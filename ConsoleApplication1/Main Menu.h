@@ -42,15 +42,16 @@ View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 ///loads the textures for the main menu
 void LoadMainMenuTex()
 {
-    MainMenuBackGroundTex.loadFromFile("Textures/Main Menu/mainmenu-no-buttons-2.png");
-    StartButtonTex.loadFromFile("Textures/Main Menu/startbutton-default.png");
-    StartButtonHoverTex.loadFromFile("Textures/Main Menu/startbutton-hover.png");
-    CreditButtonTex.loadFromFile("Textures/Main Menu/creditsbutton-default.png");
-    CreditButtonHoverTex.loadFromFile("Textures/Main Menu/creditsbutton-hover.png");
-    QuitButtonTex.loadFromFile("Textures/Main Menu/quitbutton-default.png");
-    QuitButtonHoverTex.loadFromFile("Textures/Main Menu/quitbutton-hover.png");
-    BackTOMainMenuTex.loadFromFile("Textures/Main Menu/back to main menu button-default.png");
-    BackTOMainMenuHoverTex.loadFromFile("Textures/Main Menu/back to main menu button-hover.png");
+    //test one two three
+    MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/mainmenu-no-buttons-2.png");
+    StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
+    StartButtonHoverTex.loadFromFile("Assets/Main Menu/startbutton-hover.png");
+    CreditButtonTex.loadFromFile("Assets/Main Menu/creditsbutton-default.png");
+    CreditButtonHoverTex.loadFromFile("Assets/Main Menu/creditsbutton-hover.png");
+    QuitButtonTex.loadFromFile("Assets/Main Menu/quitbutton-default.png");
+    QuitButtonHoverTex.loadFromFile("Assets/Main Menu/quitbutton-hover.png");
+    BackTOMainMenuTex.loadFromFile("Assets/Main Menu/back to main menu button-default.png");
+    BackTOMainMenuHoverTex.loadFromFile("Assets/Main Menu/back to main menu button-hover.png");
 }
 
 void MainMenuStart(RenderWindow& window)
