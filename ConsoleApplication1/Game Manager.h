@@ -34,12 +34,12 @@ Sprite Opacity;
 
 void SetupPauseMenu()
 {
-    MainMenuButtonTex.loadFromFile("Textures/Pause Menu/Main-Menu-Button.png");
-    MainMenuButtonTexHover.loadFromFile("Textures/Pause Menu/Main-Menu-Button-Hover.png");
-    BackToTheGameButtonTex.loadFromFile("Textures/Pause Menu/Back-To-Game-Button.png");
-    BackToTheGameButtonHoverTex.loadFromFile("Textures/Pause Menu/Back-To-Game-Button-Hover.png");
-    PauseMenuBlank.loadFromFile("Textures/Pause Menu/Pause-Menu-Blank.png");
-    OpacityTex.loadFromFile("Textures/Pause Menu/50-Percent-Opacity-Screen.png");
+    MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
+    MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
+    BackToTheGameButtonTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button.png");
+    BackToTheGameButtonHoverTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button-Hover.png");
+    PauseMenuBlank.loadFromFile("Assets/Pause Menu/Pause-Menu-Blank.png");
+    OpacityTex.loadFromFile("Assets/Pause Menu/50-Percent-Opacity-Screen.png");
 
     BackToGame.setTexture(BackToTheGameButtonTex);
     BackToMainMenu.setTexture(MainMenuButtonTex);
