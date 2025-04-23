@@ -37,7 +37,7 @@ namespace khalid {
 		//sunflower
 		SunFlowerIdleTex.loadFromFile("Assets/Plants/SunFlower/sunflower-idle-ST.png");
 		SunFlowerProducingSunTex.loadFromFile("Assets/Plants/SunFlower/sunflower-producingsun_ST.png");
-		SunFlowerSunTex.loadFromFile("Assets/sun-ST.png");
+		//SunFlowerSunTex.loadFromFile("Assets/sun-ST.png");
 		//SunCoin
 		sunCoin1.loadFromFile("Assets/Sun/Sun1.png");
 		sunCoin2.loadFromFile("Assets/Sun/Sun2.png");
