@@ -31,23 +31,23 @@ namespace khalid {
 	//will load all textures once
 	void LoadPlantTextures() {
 		//peashooter
-		PeaShooterIdleTex.loadFromFile("Textures/Plants/PeaShooter/peashooter-idle-ST.png");
-		PeaShooterShootTex.loadFromFile("Textures/Plants/PeaShooter/peashooter-shooting-ST.png");
-		PeaShooterProjectileTex.loadFromFile("Textures/Plants/PeaShooter/peashooter-bullet.png");
+		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
+		PeaShooterShootTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-shooting-ST.png");
+		PeaShooterProjectileTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-bullet.png");
 		//sunflower
-		SunFlowerIdleTex.loadFromFile("Textures/Plants/SunFlower/sunflower-idle-ST.png");
-		SunFlowerProducingSunTex.loadFromFile("Textures/Plants/SunFlower/sunflower-producingsun_ST.png");
-		SunFlowerSunTex.loadFromFile("Textures/sun-ST.png");
+		SunFlowerIdleTex.loadFromFile("Assets/Plants/SunFlower/sunflower-idle-ST.png");
+		SunFlowerProducingSunTex.loadFromFile("Assets/Plants/SunFlower/sunflower-producingsun_ST.png");
+		SunFlowerSunTex.loadFromFile("Assets/sun-ST.png");
 		//SunCoin
-		sunCoin1.loadFromFile("Textures/Sun1.png");
-		sunCoin2.loadFromFile("Textures/Sun2.png");
-		sunCoin3.loadFromFile("Textures/Sun3.png");
+		sunCoin1.loadFromFile("Assets/Sun1.png");
+		sunCoin2.loadFromFile("Assets/Sun2.png");
+		sunCoin3.loadFromFile("Assets/Sun3.png");
 		//icepeashooter
-		IcePeaShooterIdleTex.loadFromFile("Textures/Plants/IcePeaShooter/icepeashooter-idle-ST2.png");
-		IcePeaShooterShootTex.loadFromFile("Textures/Plants/IcePeaShooter/icepeashooter-shooting-ST.png");
-		IcePeaShooterProjectileTex.loadFromFile("Textures/Plants/IcePeaShooter/icepeashooter-bullet.png");
+		IcePeaShooterIdleTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-idle-ST2.png");
+		IcePeaShooterShootTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-shooting-ST.png");
+		IcePeaShooterProjectileTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-bullet.png");
 		//wallnut
-		WallNutIdleTex.loadFromFile("Textures/Plants/WallNut/wallnut-ST.png");
+		WallNutIdleTex.loadFromFile("Assets/Plants/WallNut/wallnut-ST.png");
 	}
 
 	//all types of plants
