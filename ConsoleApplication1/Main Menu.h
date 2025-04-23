@@ -102,7 +102,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 animClock.restart();
                 startAnim = true;
             }
-            MainMenuCamera.setCenter(easeInOut(startValue, endValue, animClock, MainMenuAnimationDuration), 360);
+            MainMenuCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animClock, MainMenuAnimationDuration), 360);
 		}
 		else
 		{
@@ -161,7 +161,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
 				animClock.restart();
 				startAnim = true;
             }
-            MainMenuCamera.setCenter(easeInOut(startValue, endValue, animClock, MainMenuAnimationDuration), 360);
+            MainMenuCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animClock, MainMenuAnimationDuration), 360);
         }
         else
         {
