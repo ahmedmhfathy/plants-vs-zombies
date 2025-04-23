@@ -136,6 +136,13 @@
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Game Manager.h" />
+    <ClInclude Include="Main Menu.h" />
+    <ClInclude Include="plants.h" />
+    <ClInclude Include="Tools.h" />
+    <ClInclude Include="Zombies.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
