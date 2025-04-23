@@ -1,4 +1,4 @@
-// ana bagarab hena jj
+// ana bagarab hena
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
