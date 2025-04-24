@@ -103,7 +103,7 @@ void RenderScreen()
             DrawLevel3(window);
         }
 
-        if (IsPaused)
+        if (IsPaused && !LevelIsOver)
         {
             DrawPauseMenu(window);
         }

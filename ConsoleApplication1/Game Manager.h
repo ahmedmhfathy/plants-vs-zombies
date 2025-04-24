@@ -20,7 +20,7 @@ Vector2f MouseWorldPostion;
 bool IsPaused = false;
 int ZombieHealth = 100;
 
-#pragma region LoadPauseMenuTex
+#pragma region Pause Menu Textures and Sprites
 Texture MainMenuButtonTex;
 Texture MainMenuButtonTexHover;
 Texture BackToTheGameButtonTex;
@@ -34,7 +34,7 @@ Sprite BlankPauseMenu;
 Sprite Opacity;
 #pragma endregion
 
-#pragma region LoadLevelEndSetup
+#pragma region Level End Menu Textures and Sprites
 Texture LostMenuBlankTex;
 Texture RetryButtonTex;
 Texture RetryButtonHoverTex;
@@ -55,6 +55,7 @@ Sprite WinMenuBlank;
 Sprite NextlevelButton;
 #pragma endregion
 
+#pragma region Pause Menu
 void SetupPauseMenu()
 {
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
@@ -79,6 +80,57 @@ void SetupPauseMenu()
     Opacity.setTexture(OpacityTex);
 }
 
+void PauseMenuUpdate()
+{
+    if (Keyboard::isKeyPressed(Keyboard::Escape))
+    {
+        IsPaused = true;
+    }
+    if (IsPaused && !LevelIsOver)
+    {
+        if (BackToGame.getGlobalBounds().contains(MouseWorldPostion))
+        {
+            BackToGame.setTexture(BackToTheGameButtonHoverTex);
+            if (Mouse::isButtonPressed(Mouse::Left))
+            {
+                IsPaused = false;
+            }
+        }
+        else
+        {
+            BackToGame.setTexture(BackToTheGameButtonTex);
+        }
+
+        if (BackToMainMenu.getGlobalBounds().contains(MouseWorldPostion))
+        {
+            BackToMainMenu.setTexture(MainMenuButtonTexHover);
+            if (Mouse::isButtonPressed(Mouse::Left))
+            {
+                IsPaused = false;
+                CurrentState = MainMenu;
+            }
+        }
+        else
+        {
+            BackToMainMenu.setTexture(MainMenuButtonTex);
+        }
+    }
+}
+
+void DrawPauseMenu(RenderWindow& window)
+{
+    if (!LevelIsOver)
+    {
+        window.draw(Opacity);
+        window.draw(BlankPauseMenu);
+        window.draw(BackToGame);
+        window.draw(BackToMainMenu);
+    }
+}
+#pragma endregion
+
+#pragma region Level End Menus
+
 void LevelEndSetup()
 {
     //main
@@ -102,7 +154,7 @@ void LevelEndSetup()
     RetryButton.setPosition(585, 400);
     RetryButton.setScale(1.75, 1.75);
 
-   
+
 
     //win case
     WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
@@ -118,24 +170,6 @@ void LevelEndSetup()
     NextlevelButton.setPosition(555, 400);
     NextlevelButton.setScale(1.75, 1.75);
 };
-
-void DrawLevelEnd(RenderWindow& window)
-{
-    if (WinLevel)
-    {
-        window.draw(Opacity);
-        window.draw(WinMenuBlank);
-        window.draw(NextlevelButton);
-        window.draw(BackToMainMenuLevelEnd);
-    }
-    else
-    {
-        window.draw(Opacity);
-        window.draw(LostMenuBlank);
-        window.draw(RetryButton);
-        window.draw(BackToMainMenuLevelEnd);
-    }
-}
 
 void LevelEndUpdate()
 {
@@ -239,53 +273,25 @@ void LevelEndUpdate()
     }
 }
 
-void PauseMenuUpdate()
+void DrawLevelEnd(RenderWindow& window)
 {
-    if (Keyboard::isKeyPressed(Keyboard::Escape))
-    {
-        IsPaused = true;
-    }
-    if (IsPaused && !LevelIsOver)
-    {
-        if (BackToGame.getGlobalBounds().contains(MouseWorldPostion))
-        {
-            BackToGame.setTexture(BackToTheGameButtonHoverTex);
-            if (Mouse::isButtonPressed(Mouse::Left))
-            {
-                IsPaused = false;
-            }
-        }
-        else
-        {
-            BackToGame.setTexture(BackToTheGameButtonTex);
-        }
-
-        if (BackToMainMenu.getGlobalBounds().contains(MouseWorldPostion))
-        {
-            BackToMainMenu.setTexture(MainMenuButtonTexHover);
-            if (Mouse::isButtonPressed(Mouse::Left))
-            {
-                IsPaused = false;
-                CurrentState = MainMenu;
-            }
-        }
-        else
-        {
-            BackToMainMenu.setTexture(MainMenuButtonTex);
-        }
-    }
-}
-
-void DrawPauseMenu(RenderWindow& window)
-{
-    if (!LevelIsOver)
+    if (WinLevel)
     {
         window.draw(Opacity);
-        window.draw(BlankPauseMenu);
-        window.draw(BackToGame);
-        window.draw(BackToMainMenu);
+        window.draw(WinMenuBlank);
+        window.draw(NextlevelButton);
+        window.draw(BackToMainMenuLevelEnd);
+    }
+    else
+    {
+        window.draw(Opacity);
+        window.draw(LostMenuBlank);
+        window.draw(RetryButton);
+        window.draw(BackToMainMenuLevelEnd);
     }
 }
+
+#pragma endregion
 
 RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 
@@ -304,10 +310,6 @@ void UpdateLevel1()
     box.setPosition(MouseWorldPostion);
     khalid::UpdatePlants(box, IsPaused);
 
-    if (Keyboard::isKeyPressed(Keyboard::Backspace))
-    {
-        SwitchState(MainMenu);
-    }
     for (int i = 0; i < 4; i++)
     {
         if (khalid::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
