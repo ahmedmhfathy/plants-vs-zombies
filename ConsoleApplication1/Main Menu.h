@@ -1,3 +1,4 @@
+
 // hello from main menu
 #pragma once
 #include <SFML/Graphics.hpp>
@@ -61,14 +62,14 @@ void MainMenuStart(RenderWindow& window)
 
     LoadMainMenuTex();
 
-    #pragma region setup elements
-	//sets the textures
+#pragma region setup elements
+    //sets the textures
     MainMenuBackGround.setTexture(MainMenuBackGroundTex);
     StartButton.setTexture(StartButtonTex);
     CreditButton.setTexture(CreditButtonTex);
     QuitButton.setTexture(QuitButtonTex);
     BackTOMainMenuButton.setTexture(BackTOMainMenuTex);
-	//set up the back to main menu button
+    //set up the back to main menu button
     BackTOMainMenuButton.setPosition(2185, 436);
     //set up the start button
     StartButton.setOrigin({ StartButton.getLocalBounds().width / 2, StartButton.getLocalBounds().height / 2 });
@@ -82,7 +83,7 @@ void MainMenuStart(RenderWindow& window)
     QuitButton.setOrigin({ QuitButton.getLocalBounds().width / 2, QuitButton.getLocalBounds().height / 2 });
     QuitButton.rotate(13.2);
     QuitButton.setPosition({ 1023, 275 + 115 + 100 });
-    #pragma endregion
+#pragma endregion
 }
 
 void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
@@ -102,12 +103,12 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 animClock.restart();
                 startAnim = true;
             }
-            MainMenuCamera.setCenter(easeInOut(startValue, endValue, animClock, MainMenuAnimationDuration), 360);
-		}
-		else
-		{
-			startAnim = false;
-		}
+            MainMenuCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animClock, MainMenuAnimationDuration), 360);
+        }
+        else
+        {
+            startAnim = false;
+        }
 
         //main menu buttons
         if (mouse_pos.x >= 884 && mouse_pos.x <= 1211 && mouse_pos.y >= 202 && mouse_pos.y <= 310)
@@ -115,7 +116,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             StartButton.setTexture(StartButtonHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
-                SwitchState("Level 1");
+                SwitchState(Level1);
             }
         }
         else
@@ -152,20 +153,20 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
     }
     else //credits menu buttons and animation
     {
-		//animate from main menu ---> credits
+        //animate from main menu ---> credits
         if (MainMenuCamera.getCenter().x < 1920)
         {
             float startValue = 640, endValue = 1920;
             if (startAnim == false)
             {
-				animClock.restart();
-				startAnim = true;
+                animClock.restart();
+                startAnim = true;
             }
-            MainMenuCamera.setCenter(easeInOut(startValue, endValue, animClock, MainMenuAnimationDuration), 360);
+            MainMenuCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animClock, MainMenuAnimationDuration), 360);
         }
         else
         {
-			startAnim = false;
+            startAnim = false;
         }
 
         //credits menu buttons
@@ -191,5 +192,5 @@ void DrawMainMenu(RenderWindow& window)
     window.draw(StartButton);
     window.draw(CreditButton);
     window.draw(QuitButton);
-    window.draw(BackTOMainMenuButton); 
+    window.draw(BackTOMainMenuButton);
 }

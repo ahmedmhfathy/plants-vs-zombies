@@ -10,11 +10,16 @@
 using namespace std;
 using namespace sf;
 
-void SwitchState(String NewState);
+enum State
+{
+    MainMenu, Level1
+    , Level2, Level3
+}CurrentState;
+void SwitchState(State NewState);
 
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
-String CurrentState;
+//String CurrentState;
 bool IsPaused = false;
 int ZombieHealth = 100;
 
@@ -84,7 +89,7 @@ void PauseMenuUpdate()
             if (Mouse::isButtonPressed(Mouse::Left))
             {
                 IsPaused = false;
-                CurrentState = "Main Menu";
+                CurrentState = MainMenu;
             }
         }
         else
@@ -123,7 +128,7 @@ void UpdateLevel1()
 
     if (Keyboard::isKeyPressed(Keyboard::Backspace))
     {
-        SwitchState("Main Menu");
+        SwitchState(MainMenu);
     }
     for (int i = 0; i < 4; i++)
     {
@@ -131,7 +136,7 @@ void UpdateLevel1()
         {
             khalid::PlantsArray[i].takeDmg(1);
         }
-    }  
+    }
 }
 void DrawLevel1(RenderWindow& window)
 {
@@ -167,19 +172,19 @@ void DrawLevel3(RenderWindow& window)
 #pragma endregion
 
 // switches the state of the game and calls the start function of the new state
-void SwitchState(String NewState)
+void SwitchState(State NewState)
 {
     CurrentState = NewState;
 
-    if (CurrentState == "Level 1")
+    if (CurrentState == Level1)
     {
         StartLevel1();
     }
-    else if (CurrentState == "Level 2")
+    else if (CurrentState == Level2)
     {
         StartLevel2();
     }
-    else if (CurrentState == "Level 3")
+    else if (CurrentState == Level3)
     {
         StartLevel3();
     }

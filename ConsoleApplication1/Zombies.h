@@ -10,7 +10,6 @@ using namespace sf;
 RectangleShape collider(Vector2f());
 RectangleShape plant;
 
-
 #pragma region Texture Decalration
 //Regular
 Texture RegularWalkText;
