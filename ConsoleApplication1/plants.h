@@ -176,10 +176,10 @@ namespace khalid {
 			{
 				//checks if a zombie is infront of the plant
 				//will take the array of zombies instead in the future
-				if ((type == PeaShooter || type == SnowPeaShooter) &&
-					((shape.getPosition().y <= zombie.getGlobalBounds().top + zombie.getGlobalBounds().height &&
-						shape.getPosition().y >= zombie.getGlobalBounds().top) &&
-						shape.getPosition().x <= zombie.getGlobalBounds().left))
+				if ((type == PeaShooter || type == SnowPeaShooter) 
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie.getGlobalBounds().top + zombie.getGlobalBounds().height)
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie.getGlobalBounds().top)
+					&& (shape.getGlobalBounds().left <= zombie.getGlobalBounds().left)))
 				{
 					zombieInFront = true;
 				}
@@ -187,6 +187,18 @@ namespace khalid {
 				{
 					zombieInFront = false;
 				}
+
+				//if ((type == PeaShooter || type == SnowPeaShooter) &&
+				//	((shape.getPosition().y <= zombie.getGlobalBounds().top + zombie.getGlobalBounds().height &&
+				//		shape.getPosition().y >= zombie.getGlobalBounds().top) &&
+				//		shape.getPosition().x <= zombie.getGlobalBounds().left))
+				//{
+				//	zombieInFront = true;
+				//}
+				//else
+				//{
+				//	zombieInFront = false;
+				//}
 
 				animationHandler();
 				action();

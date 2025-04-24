@@ -3,7 +3,7 @@
 C:\Users\khali\repositries\ConsoleApplication1\plants.h(166,48): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\plants.h(349,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\plants.h(361,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Tools.h(48,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
