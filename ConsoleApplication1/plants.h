@@ -39,9 +39,9 @@ namespace khalid {
 		SunFlowerProducingSunTex.loadFromFile("Assets/Plants/SunFlower/sunflower-producingsun_ST.png");
 		SunFlowerSunTex.loadFromFile("Assets/Sun/sun-ST.png");
 		//SunCoin
-		sunCoin1.loadFromFile("Assets/Sun/Sun1.png");
-		sunCoin2.loadFromFile("Assets/Sun/Sun2.png");
-		sunCoin3.loadFromFile("Assets/Sun/Sun3.png");
+		//sunCoin1.loadFromFile("Assets/Sun/Sun1.png");
+		//sunCoin2.loadFromFile("Assets/Sun/Sun2.png");
+		//sunCoin3.loadFromFile("Assets/Sun/Sun3.png");
 		//icepeashooter
 		IcePeaShooterIdleTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-idle-ST2.png");
 		IcePeaShooterShootTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-shooting-ST.png");
