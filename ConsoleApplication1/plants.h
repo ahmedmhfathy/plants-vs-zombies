@@ -442,6 +442,7 @@ namespace khalid {
 			if (!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime())
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
 			}
 		}
 
