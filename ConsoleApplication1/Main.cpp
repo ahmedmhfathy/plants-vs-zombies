@@ -47,6 +47,7 @@ void Start()
     window.setVerticalSyncEnabled(true);
     MainMenuStart(window);
     SetupPauseMenu();
+    LevelEndSetup();
 }
 void Update()
 {
@@ -73,6 +74,7 @@ void Update()
         }
 
         PauseMenuUpdate();
+        LevelEndUpdate();
     }
 }
 
@@ -87,6 +89,7 @@ void RenderScreen()
     }
     else
     {
+
         if (CurrentState == Level1)
         {
             DrawLevel1(window);
@@ -100,10 +103,16 @@ void RenderScreen()
             DrawLevel3(window);
         }
 
-        if (IsPaused)
+        if (IsPaused && !LevelIsOver)
         {
             DrawPauseMenu(window);
         }
+        if (LevelIsOver)
+        {
+            DrawLevelEnd(window);
+        }
+
     }
+
     window.display();
 }

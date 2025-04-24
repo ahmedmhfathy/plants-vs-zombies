@@ -6,15 +6,17 @@
 #include <string>
 #include <cmath>
 #include "plants.h"
+#include "SFML-2.6.1/examples/vulkan/Vulkan.cpp"
 
 using namespace std;
 using namespace sf;
 
 enum State{MainMenu, Level1, Level2, Level3} CurrentState;
 void SwitchState(State NewState);
-
+bool LevelIsOver = false;
+bool WinLevel = false;
 Vector2i Mousepostion;
-Vector2f MouseWorldPostion;
+Vector2f MouseWorldPostion; 
 
 bool IsPaused = false;
 int ZombieHealth = 100;
@@ -33,6 +35,27 @@ Sprite BlankPauseMenu;
 Sprite Opacity;
 #pragma endregion
 
+#pragma region LoadLevelEndSetup
+Texture LostMenuBlankTex;
+Texture RetryButtonTex;
+Texture RetryButtonHoverTex;
+
+Texture BackToMainMenuLevelEndTex;
+Texture BackToMainMenuLevelEndHoverTex;
+
+Texture WinMenuBlankTex;
+Texture NextlevelButtonTex;
+Texture NextlevelButtonHoverTex;
+
+Sprite LostMenuBlank;
+Sprite RetryButton;
+
+Sprite BackToMainMenuLevelEnd;
+
+Sprite WinMenuBlank;
+Sprite NextlevelButton;
+#pragma endregion
+
 void SetupPauseMenu()
 {
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
@@ -43,25 +66,131 @@ void SetupPauseMenu()
     OpacityTex.loadFromFile("Assets/Pause Menu/50-Percent-Opacity-Screen.png");
 
     BackToGame.setTexture(BackToTheGameButtonTex);
+    BackToGame.setPosition(537, 459);
+    BackToGame.setScale(1.75, 1.75);
+
     BackToMainMenu.setTexture(MainMenuButtonTex);
     BackToMainMenu.setPosition(555, 400);
     BackToMainMenu.setScale(1.75, 1.75);
-    BackToGame.setPosition(537, 459);
-    BackToGame.setScale(1.75, 1.75);
+    
     BlankPauseMenu.setTexture(PauseMenuBlank);
-
     BlankPauseMenu.setOrigin(BlankPauseMenu.getGlobalBounds().width / 2, BlankPauseMenu.getGlobalBounds().height / 2);
     BlankPauseMenu.setScale(1.75, 1.75);
     BlankPauseMenu.setPosition(640, 360);
     Opacity.setTexture(OpacityTex);
 }
+
+void LevelEndSetup()
+{
+    //main
+    BackToMainMenuLevelEndTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button.png");
+    BackToMainMenuLevelEndHoverTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button-Hover.png");
+    BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
+    BackToMainMenuLevelEnd.setPosition(537, 459);
+    BackToMainMenuLevelEnd.setScale(1.75, 1.75);
+
+    //lose case
+    LostMenuBlankTex.loadFromFile("Assets/Lost Menu/lost-menu-blank.png");
+    RetryButtonTex.loadFromFile("Assets/Lost Menu/retry-button.png");
+    RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
+
+    LostMenuBlank.setTexture(LostMenuBlankTex);
+    LostMenuBlank.setOrigin(LostMenuBlank.getGlobalBounds().width / 2, LostMenuBlank.getGlobalBounds().height / 2);
+    LostMenuBlank.setScale(1.75, 1.75);
+    LostMenuBlank.setPosition(640, 360);
+
+    RetryButton.setTexture(RetryButtonTex);
+    RetryButton.setPosition(555, 400);
+    RetryButton.setScale(1.75, 1.75);
+    
+
+
+    //win case
+    WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
+    NextlevelButtonTex.loadFromFile("Assets/Win Menu/next-level-button.png");
+    NextlevelButtonHoverTex.loadFromFile("Assets/Win Menu/next-level-button-hover.png");
+    
+    WinMenuBlank.setTexture(WinMenuBlankTex);
+    WinMenuBlank.setOrigin(WinMenuBlank.getGlobalBounds().width / 2, WinMenuBlank.getGlobalBounds().height / 2);
+    WinMenuBlank.setScale(1.75, 1.75);
+    WinMenuBlank.setPosition(640, 360);
+
+    NextlevelButton.setTexture(NextlevelButtonTex);
+    NextlevelButton.setPosition(555, 400);
+    NextlevelButton.setScale(1.75, 1.75);
+};
+
+void DrawLevelEnd(RenderWindow&window)
+{
+    if (WinLevel)
+    {
+        window.draw(Opacity);
+        window.draw(WinMenuBlank);
+        window.draw(NextlevelButton);
+        window.draw(BackToMainMenuLevelEnd);
+    }
+    else
+    {
+        window.draw(Opacity);
+        window.draw(LostMenuBlank);
+        window.draw(RetryButton);
+        window.draw(BackToMainMenuLevelEnd);
+    }
+}
+
+void LevelEndUpdate()
+{
+    IsPaused = true;
+    if (Keyboard::isKeyPressed(Keyboard::W))
+    {
+        LevelIsOver = true;
+        WinLevel = true;
+    }
+    if (Keyboard::isKeyPressed(Keyboard::S))
+    {
+        LevelIsOver = true;
+        WinLevel = false;
+    }
+
+    if (LevelIsOver)
+    {
+        if (WinLevel)
+        {
+            if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
+            {
+                NextlevelButton.setTexture(NextlevelButtonHoverTex);
+                /*if (Mouse::isButtonPressed(Mouse::Left))
+                {
+                    CurrentState = Level2;
+                }*/
+            }
+        }
+            if(!WinLevel)
+            {
+                if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
+                {
+                    BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
+                    /*if (Mouse::isButtonPressed(Mouse::Left))
+                    {
+                        CurrentState = Level2;
+                    }*/
+                }
+            }
+        
+    }
+}
+
+
+
+
+
 void PauseMenuUpdate()
 {
     if (Keyboard::isKeyPressed(Keyboard::Escape))
     {
         IsPaused = true;
     }
-    if (IsPaused)
+    if (IsPaused && !LevelIsOver)
     {
         if (BackToGame.getGlobalBounds().contains(MouseWorldPostion))
         {
@@ -91,12 +220,16 @@ void PauseMenuUpdate()
         }
     }
 }
+
 void DrawPauseMenu(RenderWindow& window)
 {
-    window.draw(Opacity);
-    window.draw(BlankPauseMenu);
-    window.draw(BackToGame);
-    window.draw(BackToMainMenu);
+    if (!LevelIsOver)
+    {
+        window.draw(Opacity);
+        window.draw(BlankPauseMenu);
+        window.draw(BackToGame);
+        window.draw(BackToMainMenu);
+    }
 }
 
 RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
