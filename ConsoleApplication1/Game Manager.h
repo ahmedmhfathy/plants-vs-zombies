@@ -139,9 +139,9 @@ void DrawLevelEnd(RenderWindow& window)
 
 void LevelEndUpdate()
 {
-    IsPaused = true;
     if (Keyboard::isKeyPressed(Keyboard::W))
     {
+    IsPaused = true;
         LevelIsOver = true;
         WinLevel = true;
     }
