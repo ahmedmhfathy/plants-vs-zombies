@@ -29,7 +29,7 @@ Texture SoccerGuyIdleText;
 Texture SoccerGuyAttackText;
 #pragma endregion
 
-void TextLoading() {
+void LoadZombieTextures() {
 	RegularWalkText.loadFromFile("Assets/regular_walk.png");
 }
 
@@ -56,7 +56,11 @@ public:
 		isMoving = true;
 		isAttacking = false;
 
-		TextLoading();
+		//note:
+		//this will be called for each zombie which is redundant, its better to move this to the main startZombies 
+		//function where its called only once
+		LoadZombieTextures();
+		//---------------------------------------------
 
 		switch (type)
 		{
@@ -89,11 +93,15 @@ public:
 			break;
 		}
 	}
+
+	//note:
+	//its also better to have only one part/function check for ALL zombies if they are infront of a plant
+	//in the main UpdateZombies function you could loop through all zombies and check if they are infront of a plant
+	//instead of checking for intersections by looping through all plants for each zombie
 	void update(/*RectangleShape plant*/) { // will take plants array
 		
 		Animation();
 		Movement();
-
 	}
 
 private:
@@ -167,6 +175,7 @@ private:
 
 		}
 	}
+
 	void Movement() {
 		if (health == 0) {
 			isDead = 0;
@@ -202,6 +211,6 @@ void UpdateZ() {
 	zombie[0].update();
 }
 
-//make a draw function for zombies
+//make a draw function for zombies here
 
 
