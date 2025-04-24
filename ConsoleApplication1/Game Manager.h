@@ -85,7 +85,7 @@ void LevelEndSetup()
     BackToMainMenuLevelEndTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button.png");
     BackToMainMenuLevelEndHoverTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button-Hover.png");
     BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
-    BackToMainMenuLevelEnd.setPosition(537, 459);
+    BackToMainMenuLevelEnd.setPosition(555, 459);
     BackToMainMenuLevelEnd.setScale(1.75, 1.75);
 
     //lose case
@@ -99,10 +99,10 @@ void LevelEndSetup()
     LostMenuBlank.setPosition(640, 360);
 
     RetryButton.setTexture(RetryButtonTex);
-    RetryButton.setPosition(555, 400);
+    RetryButton.setPosition(585, 400);
     RetryButton.setScale(1.75, 1.75);
 
-
+   
 
     //win case
     WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
@@ -141,12 +141,13 @@ void LevelEndUpdate()
 {
     if (Keyboard::isKeyPressed(Keyboard::W))
     {
-    IsPaused = true;
+        IsPaused = true;
         LevelIsOver = true;
         WinLevel = true;
     }
     if (Keyboard::isKeyPressed(Keyboard::S))
     {
+        IsPaused = true;
         LevelIsOver = true;
         WinLevel = false;
     }
@@ -158,30 +159,85 @@ void LevelEndUpdate()
             if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
             {
                 NextlevelButton.setTexture(NextlevelButtonHoverTex);
-                /*if (Mouse::isButtonPressed(Mouse::Left))
+                if (Mouse::isButtonPressed(Mouse::Left))
                 {
-                    CurrentState = Level2;
-                }*/
+                    if (CurrentState == Level1)
+                    {
+                        SwitchState(Level2);
+                    }
+                    else if (CurrentState == Level2)
+                    {
+                        SwitchState(Level3);
+                    }
+                    else
+                    {
+                        //Ty for playing();
+                    }
+                }
             }
+            else
+            {
+                NextlevelButton.setTexture(NextlevelButtonTex);
+            }
+
+            if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
+            {
+                BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
+                if (Mouse::isButtonPressed(Mouse::Left))
+                {
+                    CurrentState = MainMenu;
+                }
+            }
+            else
+            {
+                BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
+            }
+
+
         }
         if (!WinLevel)
         {
             if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
             {
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
-                /*if (Mouse::isButtonPressed(Mouse::Left))
+                if (Mouse::isButtonPressed(Mouse::Left))
                 {
-                    CurrentState = Level2;
-                }*/
+                    CurrentState = MainMenu;
+                }
+            }
+            else
+            {
+                BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
+            }
+
+
+            if (RetryButton.getGlobalBounds().contains(MouseWorldPostion))
+            {
+                RetryButton.setTexture(RetryButtonHoverTex);
+                if (Mouse::isButtonPressed(Mouse::Left))
+                {
+                    if (CurrentState == Level1)
+                    {
+                        SwitchState(Level1);
+                    }
+                    else if (CurrentState == Level2)
+                    {
+                        SwitchState(Level2);
+                    }
+                    else if (CurrentState == Level3)
+                    {
+                        SwitchState(Level3);
+                    }
+                }
+            }
+            else
+            {
+                RetryButton.setTexture(RetryButtonTex);
             }
         }
 
     }
 }
-
-
-
-
 
 void PauseMenuUpdate()
 {
@@ -296,6 +352,9 @@ void DrawLevel3(RenderWindow& window)
 // switches the state of the game and calls the start function of the new state
 void SwitchState(State NewState)
 {
+    LevelIsOver = false;
+    WinLevel = false;
+    IsPaused = false;
     CurrentState = NewState;
 
     if (CurrentState == Level1)
