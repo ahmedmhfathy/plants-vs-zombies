@@ -37,7 +37,7 @@ namespace khalid {
 		//sunflower
 		SunFlowerIdleTex.loadFromFile("Assets/Plants/SunFlower/sunflower-idle-ST.png");
 		SunFlowerProducingSunTex.loadFromFile("Assets/Plants/SunFlower/sunflower-producingsun_ST.png");
-		//SunFlowerSunTex.loadFromFile("Assets/sun-ST.png");
+		SunFlowerSunTex.loadFromFile("Assets/Sun/sun-ST.png");
 		//SunCoin
 		sunCoin1.loadFromFile("Assets/Sun/Sun1.png");
 		sunCoin2.loadFromFile("Assets/Sun/Sun2.png");
@@ -62,9 +62,9 @@ namespace khalid {
 		Sprite shape;
 
 		//these are only used for the sun coin
-		Sprite SunCoinShape1;
-		Sprite SunCoinShape2;
-		Sprite SunCoinShape3;
+		//Sprite SunCoinShape1;
+		//Sprite SunCoinShape2;
+		//Sprite SunCoinShape3;
 
 		float damage; //<<<<<<<<---------------<<< to be used in the zombie system
 		float slowMultiplier = 1; //<<<<<<<<---------------<<< to be used in the zombie system
@@ -101,37 +101,32 @@ namespace khalid {
 			}
 			else if (type == SunFlower)
 			{
-				SunCoinShape1.setTexture(sunCoin1);
-				SunCoinShape2.setTexture(sunCoin2);
-				SunCoinShape3.setTexture(sunCoin3);
-
-				SunCoinShape1.setPosition(SpwanPos);
-				SunCoinShape2.setPosition(SpwanPos);
-				SunCoinShape3.setPosition(SpwanPos);
-
-				SunCoinShape1.setOrigin({ SunCoinShape1.getLocalBounds().width / 2, SunCoinShape1.getLocalBounds().height / 2 });
-				SunCoinShape2.setOrigin({ SunCoinShape2.getLocalBounds().width / 2, SunCoinShape2.getLocalBounds().height / 2 });
-				SunCoinShape3.setOrigin({ SunCoinShape3.getLocalBounds().width / 2, SunCoinShape3.getLocalBounds().height / 2 });
-
+				//SunCoinShape1.setTexture(sunCoin1);
+				//SunCoinShape2.setTexture(sunCoin2);
+				//SunCoinShape3.setTexture(sunCoin3);
+				//SunCoinShape1.setPosition(SpwanPos);
+				//SunCoinShape2.setPosition(SpwanPos);
+				//SunCoinShape3.setPosition(SpwanPos);
+				//SunCoinShape1.setOrigin({ SunCoinShape1.getLocalBounds().width / 2, SunCoinShape1.getLocalBounds().height / 2 });
+				//SunCoinShape2.setOrigin({ SunCoinShape2.getLocalBounds().width / 2, SunCoinShape2.getLocalBounds().height / 2 });
+				//SunCoinShape3.setOrigin({ SunCoinShape3.getLocalBounds().width / 2, SunCoinShape3.getLocalBounds().height / 2 });
 				//SunCoinShape1.setScale(3.5, 3.5);
 				//SunCoinShape2.setScale(3.5, 3.5);
 				//SunCoinShape3.setScale(3.5, 3.5);
-
-				projectileLifeSpan = seconds(12);
-
-				speed = 0;
-				damage = PlantDamage;
-				slowMultiplier = 1;
-
-				//shape.setTexture(SunFlowerSunTex);
-				//shape.setTextureRect(IntRect(0, 0, 26, 26));
-				//shape.setPosition(SpwanPos);
-				//shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
-				//projectileLifeSpan = seconds(17.5); //time to despawn
-				//shape.setScale(3.5, 3.5);
+				//projectileLifeSpan = seconds(12);
 				//speed = 0;
 				//damage = PlantDamage;
 				//slowMultiplier = 1;
+
+				shape.setTexture(SunFlowerSunTex);
+				shape.setTextureRect(IntRect(0, 0, 26, 26));
+				shape.setPosition(SpwanPos);
+				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
+				projectileLifeSpan = seconds(17.5); //time to despawn
+				shape.setScale(3.5, 3.5);
+				speed = 0;
+				damage = PlantDamage;
+				slowMultiplier = 1;
 			}
 		}
 		void update(bool isPaused) {
@@ -142,9 +137,9 @@ namespace khalid {
 			}
 			else if (type == SunFlower)
 			{
-				//SunCoinShape1.rotate(1);
-				SunCoinShape2.rotate(-0.5);
-				SunCoinShape3.rotate(0.5);
+				shape.rotate(0.5);
+				//SunCoinShape2.rotate(-0.5);
+				//SunCoinShape3.rotate(0.5);
 			}
 		}
 	};
@@ -469,16 +464,18 @@ namespace khalid {
 	void DrawPlantsAndProjectiles(RenderWindow& window) {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			if (PlantProjectilesARR[i].type == SunFlower)
-			{
-				window.draw(PlantProjectilesARR[i].SunCoinShape3);
-				window.draw(PlantProjectilesARR[i].SunCoinShape2);
-				window.draw(PlantProjectilesARR[i].SunCoinShape1);
-			}
-			else
-			{
-				window.draw(PlantProjectilesARR[i].shape);
-			}
+			window.draw(PlantProjectilesARR[i].shape);
+
+			//if (PlantProjectilesARR[i].type == SunFlower)
+			//{
+			//	window.draw(PlantProjectilesARR[i].SunCoinShape3);
+			//	window.draw(PlantProjectilesARR[i].SunCoinShape2);
+			//	window.draw(PlantProjectilesARR[i].SunCoinShape1);
+			//}
+			//else
+			//{
+			//	window.draw(PlantProjectilesARR[i].shape);
+			//}
 		}
 		for (int i = 0; i < 4; i++)
 		{

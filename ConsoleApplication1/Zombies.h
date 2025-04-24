@@ -202,4 +202,6 @@ void UpdateZ() {
 	zombie[0].update();
 }
 
+//make a draw function for zombies
+
 
