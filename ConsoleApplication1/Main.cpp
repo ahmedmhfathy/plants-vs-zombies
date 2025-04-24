@@ -1,3 +1,4 @@
+// enta zengy leh
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
@@ -23,7 +24,7 @@ int main()
     Clock clock;
     while (window.isOpen()) // game loop
     {
-        #pragma region MISC
+#pragma region MISC
         deltaTime = clock.restart().asSeconds();
         Event event;
         while (window.pollEvent(event))
@@ -31,7 +32,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        #pragma endregion
+#pragma endregion
 
         Update();
         RenderScreen();
@@ -50,6 +51,7 @@ void Start()
 }
 void Update()
 {
+
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
 
@@ -101,7 +103,7 @@ void RenderScreen()
             DrawLevel3(window);
         }
 
-        if (IsPaused && !LevelIsOver)
+        if (IsPaused)
         {
             DrawPauseMenu(window);
         }

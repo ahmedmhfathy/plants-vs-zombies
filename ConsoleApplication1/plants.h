@@ -379,7 +379,7 @@ namespace khalid {
 			{
 				health = 100;
 				damage = 20;
-				timeForAction = seconds(1.5); // time to shoot
+				timeForAction = seconds(2); // time to shoot
 
 				shape.setTexture(PeaShooterIdleTex);
 				shape.setScale(3.5, 3.5);
@@ -388,7 +388,7 @@ namespace khalid {
 			else if (type == SnowPeaShooter) {
 				health = 100;
 				damage = 20;
-				timeForAction = seconds(1.5); // time to shoot
+				timeForAction = seconds(2); // time to shoot
 
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);

@@ -26,7 +26,7 @@
     <ClInclude Include="Main Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Plants.h">
+    <ClInclude Include="plants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Tools.h">
