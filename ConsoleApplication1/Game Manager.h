@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
-#include "plants.h"
+#include "Plants.h"
 
 using namespace std;
 using namespace sf;
