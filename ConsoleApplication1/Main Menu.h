@@ -43,7 +43,6 @@ View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 ///loads the textures for the main menu
 void LoadMainMenuTex()
 {
-    //test one two three
     MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/mainmenu-no-buttons-2.png");
     StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
     StartButtonHoverTex.loadFromFile("Assets/Main Menu/startbutton-hover.png");
@@ -93,7 +92,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
     //main menu buttons and animation
     if (!ShowCredits)
     {
-
         // animation from credits ---> main menu
         if (MainMenuCamera.getCenter().x > 640)
         {

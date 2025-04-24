@@ -84,7 +84,7 @@ namespace khalid {
 				shape.setTexture(PeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				projectileLifeSpan = seconds(10); //time to despawn
+				projectileLifeSpan = seconds(5); //time to despawn
 				speed = 5;
 				damage = PlantDamage;
 				slowMultiplier = 1; // wont affect anything
@@ -94,7 +94,7 @@ namespace khalid {
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				projectileLifeSpan = seconds(10); //time to despawn
+				projectileLifeSpan = seconds(5); //time to despawn
 				speed = 5;
 				damage = PlantDamage;
 				slowMultiplier = 0.5;
@@ -152,7 +152,6 @@ namespace khalid {
 	vector<PlantProjectile> PlantProjectilesARR; // contains both the bullets and sun coins
 
 	struct Plants {
-		//string type;
 		Sprite shape;
 		PlantType type;
 
@@ -202,7 +201,7 @@ namespace khalid {
 				type = EmptyPlant;
 				setupPrefab();
 
-				// and remove the plant from the garden
+				//<<<<<<<<---------------<<< and remove the plant from the garden
 			}
 		}
 
@@ -443,10 +442,18 @@ namespace khalid {
 	void UpdatePlants(RectangleShape zombiePH, bool isPaused) {
 
 		//deletes outdated projectiles
-		if (!PlantProjectilesARR.empty() && PlantProjectilesARR.front().projectileLifeSpan <= PlantProjectilesARR.front().clock.getElapsedTime())
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			PlantProjectilesARR.erase(PlantProjectilesARR.begin());
+			if (!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime())
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+			}
 		}
+
+		//if (!PlantProjectilesARR.empty() && PlantProjectilesARR.front().projectileLifeSpan <= PlantProjectilesARR.front().clock.getElapsedTime())
+		//{
+		//	PlantProjectilesARR.erase(PlantProjectilesARR.begin());
+		//}
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{

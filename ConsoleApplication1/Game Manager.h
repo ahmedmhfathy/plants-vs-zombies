@@ -10,16 +10,12 @@
 using namespace std;
 using namespace sf;
 
-enum State
-{
-    MainMenu, Level1
-    , Level2, Level3
-}CurrentState;
+enum State{MainMenu, Level1, Level2, Level3} CurrentState;
 void SwitchState(State NewState);
 
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
-//String CurrentState;
+
 bool IsPaused = false;
 int ZombieHealth = 100;
 
@@ -59,14 +55,11 @@ void SetupPauseMenu()
     BlankPauseMenu.setPosition(640, 360);
     Opacity.setTexture(OpacityTex);
 }
-
 void PauseMenuUpdate()
 {
     if (Keyboard::isKeyPressed(Keyboard::Escape))
     {
-
         IsPaused = true;
-
     }
     if (IsPaused)
     {
@@ -96,15 +89,8 @@ void PauseMenuUpdate()
         {
             BackToMainMenu.setTexture(MainMenuButtonTex);
         }
-
-
     }
 }
-
-RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
-
-
-//handle the code of each level
 void DrawPauseMenu(RenderWindow& window)
 {
     window.draw(Opacity);
@@ -112,6 +98,10 @@ void DrawPauseMenu(RenderWindow& window)
     window.draw(BackToGame);
     window.draw(BackToMainMenu);
 }
+
+RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
+
+//handle the code of each level
 #pragma region Level Functions
 void StartLevel1()
 {

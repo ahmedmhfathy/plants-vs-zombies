@@ -1,4 +1,3 @@
-// ba3mel 7aga
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
@@ -75,6 +74,7 @@ void Update()
         PauseMenuUpdate();
     }
 }
+
 // this function will be used to render the screen
 void RenderScreen()
 {
