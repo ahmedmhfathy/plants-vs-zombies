@@ -88,7 +88,6 @@ void RenderScreen()
     }
     else
     {
-
         if (CurrentState == Level1)
         {
             DrawLevel1(window);
@@ -112,6 +111,5 @@ void RenderScreen()
         }
 
     }
-
     window.display();
 }
