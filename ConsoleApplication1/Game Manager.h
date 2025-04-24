@@ -17,7 +17,6 @@ Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
 
 bool IsPaused = false;
-int ZombieHealth = 100;
 
 #pragma region LoadPauseMenuTex
 Texture MainMenuButtonTex;
@@ -33,6 +32,7 @@ Sprite BlankPauseMenu;
 Sprite Opacity;
 #pragma endregion
 
+#pragma region Pause Menu Functions
 void SetupPauseMenu()
 {
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
@@ -98,6 +98,7 @@ void DrawPauseMenu(RenderWindow& window)
     window.draw(BackToGame);
     window.draw(BackToMainMenu);
 }
+#pragma endregion
 
 RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 
