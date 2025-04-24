@@ -1,4 +1,5 @@
 // ANA FEL LABORYA aa
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
@@ -25,7 +26,7 @@ int main()
     Clock clock;
     while (window.isOpen()) // game loop
     {
-        #pragma region MISC
+#pragma region MISC
         deltaTime = clock.restart().asSeconds();
         Event event;
         while (window.pollEvent(event))
@@ -33,7 +34,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        #pragma endregion
+#pragma endregion
 
         Update();
         RenderScreen();
@@ -43,7 +44,7 @@ int main()
 
 void Start()
 {
-    CurrentState = "Main Menu";
+    CurrentState = MainMenu;
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
     MainMenuStart(window);
@@ -54,21 +55,21 @@ void Update()
 
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
-    if (CurrentState == "Main Menu")
+    if (CurrentState == MainMenu)
     {
         MainMenuUpdate(MouseWorldPostion, window);
     }
     else
     {
-        if (CurrentState == "Level 1" && !IsPaused)
+        if (CurrentState == Level1 && !IsPaused)
         {
             UpdateLevel1();
         }
-        else if (CurrentState == "Level 2" && !IsPaused)
+        else if (CurrentState == Level2 && !IsPaused)
         {
             UpdateLevel2();
         }
-        else if (CurrentState == "Level 3" && !IsPaused)
+        else if (CurrentState == Level3 && !IsPaused)
         {
             UpdateLevel3();
         }
@@ -81,21 +82,21 @@ void RenderScreen()
 {
     window.clear();
 
-    if (CurrentState == "Main Menu")
+    if (CurrentState == MainMenu)
     {
         DrawMainMenu(window);
     }
     else
     {
-        if (CurrentState == "Level 1")
+        if (CurrentState == Level1)
         {
             DrawLevel1(window);
         }
-        else if (CurrentState == "Level 2")
+        else if (CurrentState == Level2)
         {
             DrawLevel2(window);
         }
-        else if (CurrentState == "Level 3")
+        else if (CurrentState == Level3)
         {
             DrawLevel3(window);
         }
