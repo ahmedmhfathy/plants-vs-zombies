@@ -43,8 +43,7 @@ int main()
 
 void Start()
 {
-    //we will load all textures once here
-    khalid::LoadPlantTextures();
+    khalid::LoadPlantTextures(); //textures loaded here once
 
     CurrentState = MainMenu;
 
@@ -53,15 +52,16 @@ void Start()
 
     MainMenuStart(window); //textures loaded here once
 
-    SetupPauseMenu();
-    LevelEndSetup();
+    SetupPauseMenu(); //textures loaded here once
+    LevelEndSetup(); //textures loaded here once
 }
 void Update()
 {
-
+    //gets mouse world position from screen position
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
 
+    //calls the update function depending on current state and pause state
     if (CurrentState == MainMenu)
     {
         MainMenuUpdate(MouseWorldPostion, window);
@@ -91,6 +91,7 @@ void RenderScreen()
 {
     window.clear();
 
+    //draws screen depending on current state
     if (CurrentState == MainMenu)
     {
         DrawMainMenu(window);

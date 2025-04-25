@@ -12,13 +12,13 @@ using namespace sf;
 
 enum State { MainMenu, Level1, Level2, Level3 } CurrentState;
 void SwitchState(State NewState);
+
 bool LevelIsOver = false;
 bool WinLevel = false;
+bool IsPaused = false;
+
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
-
-bool IsPaused = false;
-int ZombieHealth = 100;
 
 #pragma region Pause Menu Textures and Sprites
 Texture MainMenuButtonTex;
