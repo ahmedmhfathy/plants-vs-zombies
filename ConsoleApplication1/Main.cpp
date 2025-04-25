@@ -6,6 +6,7 @@
 #include <string>
 #include "Main Menu.h"
 #include "Game Manager.h"
+#include "plants.h"
 using namespace std;
 using namespace sf;
 
@@ -42,10 +43,16 @@ int main()
 
 void Start()
 {
+    //we will load all textures once here
+    khalid::LoadPlantTextures();
+
     CurrentState = MainMenu;
+
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
-    MainMenuStart(window);
+
+    MainMenuStart(window); //textures loaded here once
+
     SetupPauseMenu();
     LevelEndSetup();
 }

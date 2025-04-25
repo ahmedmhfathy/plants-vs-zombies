@@ -7,7 +7,7 @@ using namespace std;
 using namespace sf;
 
 namespace khalid {
-#pragma region Declaring Texures
+	#pragma region Declaring Texures
 	//peashooter
 	Texture PeaShooterIdleTex;
 	Texture PeaShooterShootTex;
@@ -16,21 +16,17 @@ namespace khalid {
 	Texture SunFlowerIdleTex;
 	Texture SunFlowerProducingSunTex;
 	Texture SunFlowerSunTex;
-	//sun coin 2
-	Texture sunCoin1;
-	Texture sunCoin2;
-	Texture sunCoin3;
 	//WallNut
 	Texture WallNutIdleTex;
 	//IcePeaShooter
 	Texture IcePeaShooterIdleTex;
 	Texture IcePeaShooterShootTex;
 	Texture IcePeaShooterProjectileTex;
-#pragma endregion
+	#pragma endregion
 
 	//will load all textures once
 	void LoadPlantTextures() {
-		//peashooter
+		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
 		PeaShooterShootTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-shooting-ST.png");
 		PeaShooterProjectileTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-bullet.png");
@@ -38,11 +34,7 @@ namespace khalid {
 		SunFlowerIdleTex.loadFromFile("Assets/Plants/SunFlower/sunflower-idle-ST.png");
 		SunFlowerProducingSunTex.loadFromFile("Assets/Plants/SunFlower/sunflower-producingsun_ST.png");
 		SunFlowerSunTex.loadFromFile("Assets/Sun/sun-ST.png");
-		//SunCoin
-		//sunCoin1.loadFromFile("Assets/Sun/Sun1.png");
-		//sunCoin2.loadFromFile("Assets/Sun/Sun2.png");
-		//sunCoin3.loadFromFile("Assets/Sun/Sun3.png");
-		//icepeashooter
+		//SnowPeaShooter
 		IcePeaShooterIdleTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-idle-ST2.png");
 		IcePeaShooterShootTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-shooting-ST.png");
 		IcePeaShooterProjectileTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-bullet.png");
@@ -57,14 +49,7 @@ namespace khalid {
 	{
 		//string type;
 		PlantType type;
-
-		//these are used for the other projectiles
 		Sprite shape;
-
-		//these are only used for the sun coin
-		//Sprite SunCoinShape1;
-		//Sprite SunCoinShape2;
-		//Sprite SunCoinShape3;
 
 		float damage; //<<<<<<<<---------------<<< to be used in the zombie system
 		float slowMultiplier = 1; //<<<<<<<<---------------<<< to be used in the zombie system
@@ -76,8 +61,6 @@ namespace khalid {
 		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos) {
 			clock.restart();
 			type = plantType;
-			//damage = PlantDamage;
-			//shape.setPosition(SpwanPos);
 
 			if (type == PeaShooter)
 			{
@@ -101,25 +84,7 @@ namespace khalid {
 			}
 			else if (type == SunFlower)
 			{
-				//SunCoinShape1.setTexture(sunCoin1);
-				//SunCoinShape2.setTexture(sunCoin2);
-				//SunCoinShape3.setTexture(sunCoin3);
-				//SunCoinShape1.setPosition(SpwanPos);
-				//SunCoinShape2.setPosition(SpwanPos);
-				//SunCoinShape3.setPosition(SpwanPos);
-				//SunCoinShape1.setOrigin({ SunCoinShape1.getLocalBounds().width / 2, SunCoinShape1.getLocalBounds().height / 2 });
-				//SunCoinShape2.setOrigin({ SunCoinShape2.getLocalBounds().width / 2, SunCoinShape2.getLocalBounds().height / 2 });
-				//SunCoinShape3.setOrigin({ SunCoinShape3.getLocalBounds().width / 2, SunCoinShape3.getLocalBounds().height / 2 });
-				//SunCoinShape1.setScale(3.5, 3.5);
-				//SunCoinShape2.setScale(3.5, 3.5);
-				//SunCoinShape3.setScale(3.5, 3.5);
-				//projectileLifeSpan = seconds(12);
-				//speed = 0;
-				//damage = PlantDamage;
-				//slowMultiplier = 1;
-
 				shape.setTexture(SunFlowerSunTex);
-				shape.setTextureRect(IntRect(0, 0, 26, 26));
 				shape.setPosition(SpwanPos);
 				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
 				projectileLifeSpan = seconds(17.5); //time to despawn
@@ -138,8 +103,6 @@ namespace khalid {
 			else if (type == SunFlower)
 			{
 				shape.rotate(0.5);
-				//SunCoinShape2.rotate(-0.5);
-				//SunCoinShape3.rotate(0.5);
 			}
 		}
 	};
@@ -149,6 +112,8 @@ namespace khalid {
 	struct Plants {
 		Sprite shape;
 		PlantType type;
+
+		int row, col; //<<<<<<<<---------------<<< for the grid system
 
 	private:
 		float health;
@@ -187,18 +152,6 @@ namespace khalid {
 				{
 					zombieInFront = false;
 				}
-
-				//if ((type == PeaShooter || type == SnowPeaShooter) &&
-				//	((shape.getPosition().y <= zombie.getGlobalBounds().top + zombie.getGlobalBounds().height &&
-				//		shape.getPosition().y >= zombie.getGlobalBounds().top) &&
-				//		shape.getPosition().x <= zombie.getGlobalBounds().left))
-				//{
-				//	zombieInFront = true;
-				//}
-				//else
-				//{
-				//	zombieInFront = false;
-				//}
 
 				animationHandler();
 				action();
@@ -379,7 +332,7 @@ namespace khalid {
 			{
 				health = 100;
 				damage = 20;
-				timeForAction = seconds(2); // time to shoot
+				timeForAction = seconds(1.5); // time to shoot
 
 				shape.setTexture(PeaShooterIdleTex);
 				shape.setScale(3.5, 3.5);
@@ -388,7 +341,7 @@ namespace khalid {
 			else if (type == SnowPeaShooter) {
 				health = 100;
 				damage = 20;
-				timeForAction = seconds(2); // time to shoot
+				timeForAction = seconds(1.5); // time to shoot
 
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
@@ -420,13 +373,9 @@ namespace khalid {
 	// and when the player decides to plant it will change from NULL to which ever plant they choose
 	// and if the plant dies it will be NULL as well
 
-	// this will be used for
-	// loading textures
-	// setting up the plants
-	// calling the start function of each plant
 	void StartPlants() {
-		LoadPlantTextures(); //we could remove this and call it once in the main start function
 		PlantProjectilesARR.clear();
+		//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
 
 		//testing will be removed soon
 		PlantsArray[0].type = PeaShooter;
@@ -458,11 +407,6 @@ namespace khalid {
 			}
 		}
 
-		//if (!PlantProjectilesARR.empty() && PlantProjectilesARR.front().projectileLifeSpan <= PlantProjectilesARR.front().clock.getElapsedTime())
-		//{
-		//	PlantProjectilesARR.erase(PlantProjectilesARR.begin());
-		//}
-
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
 			PlantProjectilesARR[i].update(isPaused);
@@ -478,17 +422,6 @@ namespace khalid {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
 			window.draw(PlantProjectilesARR[i].shape);
-
-			//if (PlantProjectilesARR[i].type == SunFlower)
-			//{
-			//	window.draw(PlantProjectilesARR[i].SunCoinShape3);
-			//	window.draw(PlantProjectilesARR[i].SunCoinShape2);
-			//	window.draw(PlantProjectilesARR[i].SunCoinShape1);
-			//}
-			//else
-			//{
-			//	window.draw(PlantProjectilesARR[i].shape);
-			//}
 		}
 		for (int i = 0; i < 4; i++)
 		{

@@ -56,14 +56,18 @@ Sprite NextlevelButton;
 #pragma endregion
 
 #pragma region Pause Menu
-void SetupPauseMenu()
-{
+void LoadPauseMenuTextures() {
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
     MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
     BackToTheGameButtonTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button.png");
     BackToTheGameButtonHoverTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button-Hover.png");
     PauseMenuBlank.loadFromFile("Assets/Pause Menu/Pause-Menu-Blank.png");
     OpacityTex.loadFromFile("Assets/Pause Menu/50-Percent-Opacity-Screen.png");
+}
+
+void SetupPauseMenu()
+{
+    LoadPauseMenuTextures();
 
     BackToGame.setTexture(BackToTheGameButtonTex);
     BackToGame.setPosition(537, 459);
@@ -130,20 +134,29 @@ void DrawPauseMenu(RenderWindow& window)
 #pragma endregion
 
 #pragma region Level End Menus
-
-void LevelEndSetup()
-{
-    //main
-    BackToMainMenuLevelEndTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button.png");
-    BackToMainMenuLevelEndHoverTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button-Hover.png");
-    BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
-    BackToMainMenuLevelEnd.setPosition(555, 459);
-    BackToMainMenuLevelEnd.setScale(1.75, 1.75);
-
+void LoadLevelEndTextures() {
     //lose case
     LostMenuBlankTex.loadFromFile("Assets/Lost Menu/lost-menu-blank.png");
     RetryButtonTex.loadFromFile("Assets/Lost Menu/retry-button.png");
     RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
+
+    //win case
+    WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
+    NextlevelButtonTex.loadFromFile("Assets/Win Menu/next-level-button.png");
+    NextlevelButtonHoverTex.loadFromFile("Assets/Win Menu/next-level-button-hover.png");
+
+    //main
+    BackToMainMenuLevelEndTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button.png");
+    BackToMainMenuLevelEndHoverTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button-Hover.png");
+}
+
+void LevelEndSetup()
+{
+    LoadLevelEndTextures();
+
+    BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
+    BackToMainMenuLevelEnd.setPosition(555, 459);
+    BackToMainMenuLevelEnd.setScale(1.75, 1.75);
 
     LostMenuBlank.setTexture(LostMenuBlankTex);
     LostMenuBlank.setOrigin(LostMenuBlank.getGlobalBounds().width / 2, LostMenuBlank.getGlobalBounds().height / 2);
@@ -153,13 +166,6 @@ void LevelEndSetup()
     RetryButton.setTexture(RetryButtonTex);
     RetryButton.setPosition(585, 400);
     RetryButton.setScale(1.75, 1.75);
-
-
-
-    //win case
-    WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
-    NextlevelButtonTex.loadFromFile("Assets/Win Menu/next-level-button.png");
-    NextlevelButtonHoverTex.loadFromFile("Assets/Win Menu/next-level-button-hover.png");
 
     WinMenuBlank.setTexture(WinMenuBlankTex);
     WinMenuBlank.setOrigin(WinMenuBlank.getGlobalBounds().width / 2, WinMenuBlank.getGlobalBounds().height / 2);
@@ -299,7 +305,6 @@ RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 #pragma region Level Functions
 void StartLevel1()
 {
-    khalid::PlantProjectilesARR.clear();
     khalid::StartPlants();
 
     box.setPosition({ 1000, 100 });
