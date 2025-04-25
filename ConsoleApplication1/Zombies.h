@@ -10,7 +10,6 @@ using namespace sf;
 RectangleShape collider(Vector2f());
 RectangleShape plant;
 
-
 #pragma region Texture Decalration
 //Regular
 Texture RegularWalkText;
@@ -202,5 +201,7 @@ void StartZombies() {
 void UpdateZ() {
 	zombie[0].update();
 }
+
+//make a draw function for zombies
 
 

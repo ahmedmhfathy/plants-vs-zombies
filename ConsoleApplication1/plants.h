@@ -7,7 +7,7 @@ using namespace std;
 using namespace sf;
 
 namespace khalid {
-#pragma region Declaring Texures
+	#pragma region Declaring Texures
 	//peashooter
 	Texture PeaShooterIdleTex;
 	Texture PeaShooterShootTex;
@@ -16,38 +16,30 @@ namespace khalid {
 	Texture SunFlowerIdleTex;
 	Texture SunFlowerProducingSunTex;
 	Texture SunFlowerSunTex;
-	//sun coin 2
-	Texture sunCoin1;
-	Texture sunCoin2;
-	Texture sunCoin3;
 	//WallNut
 	Texture WallNutIdleTex;
 	//IcePeaShooter
 	Texture IcePeaShooterIdleTex;
 	Texture IcePeaShooterShootTex;
 	Texture IcePeaShooterProjectileTex;
-#pragma endregion
+	#pragma endregion
 
 	//will load all textures once
 	void LoadPlantTextures() {
-		//peashooter
-		PeaShooterIdleTex.loadFromFile("Textures/Plants/PeaShooter/peashooter-idle-ST.png");
-		PeaShooterShootTex.loadFromFile("Textures/Plants/PeaShooter/peashooter-shooting-ST.png");
-		PeaShooterProjectileTex.loadFromFile("Textures/Plants/PeaShooter/peashooter-bullet.png");
+		//PeaShooter
+		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
+		PeaShooterShootTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-shooting-ST.png");
+		PeaShooterProjectileTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-bullet.png");
 		//sunflower
-		SunFlowerIdleTex.loadFromFile("Textures/Plants/SunFlower/sunflower-idle-ST.png");
-		SunFlowerProducingSunTex.loadFromFile("Textures/Plants/SunFlower/sunflower-producingsun_ST.png");
-		SunFlowerSunTex.loadFromFile("Textures/sun-ST.png");
-		//SunCoin
-		sunCoin1.loadFromFile("Textures/Sun1.png");
-		sunCoin2.loadFromFile("Textures/Sun2.png");
-		sunCoin3.loadFromFile("Textures/Sun3.png");
-		//icepeashooter
-		IcePeaShooterIdleTex.loadFromFile("Textures/Plants/IcePeaShooter/icepeashooter-idle-ST2.png");
-		IcePeaShooterShootTex.loadFromFile("Textures/Plants/IcePeaShooter/icepeashooter-shooting-ST.png");
-		IcePeaShooterProjectileTex.loadFromFile("Textures/Plants/IcePeaShooter/icepeashooter-bullet.png");
+		SunFlowerIdleTex.loadFromFile("Assets/Plants/SunFlower/sunflower-idle-ST.png");
+		SunFlowerProducingSunTex.loadFromFile("Assets/Plants/SunFlower/sunflower-producingsun_ST.png");
+		SunFlowerSunTex.loadFromFile("Assets/Sun/sun-ST.png");
+		//SnowPeaShooter
+		IcePeaShooterIdleTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-idle-ST2.png");
+		IcePeaShooterShootTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-shooting-ST.png");
+		IcePeaShooterProjectileTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-bullet.png");
 		//wallnut
-		WallNutIdleTex.loadFromFile("Textures/Plants/WallNut/wallnut-ST.png");
+		WallNutIdleTex.loadFromFile("Assets/Plants/WallNut/wallnut-ST.png");
 	}
 
 	//all types of plants
@@ -57,14 +49,7 @@ namespace khalid {
 	{
 		//string type;
 		PlantType type;
-
-		//these are used for the other projectiles
 		Sprite shape;
-
-		//these are only used for the sun coin
-		Sprite SunCoinShape1;
-		Sprite SunCoinShape2;
-		Sprite SunCoinShape3;
 
 		float damage; //<<<<<<<<---------------<<< to be used in the zombie system
 		float slowMultiplier = 1; //<<<<<<<<---------------<<< to be used in the zombie system
@@ -76,15 +61,13 @@ namespace khalid {
 		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos) {
 			clock.restart();
 			type = plantType;
-			//damage = PlantDamage;
-			//shape.setPosition(SpwanPos);
 
 			if (type == PeaShooter)
 			{
 				shape.setTexture(PeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				projectileLifeSpan = seconds(10); //time to despawn
+				//projectileLifeSpan = seconds(5); //time to despawn
 				speed = 5;
 				damage = PlantDamage;
 				slowMultiplier = 1; // wont affect anything
@@ -94,44 +77,21 @@ namespace khalid {
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				projectileLifeSpan = seconds(10); //time to despawn
+				//projectileLifeSpan = seconds(5); //time to despawn
 				speed = 5;
 				damage = PlantDamage;
 				slowMultiplier = 0.5;
 			}
 			else if (type == SunFlower)
 			{
-				SunCoinShape1.setTexture(sunCoin1);
-				SunCoinShape2.setTexture(sunCoin2);
-				SunCoinShape3.setTexture(sunCoin3);
-
-				SunCoinShape1.setPosition(SpwanPos);
-				SunCoinShape2.setPosition(SpwanPos);
-				SunCoinShape3.setPosition(SpwanPos);
-
-				SunCoinShape1.setOrigin({ SunCoinShape1.getLocalBounds().width / 2, SunCoinShape1.getLocalBounds().height / 2 });
-				SunCoinShape2.setOrigin({ SunCoinShape2.getLocalBounds().width / 2, SunCoinShape2.getLocalBounds().height / 2 });
-				SunCoinShape3.setOrigin({ SunCoinShape3.getLocalBounds().width / 2, SunCoinShape3.getLocalBounds().height / 2 });
-
-				//SunCoinShape1.setScale(3.5, 3.5);
-				//SunCoinShape2.setScale(3.5, 3.5);
-				//SunCoinShape3.setScale(3.5, 3.5);
-
-				projectileLifeSpan = seconds(12);
-
+				shape.setTexture(SunFlowerSunTex);
+				shape.setPosition(SpwanPos);
+				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
+				projectileLifeSpan = seconds(12); //time to despawn
+				shape.setScale(1.25, 1.25);
 				speed = 0;
 				damage = PlantDamage;
 				slowMultiplier = 1;
-
-				//shape.setTexture(SunFlowerSunTex);
-				//shape.setTextureRect(IntRect(0, 0, 26, 26));
-				//shape.setPosition(SpwanPos);
-				//shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
-				//projectileLifeSpan = seconds(17.5); //time to despawn
-				//shape.setScale(3.5, 3.5);
-				//speed = 0;
-				//damage = PlantDamage;
-				//slowMultiplier = 1;
 			}
 		}
 		void update(bool isPaused) {
@@ -142,9 +102,7 @@ namespace khalid {
 			}
 			else if (type == SunFlower)
 			{
-				//SunCoinShape1.rotate(1);
-				SunCoinShape2.rotate(-0.5);
-				SunCoinShape3.rotate(0.5);
+				shape.rotate(0.5);
 			}
 		}
 	};
@@ -152,9 +110,10 @@ namespace khalid {
 	vector<PlantProjectile> PlantProjectilesARR; // contains both the bullets and sun coins
 
 	struct Plants {
-		//string type;
 		Sprite shape;
 		PlantType type;
+
+		int row, col; //<<<<<<<<---------------<<< for the grid system
 
 	private:
 		float health;
@@ -182,10 +141,10 @@ namespace khalid {
 			{
 				//checks if a zombie is infront of the plant
 				//will take the array of zombies instead in the future
-				if ((type == PeaShooter || type == SnowPeaShooter) &&
-					((shape.getPosition().y <= zombie.getGlobalBounds().top + zombie.getGlobalBounds().height &&
-						shape.getPosition().y >= zombie.getGlobalBounds().top) &&
-						shape.getPosition().x <= zombie.getGlobalBounds().left))
+				if ((type == PeaShooter || type == SnowPeaShooter) 
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie.getGlobalBounds().top + zombie.getGlobalBounds().height)
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie.getGlobalBounds().top)
+					&& (shape.getGlobalBounds().left <= zombie.getGlobalBounds().left)))
 				{
 					zombieInFront = true;
 				}
@@ -202,7 +161,7 @@ namespace khalid {
 				type = EmptyPlant;
 				setupPrefab();
 
-				// and remove the plant from the garden
+				//<<<<<<<<---------------<<< and remove the plant from the garden
 			}
 		}
 
@@ -320,7 +279,7 @@ namespace khalid {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 7 , -23 }));
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12 , -24 }));
 
 					PlantProjectilesARR.push_back(bullet);
 				}
@@ -331,7 +290,7 @@ namespace khalid {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 7, -23 }));
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12, -24 }));
 
 					PlantProjectilesARR.push_back(bullet);
 				}
@@ -373,7 +332,7 @@ namespace khalid {
 			{
 				health = 100;
 				damage = 20;
-				timeForAction = seconds(2); // time to shoot
+				timeForAction = seconds(1.5); // time to shoot
 
 				shape.setTexture(PeaShooterIdleTex);
 				shape.setScale(3.5, 3.5);
@@ -382,7 +341,7 @@ namespace khalid {
 			else if (type == SnowPeaShooter) {
 				health = 100;
 				damage = 20;
-				timeForAction = seconds(2); // time to shoot
+				timeForAction = seconds(1.5); // time to shoot
 
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
@@ -414,13 +373,9 @@ namespace khalid {
 	// and when the player decides to plant it will change from NULL to which ever plant they choose
 	// and if the plant dies it will be NULL as well
 
-	// this will be used for
-	// loading textures
-	// setting up the plants
-	// calling the start function of each plant
 	void StartPlants() {
-		LoadPlantTextures(); //we could remove this and call it once in the main start function
 		PlantProjectilesARR.clear();
+		//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
 
 		//testing will be removed soon
 		PlantsArray[0].type = PeaShooter;
@@ -443,9 +398,20 @@ namespace khalid {
 	void UpdatePlants(RectangleShape zombiePH, bool isPaused) {
 
 		//deletes outdated projectiles
-		if (!PlantProjectilesARR.empty() && PlantProjectilesARR.front().projectileLifeSpan <= PlantProjectilesARR.front().clock.getElapsedTime())
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			PlantProjectilesARR.erase(PlantProjectilesARR.begin());
+			if ((PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter) && 
+				PlantProjectilesARR[i].shape.getPosition().x > 1290) //enter despawn position
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+			else if ((PlantProjectilesARR[i].type == SunFlower) &&
+					(!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
 		}
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
@@ -462,16 +428,7 @@ namespace khalid {
 	void DrawPlantsAndProjectiles(RenderWindow& window) {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			if (PlantProjectilesARR[i].type == SunFlower)
-			{
-				window.draw(PlantProjectilesARR[i].SunCoinShape3);
-				window.draw(PlantProjectilesARR[i].SunCoinShape2);
-				window.draw(PlantProjectilesARR[i].SunCoinShape1);
-			}
-			else
-			{
-				window.draw(PlantProjectilesARR[i].shape);
-			}
+			window.draw(PlantProjectilesARR[i].shape);
 		}
 		for (int i = 0; i < 4; i++)
 		{
