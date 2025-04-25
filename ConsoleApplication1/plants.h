@@ -67,7 +67,7 @@ namespace khalid {
 				shape.setTexture(PeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				projectileLifeSpan = seconds(5); //time to despawn
+				//projectileLifeSpan = seconds(5); //time to despawn
 				speed = 5;
 				damage = PlantDamage;
 				slowMultiplier = 1; // wont affect anything
@@ -77,7 +77,7 @@ namespace khalid {
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				projectileLifeSpan = seconds(5); //time to despawn
+				//projectileLifeSpan = seconds(5); //time to despawn
 				speed = 5;
 				damage = PlantDamage;
 				slowMultiplier = 0.5;
@@ -87,8 +87,8 @@ namespace khalid {
 				shape.setTexture(SunFlowerSunTex);
 				shape.setPosition(SpwanPos);
 				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
-				projectileLifeSpan = seconds(17.5); //time to despawn
-				shape.setScale(3.5, 3.5);
+				projectileLifeSpan = seconds(12); //time to despawn
+				shape.setScale(1.25, 1.25);
 				speed = 0;
 				damage = PlantDamage;
 				slowMultiplier = 1;
@@ -279,7 +279,7 @@ namespace khalid {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 7 , -23 }));
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12 , -24 }));
 
 					PlantProjectilesARR.push_back(bullet);
 				}
@@ -290,7 +290,7 @@ namespace khalid {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 7, -23 }));
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12, -24 }));
 
 					PlantProjectilesARR.push_back(bullet);
 				}
@@ -400,7 +400,14 @@ namespace khalid {
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			if (!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime())
+			if ((PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter) && 
+				PlantProjectilesARR[i].shape.getPosition().x > 1290) //enter despawn position
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+			else if ((PlantProjectilesARR[i].type == SunFlower) &&
+					(!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
