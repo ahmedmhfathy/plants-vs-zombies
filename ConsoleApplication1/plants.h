@@ -6,7 +6,7 @@
 using namespace std;
 using namespace sf;
 
-namespace khalid {
+namespace PlantsNS {
 	#pragma region Declaring Texures
 	//peashooter
 	Texture PeaShooterIdleTex;

@@ -305,7 +305,7 @@ RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 #pragma region Level Functions
 void StartLevel1()
 {
-    khalid::StartPlants();
+    PlantsNS::StartPlants();
 
     box.setPosition({ 1000, 100 });
     box.setOrigin({ 50, 50 });
@@ -313,19 +313,19 @@ void StartLevel1()
 void UpdateLevel1()
 {
     box.setPosition(MouseWorldPostion);
-    khalid::UpdatePlants(box, IsPaused);
+    PlantsNS::UpdatePlants(box, IsPaused);
 
     for (int i = 0; i < 4; i++)
     {
-        if (khalid::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
+        if (PlantsNS::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
         {
-            khalid::PlantsArray[i].takeDmg(1);
+            PlantsNS::PlantsArray[i].takeDmg(1);
         }
     }
 }
 void DrawLevel1(RenderWindow& window)
 {
-    khalid::DrawPlantsAndProjectiles(window);
+    PlantsNS::DrawPlantsAndProjectiles(window);
     window.draw(box);
 }
 
