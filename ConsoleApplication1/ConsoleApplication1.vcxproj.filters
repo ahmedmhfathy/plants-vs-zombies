@@ -38,5 +38,11 @@
     <ClInclude Include="planting system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StartAnimation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Wave System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

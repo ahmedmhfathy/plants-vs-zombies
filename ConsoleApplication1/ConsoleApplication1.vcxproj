@@ -141,7 +141,9 @@
     <ClInclude Include="Main Menu.h" />
     <ClInclude Include="planting system.h" />
     <ClInclude Include="plants.h" />
+    <ClInclude Include="StartAnimation.h" />
     <ClInclude Include="Tools.h" />
+    <ClInclude Include="Wave System.h" />
     <ClInclude Include="Zombies.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
