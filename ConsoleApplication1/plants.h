@@ -6,7 +6,15 @@
 using namespace std;
 using namespace sf;
 
-namespace khalid {
+int currentMoney;
+
+struct Grid
+{
+	RectangleShape shape;
+	bool isPlanted = false;
+}myGrid[46];
+
+namespace plantNS {
 	#pragma region Declaring Texures
 	//peashooter
 	Texture PeaShooterIdleTex;
@@ -94,7 +102,7 @@ namespace khalid {
 				slowMultiplier = 1;
 			}
 		}
-		void update(bool isPaused) {
+		void update() {
 
 			if (type == PeaShooter || type == SnowPeaShooter)
 			{
@@ -113,7 +121,7 @@ namespace khalid {
 		Sprite shape;
 		PlantType type;
 
-		int row, col; //<<<<<<<<---------------<<< for the grid system
+		int GridIndex;
 
 	private:
 		float health;
@@ -135,16 +143,17 @@ namespace khalid {
 		void start() {
 			setupPrefab();
 		}
-		void update(RectangleShape zombie, bool isPaused) //<<<<<<<<---------------<<< take the array of zombies and loop through them
+		void update(RectangleShape zombie) //<<<<<<<<---------------<<< take the array of zombies and loop through them
 		{
 			if (!isDead) // if not dead will animate and execute action
 			{
-				//checks if a zombie is infront of the plant
+				//checks if a zombie is infront of the plant and on screen
 				//will take the array of zombies instead in the future
 				if ((type == PeaShooter || type == SnowPeaShooter) 
 					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie.getGlobalBounds().top + zombie.getGlobalBounds().height)
 					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie.getGlobalBounds().top)
-					&& (shape.getGlobalBounds().left <= zombie.getGlobalBounds().left)))
+					&& (shape.getGlobalBounds().left <= zombie.getGlobalBounds().left))
+					&& (zombie.getPosition().x <= 1000))
 				{
 					zombieInFront = true;
 				}
@@ -162,6 +171,11 @@ namespace khalid {
 				setupPrefab();
 
 				//<<<<<<<<---------------<<< and remove the plant from the garden
+			}
+
+			if (type == EmptyPlant)
+			{
+				myGrid[GridIndex].isPlanted = false;
 			}
 		}
 
@@ -334,60 +348,71 @@ namespace khalid {
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
+				animationCol = rand() % 8;
+				shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 34));
 				shape.setTexture(PeaShooterIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 8;
 			}
 			else if (type == SnowPeaShooter) {
 				health = 100;
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
+				animationCol = rand() % 8;
+				shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 34));
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 8;
 			}
 			else if (type == SunFlower) {
 				health = 100;
 				damage = 0;
 				timeForAction = seconds(24); // time to spawn sun 24
 
+				animationCol = rand() % 6;
+				shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 34));
 				shape.setTexture(SunFlowerIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 6;
 			}
 			else if (type == WallNut) {
 				health = 600;
 				damage = 0;
 
+				animationRow = 0;
+				animationCol = rand() % 5;
+				shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 				shape.setTexture(WallNutIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 5;
 			}
 		}
-	}PlantsArray[4];
-
-
-	// we will have 45 plants in the game all set to null at the start of the game
-	// ###### ahmed ibrahim & marawan ###### will set the position of the 45 plants on each box of the garden
-	// and when the player decides to plant it will change from NULL to which ever plant they choose
-	// and if the plant dies it will be NULL as well
+	}PlantsArray[45];
 
 	void StartPlants() {
 		PlantProjectilesARR.clear();
 		//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
 
 		//testing will be removed soon
-		PlantsArray[0].type = PeaShooter;
-		PlantsArray[0].shape.setPosition({ 200,100 });
-		PlantsArray[1].type = SnowPeaShooter;
-		PlantsArray[1].shape.setPosition({ 200,300 });
-		PlantsArray[2].type = WallNut;
-		PlantsArray[2].shape.setPosition({ 200,500 });
-		PlantsArray[3].type = SunFlower;
-		PlantsArray[3].shape.setPosition({ 200,600 });
+		for (int i = 1; i <= 45; i++)
+		{
+			PlantsArray[i - 1].shape.setPosition(myGrid[i].shape.getPosition());
+			PlantsArray[i - 1].type = EmptyPlant;
+			PlantsArray[i - 1].GridIndex = i;
+			myGrid[i].isPlanted = false;
+		}
 
-		for (int i = 0; i < 4; i++)
+		PlantsArray[0].type = PeaShooter;
+		myGrid[1].isPlanted = true;
+		//PlantsArray[0].shape.setPosition({ 200,100 });
+		PlantsArray[1].type = SnowPeaShooter;
+		myGrid[2].isPlanted = true;
+		//PlantsArray[1].shape.setPosition({ 200,300 });
+		PlantsArray[2].type = WallNut;
+		myGrid[3].isPlanted = true;
+		//PlantsArray[2].shape.setPosition({ 200,500 });
+		PlantsArray[3].type = SunFlower;
+		myGrid[4].isPlanted = true;
+		//PlantsArray[3].shape.setPosition({ 200,600 });
+
+		for (int i = 0; i < 45; i++)
 		{
 			PlantsArray[i].start();
 		}
@@ -395,8 +420,7 @@ namespace khalid {
 
 	// this function will be used to update the plants and remove outdated projectiles 
 	// it will be called every frame
-	void UpdatePlants(RectangleShape zombiePH, bool isPaused) {
-
+	void UpdatePlants(RectangleShape zombiePH, Vector2f mousePos) {
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
@@ -416,12 +440,20 @@ namespace khalid {
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			PlantProjectilesARR[i].update(isPaused);
+			PlantProjectilesARR[i].update();
+
+			if (PlantProjectilesARR[i].type == SunFlower && PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousePos)
+				&& Mouse::isButtonPressed(Mouse::Left))
+			{
+				currentMoney += 25;
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
 		}
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 45; i++)
 		{
-			PlantsArray[i].update(zombiePH, isPaused); // will take the zombie array in the update function
+			PlantsArray[i].update(zombiePH); // will take the zombie array in the update function
 		}
 	}
 
@@ -430,10 +462,386 @@ namespace khalid {
 		{
 			window.draw(PlantProjectilesARR[i].shape);
 		}
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 45; i++)
 		{
-			window.draw(PlantsArray[i].shape);
+			if (PlantsArray[i].type != EmptyPlant)
+			{
+				window.draw(PlantsArray[i].shape);
+			}
 		}
 	}
 }
 
+namespace plantingSystem {
+
+#pragma region PlantSelection Texture Declaration
+	Texture SunContainerTex;
+	Texture ShovelContainerBlankTex;
+	Texture ShovelContainerTex;
+	Texture ShovelTex;
+
+	Texture GradientOpacityTex;
+
+	Texture PeaShooterSeedPacketTex;
+	Texture	PeaShooterSeedPacketUnavailableTex;
+
+	Texture SnowPeaShooterSeedPacketTex;
+	Texture SnowPeaShooterSeedPacketUnavailableTex;
+
+	Texture SunFlowerSeedPacketTex;
+	Texture SunFlowerSeedPacketUnavailableTex;
+
+	Texture WallNutSeedPacketTex;
+	Texture WallNutSeedPacketUnavailableTex;
+#pragma endregion
+
+#pragma region Plant Selection Sprite Declaration
+	Sprite SunContainer;
+	Sprite ShovelContainer;
+	Sprite SelectionHolograph;
+	Sprite GradientOpacity;
+
+	Sprite peaShooterSeedPacket;
+	Sprite SnowPeaShooterSeedPacket;
+	Sprite SunFlowerSeedPacket;
+	Sprite WallNutSeedPacket;
+#pragma endregion
+
+#pragma region Clocks and timers
+	Clock PeaShooterClock, SnowPeaShooterClock, SunFlowerClock, WallNutClock;
+	Time PeaShooterTime = seconds(7);
+	Time SnowPeaShooterTime = seconds(7);
+	Time SunFlowerTime = seconds(7);
+	Time WallNutTime = seconds(30);
+#pragma endregion
+
+	Font font;
+	Text moneyText;
+
+	bool isHolding = false;
+
+	void LoadPlantSelectionTextures() {
+		font.loadFromFile("Assets/HouseofTerror Regular.otf");
+
+		SunContainerTex.loadFromFile("Assets/Currency system and planting/sun-cointainer.png");
+		ShovelContainerBlankTex.loadFromFile("Assets/Currency system and planting/empty-container.png");
+		ShovelContainerTex.loadFromFile("Assets/Currency system and planting/container-with-shovel.png");
+		ShovelTex.loadFromFile("Assets/Currency system and planting/shovel.png");
+
+		GradientOpacityTex.loadFromFile("Assets/Currency system and planting/Gradient-opacity-layer.png");
+
+		PeaShooterSeedPacketTex.loadFromFile("Assets/Currency system and planting/peashooter-seedpacket-1.png");
+		PeaShooterSeedPacketUnavailableTex.loadFromFile("Assets/Currency system and planting/peashooter-seedpacket-2.png");
+
+		SnowPeaShooterSeedPacketTex.loadFromFile("Assets/Currency system and planting/snowpea-seedpacket-1.png");
+		SnowPeaShooterSeedPacketUnavailableTex.loadFromFile("Assets/Currency system and planting/snowpea-seedpacket-2.png");
+
+		SunFlowerSeedPacketTex.loadFromFile("Assets/Currency system and planting/sunflower-seedpacket-1.png");
+		SunFlowerSeedPacketUnavailableTex.loadFromFile("Assets/Currency system and planting/sunflower-seedpacket-2.png");
+
+		WallNutSeedPacketTex.loadFromFile("Assets/Currency system and planting/wallnut-seedpacket-1.png");
+		WallNutSeedPacketUnavailableTex.loadFromFile("Assets/Currency system and planting/wallnut-seedpacket-2.png");
+	}
+
+
+
+	void SetupPlantSelectionUI(Vector2f offset) {
+		GradientOpacity.setTexture(GradientOpacityTex);
+		GradientOpacity.setPosition(0 + offset.x, 0 + offset.y);
+
+		SunContainer.setTexture(SunContainerTex);
+		SunContainer.setPosition(30 + offset.x, 20 + offset.y);
+
+		moneyText.setFont(font);
+		moneyText.setCharacterSize(56);
+		moneyText.setOutlineColor(Color::Black);
+		moneyText.setOutlineThickness(3);
+		moneyText.setPosition(55 + offset.x, 117 + offset.y);
+
+		SunFlowerSeedPacket.setTexture(SunFlowerSeedPacketTex);
+		SunFlowerSeedPacket.setPosition(23 + offset.x, 183 + offset.y);
+
+		peaShooterSeedPacket.setTexture(PeaShooterSeedPacketTex);
+		peaShooterSeedPacket.setPosition(27 + offset.x, 292 + offset.y);
+
+		SnowPeaShooterSeedPacket.setTexture(SnowPeaShooterSeedPacketTex);
+		SnowPeaShooterSeedPacket.setPosition(27 + offset.x, 393 + offset.y);
+
+		WallNutSeedPacket.setTexture(WallNutSeedPacketTex);
+		WallNutSeedPacket.setPosition(27 + offset.x, 490 + offset.y);
+
+		ShovelContainer.setTexture(ShovelContainerTex);
+		ShovelContainer.setPosition(27 + offset.x, 595 + offset.y);
+	}
+
+	enum Selection { PeaShooter, SnowPeaShooter, SunFlower, WallNut, Shovel, None }currentSelection;
+
+	void startPlantingSystem(Vector2f offset) {
+		LoadPlantSelectionTextures();
+		SetupPlantSelectionUI(offset);
+
+		SunFlowerClock.restart();
+		PeaShooterClock.restart();
+		SnowPeaShooterClock.restart();
+		WallNutClock.restart();
+
+		currentMoney = 50;
+		currentSelection = SnowPeaShooter;
+
+		//setup the grid
+		for (int i = 1, r = 0, c = 0; i <= 45; i++)
+		{
+			myGrid[i].shape.setSize({ 107, 130 });
+			myGrid[i].shape.setPosition(107 * c, 130 * r);
+
+			c++;
+			if (i % 9 == 0)
+			{
+				c = 0;
+				r++;
+			}
+			if (i % 2 == 0)
+			{
+				myGrid[i].shape.setFillColor(Color(255, 255, 255, 64));
+			}
+			else
+			{
+				myGrid[i].shape.setFillColor(Color(255, 255, 255, 32));
+			}
+		}
+	}
+
+	void updatePlantingSystem(Vector2f mousePos) {
+
+		moneyText.setString(to_string(currentMoney));
+
+		#pragma region selection logic
+		if (PeaShooterClock.getElapsedTime() >= PeaShooterTime && currentMoney >= 100)
+		{
+			peaShooterSeedPacket.setTexture(PeaShooterSeedPacketTex);
+			if (peaShooterSeedPacket.getGlobalBounds().contains(mousePos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				isHolding = true;
+				currentSelection = PeaShooter;
+			}
+		}
+		else
+		{
+			peaShooterSeedPacket.setTexture(PeaShooterSeedPacketUnavailableTex);
+		}
+
+		if (SnowPeaShooterClock.getElapsedTime() >= SnowPeaShooterTime && currentMoney >= 175)
+		{
+			SnowPeaShooterSeedPacket.setTexture(SnowPeaShooterSeedPacketTex);
+			if (SnowPeaShooterSeedPacket.getGlobalBounds().contains(mousePos) && Mouse::isButtonPressed(Mouse::Left)) {
+				isHolding = true;
+				currentSelection = SnowPeaShooter;
+			}
+		}
+		else
+		{
+			SnowPeaShooterSeedPacket.setTexture(SnowPeaShooterSeedPacketUnavailableTex);
+		}
+
+		if (SunFlowerClock.getElapsedTime() >= SunFlowerTime && currentMoney >= 50)
+		{
+			SunFlowerSeedPacket.setTexture(SunFlowerSeedPacketTex);
+			if (SunFlowerSeedPacket.getGlobalBounds().contains(mousePos) && Mouse::isButtonPressed(Mouse::Left)) {
+				isHolding = true;
+				currentSelection = SunFlower;
+			}
+		}
+		else
+		{
+			SunFlowerSeedPacket.setTexture(SunFlowerSeedPacketUnavailableTex);
+		}
+
+		if (WallNutClock.getElapsedTime() >= WallNutTime && currentMoney >= 50)
+		{
+			WallNutSeedPacket.setTexture(WallNutSeedPacketTex);
+			if (WallNutSeedPacket.getGlobalBounds().contains(mousePos) && Mouse::isButtonPressed(Mouse::Left)) {
+				isHolding = true;
+				currentSelection = WallNut;
+			}
+		}
+		else
+		{
+			WallNutSeedPacket.setTexture(WallNutSeedPacketUnavailableTex);
+		}
+
+		if (ShovelContainer.getGlobalBounds().contains(mousePos) && Mouse::isButtonPressed(Mouse::Left)) {
+			isHolding = true;
+			currentSelection = Shovel;
+		}
+
+		//cancel holding when you right click
+		if (Mouse::isButtonPressed(Mouse::Right))
+		{
+			isHolding = false;
+		}
+
+		// if holding an item show the holograph of it
+		if (isHolding)
+		{
+			if (currentSelection == Shovel)
+			{
+				ShovelContainer.setTexture(ShovelContainerBlankTex);
+
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
+				SelectionHolograph.setTexture(ShovelTex);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getGlobalBounds().width / 2, SelectionHolograph.getGlobalBounds().height / 2 });
+				SelectionHolograph.setScale(1, 1);
+			}
+			else if (currentSelection == PeaShooter)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0 * 30, 0, 30, 34));
+				SelectionHolograph.setTexture(plantNS::PeaShooterIdleTex);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2, SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setScale(3.5, 3.5);
+			}
+			else if (currentSelection == SnowPeaShooter)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0 * 32, 0, 32, 34));
+				SelectionHolograph.setTexture(plantNS::IcePeaShooterIdleTex);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2, SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setScale(3.5, 3.5);
+			}
+			else if (currentSelection == SunFlower)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0 * 32, 0, 32, 34));
+				SelectionHolograph.setTexture(plantNS::SunFlowerIdleTex);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2, SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setScale(3.5, 3.5);
+			}
+			else if (currentSelection == WallNut)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0 * 28, 0 * 31, 28, 31));
+				SelectionHolograph.setTexture(plantNS::WallNutIdleTex);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2, SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setScale(3.5, 3.5);
+			}
+
+			SelectionHolograph.setPosition(mousePos);
+		}
+		else
+		{
+			ShovelContainer.setTexture(ShovelContainerTex);
+			currentSelection = None;
+		}
+		#pragma endregion
+
+		//planting logic
+		if (currentSelection != None)
+		{
+			for (int i = 1; i < 46; i++)
+			{
+				if (myGrid[i].shape.getGlobalBounds().contains(mousePos) && Mouse::isButtonPressed(Mouse::Left))
+				{
+					if (currentSelection == Shovel && isHolding)
+					{
+						cout << "Shovel " << i << endl;
+						
+						plantNS::PlantsArray[i - 1].type = plantNS::EmptyPlant;
+						plantNS::PlantsArray[i - 1].start();
+						myGrid[i].isPlanted = false;
+
+						isHolding = false;
+						currentSelection = None;
+					}
+					else if (currentSelection == PeaShooter && isHolding)
+					{
+						if (!myGrid[i].isPlanted)
+						{
+							cout << "PeaShooter " << i << endl;
+
+							plantNS::PlantsArray[i - 1].type = plantNS::PeaShooter;
+							plantNS::PlantsArray[i - 1].start();
+							myGrid[i].isPlanted = true;
+
+							currentMoney -= 100;
+							PeaShooterClock.restart();
+
+							isHolding = false;
+							currentSelection = None;
+						}
+					}
+					else if (currentSelection == SnowPeaShooter && isHolding)
+					{
+						if (!myGrid[i].isPlanted)
+						{
+							cout << "SnowPeaShooter " << i << endl;
+
+							plantNS::PlantsArray[i - 1].type = plantNS::SnowPeaShooter;
+							plantNS::PlantsArray[i - 1].start();
+							myGrid[i].isPlanted = true;
+
+							currentMoney -= 175;
+							SnowPeaShooterClock.restart();
+
+							isHolding = false;
+							currentSelection = None;
+						}
+					}
+					else if (currentSelection == SunFlower && isHolding)
+					{
+						if (!myGrid[i].isPlanted)
+						{
+							cout << "SunFlower " << i << endl;
+
+							plantNS::PlantsArray[i - 1].type = plantNS::SunFlower;
+							plantNS::PlantsArray[i - 1].start();
+							myGrid[i].isPlanted = true;
+
+							currentMoney -= 50;
+							SunFlowerClock.restart();
+
+							isHolding = false;
+							currentSelection = None;
+						}
+					}
+					else if (currentSelection == WallNut && isHolding)
+					{
+						if (!myGrid[i].isPlanted)
+						{
+							cout << "WallNut " << i << endl;
+
+							plantNS::PlantsArray[i - 1].type = plantNS::WallNut;
+							plantNS::PlantsArray[i - 1].start();
+							myGrid[i].isPlanted = true;
+
+							currentMoney -= 50;
+							WallNutClock.restart();
+
+							isHolding = false;
+							currentSelection = None;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	////draws the grid
+	//void drawPlantingSystem(RenderWindow& window) {
+	//	for (int i = 1; i <= 45; i++)
+	//	{
+	//		window.draw(myGrid[i].shape);
+	//	}
+	//}
+
+	void drawPlantSelectionUI(RenderWindow& window) {
+		window.draw(GradientOpacity);
+		window.draw(SunContainer);
+		window.draw(moneyText);
+		window.draw(peaShooterSeedPacket);
+		window.draw(SnowPeaShooterSeedPacket);
+		window.draw(SunFlowerSeedPacket);
+		window.draw(WallNutSeedPacket);
+		window.draw(ShovelContainer);
+
+		if (isHolding)
+		{
+			window.draw(SelectionHolograph);
+		}
+	}
+}

@@ -10,7 +10,7 @@
 using namespace std;
 using namespace sf;
 
-RenderWindow window(VideoMode(1280, 720), "Plant vs zombie");
+RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies");
 
 #pragma region Function Declaration
 void Start();
@@ -25,7 +25,7 @@ int main()
     Clock clock;
     while (window.isOpen()) // game loop
     {
-#pragma region MISC
+        #pragma region MISC
         deltaTime = clock.restart().asSeconds();
         Event event;
         while (window.pollEvent(event))
@@ -33,7 +33,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-#pragma endregion
+        #pragma endregion
 
         Update();
         RenderScreen();
@@ -43,7 +43,7 @@ int main()
 
 void Start()
 {
-    khalid::LoadPlantTextures(); //textures loaded here once
+    plantNS::LoadPlantTextures(); //textures loaded here once
 
     CurrentState = MainMenu;
 
@@ -70,7 +70,7 @@ void Update()
     {
         if (CurrentState == Level1 && !IsPaused)
         {
-            UpdateLevel1();
+            UpdateLevel1(window);
         }
         else if (CurrentState == Level2 && !IsPaused)
         {

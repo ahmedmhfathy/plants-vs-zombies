@@ -6,6 +6,7 @@
 #include <string>
 #include <cmath>
 #include "plants.h"
+//#include "planting system.h"
 
 using namespace std;
 using namespace sf;
@@ -13,12 +14,16 @@ using namespace sf;
 enum State { MainMenu, Level1, Level2, Level3 } CurrentState;
 void SwitchState(State NewState);
 
+Vector2f offeset = { -300, -50 };
+
 bool LevelIsOver = false;
 bool WinLevel = false;
 bool IsPaused = false;
 
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
+
+View GameCamera(FloatRect(0,0,1280,720));
 
 #pragma region Pause Menu Textures and Sprites
 Texture MainMenuButtonTex;
@@ -70,18 +75,19 @@ void SetupPauseMenu()
     LoadPauseMenuTextures();
 
     BackToGame.setTexture(BackToTheGameButtonTex);
-    BackToGame.setPosition(537, 459);
+    BackToGame.setPosition(537 + offeset.x, 459 + offeset.y);
     BackToGame.setScale(1.75, 1.75);
 
     BackToMainMenu.setTexture(MainMenuButtonTex);
-    BackToMainMenu.setPosition(555, 400);
+    BackToMainMenu.setPosition(555 +offeset.x, 400 + offeset.y);
     BackToMainMenu.setScale(1.75, 1.75);
 
     BlankPauseMenu.setTexture(PauseMenuBlank);
     BlankPauseMenu.setOrigin(BlankPauseMenu.getGlobalBounds().width / 2, BlankPauseMenu.getGlobalBounds().height / 2);
     BlankPauseMenu.setScale(1.75, 1.75);
-    BlankPauseMenu.setPosition(640, 360);
+    BlankPauseMenu.setPosition(640 + offeset.x, 360 +offeset.y);
     Opacity.setTexture(OpacityTex);
+    Opacity.setPosition(offeset);
 }
 
 void PauseMenuUpdate()
@@ -155,25 +161,25 @@ void LevelEndSetup()
     LoadLevelEndTextures();
 
     BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
-    BackToMainMenuLevelEnd.setPosition(555, 459);
+    BackToMainMenuLevelEnd.setPosition(555 + offeset.x, 459 + offeset.y);
     BackToMainMenuLevelEnd.setScale(1.75, 1.75);
 
     LostMenuBlank.setTexture(LostMenuBlankTex);
     LostMenuBlank.setOrigin(LostMenuBlank.getGlobalBounds().width / 2, LostMenuBlank.getGlobalBounds().height / 2);
     LostMenuBlank.setScale(1.75, 1.75);
-    LostMenuBlank.setPosition(640, 360);
+    LostMenuBlank.setPosition(640 + offeset.x, 360 + offeset.y);
 
     RetryButton.setTexture(RetryButtonTex);
-    RetryButton.setPosition(585, 400);
+    RetryButton.setPosition(585 + offeset.x, 400 + offeset.y);
     RetryButton.setScale(1.75, 1.75);
 
     WinMenuBlank.setTexture(WinMenuBlankTex);
     WinMenuBlank.setOrigin(WinMenuBlank.getGlobalBounds().width / 2, WinMenuBlank.getGlobalBounds().height / 2);
     WinMenuBlank.setScale(1.75, 1.75);
-    WinMenuBlank.setPosition(640, 360);
+    WinMenuBlank.setPosition(640 + offeset.x, 360 + offeset.y);
 
     NextlevelButton.setTexture(NextlevelButtonTex);
-    NextlevelButton.setPosition(555, 400);
+    NextlevelButton.setPosition(555 + offeset.x, 400 + offeset.y);
     NextlevelButton.setScale(1.75, 1.75);
 };
 
@@ -301,32 +307,52 @@ void DrawLevelEnd(RenderWindow& window)
 
 RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 
+Texture gardenTex;
+Sprite garden;
+
 //handle the code of each level
 #pragma region Level Functions
 void StartLevel1()
 {
-    khalid::StartPlants();
+	gardenTex.loadFromFile("Assets/Environment/Game-Environment.png");
 
+	garden.setTexture(gardenTex);
+	garden.setPosition(-325, -265);
+	garden.setScale(0.65, 0.65);
+
+    GameCamera.setCenter({ 640, 360 });
+    GameCamera.move(-300, -50);
+
+    plantingSystem::startPlantingSystem(offeset);
+    plantNS::StartPlants();
+    
+    //GameCamera.zoom(2);
     box.setPosition({ 1000, 100 });
     box.setOrigin({ 50, 50 });
 }
-void UpdateLevel1()
+void UpdateLevel1(RenderWindow& window)
 {
-    box.setPosition(MouseWorldPostion);
-    khalid::UpdatePlants(box, IsPaused);
+	window.setView(GameCamera);
 
-    for (int i = 0; i < 4; i++)
-    {
-        if (khalid::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
-        {
-            khalid::PlantsArray[i].takeDmg(1);
-        }
-    }
+    box.setPosition(MouseWorldPostion);
+    plantNS::UpdatePlants(box, MouseWorldPostion);
+	plantingSystem::updatePlantingSystem(MouseWorldPostion);
+
+    //for (int i = 0; i < 45; i++)
+    //{
+    //    if (plantNS::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
+    //    {
+    //        plantNS::PlantsArray[i].takeDmg(1);
+    //    }
+    //}
 }
 void DrawLevel1(RenderWindow& window)
 {
-    khalid::DrawPlantsAndProjectiles(window);
-    window.draw(box);
+    window.draw(garden);
+	//plantingSystem::drawPlantingSystem(window);
+    plantNS::DrawPlantsAndProjectiles(window);
+    //window.draw(box);
+	plantingSystem::drawPlantSelectionUI(window);
 }
 
 void StartLevel2()
