@@ -44,5 +44,8 @@
     <ClInclude Include="Wave System.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Plants_Zombies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

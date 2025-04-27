@@ -5,10 +5,12 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include "Plants_Zombies.h"
 #include "plants.h"
 
 using namespace std;
 using namespace sf;
+float deltaTime;
 
 enum State { MainMenu, Level1, Level2, Level3 } CurrentState;
 void SwitchState(State NewState);
@@ -299,34 +301,27 @@ void DrawLevelEnd(RenderWindow& window)
 
 #pragma endregion
 
-RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
+//RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 
 //handle the code of each level
 #pragma region Level Functions
 void StartLevel1()
 {
-    PlantsNS::StartPlants();
-
-    box.setPosition({ 1000, 100 });
-    box.setOrigin({ 50, 50 });
+    Plants_Zombies::StartPlants();
+    Plants_Zombies::StartZombies();
+   
 }
 void UpdateLevel1()
 {
-    box.setPosition(MouseWorldPostion);
-    PlantsNS::UpdatePlants(box, IsPaused);
-
-    for (int i = 0; i < 4; i++)
-    {
-        if (PlantsNS::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
-        {
-            PlantsNS::PlantsArray[i].takeDmg(1);
-        }
-    }
+    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, IsPaused);
+    Plants_Zombies::UpdateZombies(deltaTime);
+    
+   
 }
 void DrawLevel1(RenderWindow& window)
 {
-    PlantsNS::DrawPlantsAndProjectiles(window);
-    window.draw(box);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
+    Plants_Zombies::DrawZombies(window);
 }
 
 void StartLevel2()

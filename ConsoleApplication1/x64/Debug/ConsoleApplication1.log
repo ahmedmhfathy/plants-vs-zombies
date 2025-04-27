@@ -1,21 +1,45 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (ConsoleApplication1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Main.cpp
-C:\Users\khali\repositries\ConsoleApplication1\plants.h(131,48): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(141,48): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\plants.h(314,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(295,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Tools.h(48,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(481,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Tools.h(53,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(488,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Main Menu.h(75,24): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(532,57): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Main Menu.h(83,23): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(540,58): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-  ConsoleApplication1.vcxproj -> C:\Users\khali\repositries\x64\Debug\SFML Template.exe
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(562,47): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(649,12): warning C4553: '==': result of expression not used; did you intend '='?
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\plants.h(131,48): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\plants.h(314,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Tools.h(48,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Tools.h(53,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Main Menu.h(75,24): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Main Menu.h(83,23): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+  ConsoleApplication1.vcxproj -> C:\Users\Ahmed\Documents\PROJECT_UNI\SP\x64\Debug\SFML Template.exe

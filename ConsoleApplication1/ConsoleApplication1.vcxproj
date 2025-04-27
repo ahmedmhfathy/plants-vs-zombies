@@ -141,6 +141,7 @@
     <ClInclude Include="Main Menu.h" />
     <ClInclude Include="planting system.h" />
     <ClInclude Include="plants.h" />
+    <ClInclude Include="Plants_Zombies.h" />
     <ClInclude Include="StartAnimation.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="Wave System.h" />

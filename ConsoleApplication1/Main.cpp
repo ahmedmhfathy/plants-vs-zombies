@@ -6,7 +6,8 @@
 #include <string>
 #include "Main Menu.h"
 #include "Game Manager.h"
-#include "plants.h"
+#include "Plants_Zombies.h"
+
 using namespace std;
 using namespace sf;
 
@@ -18,7 +19,7 @@ void Update();
 void RenderScreen();
 #pragma endregion
 
-float deltaTime;
+
 int main()
 {
     Start();
@@ -43,7 +44,7 @@ int main()
 
 void Start()
 {
-    PlantsNS::LoadPlantTextures(); //textures loaded here once
+    Plants_Zombies::LoadPlantTextures(); //textures loaded here once
 
     CurrentState = MainMenu;
 
