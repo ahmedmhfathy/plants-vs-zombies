@@ -121,7 +121,6 @@ namespace StartAnimationNS {
             {
                 if (checkstart_wave2) 
                 {
-                    cout << "Omar";
                     startallwave(1, 10, 3.0f);
                     checkstart_wave2 = false;
                     scaleFactor = 6.0f;
@@ -151,26 +150,14 @@ namespace StartAnimationNS {
     }
 
     void loadphoto() {
-        //gardenTex.loadFromFile("Assets/Environment/Game-Environment.png");
-
-        //garden.setTexture(gardenTex);
-        //garden.setPosition(-325, -265);
-        //garden.setScale(0.65, 0.65);
-
 
         // =======================**load photo garden**===================================
-        //gardentexture.loadFromFile("Assets/Environment/garden - Plants vs Zombies - Day.png");
-        //gardensprite.setTexture(gardentexture);
-        //gardensprite.setScale(1.2, 1.2);
-        //gardensprite.setPosition(-300, -80);
-        //gardensprite.move(300, 120);
+        gardentexture.loadFromFile("Assets/Environment/garden - Plants vs Zombies - Day.png");
+        gardensprite.setTexture(gardentexture);
+        gardensprite.setScale(1.2, 1.2);
+        gardensprite.setPosition(-300, -80);
+        gardensprite.move(300, 120);
         
-        gardentexture.loadFromFile("Assets/Environment/Game-Environment.png");
-		gardensprite.setTexture(gardentexture);
-		gardensprite.setPosition(-325, -265);
-		gardensprite.setScale(0.65, 0.65);
-
-
         // =========================**load photo READY SET PLANT!**======================================
         //*********************(READY)******************
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");

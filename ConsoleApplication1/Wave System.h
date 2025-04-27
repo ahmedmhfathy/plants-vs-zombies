@@ -82,6 +82,7 @@ struct cars
         lawnsprite.setTexture(lawntexture);
         lawnsprite.setScale(0.8, 0.8);
         lawnsprite.setPosition(220, 173 + (i * 120));
+        intersection = false;
     }
     void update(float dt) 
     {
@@ -91,6 +92,7 @@ struct cars
         }
     }
 }car[5];
+
 struct zombies {
     int row[5] = { 150, 280, 400,520,640 };
     Sprite rectanglesprite;
@@ -104,9 +106,9 @@ struct zombies {
     }
     void update(float dt) {
         rectanglesprite.move(-speedzombie * dt, 0);
-
     }
 }zombie[300];
+
 struct waves {
     float delaybetween;
     int numberzombie;
@@ -162,20 +164,17 @@ void drawzombies(RenderWindow& window) {
         Textstartfinalwavesprite.setScale(scaleFactor, scaleFactor);
         window.draw(Textstartfinalwavesprite);
     }
-     //for (int i = 0; i < 150; i++) {
-     //       if (zombie[i].rectanglesprite.getPosition().x < 265 && zombie[i].started) {
-     //           if (scalefactortextlosegame > minscaletextlosegame) {
-     //               scalefactortextlosegame -= deltatimelosegame.asSeconds() * 0.5f; // ??????? ????????
-     //           }
-     //           Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
-     //           window.draw(Textlosegamesprite);
-     //           wave[0].checkexit_wave = false;
-     //           wave[1].checkexit_wave = false;
-
-     //       }
-
-     //}
-
+     for (int i = 0; i < 150; i++) {
+            if (zombie[i].rectanglesprite.getPosition().x < 265 && zombie[i].started) {
+                if (scalefactortextlosegame > minscaletextlosegame) {
+                    scalefactortextlosegame -= deltatimelosegame.asSeconds() * 0.5f; // ??????? ????????
+                }
+                Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
+                window.draw(Textlosegamesprite);
+                wave[0].checkexit_wave = false;
+                wave[1].checkexit_wave = false;
+            }
+     }
 }
 
 void intersectioncarsandzombies(int numberwave, RenderWindow& window) {

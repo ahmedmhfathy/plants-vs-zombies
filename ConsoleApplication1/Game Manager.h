@@ -331,7 +331,10 @@ void UpdateLevel1(RenderWindow&window)
 void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
-	drawzombies(window);
+    if (!IsPaused)
+    {
+        drawzombies(window);
+    }
     PlantsNS::DrawPlantsAndProjectiles(window);
     window.draw(box);
 }
