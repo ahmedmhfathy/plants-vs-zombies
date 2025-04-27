@@ -1,21 +1,66 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (ConsoleApplication1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Main.cpp
-C:\Users\khali\repositries\ConsoleApplication1\plants.h(131,48): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Tools.h(48,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\plants.h(314,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Tools.h(53,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Tools.h(48,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(81,34): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Tools.h(53,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(81,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Main Menu.h(75,24): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(82,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Main Menu.h(83,23): warning C4305: 'argument': truncation from 'double' to 'float'
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(100,39): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-  ConsoleApplication1.vcxproj -> C:\Users\khali\repositries\x64\Debug\SFML Template.exe
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(100,34): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(101,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(200,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(125,36): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(125,31): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(133,39): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(133,34): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(138,37): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(138,32): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(143,39): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(143,34): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\plants.h(131,48): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\plants.h(314,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Main Menu.h(75,24): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\ConsoleApplication1\Main Menu.h(83,23): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+  ConsoleApplication1.vcxproj -> D:\Games\PlantVsZombie REPO\moody141007\plants-vs-zombies\x64\Debug\SFML Template.exe

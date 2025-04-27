@@ -5,6 +5,8 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include "StartAnimation.h"
+#include "Wave System.h"
 #include "plants.h"
 
 using namespace std;
@@ -305,15 +307,18 @@ RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 #pragma region Level Functions
 void StartLevel1()
 {
-    PlantsNS::StartPlants();
+    //StartAnimationNS::GardenCamera.zoom(3);
+    StartAnimationNS::startAnimation();
+    //PlantsNS::StartPlants();
 
     box.setPosition({ 1000, 100 });
     box.setOrigin({ 50, 50 });
 }
-void UpdateLevel1()
+void UpdateLevel1(RenderWindow&window)
 {
+    StartAnimationNS::updateAnimation(window);
     box.setPosition(MouseWorldPostion);
-    PlantsNS::UpdatePlants(box, IsPaused);
+    //PlantsNS::UpdatePlants(box, IsPaused);
 
     for (int i = 0; i < 4; i++)
     {
@@ -325,7 +330,8 @@ void UpdateLevel1()
 }
 void DrawLevel1(RenderWindow& window)
 {
-    PlantsNS::DrawPlantsAndProjectiles(window);
+    StartAnimationNS::Renderstartanimation(window);
+    //PlantsNS::DrawPlantsAndProjectiles(window);
     window.draw(box);
 }
 

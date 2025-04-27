@@ -11,6 +11,7 @@
 #include <sstream>
 #include<time.h>
 #include"StartAnimation.h"
+
 #pragma region (Texture,sprite)_declaration
 Texture lawntexture;
 Texture rectangletexture;
@@ -21,6 +22,7 @@ Sprite Textstartfinalwavesprite;
 Texture Textlosegametexture;
 Sprite Textlosegamesprite;
 #pragma endregion
+
 #pragma region boolean
 // =====================***boolean waves**=================================
 bool nowave = true;
@@ -28,6 +30,7 @@ bool checkstart_wave2 = true;
 bool checkstart_wave3 = true;
 bool endRSP = false;
 #pragma endregion
+
 #pragma region hours and timer
 //================================================================================
 Time deltatime; // use in move cars
@@ -48,6 +51,7 @@ Clock clocklosegame;                      //clock for lose game.....
 // deltatime for animation 3 texts(start wave2, start final wave, lose game)......
 Time deltatimetextstartwave2, deltatimetextfinalwave, deltatimelosegame;
 #pragma endregion
+
 #pragma region Scale 
 float minscale = 1.7f;               // Min Scale For Text Start Wave Two And Text Final Wave
 float scaleFactor = 6.0f;           // First scale For  Text Start Wave Two And Text Final Wave
@@ -65,18 +69,22 @@ void intersectioncarsandzombies(int, RenderWindow&);
 void drawzombies(RenderWindow&, string);
 void startallwave(int, int, float);
 #pragma endregion
-struct cars {
+struct cars
+{
     bool intersection = false;
     float speed = 150;
     Sprite lawnsprite;
-    void start(int i) {
-        lawntexture.loadFromFile("photo/lawnmower.png");
+    void start(int i)
+    {
+        lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
         lawnsprite.setTexture(lawntexture);
         lawnsprite.setScale(0.8, 0.8);
         lawnsprite.setPosition(220, 173 + (i * 120));
     }
-    void update(float dt) {
-        if (lawnsprite.getPosition().x < 230) {
+    void update(float dt) 
+    {
+        if (lawnsprite.getPosition().x < 230)
+        {
             lawnsprite.move(speed * dt, 0);
         }
     }
@@ -87,7 +95,7 @@ struct zombies {
     bool started;
     bool stoped;
     void start(int x) {
-        rectangletexture.loadFromFile("photo/rectangle.png");
+        rectangletexture.loadFromFile("Assets/Environment/rectangle.png");
         rectanglesprite.setTexture(rectangletexture);
         rectanglesprite.setScale(0.2, 0.1);
         rectanglesprite.setPosition(1300, row[rand() % 5]);

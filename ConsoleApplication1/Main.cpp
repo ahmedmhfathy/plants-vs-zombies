@@ -18,7 +18,7 @@ void Update();
 void RenderScreen();
 #pragma endregion
 
-float deltaTime;
+float DeltaTime;
 int main()
 {
     Start();
@@ -26,7 +26,7 @@ int main()
     while (window.isOpen()) // game loop
     {
 #pragma region MISC
-        deltaTime = clock.restart().asSeconds();
+        DeltaTime = clock.restart().asSeconds();
         Event event;
         while (window.pollEvent(event))
         {
@@ -43,7 +43,7 @@ int main()
 
 void Start()
 {
-    PlantsNS::LoadPlantTextures(); //textures loaded here once
+    //PlantsNS::LoadPlantTextures(); //textures loaded here once
 
     CurrentState = MainMenu;
 
@@ -55,6 +55,7 @@ void Start()
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
 }
+
 void Update()
 {
     //gets mouse world position from screen position
@@ -70,7 +71,7 @@ void Update()
     {
         if (CurrentState == Level1 && !IsPaused)
         {
-            UpdateLevel1();
+            UpdateLevel1(window);
         }
         else if (CurrentState == Level2 && !IsPaused)
         {
@@ -85,7 +86,6 @@ void Update()
         LevelEndUpdate();
     }
 }
-
 // this function will be used to render the screen
 void RenderScreen()
 {
