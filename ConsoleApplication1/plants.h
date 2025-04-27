@@ -379,13 +379,13 @@ namespace PlantsNS {
 
 		//testing will be removed soon
 		PlantsArray[0].type = PeaShooter;
-		PlantsArray[0].shape.setPosition({ 200,100 });
+		PlantsArray[0].shape.setPosition({ 400,100 });
 		PlantsArray[1].type = SnowPeaShooter;
-		PlantsArray[1].shape.setPosition({ 200,300 });
+		PlantsArray[1].shape.setPosition({ 400,300 });
 		PlantsArray[2].type = WallNut;
-		PlantsArray[2].shape.setPosition({ 200,500 });
+		PlantsArray[2].shape.setPosition({ 400,500 });
 		PlantsArray[3].type = SunFlower;
-		PlantsArray[3].shape.setPosition({ 200,600 });
+		PlantsArray[3].shape.setPosition({ 400,600 });
 
 		for (int i = 0; i < 4; i++)
 		{

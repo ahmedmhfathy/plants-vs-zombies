@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iomanip>
 #include"Wave System.h"
+#include"Game Manager.h"
 
 using namespace std;
 using namespace sf;
@@ -47,7 +48,6 @@ namespace StartAnimationNS {
 #pragma endregion
 
 #pragma region Hours
-    // hours
     Clock animcameraClock; // Clock use in animation to camera
     Clock clockRSP;
 #pragma endregion
@@ -56,6 +56,32 @@ namespace StartAnimationNS {
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void startAnimation() {
+        #pragma region restart clocks and booleans
+        animcameraClock.restart();
+        clockRSP.restart();
+        clockwave2.restart();
+        clockfinalwave.restart();
+        globalClock.restart();
+        frameClock.restart();
+        clockdrawtextwave2.restart();
+        clockdrawtextfinalwave.restart();
+        clocklosegame.restart();
+        clockmovecars.restart();
+
+        startdrawRSP = true;
+        EntertostartdrawRSP = false;
+        // variable check Camera move Right And Left
+        moveright = false;
+        moveleft = false;
+        startAnimcamera = false;
+        movefromwavetoanother = true;
+
+        nowave = true;
+        checkstart_wave2 = true;
+        checkstart_wave3 = true;
+        endRSP = false;
+        #pragma endregion
+
         for (int i = 0; i < 5; i++) {
             car[i].start(i);
         }
@@ -69,13 +95,16 @@ namespace StartAnimationNS {
         deltatimetextfinalwave = clockdrawtextfinalwave.restart();
         deltatimelosegame = clocklosegame.restart();
         movecamera(window);
+
         if (moveleft) 
         {
             movecars(); // When Move Camera is end .... Start move car
         }
+
         // This Restart for the first wave..............
         deltaTime = frameClock.restart().asSeconds();
         timeSinceStart = globalClock.getElapsedTime().asSeconds();
+
         if (nowave && endRSP) { allwave(0); }
         if (wave[0].checkexit_wave) 
         {
@@ -90,7 +119,8 @@ namespace StartAnimationNS {
             {
                 if (checkstart_wave2) 
                 {
-                    startallwave(1, 7, 3.0f);
+                    cout << "Omar";
+                    startallwave(1, 10, 3.0f);
                     checkstart_wave2 = false;
                     scaleFactor = 6.0f;
                 }
@@ -110,7 +140,7 @@ namespace StartAnimationNS {
             {
                 if (checkstart_wave3) 
                 {
-                    startallwave(2, 8, 3.0f);
+                    startallwave(2, 15, 3.0f);
                     checkstart_wave3 = false;
                 }
                 allwave(2);
@@ -163,6 +193,7 @@ namespace StartAnimationNS {
 
     void movecamera(RenderWindow& window) {
         // Start Move Camera From Left To Right..... Then From Right To Left.....
+
         window.setView(GardenCamera);
         if (!moveright) {
             if (GardenCamera.getCenter().x <= 1040) {
@@ -217,7 +248,6 @@ namespace StartAnimationNS {
         {
             endRSP = true;
         }
-
     }
 
     void movecars() {
@@ -227,7 +257,7 @@ namespace StartAnimationNS {
         for (int i = 0; i < 5; i++) 
         {
             car[i].update(dt);
-            if (car[i].lawnsprite.getPosition().x > 320) 
+            if (car[i].lawnsprite.getPosition().x > 225) 
             {
                 stoppedCars++;
             }

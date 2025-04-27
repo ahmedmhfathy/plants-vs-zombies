@@ -43,7 +43,7 @@ int main()
 
 void Start()
 {
-    //PlantsNS::LoadPlantTextures(); //textures loaded here once
+    PlantsNS::LoadPlantTextures(); //textures loaded here once
 
     CurrentState = MainMenu;
 

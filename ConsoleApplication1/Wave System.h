@@ -63,12 +63,14 @@ FloatRect rect1;
 FloatRect rect2;
 // speed zombies
 const float speedzombie = 40.0f;
+
 #pragma region Functiondelaration
 void allwave(int);
 void intersectioncarsandzombies(int, RenderWindow&);
 void drawzombies(RenderWindow&, string);
 void startallwave(int, int, float);
 #pragma endregion
+
 struct cars
 {
     bool intersection = false;
@@ -110,6 +112,7 @@ struct waves {
     int numberzombie;
     bool checkexit_wave=false;
 }wave[3];
+
 void drawzombies(RenderWindow& window) {
     if (nowave) {
         for (int i = 0; i < wave[0].numberzombie; i++) {
@@ -159,21 +162,22 @@ void drawzombies(RenderWindow& window) {
         Textstartfinalwavesprite.setScale(scaleFactor, scaleFactor);
         window.draw(Textstartfinalwavesprite);
     }
- for (int i = 0; i < 150; i++) {
-        if (zombie[i].rectanglesprite.getPosition().x < 265 && zombie[i].started) {
-            if (scalefactortextlosegame > minscaletextlosegame) {
-                scalefactortextlosegame -= deltatimelosegame.asSeconds() * 0.5f; // ??????? ????????
-            }
-            Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
-            window.draw(Textlosegamesprite);
-            wave[0].checkexit_wave = false;
-            wave[1].checkexit_wave = false;
+     //for (int i = 0; i < 150; i++) {
+     //       if (zombie[i].rectanglesprite.getPosition().x < 265 && zombie[i].started) {
+     //           if (scalefactortextlosegame > minscaletextlosegame) {
+     //               scalefactortextlosegame -= deltatimelosegame.asSeconds() * 0.5f; // ??????? ????????
+     //           }
+     //           Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
+     //           window.draw(Textlosegamesprite);
+     //           wave[0].checkexit_wave = false;
+     //           wave[1].checkexit_wave = false;
 
-        }
+     //       }
 
-    }
+     //}
 
 }
+
 void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
      deltatime = clockmovecars.restart();
     float dt = deltatime.asSeconds();
@@ -196,6 +200,7 @@ void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
         }
     }
 }
+
 void startallwave(int numberwave, int numberzombie, float delaybetween) {
     srand(time(0));
     float deltaTime;
@@ -221,12 +226,12 @@ void allwave(int numberwave) {
             zombie[i].started = true;
         }
     }
-        for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
-            if (zombie[i].rectanglesprite.getPosition().x < 260) {
-                zombie[i].stoped = true;
-            }
+    for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
+        if (zombie[i].rectanglesprite.getPosition().x < 260) {
+            zombie[i].stoped = true;
         }
-      for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
+    }
+    for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
         if (zombie[i].stoped != true) {
             wave[numberwave].checkexit_wave = false;
             break;
