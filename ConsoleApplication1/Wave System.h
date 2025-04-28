@@ -10,10 +10,6 @@
 
 namespace Waves{
 
-struct Wave {
-	int numberOfZombies;
-	Time DelayBetweenWaves;
-};
 
 Texture zombTex;
 struct zombies {
@@ -38,6 +34,10 @@ struct zombies {
 		}
 	}
 }AllZombies[100];
+struct Wave {
+	int numberOfZombies;
+	Time DelayBetweenWaves;
+};
 
 Clock waveClock;
 
@@ -60,6 +60,10 @@ void UpdateWaves(Wave wavesData[], int numberOfWaves) {
 	{
 
 	}
+}
+
+void SpawnZombie() {
+
 }
 
 void DrawWavesAndZombies(Wave wavesData[], int numberOfWaves, RenderWindow& window) {

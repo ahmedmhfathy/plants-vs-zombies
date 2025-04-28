@@ -166,7 +166,7 @@ void updateEnvironment(RenderWindow& window) {
 			ReadySetPlant.setOrigin(ReadySetPlant.getGlobalBounds().width / 2, ReadySetPlant.getGlobalBounds().height / 2);
 			ReadySetPlant.setPosition(340, 310);
 		}
-		else if (animationClock.getElapsedTime() <= seconds(4.5)) {
+		else if (animationClock.getElapsedTime() >= seconds(3.25)) {
 			FinishedAllAimations = true;
 		}
 	}
