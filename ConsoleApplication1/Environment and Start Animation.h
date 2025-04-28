@@ -177,7 +177,6 @@ void updateEnvironment(RenderWindow& window) {
 	}
 }
 
-
 // draws the garden, lawnmowers and ready set plant text and the whole animation
 void drawEnvironment(RenderWindow& window) {
 	window.draw(Garden);

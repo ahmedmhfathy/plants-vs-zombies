@@ -51,7 +51,7 @@ void Start()
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    MainMenuStart(window); //textures loaded here once
+    MainMenuStart(window);
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
