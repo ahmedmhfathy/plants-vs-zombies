@@ -1,5 +1,38 @@
+# Visual Studio
 .vs/
-*.o
-*.exe
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+x64/
 Debug/
 Release/
+*.exe
+*.dll
+*.obj
+*.pdb
+*.ipch
+*.log
+*.tlog
+*.lastbuildstate
+
+# SFML (if you have custom build output)
+bin/
+build/
+lib/
+
+# CMake (if you are using it with SFML)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Others
+*.db
+*.opensdf
+*.sdf
+*.cache
+*.VC.db
