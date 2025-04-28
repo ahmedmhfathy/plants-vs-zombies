@@ -535,8 +535,6 @@ namespace plantingSystem {
 		WallNutSeedPacketUnavailableTex.loadFromFile("Assets/Currency system and planting/wallnut-seedpacket-2.png");
 	}
 
-
-
 	void SetupPlantSelectionUI(Vector2f offset) {
 		GradientOpacity.setTexture(GradientOpacityTex);
 		GradientOpacity.setPosition(0 + offset.x, 0 + offset.y);
@@ -569,7 +567,6 @@ namespace plantingSystem {
 	enum Selection { PeaShooter, SnowPeaShooter, SunFlower, WallNut, Shovel, None }currentSelection;
 
 	void startPlantingSystem(Vector2f offset) {
-		LoadPlantSelectionTextures();
 		SetupPlantSelectionUI(offset);
 
 		SunFlowerClock.restart();
@@ -592,6 +589,7 @@ namespace plantingSystem {
 				c = 0;
 				r++;
 			}
+
 			if (i % 2 == 0)
 			{
 				myGrid[i].shape.setFillColor(Color(255, 255, 255, 64));

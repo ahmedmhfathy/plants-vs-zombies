@@ -7,16 +7,28 @@
 #include <cmath>
 #include "Tools.h"
 
+namespace Waves{
+
 struct Wave {
 	int numberOfZombies;
-	int NumberOfWaves;
 	Time DelayBetweenWaves;
 };
 
-void startWaves(Wave wavesData[]) {
+Clock waveClock;
 
+void startWaves(Wave wavesData[], int numberOfWaves) {
+	for (int i = 0; i < numberOfWaves; i++)
+	{
+
+	}
 }
 
 void UpdateWaves() {
+	Time StartDelay = seconds(5);
+	if (waveClock.getElapsedTime()>= StartDelay)
+	{
+
+	}
+}
 
 }

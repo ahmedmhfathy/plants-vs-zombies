@@ -30,7 +30,6 @@ Sprite ReadySetPlant;
 bool startAnimation = false;
 bool finishedRight = false;
 bool finishedLeft = false;
-bool startRSP = false;
 bool FinishedAllAimations = false;
 
 Clock animationClock;
@@ -49,7 +48,7 @@ struct lawnMowers
 	void update(bool hit) {
 		if (hit)
 		{
-			if (shape.getPosition().x < 1100)
+			if (shape.getPosition().x < 1000)
 			{
 				shape.move(speed, 0);
 			}
@@ -73,14 +72,14 @@ void startEnvironment() {
 	GameCamera.setCenter({ 640, 360 });
 	GameCamera.move(-300, -50);
 
+	#pragma region set all start states
 	animationClock.restart();
 
 	startAnimation = false;
 	finishedRight = false;
 	finishedLeft = false;
-	startRSP = false;
 	FinishedAllAimations = false;
-
+	#pragma endregion
 
 	LoadEnvironmentTextures();
 	Garden.setTexture(gardenTex);
@@ -93,6 +92,7 @@ void startEnvironment() {
 	}
 }
 
+//updates the animation
 void updateEnvironment(RenderWindow& window) {
 	window.setView(GameCamera);
 
@@ -134,19 +134,21 @@ void updateEnvironment(RenderWindow& window) {
 		else
 		{
 			finishedLeft = true;
-			startRSP = true;
+			startAnimation = false;
 		}
 	}
 	
 	//READY SET PLANT ANIMATION
 	if (finishedRight && finishedLeft && !FinishedAllAimations)
 	{
-		if (startRSP)
+		if (!startAnimation)
 		{
 			animationClock.restart();
 			ReadySetPlant.setPosition(340, 310);
-			startRSP = false;
+			startAnimation = true;
 		}
+
+		ReadySetPlant.setScale(1, 1);
 
 		if (animationClock.getElapsedTime() <= seconds(1))
 		{
@@ -170,10 +172,13 @@ void updateEnvironment(RenderWindow& window) {
 	}
 	else
 	{
-		ReadySetPlant.setPosition(2000, 2000);
+		//ReadySetPlant.setPosition(2000, 2000);
+		ReadySetPlant.setScale(0,0);
 	}
 }
 
+
+// draws the garden, lawnmowers and ready set plant text and the whole animation
 void drawEnvironment(RenderWindow& window) {
 	window.draw(Garden);
 

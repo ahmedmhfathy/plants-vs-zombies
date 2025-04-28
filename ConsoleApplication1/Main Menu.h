@@ -58,9 +58,6 @@ void MainMenuStart(RenderWindow& window)
 {
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
-
-    LoadMainMenuTex();
-
 #pragma region setup elements
     //sets the textures
     MainMenuBackGround.setTexture(MainMenuBackGroundTex);

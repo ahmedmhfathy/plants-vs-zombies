@@ -16,6 +16,7 @@ RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies");
 void Start();
 void Update();
 void RenderScreen();
+void LoadALLTextures();
 #pragma endregion
 
 float deltaTime;
@@ -43,7 +44,7 @@ int main()
 
 void Start()
 {
-    plantNS::LoadPlantTextures(); //textures loaded here once
+    LoadALLTextures();
 
     CurrentState = MainMenu;
 
@@ -84,6 +85,14 @@ void Update()
         PauseMenuUpdate();
         LevelEndUpdate();
     }
+}
+
+//textures loaded here once
+void LoadALLTextures() {
+    LoadMainMenuTex();
+    plantNS::LoadPlantTextures(); 
+    plantingSystem::LoadPlantSelectionTextures();
+    Environment::LoadEnvironmentTextures();
 }
 
 // this function will be used to render the screen
