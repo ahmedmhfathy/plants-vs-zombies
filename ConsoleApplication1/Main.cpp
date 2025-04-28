@@ -8,6 +8,7 @@
 #include "Game Manager.h"
 #include "Plants_Zombies.h"
 
+
 using namespace std;
 using namespace sf;
 
@@ -51,6 +52,9 @@ void Start()
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
+
+
+
     MainMenuStart(window); //textures loaded here once
 
     SetupPauseMenu(); //textures loaded here once
@@ -58,6 +62,7 @@ void Start()
 }
 void Update()
 {
+    
     //gets mouse world position from screen position
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
@@ -66,6 +71,7 @@ void Update()
     if (CurrentState == MainMenu)
     {
         MainMenuUpdate(MouseWorldPostion, window);
+        
     }
     else
     {

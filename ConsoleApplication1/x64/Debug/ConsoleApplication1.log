@@ -6,22 +6,19 @@ C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(141
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(295,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(481,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(503,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(488,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(510,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(532,57): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(554,57): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(540,58): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(561,58): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(562,47): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(649,12): warning C4553: '==': result of expression not used; did you intend '='?
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(588,48): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\plants.h(131,48): warning C4305: 'argument': truncation from 'double' to 'float'

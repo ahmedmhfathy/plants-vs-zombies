@@ -39,7 +39,7 @@ Clock clockwave2;
 Clock clockfinalwave;
 Clock globalClock;
 Clock frameClock;
-float deltaTime;
+//float deltaTime;
 float timeSinceStart;
 // Hours  for 3 texts (start wave2, start final wave, lose game)..............
 Clock clockdrawtextwave2;              // clock for draw text start wave two.....

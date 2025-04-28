@@ -152,7 +152,7 @@ void movecamera(RenderWindow& window) {
                animcameraClock.restart();
                startAnimcamera = true;
            }
-           GardenCamera.setCenter(easeInOut(startValue, endValue, animcameraClock, seconds(3)), 400);
+           //GardenCamera.setCenter(easeInOut(startValue, endValue, animcameraClock, seconds(3)), 400);
        }
        else {
            moveright = true;
@@ -165,7 +165,7 @@ void movecamera(RenderWindow& window) {
                animcameraClock.restart();
                startAnimcamera = false;
            }
-           GardenCamera.setCenter(easeInOut(startValue, endValue, animcameraClock, seconds(4)), 400);
+           //GardenCamera.setCenter(easeInOut(startValue, endValue, animcameraClock, seconds(4)), 400);
        }
        else {
            moveleft = true;

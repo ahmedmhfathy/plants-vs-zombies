@@ -1,4 +1,3 @@
-
 #pragma once
 #include<SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
@@ -59,8 +58,8 @@ namespace Plants_Zombies {
 		PlantType type;
 		Sprite shape;
 
-		float damage; 
-		float slowMultiplier = 1; 
+		float damage;
+		float slowMultiplier = 1;
 		float speed;
 
 		Time projectileLifeSpan;
@@ -115,20 +114,21 @@ namespace Plants_Zombies {
 		}
 	};
 
-	
+
 
 	struct Plants {
 		Sprite shape;
 		PlantType type;
 
 		int row, col; //<<<<<<<<---------------<<< for the grid system
-		
+
 		bool isDead = false;
 		bool zombieInFront = false;
 
 		float damage;
-
 		float health;
+
+
 	private:
 
 		int animationCol = 0;
@@ -346,7 +346,7 @@ namespace Plants_Zombies {
 				animationCol = rand() % 5;
 			}
 		}
-		
+
 	}PlantsArray[4];
 
 	// we will have 45 plants in the game all set to null at the start of the game
@@ -394,10 +394,10 @@ namespace Plants_Zombies {
 
 		for (int i = 0; i < 4; i++)
 		{
-			PlantsArray[i].updatePlantStruct(zombie_array, isPaused); 
+			PlantsArray[i].updatePlantStruct(zombie_array, isPaused);
 		}
 
-		
+
 	}
 
 	void DrawPlantsAndProjectiles(RenderWindow& window) {
@@ -411,7 +411,7 @@ namespace Plants_Zombies {
 		}
 	}
 
-// ZOMBIES =============================================
+	// ZOMBIES =============================================
 
 #pragma region Texture Decalration
 	//Regular
@@ -422,22 +422,39 @@ namespace Plants_Zombies {
 	Texture TrafficConeWalkText;
 	Texture TrafficConeIdleText;
 	Texture TrafficConeAttackText;
+	Texture DamegedTrafficConeWalkText;
+	Texture DamegedTrafficConeAttackText;
 	//BucketHat
 	Texture BucketHatWalkText;
 	Texture BucketHatIdleText;
 	Texture BucketHatAttackText;
+	Texture DamegedBucketHatWalkText;
+	Texture DamegedBucketHatAttackText;
 	//SoccerGuy
 	Texture SoccerGuyWalkText;
 	Texture SoccerGuyIdleText;
 	Texture SoccerGuyAttackText;
+	//Death
+	Texture death;
+#pragma endregion
 #pragma endregion
 
 	void TextLoading() {
+		RegularWalkText.loadFromFile("Assets/Zombies/Default/walkregular.png");
+		RegularAttackText.loadFromFile("Assets/Zombies/Default/eatregular.png");
+		TrafficConeWalkText.loadFromFile("Assets/Zombies/conehead/walkconehead.png");
+		TrafficConeAttackText.loadFromFile("Assets/Zombies/conehead/eatconehead.png");
+		DamegedTrafficConeWalkText.loadFromFile("Assets/Zombies/conehead/walkconeheaddameged.png");
+		DamegedTrafficConeAttackText.loadFromFile("Assets/Zombies/conehead/eatconeheaddameged.png");
+		BucketHatWalkText.loadFromFile("Assets/Zombies/buckethead/walkBuckethead.png");
+		BucketHatAttackText.loadFromFile("Assets/Zombies/buckethead/eatbuckethead.png");
+		DamegedBucketHatWalkText.loadFromFile("Assets/Zombies/buckethead/walkbucketheaddmged.png");
+		DamegedBucketHatAttackText.loadFromFile("Assets/Zombies/buckethead/eatbucketheaddmged.png");
+		death.loadFromFile("Assets/Zombies/death.png");
 
 	}
 
 	struct Zombie {
-		RectangleShape zombieSquare; // instead of sprite for now
 		Sprite zombieCont;
 		zombieType type;
 
@@ -447,6 +464,9 @@ namespace Plants_Zombies {
 
 		bool isDamaged = false;
 		bool isAttacking = false;
+		bool isDead = false;
+
+		Clock Zclock;
 
 	private:
 		int CollIndex = 0;
@@ -454,8 +474,9 @@ namespace Plants_Zombies {
 
 		bool isIdle = false;
 		bool isMoving = false;
-		bool isDead = false;
 		bool PlantsinFront = false;
+		bool deathOfZombie = false;
+
 
 	public:
 		void start() {
@@ -469,32 +490,33 @@ namespace Plants_Zombies {
 			switch (type)
 			{
 			case regular:
-				//zombieCont.setTexture(RegularWalkText);
+				zombieCont.setTexture(RegularWalkText);
 				health = 100;
-				speed = 10.0;
+				speed = 5.0;
 				damage = 10;
-				zombieSquare.setPosition(1000, 100); // will be changed to the sprite
+				//zombieSquare.setPosition(1000, 100);
+				zombieCont.setPosition(1000, 100);
 				break;
 			case trafficCone:
-				//zombieCont.setTexture(TrafficConeIdleText);
+				zombieCont.setTexture(TrafficConeWalkText);
 				health = 300;
 				speed = 9.9;
 				damage = 5;
-				zombieSquare.setPosition(1000, 300); // will be changed to the sprite
+				zombieCont.setPosition(1000, 300); // will be changed to the sprite
 				break;
 			case bucketHat:
-				//zombieCont.setTexture(BucketHatIdleText);
+				zombieCont.setTexture(BucketHatWalkText);
 				health = 300;
 				speed = 9.8;
 				damage = 10;
-				zombieSquare.setPosition(1000, 500); // will be changed to the sprite
+				zombieCont.setPosition(1000, 500); // will be changed to the sprite
 				break;
 			case soccerGuy:
-				//zombieCont.setTexture(RegularIdleText);
+				zombieCont.setTexture(RegularWalkText);
 				health = 150;
 				speed = 15.0;
 				damage = 5;
-				zombieSquare.setPosition(1000, 600); // will be changed to the sprite
+				zombieCont.setPosition(1000, 600); // will be changed to the sprite
 				break;
 			case Dead:
 				isDead = true;
@@ -509,13 +531,13 @@ namespace Plants_Zombies {
 				break;
 			}
 		}
-		void update(float deltaTime) { 
+		void update(float deltaTime) {
 
 			if (!isDead || type != Dead)
 			{
-				//Animation(); will be used when sprites sheets are available (ammar)
 				Movement(deltaTime);
 				CollisionZombies(PlantProjectilesARR, PlantsArray);
+				Animation();
 			}
 
 		}
@@ -528,10 +550,9 @@ namespace Plants_Zombies {
 				{
 					for (int j = 0; j < PlantProjectilesARR.size(); j++) {
 						if (!PlantProjectilesARR.empty()) {
-							if (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombie_array[i].zombieSquare.getGlobalBounds())) {
+							if (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombie_array[i].zombieCont.getGlobalBounds())) {
 								zombie_array[i].health -= PlantProjectilesARR[j].damage;
 								zombie_array[i].isDamaged = true;
-								zombie_array[i].zombieSquare.setFillColor(Color::Red);
 								if (PlantProjectilesARR[j].type == SnowPeaShooter)
 								{
 									zombie_array[i].speed = (speed * PlantProjectilesARR[j].slowMultiplier);
@@ -542,6 +563,10 @@ namespace Plants_Zombies {
 								PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 								j--;
 								break;
+							}
+							else
+							{
+								zombie_array[i].isDamaged = false;
 							}
 						}
 					}
@@ -554,106 +579,191 @@ namespace Plants_Zombies {
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					if (Plants_Zombies::PlantsArray[i].shape.getGlobalBounds().intersects(Plants_Zombies::zombie_array[j].zombieSquare.getGlobalBounds()))
+					if (Plants_Zombies::PlantsArray[i].shape.getGlobalBounds().intersects(Plants_Zombies::zombie_array[j].zombieCont.getGlobalBounds()))
 					{
-						zombie_array[j].zombieSquare.setFillColor(Color::White);
-						PlantsArray[i].takeDmg(Plants_Zombies::zombie_array[j].damage);
-						cout << PlantsArray[i].health << endl;
-						zombie_array[j].health -= PlantsArray[j].damage;
-						zombie_array[j].isMoving = false;
 						zombie_array[j].isAttacking = true;
+						if (PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
+						{
+							zombie_array[j].isDamaged = true;
+							zombie_array[j].health -= PlantsArray[j].damage;
+						}
+						if (Zclock.getElapsedTime().asSeconds() > 1.5)
+						{
+							PlantsArray[i].takeDmg(Plants_Zombies::zombie_array[j].damage);
+							cout << PlantsArray[i].health << endl;
+							zombie_array[j].isMoving = false;
+							Zclock.restart();
+						}
 
+					}
+					else
+					{
+						zombie_array[i].isAttacking = false;
 					}
 				}
 			}
-			
+
 
 		}
 
 	private:
 		void Animation() {
 			// regular
-			if (type == regular && isIdle)
-			{
-			}
-			else if (type == regular && isMoving)
-			{
-				zombieCont.setTexture(RegularWalkText);
-				zombieCont.setTextureRect(IntRect(CollIndex * 42, 50, 42, 50));
-				CollIndex = (CollIndex + 1) % 7;
-			}
-			else if (type == regular && isAttacking)
-			{
-			}
-			else if (type == regular && isDead)
-			{
-			}
+			if (type == regular) {
+				if (isMoving)
+				{
+					zombieCont.setTexture(RegularWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
 
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
+						zombieCont.setTexture(RegularAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+
+				}else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 34));
+						zombieCont.setTexture(death);
+						CollIndex = (CollIndex + 1) % 8;
+						Zclock.restart();
+
+						if (CollIndex == 7)
+						{
+							deathOfZombie = true;
+						}
+					}
+				}
+				
+			}
+			
 			// Traffic Cone
-			if (type == trafficCone && isIdle)
-			{
+			if (type == trafficCone) {
+				if (isIdle)
+				{
 
+				}
+				else if (isMoving)
+				{
+					zombieCont.setTexture(TrafficConeWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 58));
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 57));
+						zombieCont.setTexture(DamegedTrafficConeAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 34));
+						zombieCont.setTexture(death);
+						CollIndex = (CollIndex + 1) % 8;
+						Zclock.restart();
+
+						if (CollIndex == 7)
+						{
+							deathOfZombie = true;
+						}
+					}
+				}
 			}
-			else if (type == trafficCone && isMoving)
-			{
-
-			}
-			else if (type == trafficCone && isAttacking)
-			{
-
-			}
-			else if (type == trafficCone && isDead)
-			{
-
-			}
-
+			
 			// Bucket Hat
-			if (type == bucketHat && isIdle)
+			if (type == bucketHat)
 			{
+				if (isIdle)
+				{
 
+				}
+				else if (isMoving)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 52));
+						zombieCont.setTexture(BucketHatWalkText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asSeconds() > 0.2) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 37, 0, 37, 57));
+						zombieCont.setTexture(BucketHatAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 34));
+						zombieCont.setTexture(death);
+						CollIndex = (CollIndex + 1) % 8;
+						Zclock.restart();
+					}
+				}
 			}
-			else if (type == bucketHat && isMoving)
-			{
-
-			}
-			else if (type == bucketHat && isAttacking)
-			{
-
-			}
-			else if (type == bucketHat && isDead)
-			{
-
-			}
-
+			
+			
+			
 			// Soccer Guy
-			if (type == soccerGuy && isIdle)
-			{
+			if (type == soccerGuy) {
+				if (isIdle)
+				{
 
-			}
-			else if (type == soccerGuy && isMoving)
-			{
+				}
+				else if (isMoving)
+				{
 
-			}
-			else if (type == soccerGuy && isAttacking)
-			{
+				}
+				else if (isAttacking)
+				{
 
-			}
-			else if (type == soccerGuy && isDead)
-			{
+				}
+				else if (isDead)
+				{
 
+				}
 			}
-		}
+			}
+
+			
 		void Movement(float deltaTime) {
 			if (health <= 0)
 			{
-				isDead == true;
-				zombieSquare.setScale(Vector2f(0, 0));
+				isDead = true;
+				isMoving = false;
+				isAttacking = false;
+				isDamaged = false;
+				if (deathOfZombie)
+				{
+					zombieCont.setScale(Vector2f(0, 0));
+					Zclock.restart();
+				}
 			}
 			else if (isMoving)
 			{
-			zombieSquare.move(-1 * speed * deltaTime, 0);
+				zombieCont.move(-1 * speed * deltaTime, 0);
 			}
-			
+
 		}
 
 	}zombie_array[4];
@@ -661,25 +771,25 @@ namespace Plants_Zombies {
 	void StartZombies() {
 #pragma region regular
 		zombie_array[0].type = regular;
-		zombie_array[0].zombieSquare.setSize(Vector2f(100.f, 100.f));
+		zombie_array[0].zombieCont.setScale(2, 2);
 		zombie_array[0].start();
 #pragma endregion
 
 #pragma region trafficCone 
 		zombie_array[1].type = trafficCone;
-		zombie_array[1].zombieSquare.setSize(Vector2f(100.f, 100.f));
+		zombie_array[1].zombieCont.setScale(2, 2);
 		zombie_array[1].start();
 #pragma endregion
 
 #pragma region bucketHat
 		zombie_array[2].type = bucketHat;
-		zombie_array[2].zombieSquare.setSize(Vector2f(100.f, 100.f));
+		zombie_array[2].zombieCont.setScale(2, 2);
 		zombie_array[2].start();
 #pragma endregion
 
 #pragma region soccerGuy
 		zombie_array[3].type = soccerGuy;
-		zombie_array[3].zombieSquare.setSize(Vector2f(100.f, 100.f));
+		zombie_array[3].zombieCont.setScale(2, 2);
 		zombie_array[3].start();
 #pragma endregion
 	}
@@ -689,18 +799,9 @@ namespace Plants_Zombies {
 		{
 			if (zombie_array[i].type != Dead)
 			{
-				// Blue
-				zombie_array[0].zombieSquare.setFillColor(Color::Blue);
 				zombie_array[0].update(deltaTime);
-				//Cyan
-				zombie_array[1].zombieSquare.setFillColor(Color::Cyan);
 				zombie_array[1].update(deltaTime);
-				#pragma endregion
-				// Yellow
-				zombie_array[2].zombieSquare.setFillColor(Color::Yellow);
 				zombie_array[2].update(deltaTime);
-				// Magnetta
-				zombie_array[3].zombieSquare.setFillColor(Color::Magenta);
 				zombie_array[3].update(deltaTime);
 			}
 		}
@@ -712,8 +813,7 @@ namespace Plants_Zombies {
 		{
 			if (zombie_array[i].type != Dead)
 			{
-				
-				window.draw(zombie_array[i].zombieSquare);
+				window.draw(zombie_array[i].zombieCont);
 
 			}
 		}
@@ -731,14 +831,17 @@ namespace Plants_Zombies {
 			{
 				for (int j = 0; j < 4; j++)
 				{
-					// checks if a zombie is in front of the plant  
-					if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
-						&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieSquare.getGlobalBounds().top + zombie_array[j].zombieSquare.getGlobalBounds().height)
-							&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieSquare.getGlobalBounds().top)
-							&& (PlantsArray[i].shape.getGlobalBounds().left <= zombie_array[j].zombieSquare.getGlobalBounds().left)))
+					if (!zombie_array[i].isDead)
 					{
-						PlantsArray[i].zombieInFront = true;
-						break;
+						// checks if a zombie is in front of the plant  
+						if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
+							&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
+								&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
+								&& (PlantsArray[i].shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left)))
+						{
+							PlantsArray[i].zombieInFront = true;
+							break;
+						}
 					}
 					else
 					{
