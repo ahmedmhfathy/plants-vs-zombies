@@ -6,7 +6,7 @@
 #include <string>
 #include <cmath>
 #include "plants.h"
-//#include "planting system.h"
+#include"Environment and Start Animation.h"
 
 using namespace std;
 using namespace sf;
@@ -16,14 +16,12 @@ void SwitchState(State NewState);
 
 Vector2f offeset = { -300, -50 };
 
-bool LevelIsOver = false;
 bool WinLevel = false;
+bool LevelIsOver = false;
 bool IsPaused = false;
 
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
-
-View GameCamera(FloatRect(0,0,1280,720));
 
 #pragma region Pause Menu Textures and Sprites
 Texture MainMenuButtonTex;
@@ -92,7 +90,7 @@ void SetupPauseMenu()
 
 void PauseMenuUpdate()
 {
-    if (Keyboard::isKeyPressed(Keyboard::Escape))
+    if (Keyboard::isKeyPressed(Keyboard::Escape) && Environment::FinishedAllAimations)
     {
         IsPaused = true;
     }
@@ -129,13 +127,10 @@ void PauseMenuUpdate()
 
 void DrawPauseMenu(RenderWindow& window)
 {
-    if (!LevelIsOver)
-    {
-        window.draw(Opacity);
-        window.draw(BlankPauseMenu);
-        window.draw(BackToGame);
-        window.draw(BackToMainMenu);
-    }
+    window.draw(Opacity);
+    window.draw(BlankPauseMenu);
+    window.draw(BackToGame);
+    window.draw(BackToMainMenu);
 }
 #pragma endregion
 
@@ -307,22 +302,11 @@ void DrawLevelEnd(RenderWindow& window)
 
 RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 
-Texture gardenTex;
-Sprite garden;
-
 //handle the code of each level
 #pragma region Level Functions
 void StartLevel1()
 {
-	gardenTex.loadFromFile("Assets/Environment/Game-Environment.png");
-
-	garden.setTexture(gardenTex);
-	garden.setPosition(-325, -265);
-	garden.setScale(0.65, 0.65);
-
-    GameCamera.setCenter({ 640, 360 });
-    GameCamera.move(-300, -50);
-
+    Environment::startEnvironment();
     plantingSystem::startPlantingSystem(offeset);
     plantNS::StartPlants();
     
@@ -332,26 +316,15 @@ void StartLevel1()
 }
 void UpdateLevel1(RenderWindow& window)
 {
-	window.setView(GameCamera);
-
+    Environment::updateEnvironment(window);
     box.setPosition(MouseWorldPostion);
     plantNS::UpdatePlants(box, MouseWorldPostion);
 	plantingSystem::updatePlantingSystem(MouseWorldPostion);
-
-    //for (int i = 0; i < 45; i++)
-    //{
-    //    if (plantNS::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
-    //    {
-    //        plantNS::PlantsArray[i].takeDmg(1);
-    //    }
-    //}
 }
 void DrawLevel1(RenderWindow& window)
 {
-    window.draw(garden);
-	//plantingSystem::drawPlantingSystem(window);
+    Environment::drawEnvironment(window);
     plantNS::DrawPlantsAndProjectiles(window);
-    //window.draw(box);
 	plantingSystem::drawPlantSelectionUI(window);
 }
 

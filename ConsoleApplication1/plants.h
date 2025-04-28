@@ -165,29 +165,21 @@ namespace plantNS {
 				animationHandler();
 				action();
 			}
-			else // else will turn the plant into an empty gameobject
-			{
-				type = EmptyPlant;
-				setupPrefab();
 
-				//<<<<<<<<---------------<<< and remove the plant from the garden
-			}
-
-			if (type == EmptyPlant)
+			if (type == EmptyPlant || health <=0)
 			{
 				myGrid[GridIndex].isPlanted = false;
+				idle = false;
+				doAction = false;
+				isDead = true;
+
+				type = EmptyPlant;
+				setupPrefab();
 			}
 		}
 
 		void takeDmg(float damage) { //<<<<<<<<---------------<<< to be used in the zombie system
 			health -= damage;
-
-			if (health <= 0)
-			{
-				idle = false;
-				doAction = false;
-				isDead = true;
-			}
 		}
 
 	private:
