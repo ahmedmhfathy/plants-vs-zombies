@@ -191,5 +191,4 @@ void drawEnvironment(RenderWindow& window) {
 		window.draw(ReadySetPlant);
 	}
 }
-
 }

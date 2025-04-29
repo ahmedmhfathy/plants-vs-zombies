@@ -51,7 +51,7 @@ namespace plantNS {
 	}
 
 	//all types of plants
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant};
 
 	struct PlantProjectile
 	{
@@ -380,9 +380,8 @@ namespace plantNS {
 
 	void StartPlants() {
 		PlantProjectilesARR.clear();
-		//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
 
-		//testing will be removed soon
+		//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
 		for (int i = 1; i <= 45; i++)
 		{
 			PlantsArray[i - 1].shape.setPosition(myGrid[i].shape.getPosition());
@@ -391,18 +390,15 @@ namespace plantNS {
 			myGrid[i].isPlanted = false;
 		}
 
+		//these are for testing
 		PlantsArray[0].type = PeaShooter;
 		myGrid[1].isPlanted = true;
-		//PlantsArray[0].shape.setPosition({ 200,100 });
 		PlantsArray[1].type = SnowPeaShooter;
 		myGrid[2].isPlanted = true;
-		//PlantsArray[1].shape.setPosition({ 200,300 });
 		PlantsArray[2].type = WallNut;
 		myGrid[3].isPlanted = true;
-		//PlantsArray[2].shape.setPosition({ 200,500 });
 		PlantsArray[3].type = SunFlower;
 		myGrid[4].isPlanted = true;
-		//PlantsArray[3].shape.setPosition({ 200,600 });
 
 		for (int i = 0; i < 45; i++)
 		{
@@ -413,6 +409,7 @@ namespace plantNS {
 	// this function will be used to update the plants and remove outdated projectiles 
 	// it will be called every frame
 	void UpdatePlants(RectangleShape zombiePH, Vector2f mousePos) {
+
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
@@ -432,8 +429,10 @@ namespace plantNS {
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
+			//call update function
 			PlantProjectilesARR[i].update();
 
+			//collect suns
 			if (PlantProjectilesARR[i].type == SunFlower && PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousePos)
 				&& Mouse::isButtonPressed(Mouse::Left))
 			{
