@@ -63,5 +63,4 @@ C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Main Menu.h(75,24): 
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Main Menu.h(83,23): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-  LINK : C:\Users\Ahmed\Documents\PROJECT_UNI\SP\x64\Debug\SFML Template.exe not found or not built by the last incremental link; performing full link
   ConsoleApplication1.vcxproj -> C:\Users\Ahmed\Documents\PROJECT_UNI\SP\x64\Debug\SFML Template.exe
