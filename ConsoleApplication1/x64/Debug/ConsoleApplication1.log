@@ -27,10 +27,10 @@ C:\Users\khali\repositries\ConsoleApplication1\Environment and Start Animation.h
 C:\Users\khali\repositries\ConsoleApplication1\Environment and Start Animation.h(46,29): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Environment and Start Animation.h(87,24): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Environment and Start Animation.h(86,24): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Environment and Start Animation.h(87,18): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Environment and Start Animation.h(86,18): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Main Menu.h(72,24): warning C4305: 'argument': truncation from 'double' to 'float'

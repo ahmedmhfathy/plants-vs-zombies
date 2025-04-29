@@ -108,7 +108,7 @@ void updateEnvironment(RenderWindow& window) {
 				startAnimation = true;
 			}
 
-			GameCamera.setCenter(easeInOut(CubicEaseInOut, start, end, animationClock, animationTime), 360-50);
+			GameCamera.setCenter(easeInOut(CubicEaseInOut, start, end, animationClock, animationTime), 310);
 		}
 		else
 		{
@@ -128,7 +128,7 @@ void updateEnvironment(RenderWindow& window) {
 				startAnimation = true;
 			}
 
-			GameCamera.setCenter(easeInOut(CubicEaseInOut, start, end, animationClock, animationTime_), 360-50);
+			GameCamera.setCenter(easeInOut(CubicEaseInOut, start, end, animationClock, animationTime_), 310);
 		}
 		else
 		{
