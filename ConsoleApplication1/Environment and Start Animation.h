@@ -69,8 +69,7 @@ void LoadEnvironmentTextures() {
 }
 
 void startEnvironment() {
-	GameCamera.setCenter({ 640, 360 });
-	GameCamera.move(-300, -50);
+	GameCamera.setCenter({ 340, 310 });
 
 	#pragma region set all start states
 	animationClock.restart();
