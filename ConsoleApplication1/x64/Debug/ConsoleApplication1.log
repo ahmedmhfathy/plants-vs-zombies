@@ -1,66 +1,11 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (ConsoleApplication1.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-  Main.cpp
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Tools.h(48,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Tools.h(53,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(83,34): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(83,29): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(84,41): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(104,39): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(104,34): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(105,57): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(204,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(157,36): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(157,31): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(166,39): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(166,34): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(171,37): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(171,32): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(176,39): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(176,34): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\plants.h(131,48): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\plants.h(314,14): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Main Menu.h(75,24): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Main Menu.h(83,23): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-  ConsoleApplication1.vcxproj -> C:\Users\Ahmed\Documents\PROJECT_UNI\SP\x64\Debug\SFML Template.exe
+Main.obj : error LNK2019: unresolved external symbol "void __cdecl loadphoto(void)" (?loadphoto@@YAXXZ) referenced in function "void __cdecl StartAnimationNS::startAnimation(void)" (?startAnimation@StartAnimationNS@@YAXXZ)
+    Hint on symbols that are defined and could potentially match:
+      "void __cdecl StartAnimationNS::loadphoto(void)" (?loadphoto@StartAnimationNS@@YAXXZ)
+Main.obj : error LNK2019: unresolved external symbol "void __cdecl movecamera(class sf::RenderWindow &)" (?movecamera@@YAXAEAVRenderWindow@sf@@@Z) referenced in function "void __cdecl StartAnimationNS::updateAnimation(class sf::RenderWindow &)" (?updateAnimation@StartAnimationNS@@YAXAEAVRenderWindow@sf@@@Z)
+    Hint on symbols that are defined and could potentially match:
+      "void __cdecl StartAnimationNS::movecamera(class sf::RenderWindow &)" (?movecamera@StartAnimationNS@@YAXAEAVRenderWindow@sf@@@Z)
+Main.obj : error LNK2019: unresolved external symbol "void __cdecl movecars(void)" (?movecars@@YAXXZ) referenced in function "void __cdecl StartAnimationNS::updateAnimation(class sf::RenderWindow &)" (?updateAnimation@StartAnimationNS@@YAXAEAVRenderWindow@sf@@@Z)
+    Hint on symbols that are defined and could potentially match:
+      "void __cdecl StartAnimationNS::movecars(void)" (?movecars@StartAnimationNS@@YAXXZ)
+C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\x64\Debug\SFML Template.exe : fatal error LNK1120: 3 unresolved externals

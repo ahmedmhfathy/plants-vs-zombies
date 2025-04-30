@@ -6,6 +6,7 @@
 #include <string>
 #include <cmath>
 #include "StartAnimation.h"
+#include "Wave System.h"
 #include "plants.h"
 
 using namespace std;
@@ -307,7 +308,7 @@ RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 void StartLevel1()
 {
     StartAnimationNS::startAnimation();
-    startallwave(0, 5, 7);
+    level(2, 4, 7.0f);
 
     PlantsNS::StartPlants();
     box.setPosition({ 1000, 100 });

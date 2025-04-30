@@ -5,7 +5,6 @@
 #include<vector>
 using namespace std;
 using namespace sf;
-
 namespace PlantsNS {
 	#pragma region Declaring Texures
 	//peashooter

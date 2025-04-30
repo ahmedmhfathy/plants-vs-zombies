@@ -6,6 +6,7 @@
 #include <string>
 #include "Main Menu.h"
 #include "Game Manager.h"
+#include "StartAnimation.h"
 #include "plants.h"
 using namespace std;
 using namespace sf;
