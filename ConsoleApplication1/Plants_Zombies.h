@@ -17,7 +17,7 @@ namespace Plants_Zombies {
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant };
-	enum zombieType { regular, bucketHat, trafficCone, newsPaper, Dead };
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, Dead };
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -55,7 +55,7 @@ namespace Plants_Zombies {
 		WallNutIdleTex.loadFromFile("Assets/Plants/WallNut/wallnut-ST.png");
 	}
 
-	
+
 
 	struct PlantProjectile
 	{
@@ -63,7 +63,7 @@ namespace Plants_Zombies {
 		PlantType type;
 		Sprite shape;
 
-		float damage; 
+		float damage;
 		float slowMultiplier = 1;
 		float speed;
 
@@ -127,7 +127,7 @@ namespace Plants_Zombies {
 		int row, col; //<<<<<<<<---------------<<< for the grid system
 
 		bool zombieInFront = false;
-	
+
 		float health;
 		float damage;
 	private:
@@ -147,9 +147,9 @@ namespace Plants_Zombies {
 		void start() {
 			setupPrefab();
 		}
-		
 
-		void takeDmg(float damage) { 
+
+		void takeDmg(float damage) {
 			health -= damage;
 
 			if (health <= 0)
@@ -342,7 +342,7 @@ namespace Plants_Zombies {
 				animationCol = rand() % 6;
 			}
 			else if (type == WallNut) {
-				health = 1400; 
+				health = 1400;
 				damage = 0;
 
 				shape.setTexture(WallNutIdleTex);
@@ -406,7 +406,7 @@ namespace Plants_Zombies {
 
 		for (int i = 0; i < 4; i++)
 		{
-			PlantsArray[i].updatePlantStruct(zombie_array, isPaused); 
+			PlantsArray[i].updatePlantStruct(zombie_array, isPaused);
 		}
 	}
 
@@ -422,8 +422,8 @@ namespace Plants_Zombies {
 	}
 
 
-	
-// ZOMBIES =============================================
+
+	// ZOMBIES =============================================
 
 #pragma region Texture Decalration
 	//Regular
@@ -442,26 +442,40 @@ namespace Plants_Zombies {
 	Texture BucketHatAttackText;
 	Texture DamegedBucketHatWalkText;
 	Texture DamegedBucketHatAttackText;
-	//SoccerGuy
-	Texture SoccerGuyWalkText;
-	Texture SoccerGuyIdleText;
-	Texture SoccerGuyAttackText;
+	//NewsMan
+	Texture NewsManWalkText;
+	Texture NewsManAttackText;
+	Texture DamegedNewsManWalkText;
+	Texture DamegedNewsManAttackText;
+	Texture SurpriseText;
+	Texture NewsManDeath;
 	//Death
 	Texture death;
 #pragma endregion
 #pragma endregion
 
 	void LoadZombieTextures() {
+		//regular
 		RegularWalkText.loadFromFile("Assets/Zombies/Default/walkregular.png");
 		RegularAttackText.loadFromFile("Assets/Zombies/Default/eatregular.png");
+		//traffic cone
 		TrafficConeWalkText.loadFromFile("Assets/Zombies/conehead/walkconehead.png");
 		TrafficConeAttackText.loadFromFile("Assets/Zombies/conehead/eatconehead.png");
 		DamegedTrafficConeWalkText.loadFromFile("Assets/Zombies/conehead/walkconeheaddameged.png");
 		DamegedTrafficConeAttackText.loadFromFile("Assets/Zombies/conehead/eatconeheaddameged.png");
+		//bucket
 		BucketHatWalkText.loadFromFile("Assets/Zombies/buckethead/walkBuckethead.png");
 		BucketHatAttackText.loadFromFile("Assets/Zombies/buckethead/eatbuckethead.png");
 		DamegedBucketHatWalkText.loadFromFile("Assets/Zombies/buckethead/walkbucketheaddmged.png");
 		DamegedBucketHatAttackText.loadFromFile("Assets/Zombies/buckethead/eatbucketheaddmged.png");
+		//news man
+		NewsManWalkText.loadFromFile("Assets/Zombies/newspaper/newspaperwalk.png");
+		NewsManAttackText.loadFromFile("Assets/Zombies/newspaper/newspapereat.png");
+		DamegedNewsManWalkText.loadFromFile("Assets/Zombies/newspaper/damegednewspaperwalk.png");
+		DamegedNewsManAttackText.loadFromFile("Assets/Zombies/newspaper/damegednewspapereat.png");
+		NewsManDeath.loadFromFile("Assets/Zombies/newspaper/newspaperdeath.png");
+		SurpriseText.loadFromFile("Assets/Zombies/newspaper/surprised.png");
+		//death
 		death.loadFromFile("Assets/Zombies/death.png");
 
 	}
@@ -528,10 +542,10 @@ namespace Plants_Zombies {
 				zombieCont.setScale(0.2, 0.1);
 				zombieCont.setPosition(1300, row[rand() % 5]); // sets random spawn position 
 				break;
-			case newsPaper:
+			case newsMan:
 				zombieCont.setTexture(RegularWalkText);
 				health = 420;
-				speed = 15.0;
+				speed = 5.0;
 				damage = 20;
 
 				zombieCont.setScale(0.2, 0.1);
@@ -585,7 +599,9 @@ namespace Plants_Zombies {
 							}
 							else
 							{
-								zombie_array[i].isDamaged = false;
+								if (health > 100) {
+									zombie_array[i].isDamaged = false;
+								}
 							}
 						}
 					}
@@ -678,6 +694,24 @@ namespace Plants_Zombies {
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 57));
+						zombieCont.setTexture(TrafficConeAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isMoving && isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 57));
+						zombieCont.setTexture(DamegedTrafficConeWalkText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking && isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 57));
 						zombieCont.setTexture(DamegedTrafficConeAttackText);
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
@@ -705,7 +739,8 @@ namespace Plants_Zombies {
 				if (isMoving)
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 52));
+
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 56));
 						zombieCont.setTexture(BucketHatWalkText);
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
@@ -713,7 +748,25 @@ namespace Plants_Zombies {
 				}
 				else if (isAttacking)
 				{
-					if (Zclock.getElapsedTime().asSeconds() > 0.2) {
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 37, 0, 37, 57));
+						zombieCont.setTexture(BucketHatAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isMoving && isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 44, 0, 44, 56));
+						zombieCont.setTexture(DamegedBucketHatWalkText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking && isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 37, 0, 37, 57));
 						zombieCont.setTexture(BucketHatAttackText);
 						CollIndex = (CollIndex + 1) % 6;
@@ -728,22 +781,63 @@ namespace Plants_Zombies {
 						CollIndex = (CollIndex + 1) % 8;
 						Zclock.restart();
 					}
+					if (CollIndex == 7)
+					{
+						deathOfZombie = true;
+					}
 				}
 			}
 
-			// Soccer Guy
-			if (type == newsPaper) {
+			// news man
+			if (type == newsMan) {
 				if (isMoving)
 				{
-
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 57));
+						zombieCont.setTexture(NewsManWalkText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
 				}
 				else if (isAttacking)
 				{
-
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 57, 0, 57, 57));
+						zombieCont.setTexture(NewsManAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isMoving && isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 57));
+						zombieCont.setTexture(DamegedNewsManWalkText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking && isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 57, 0, 57, 57));
+						zombieCont.setTexture(DamegedNewsManAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
 				}
 				else if (isDead)
 				{
-
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 58, 0, 58, 45));
+						zombieCont.setTexture(NewsManDeath);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+					if (CollIndex == 6)
+					{
+						deathOfZombie = true;
+					}
 				}
 			}
 		}
@@ -755,7 +849,7 @@ namespace Plants_Zombies {
 				isMoving = false;
 				isAttacking = false;
 				isDamaged = false;
-				
+
 				// waits until zombie is dead to remove it
 				if (deathOfZombie)
 				{
@@ -766,6 +860,14 @@ namespace Plants_Zombies {
 			else if (isMoving)
 			{
 				zombieCont.move(-1 * speed * deltaTime, 0);
+			}
+			if (health >= 100) {
+				isDamaged = true;
+			}
+			if (type == newsMan && isDamaged)
+			{
+				speed = 10;
+				damage = 30;
 			}
 
 		}
@@ -784,7 +886,7 @@ namespace Plants_Zombies {
 		zombie_array[2].zombieCont.setScale(2, 2);
 		zombie_array[2].start();
 
-		zombie_array[3].type = newsPaper;
+		zombie_array[3].type = newsMan;
 		zombie_array[3].zombieCont.setScale(2, 2);
 		zombie_array[3].start();
 
@@ -800,6 +902,7 @@ namespace Plants_Zombies {
 				zombie_array[2].update(deltaTime);
 				zombie_array[3].update(deltaTime);
 			}
+
 		}
 
 	}
