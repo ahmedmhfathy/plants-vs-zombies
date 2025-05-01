@@ -24,12 +24,6 @@ Texture Planttexttexture;
 Sprite Planttextsprite;
 #pragma endregion
 #pragma region Fuctions
-void startAnimation();
-void updateAnimation(RenderWindow&);
-void loadphoto();
-void movecamera(RenderWindow&);
-void RSP(RenderWindow&); // Ready...Set....Plant....
-void movecars(); 
 #pragma endregion
 #pragma region boolean
 bool startdrawRSP = true;
@@ -47,6 +41,12 @@ Clock clockRSP;
 #pragma endregion
 // ==*** Declare Camera ***===
  namespace  StartAnimationNS {
+void startAnimation();
+void updateAnimation(RenderWindow&);
+void movecamera(RenderWindow&);
+void RSP(RenderWindow&); // Ready...Set....Plant....
+void loadphoto();
+void movecars(); 
     View GardenCamera(FloatRect(0, 0, 1280, 720));
     void startAnimation() {
         for (int i = 0; i < 5; i++) {
@@ -73,6 +73,7 @@ Clock clockRSP;
             level(3, 3, 10);
         }
     }
+    
     void loadphoto() {
         // =======================**load photo garden**===================================
         gardentexture.loadFromFile("Assets/Environment/Game-Environment.png");
@@ -207,3 +208,5 @@ Clock clockRSP;
 
     }
 }
+
+

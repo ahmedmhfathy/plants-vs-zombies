@@ -52,6 +52,7 @@ void Start()
     window.setVerticalSyncEnabled(true);
 
     MainMenuStart(window); //textures loaded here once
+    StartLevel1();
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once

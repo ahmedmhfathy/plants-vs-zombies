@@ -8,7 +8,6 @@ using namespace std;
 using namespace sf;
 
 namespace Plants_Zombies {
-	int score;
 #pragma region Forward Declaration for Structs
 	struct Zombie;
 	struct PlantProjectile;
@@ -17,7 +16,7 @@ namespace Plants_Zombies {
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant,SunCoin };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, Dead };
 #pragma endregion
 
@@ -95,14 +94,14 @@ namespace Plants_Zombies {
 				damage = PlantDamage;
 				slowMultiplier = 0.5;
 			}
-			else if (type == SunFlower||type==SunCoin)
+			else if (type == SunFlower)
 			{
 				shape.setTexture(SunFlowerSunTex);
 				shape.setPosition(SpwanPos);
 				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
 				projectileLifeSpan = seconds(12); //time to despawn
 				shape.setScale(1.25, 1.25);
-				speed = 0.1;
+				speed = 0;
 				damage = PlantDamage;
 				slowMultiplier = 1;
 			}
@@ -116,14 +115,6 @@ namespace Plants_Zombies {
 			else if (type == SunFlower)
 			{
 				shape.rotate(0.5);
-			}
-			else if (type == SunCoin)
-			{
-				if (shape.getPosition().y < (200 + rand() % 300))
-				{
-					shape.move(0, speed);
-
-				}
 			}
 		}
 	};
@@ -389,7 +380,7 @@ namespace Plants_Zombies {
 
 	// this function will be used to update the plants and remove outdated projectiles 
 	// it will be called every frame
-	void UpdatePlants(Zombie* zombie_array, bool isPaused,Vector2f mousepos) {
+	void UpdatePlants(Zombie* zombie_array, bool isPaused) {
 
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
@@ -410,16 +401,7 @@ namespace Plants_Zombies {
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-
 			PlantProjectilesARR[i].update(isPaused);
-			if (PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left) && (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin))
-			{
-				score = score + 25;
-				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
-				i--;
-
-
-			}
 		}
 
 		for (int i = 0; i < 4; i++)
