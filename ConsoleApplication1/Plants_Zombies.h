@@ -133,7 +133,7 @@ namespace Plants_Zombies {
 		Sprite shape;
 		PlantType type;
 
-		int row, col; //<<<<<<<<---------------<<< for the grid system
+		int gridIndex; //<<<<<<<<---------------<<< for the grid system
 
 		bool zombieInFront = false;
 
@@ -358,33 +358,26 @@ namespace Plants_Zombies {
 				animationCol = rand() % 5;
 			}
 		}
-	}PlantsArray[4];
+	}PlantsArray[45];
 
+	//void StartPlants() {
+	//	PlantProjectilesARR.clear();
+	//	//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
 
-	// we will have 45 plants in the game all set to null at the start of the game
-	// ###### ahmed ibrahim & marawan ###### will set the position of the 45 plants on each box of the garden
-	// and when the player decides to plant it will change from NULL to which ever plant they choose
-	// and if the plant dies it will be NULL as well
-
-	void StartPlants() {
-		PlantProjectilesARR.clear();
-		//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
-
-		//testing will be removed soon
-		PlantsArray[0].type = PeaShooter;
-		PlantsArray[0].shape.setPosition({ 400,100 });
-		PlantsArray[1].type = SnowPeaShooter;
-		PlantsArray[1].shape.setPosition({ 400,300 });
-		PlantsArray[2].type = WallNut;
-		PlantsArray[2].shape.setPosition({ 400,500 });
-		PlantsArray[3].type = SunFlower;
-		PlantsArray[3].shape.setPosition({ 400,600 });
-
-		for (int i = 0; i < 4; i++)
-		{
-			PlantsArray[i].start();
-		}
-	}
+	//	//testing will be removed soon
+	//	PlantsArray[0].type = PeaShooter;
+	//	PlantsArray[0].shape.setPosition({ 400,100 });
+	//	PlantsArray[1].type = SnowPeaShooter;
+	//	PlantsArray[1].shape.setPosition({ 400,300 });
+	//	PlantsArray[2].type = WallNut;
+	//	PlantsArray[2].shape.setPosition({ 400,500 });
+	//	PlantsArray[3].type = SunFlower;
+	//	PlantsArray[3].shape.setPosition({ 400,600 });
+	//	for (int i = 0; i < 4; i++)
+	//	{
+	//		PlantsArray[i].start();
+	//	}
+	//}
 
 	// this function will be used to update the plants and remove outdated projectiles 
 	// it will be called every frame
@@ -419,7 +412,7 @@ namespace Plants_Zombies {
 			}
 		}
 
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 45; i++)
 		{
 			PlantsArray[i].updatePlantStruct(zombie_array);
 		}
@@ -430,7 +423,7 @@ namespace Plants_Zombies {
 		{
 			window.draw(PlantProjectilesARR[i].shape);
 		}
-		for (int i = 0; i < 4; i++)
+		for (int i = 0; i < 45; i++)
 		{
 			window.draw(PlantsArray[i].shape);
 		}
@@ -930,40 +923,39 @@ namespace Plants_Zombies {
 		}
 	}
 
-	void Plants::updatePlantStruct(Zombie* zombie_array) {
-		for (int i = 0; i < 4; i++)
-		{
-			if (!PlantsArray[i].isDead) // if not dead will animate and execute action  
-			{
-				for (int j = 0; j < 4; j++)
-				{
-					if (!zombie_array[i].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
-					{
-						// checks if a zombie is in front of the plant  
-						if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
-							&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-								&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-								&& (PlantsArray[i].shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left)))
-						{
-							PlantsArray[i].zombieInFront = true;
-							break;
-						}
-					}
-					else
-					{
-						PlantsArray[i].zombieInFront = false;
-					}
-				}
-
-				PlantsArray[i].animationHandler();
-				PlantsArray[i].action();
-			}
-			else // else will turn the plant into an empty gameobject  
-			{
-				PlantsArray[i].type = EmptyPlant;
-				PlantsArray[i].setupPrefab();
-			}
-		}
-	}
+	//void Plants::updatePlantStruct(Zombie* zombie_array) {
+	//	for (int i = 0; i < 4; i++)
+	//	{
+	//		if (!PlantsArray[i].isDead) // if not dead will animate and execute action  
+	//		{
+	//			for (int j = 0; j < 4; j++)
+	//			{
+	//				if (!zombie_array[i].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
+	//				{
+	//					// checks if a zombie is in front of the plant  
+	//					if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
+	//						&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
+	//							&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
+	//							&& (PlantsArray[i].shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left)))
+	//					{
+	//						PlantsArray[i].zombieInFront = true;
+	//						break;
+	//					}
+	//				}
+	//				else
+	//				{
+	//					PlantsArray[i].zombieInFront = false;
+	//				}
+	//			}
+	//			PlantsArray[i].animationHandler();
+	//			PlantsArray[i].action();
+	//		}
+	//		else // else will turn the plant into an empty gameobject  
+	//		{
+	//			PlantsArray[i].type = EmptyPlant;
+	//			PlantsArray[i].setupPrefab();
+	//		}
+	//	}
+	//}
 
 }

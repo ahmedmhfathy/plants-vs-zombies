@@ -309,15 +309,15 @@ void DrawLevelEnd(RenderWindow& window)
 #pragma region Level Functions
 void StartLevel1()
 {
-    LoadSunDropTex();
-    SetupSunDrop(offset);
+    StartPlantingAndCurrencySystem(offset);
+
     StartAnimationNS::startAnimation();
 
-    Plants_Zombies::StartPlants();
+    SetupPlants();
 }
 void UpdateLevel1(RenderWindow& window)
 {
-    updateSunDrop(MouseWorldPostion, offset);
+    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
     if (!IsPaused)
@@ -331,8 +331,8 @@ void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
     drawzombies(window);
+    DrawPlantingAndCurrencySystem(window);
     Plants_Zombies::DrawPlantsAndProjectiles(window);
-    DrawSunDrop(window);
 }
 
 void StartLevel2()

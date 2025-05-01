@@ -1,4 +1,3 @@
-// enta zengy leh
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
@@ -7,7 +6,7 @@
 #include "Main Menu.h"
 #include "Game Manager.h"
 #include "StartAnimation.h"
-#include "plants.h"
+#include"planting system.h"
 using namespace std;
 using namespace sf;
 
@@ -45,6 +44,7 @@ int main()
 void Start()
 {
     Plants_Zombies::LoadPlantTextures(); //textures loaded here once
+    LoadSelectionTexture();
 
     CurrentState = MainMenu;
 
