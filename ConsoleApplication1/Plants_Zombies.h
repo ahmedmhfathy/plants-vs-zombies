@@ -8,6 +8,7 @@ using namespace std;
 using namespace sf;
 
 namespace Plants_Zombies {
+	int score;
 #pragma region Forward Declaration for Structs
 	struct Zombie;
 	struct PlantProjectile;
@@ -16,7 +17,7 @@ namespace Plants_Zombies {
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant, SunCoin };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, Dead };
 #pragma endregion
 
@@ -55,8 +56,6 @@ namespace Plants_Zombies {
 		WallNutIdleTex.loadFromFile("Assets/Plants/WallNut/wallnut-ST.png");
 	}
 
-
-
 	struct PlantProjectile
 	{
 		//string type;
@@ -94,19 +93,19 @@ namespace Plants_Zombies {
 				damage = PlantDamage;
 				slowMultiplier = 0.5;
 			}
-			else if (type == SunFlower)
+			else if (type == SunFlower || type == SunCoin)
 			{
 				shape.setTexture(SunFlowerSunTex);
 				shape.setPosition(SpwanPos);
 				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
 				projectileLifeSpan = seconds(12); //time to despawn
 				shape.setScale(1.25, 1.25);
-				speed = 0;
+				speed = 1;
 				damage = PlantDamage;
 				slowMultiplier = 1;
 			}
 		}
-		void update(bool isPaused) {
+		void update() {
 
 			if (type == PeaShooter || type == SnowPeaShooter)
 			{
@@ -115,6 +114,14 @@ namespace Plants_Zombies {
 			else if (type == SunFlower)
 			{
 				shape.rotate(0.5);
+			}
+			else if (type == SunCoin)
+			{
+				if (shape.getPosition().y < (200 + rand() % 300))
+				{
+					shape.move(0, speed);
+					shape.rotate(0.5);
+				}
 			}
 		}
 	};
@@ -159,7 +166,7 @@ namespace Plants_Zombies {
 				isDead = true;
 			}
 		}
-		void updatePlantStruct(Zombie* zombie_array, bool isPaused); // Defined at the bottom of the code
+		void updatePlantStruct(Zombie* zombie_array); // Defined at the bottom of the code
 
 	private:
 		void animationHandler() {
@@ -380,8 +387,7 @@ namespace Plants_Zombies {
 
 	// this function will be used to update the plants and remove outdated projectiles 
 	// it will be called every frame
-	void UpdatePlants(Zombie* zombie_array, bool isPaused) {
-
+	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos) {
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
@@ -401,12 +407,20 @@ namespace Plants_Zombies {
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			PlantProjectilesARR[i].update(isPaused);
+			PlantProjectilesARR[i].update();
+			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
+				&& Mouse::isButtonPressed(Mouse::Left))
+			{
+				score = score + 25;
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
 		}
 
 		for (int i = 0; i < 4; i++)
 		{
-			PlantsArray[i].updatePlantStruct(zombie_array, isPaused);
+			PlantsArray[i].updatePlantStruct(zombie_array);
 		}
 	}
 
@@ -420,8 +434,6 @@ namespace Plants_Zombies {
 			window.draw(PlantsArray[i].shape);
 		}
 	}
-
-
 
 	// ZOMBIES =============================================
 
@@ -451,7 +463,6 @@ namespace Plants_Zombies {
 	Texture NewsManDeath;
 	//Death
 	Texture death;
-#pragma endregion
 #pragma endregion
 
 	void LoadZombieTextures() {
@@ -918,7 +929,7 @@ namespace Plants_Zombies {
 		}
 	}
 
-	void Plants::updatePlantStruct(Zombie* zombie_array, bool isPaused) {
+	void Plants::updatePlantStruct(Zombie* zombie_array) {
 		for (int i = 0; i < 4; i++)
 		{
 			if (!PlantsArray[i].isDead) // if not dead will animate and execute action  
