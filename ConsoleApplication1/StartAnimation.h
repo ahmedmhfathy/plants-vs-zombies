@@ -13,7 +13,8 @@
 #include"Wave System.h"
 using namespace std;
 using namespace sf;
-#pragma region (Texture,sprite)_declaration
+
+#pragma region Textures and sprites declaration
 Texture gardentexture;
 Sprite gardensprite;
 Texture Readytexttexture;
@@ -23,8 +24,10 @@ Sprite Settextsprite;
 Texture Planttexttexture;
 Sprite Planttextsprite;
 #pragma endregion
+
 #pragma region Fuctions
 #pragma endregion
+
 #pragma region boolean
 bool startdrawRSP = true;
 bool EntertostartdrawRSP = false;
@@ -34,20 +37,26 @@ bool moveleft=false;
 bool startAnimcamera = false;
 
 #pragma endregion
+
 #pragma region Hours
 // hours
 Clock animcameraClock; // Clock use in animation to camera
 Clock clockRSP;
 #pragma endregion
-// ==*** Declare Camera ***===
+
  namespace  StartAnimationNS {
+
+#pragma region Function Declaration
 void startAnimation();
 void updateAnimation(RenderWindow&);
 void movecamera(RenderWindow&);
 void RSP(RenderWindow&); // Ready...Set....Plant....
 void loadphoto();
 void movecars(); 
+#pragma endregion
+
     View GardenCamera(FloatRect(0, 0, 1280, 720));
+
     void startAnimation() {
         for (int i = 0; i < 5; i++) {
             car[i].start(i);
@@ -58,6 +67,7 @@ void movecars();
             zombie[i].start(i, false);
         }
     }
+
     void updateAnimation(RenderWindow& window) {
         deltatimetextstartwave2 = clockdrawtextwave2.restart();
         deltatimetextfinalwave = clockdrawtextfinalwave.restart();
@@ -119,6 +129,7 @@ void movecars();
         Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
         Textlosegamesprite.setPosition(1280 / 3.5f, 720/ 2.27f);
     }
+
     void movecamera(RenderWindow& window) {
         // Start Move Camera From Left To Right..... Then From Right To Left.....
         window.setView(GardenCamera);
@@ -151,6 +162,7 @@ void movecars();
         // End function ..... and move camera is end..
 
     }
+
     void RSP(RenderWindow& window) {
         Time time;
         if (startdrawRSP)
@@ -177,6 +189,7 @@ void movecars();
         }
 
     }
+
     void movecars() {
         int stoppedCars = 0;
         Time deltatime = clockmovecars.restart();
@@ -192,6 +205,7 @@ void movecars();
 
         }
     }
+
     void Renderstartanimation(RenderWindow& window) {
         window.draw(gardensprite);
         for (int i = 0; i < 40; i++) {

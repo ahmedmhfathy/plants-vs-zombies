@@ -99,25 +99,23 @@ void SetupSunDrop(Vector2f offset) {
 	scoretex.setFillColor(Color::White);
 	scoretex.setOutlineThickness(3);
 	scoretex.setOrigin(scoretex.getGlobalBounds().width / 2, scoretex.getGlobalBounds().height / 2);
-	scoretex.setPosition(77 + offset.x, 135 + offset.y);
-
+	scoretex.setPosition(80 + offset.x, 138 + offset.y);
 }
 
 void updateSunDrop(Vector2f mousepos, Vector2f offset) {
 	if (suncoinclock.getElapsedTime() >= seconds(17))
 	{
-		Vector2f sponposition = { (float)(300 + rand() % 700 + offset.x), (float)(-100 + offset.y) };
+		Vector2f sponposition = { (float)(0 + rand() % 780), (float)(-100 + offset.y) };
 		Plants_Zombies::PlantProjectile suncoin;
 
-		suncoin.start(Plants_Zombies::SunCoin, 0, sponposition);
+		suncoin.start(Plants_Zombies::SunCoin, 0, sponposition, (200 + rand() % 300) + offset.y);
 		Plants_Zombies::PlantProjectilesARR.push_back(suncoin);
 		suncoinclock.restart();
 	}
 
-	//rect.setPosition(ms.getPosition().x - 330, ms.getPosition().y - 220);
 	scoretex.setString(to_string(Plants_Zombies::score));
 	scoretex.setOrigin(scoretex.getGlobalBounds().width / 2, scoretex.getGlobalBounds().height / 2);
-	scoretex.setPosition(77 + offset.x, 135 + offset.y);
+	scoretex.setPosition(80 + offset.x, 138 + offset.y);
 
 	if (Plants_Zombies::score >= 50 && sunflowerclock.getElapsedTime() >= sunflowertime)
 	{
@@ -198,5 +196,4 @@ void DrawSunDrop(RenderWindow& window) {
 	window.draw(plants2);
 	window.draw(plants3);
 	window.draw(plants4);
-
 }

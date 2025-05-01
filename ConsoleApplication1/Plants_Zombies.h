@@ -69,7 +69,9 @@ namespace Plants_Zombies {
 		Time projectileLifeSpan;
 		Clock clock;
 
-		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos) {
+		int sunCoinYLimt;
+
+		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos, int yLimit) {
 			clock.restart();
 			type = plantType;
 
@@ -103,6 +105,7 @@ namespace Plants_Zombies {
 				speed = 1;
 				damage = PlantDamage;
 				slowMultiplier = 1;
+				sunCoinYLimt = yLimit;
 			}
 		}
 		void update() {
@@ -117,15 +120,14 @@ namespace Plants_Zombies {
 			}
 			else if (type == SunCoin)
 			{
-				if (shape.getPosition().y < (200 + rand() % 300))
+				if (shape.getPosition().y < sunCoinYLimt)
 				{
 					shape.move(0, speed);
-					shape.rotate(0.5);
 				}
+				shape.rotate(0.5);
 			}
 		}
 	};
-
 
 	struct Plants {
 		Sprite shape;
@@ -154,7 +156,6 @@ namespace Plants_Zombies {
 		void start() {
 			setupPrefab();
 		}
-
 
 		void takeDmg(float damage) {
 			health -= damage;
@@ -271,7 +272,7 @@ namespace Plants_Zombies {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12 , -24 }));
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12 , -24 }), 0);
 
 					PlantProjectilesARR.push_back(bullet);
 				}
@@ -282,7 +283,7 @@ namespace Plants_Zombies {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12, -24 }));
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12, -24 }), 0);
 
 					PlantProjectilesARR.push_back(bullet);
 				}
@@ -293,7 +294,7 @@ namespace Plants_Zombies {
 					isDead = false;
 
 					PlantProjectile sunCoin;
-					sunCoin.start(type, damage, shape.getPosition() + Vector2f({ 0, 0 }));
+					sunCoin.start(type, damage, shape.getPosition() + Vector2f({ 0, 0 }), 0);
 
 					PlantProjectilesARR.push_back(sunCoin);
 				}

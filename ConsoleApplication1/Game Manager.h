@@ -23,6 +23,7 @@ Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
 
 Vector2f offset = { -300, -50 };
+// the center of the GameScreen is 340, 310
 
 #pragma region Pause Menu Textures and Sprites
 Texture MainMenuButtonTex;
@@ -91,7 +92,7 @@ void SetupPauseMenu()
 
 void PauseMenuUpdate()
 {
-    if (Keyboard::isKeyPressed(Keyboard::Escape))
+    if (endRSP && Keyboard::isKeyPressed(Keyboard::Escape))
     {
         IsPaused = true;
     }
@@ -304,8 +305,6 @@ void DrawLevelEnd(RenderWindow& window)
 
 #pragma endregion
 
-RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
-
 //handle the code of each level
 #pragma region Level Functions
 void StartLevel1()
@@ -314,7 +313,6 @@ void StartLevel1()
     SetupSunDrop(offset);
     StartAnimationNS::startAnimation();
 
-
     Plants_Zombies::StartPlants();
 }
 void UpdateLevel1(RenderWindow& window)
@@ -322,25 +320,18 @@ void UpdateLevel1(RenderWindow& window)
     updateSunDrop(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(2, 4, 7.0f);
+    if (!IsPaused)
+    {
+        level(2, 4, 7.0f);
+    }
 
-    box.setPosition(MouseWorldPostion);
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
-
-    //for (int i = 0; i < 4; i++)
-    //{
-    //    if (Plants_Zombies::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
-    //    {
-    //        Plants_Zombies::PlantsArray[i].takeDmg(1);
-    //    }
-    //}
 }
 void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
     drawzombies(window);
     Plants_Zombies::DrawPlantsAndProjectiles(window);
-    //window.draw(box);
     DrawSunDrop(window);
 }
 
