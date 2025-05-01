@@ -11,6 +11,7 @@
 #include <sstream>
 #include<time.h>
 #include"StartAnimation.h"
+
 #pragma region (Texture,sprite)_declaration
 Texture lawntexture;
 Texture rectangletexture;
@@ -21,6 +22,7 @@ Sprite Textstartfinalwavesprite;
 Texture Textlosegametexture;
 Sprite Textlosegamesprite;
 #pragma endregion
+
 #pragma region boolean
 // =====================***boolean waves**=================================
 bool nowave = true;
@@ -29,6 +31,7 @@ bool checkstart_wave3 = true;
 bool endRSP = false;
 bool movefromwavetoanother = true;
 #pragma endregion
+
 #pragma region hours and timer
 //================================================================================
 Clock clockmovecars; // use in move cars
@@ -49,24 +52,28 @@ Clock clocklosegame;                      //clock for lose game.....
 // deltatime for animation 3 texts(start wave2, start final wave, lose game)......
 Time deltatimetextstartwave2, deltatimetextfinalwave, deltatimelosegame;
 #pragma endregion
+
 #pragma region Scale 
 float minscale = 1.7f;               // Min Scale For Text Start Wave Two And Text Final Wave
 float scaleFactor = 6.0f;           // First scale For  Text Start Wave Two And Text Final Wave
 float minscaletextlosegame = 1.17f;          // Min Scale For Text Lose Game
 float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
 #pragma endregion
+
 //intersection
 FloatRect rect1;
 FloatRect rect2;
 // speed zombies
 const float speedzombie = 40.0f;
+
 #pragma region Functiondelaration
 void allwave(int);
-void intersectioncarsandzombies(int, RenderWindow&);
+void intersectioncarsandzombies(int);
 void drawzombies(RenderWindow&, string);
 void startallwave(int, int, float);
 void level(int, int, float);
 #pragma endregion
+
 struct cars {
     bool intersection = false;
     float speed = 150;
@@ -111,6 +118,7 @@ struct waves {
     bool checkexit_wave=false;
     bool check_startwave = true;
 }wave[3];
+
 void drawzombies(RenderWindow& window) {
     if (nowave) {
         for (int i = 0; i < wave[0].numberzombie; i++) {
@@ -128,7 +136,7 @@ void drawzombies(RenderWindow& window) {
         }
     }
     for (int i = 0; i < 3; i++) {
-        intersectioncarsandzombies(i, window);
+        intersectioncarsandzombies(i);
     }
     if (timertostartwave2 > seconds(2) && timertostartwave2 < seconds(6) && wave[0].checkexit_wave)
     {
@@ -157,7 +165,8 @@ void drawzombies(RenderWindow& window) {
         }
     } */
 }
-void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
+
+void intersectioncarsandzombies(int numberwave) {
     Time deltatime = clockmovecars.restart();
     float dt = deltatime.asSeconds();
     for (int i = 0; i < wave[numberwave].numberzombie; i++) {
@@ -178,6 +187,7 @@ void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
         }
     }
 }
+
 void startallwave(int numberwave, int numberzombie, float delaybetween) {
     srand(time(0));
     float deltaTime;
@@ -197,6 +207,7 @@ void startallwave(int numberwave, int numberzombie, float delaybetween) {
     }
 
 }
+
 void allwave(int numberwave) {
     for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
         if (timeSinceStart >= i * wave[numberwave].delaybetween) {
@@ -226,6 +237,7 @@ void allwave(int numberwave) {
         }
     }
 }
+
 void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
     if (numberwave == 2) {
         if (wave[0].check_startwave) {

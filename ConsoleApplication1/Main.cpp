@@ -26,7 +26,7 @@ int main()
     Clock clock;
     while (window.isOpen()) // game loop
     {
-#pragma region MISC
+        #pragma region MISC
         DeltaTime = clock.restart().asSeconds();
         Event event;
         while (window.pollEvent(event))
@@ -34,7 +34,7 @@ int main()
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-#pragma endregion
+        #pragma endregion
 
         Update();
         RenderScreen();
@@ -44,7 +44,8 @@ int main()
 
 void Start()
 {
-    PlantsNS::LoadPlantTextures(); //textures loaded here once
+    //textures loaded here once
+    Plants_Zombies::LoadPlantTextures();
 
     CurrentState = MainMenu;
 

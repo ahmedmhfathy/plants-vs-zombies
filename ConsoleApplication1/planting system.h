@@ -16,7 +16,7 @@ using namespace std;
 using namespace sf;
 
 #pragma region texture declaration
-Texture ground;
+Texture opacityGradientTex;
 Texture sunscore;
 Texture plant1;
 Texture plant11;
@@ -32,7 +32,7 @@ Text scoretex;
 #pragma endregion
 
 #pragma region sprite declaration
-Sprite backg;
+Sprite opacityGradient;
 Sprite sunscore1;
 Sprite plants1;
 Sprite plants2;
@@ -47,66 +47,51 @@ Time peashootertime = seconds(7);
 Time sunflowertime = seconds(7);
 Time  snowpeashootertime = seconds(7);
 Time  wallnuttime = seconds(30);
-
 #pragma endregion
+
 bool ispeashooter = false;
 bool issunflower = false;
 bool iswallnut = false;
 bool issnowpea = false;
 
-float speed = 0.1;
-Vector2i mouseposition;
-Vector2f mouseworldposition;
-//RectangleShape rect(Vector2f(10, 20));//mouse
-//Mouse ms;
-
 void LoadSunDropTex() {
-	ground.loadFromFile("SunDropSystem/background.jpg");
-	sunscore.loadFromFile("SunDropSystem/sun-cointainer.jpg");
-	plant1.loadFromFile("SunDropSystem/peashooter-seedpacket-2.jpg");
-	plant11.loadFromFile("SunDropSystem/peashooter-seedpacket-1.jpg");
-	plant2.loadFromFile("SunDropSystem/sunflower-seedpacket-2.jpg");
-	plant22.loadFromFile("SunDropSystem/sunflower-seedpacket-1.jpg");
-	plant3.loadFromFile("SunDropSystem/wallnut-seedpacket-2.jpg");
-	plant33.loadFromFile("SunDropSystem/wallnut-seedpacket-1.jpg");
-	plant4.loadFromFile("SunDropSystem/snowpea-seedpacket-2.jpg");
-	plant44.loadFromFile("SunDropSystem/snowpea-seedpacket-1.jpg");
-	sun.loadFromFile("SunDropSystem/sun-ST.png");
-	font.loadFromFile("SunDropSystem/HouseofTerror Regular.otf");
+	opacityGradientTex.loadFromFile("Assets/Currency System and planting/Gradient-opacity-layer.png");
+	sunscore.loadFromFile("Assets/Currency System and planting/sun-cointainer.png");
+	plant1.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-2.png");
+	plant11.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-1.png");
+	plant2.loadFromFile("Assets/Currency System and planting/sunflower-seedpacket-2.png");
+	plant22.loadFromFile("Assets/Currency System and planting/sunflower-seedpacket-1.png");
+	plant3.loadFromFile("Assets/Currency System and planting/wallnut-seedpacket-2.png");
+	plant33.loadFromFile("Assets/Currency System and planting/wallnut-seedpacket-1.png");
+	plant4.loadFromFile("Assets/Currency System and planting/snowpea-seedpacket-2.png");
+	plant44.loadFromFile("Assets/Currency System and planting/snowpea-seedpacket-1.png");
+	sun.loadFromFile("Assets/Sun/sun-ST.png");
+	font.loadFromFile("Assets/HouseofTerror Regular.otf");
 }
 
-void SetupSunDrop() {
-	sunscore1.setTexture(sunscore);
-	sunscore1.setTextureRect(IntRect(0, 0, 100, 92));
-	sunscore1.setScale(1, 1);
-	sunscore1.setPosition(30, 20);
+void SetupSunDrop(Vector2f offset) {
+	opacityGradient.setTexture(opacityGradientTex);
+	opacityGradient.setPosition(offset.x, offset.y);
 
-	backg.setTexture(ground);
+	sunscore1.setTexture(sunscore);
+	sunscore1.setScale(1, 1);
+	sunscore1.setPosition(30 + offset.x, 20 + offset.y);
 
 	plants1.setTexture(plant1);
-	plants1.setTextureRect(IntRect(0, 0, 100, 92));
 	plants1.setScale(1, 1);
-	plants1.setPosition(27, 292);
+	plants1.setPosition(27 + offset.x, 292 + offset.y);
 
 	plants2.setTexture(plant2);
-	plants2.setTextureRect(IntRect(0, 0, 100, 92));
 	plants2.setScale(1, 1);
-	plants2.setPosition(27, 183);
+	plants2.setPosition(27 + offset.x, 183 + offset.y);
 
 	plants3.setTexture(plant3);
-	plants3.setTextureRect(IntRect(0, 0, 100, 92));
 	plants3.setScale(1, 1);
-	plants3.setPosition(27, 490);
+	plants3.setPosition(27 + offset.x, 490 + offset.y);
 
 	plants4.setTexture(plant4);
-	plants4.setTextureRect(IntRect(0, 0, 100, 92));
 	plants4.setScale(1, 1);
-	plants4.setPosition(27, 393);
-
-	//drop.setTexture(sun);
-	//drop.setTextureRect(IntRect(0, 0, 26, 26));
-	//drop.setScale(5, 5);
-	//drop.setPosition(300+ (rand() % 700), -100);
+	plants4.setPosition(27 + offset.x, 393 + offset.y);
 
 	scoretex.setFont(font);
 	scoretex.setString(to_string(Plants_Zombies::score));
@@ -114,15 +99,14 @@ void SetupSunDrop() {
 	scoretex.setFillColor(Color::White);
 	scoretex.setOutlineThickness(3);
 	scoretex.setOrigin(scoretex.getGlobalBounds().width / 2, scoretex.getGlobalBounds().height / 2);
-	scoretex.setPosition(77, 135);
+	scoretex.setPosition(77 + offset.x, 135 + offset.y);
 
 }
 
-void updateSunDrop(Vector2f mousepos) {
+void updateSunDrop(Vector2f mousepos, Vector2f offset) {
 	if (suncoinclock.getElapsedTime() >= seconds(17))
 	{
-
-		Vector2f sponposition = { (float)(300 + rand() % 700), (float)(-100) };
+		Vector2f sponposition = { (float)(300 + rand() % 700 + offset.x), (float)(-100 + offset.y) };
 		Plants_Zombies::PlantProjectile suncoin;
 
 		suncoin.start(Plants_Zombies::SunCoin, 0, sponposition);
@@ -133,37 +117,33 @@ void updateSunDrop(Vector2f mousepos) {
 	//rect.setPosition(ms.getPosition().x - 330, ms.getPosition().y - 220);
 	scoretex.setString(to_string(Plants_Zombies::score));
 	scoretex.setOrigin(scoretex.getGlobalBounds().width / 2, scoretex.getGlobalBounds().height / 2);
-	scoretex.setPosition(77, 135);
+	scoretex.setPosition(77 + offset.x, 135 + offset.y);
+
 	if (Plants_Zombies::score >= 50 && sunflowerclock.getElapsedTime() >= sunflowertime)
 	{
 		plants2.setTexture(plant22);
 		issunflower = true;
-
 	}
 	else
 	{
 		plants2.setTexture(plant2);
-
 	}
+
 	if (Plants_Zombies::score >= 50 && wallnutclock.getElapsedTime() >= wallnuttime)
 	{
-
 		plants3.setTexture(plant33);
 		iswallnut = true;
 	}
 	else
 	{
-
 		plants3.setTexture(plant3);
 	}
 
 	if (Plants_Zombies::score >= 100 && peashooterclock.getElapsedTime() >= peashootertime)
 	{
-
 		plants1.setTexture(plant11);
 		ispeashooter = true;
 	}
-
 	else
 	{
 		plants1.setTexture(plant1);
@@ -178,18 +158,16 @@ void updateSunDrop(Vector2f mousepos) {
 	{
 		plants4.setTexture(plant4);
 	}
+
 	if (plants1.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left) && ispeashooter)
 	{
-
 		Plants_Zombies::score = Plants_Zombies::score - 100;
 		peashooterclock.restart();
 		ispeashooter = false;
 	}
 
-
 	if (plants2.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left) && issunflower)
 	{
-
 		Plants_Zombies::score -= 50;
 		sunflowerclock.restart();
 		issunflower = false;
@@ -202,19 +180,17 @@ void updateSunDrop(Vector2f mousepos) {
 		wallnutclock.restart();
 		iswallnut = false;
 	}
+
 	if (plants4.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left) && issnowpea)
 	{
-
 		Plants_Zombies::score -= 175;
 		snowpeashooterclock.restart();
 		issnowpea = false;
 	}
-
-
 }
 
 void DrawSunDrop(RenderWindow& window) {
-	//window.draw(backg);
+	window.draw(opacityGradient);
 	window.draw(scoretex);
 	window.draw(sunscore1);
 	window.draw(drop);

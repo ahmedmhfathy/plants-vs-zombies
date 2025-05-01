@@ -7,7 +7,6 @@
 #include <cmath>
 #include "StartAnimation.h"
 #include "Wave System.h"
-#include "plants.h"
 #include"planting system.h"
 
 using namespace std;
@@ -22,6 +21,8 @@ bool IsPaused = false;
 
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
+
+Vector2f offset = { -300, -50 };
 
 #pragma region Pause Menu Textures and Sprites
 Texture MainMenuButtonTex;
@@ -73,18 +74,19 @@ void SetupPauseMenu()
     LoadPauseMenuTextures();
 
     BackToGame.setTexture(BackToTheGameButtonTex);
-    BackToGame.setPosition(537, 459);
+    BackToGame.setPosition(537 + offset.x, 459 + offset.y);
     BackToGame.setScale(1.75, 1.75);
 
     BackToMainMenu.setTexture(MainMenuButtonTex);
-    BackToMainMenu.setPosition(555, 400);
+    BackToMainMenu.setPosition(555 + offset.x, 400 + offset.y);
     BackToMainMenu.setScale(1.75, 1.75);
 
     BlankPauseMenu.setTexture(PauseMenuBlank);
     BlankPauseMenu.setOrigin(BlankPauseMenu.getGlobalBounds().width / 2, BlankPauseMenu.getGlobalBounds().height / 2);
     BlankPauseMenu.setScale(1.75, 1.75);
-    BlankPauseMenu.setPosition(640, 360);
+    BlankPauseMenu.setPosition(640 + offset.x, 360 + offset.y);
     Opacity.setTexture(OpacityTex);
+    Opacity.setPosition(offset.x, offset.y);
 }
 
 void PauseMenuUpdate()
@@ -158,25 +160,25 @@ void LevelEndSetup()
     LoadLevelEndTextures();
 
     BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
-    BackToMainMenuLevelEnd.setPosition(555, 459);
+    BackToMainMenuLevelEnd.setPosition(555 + offset.x, 459 + offset.y);
     BackToMainMenuLevelEnd.setScale(1.75, 1.75);
 
     LostMenuBlank.setTexture(LostMenuBlankTex);
     LostMenuBlank.setOrigin(LostMenuBlank.getGlobalBounds().width / 2, LostMenuBlank.getGlobalBounds().height / 2);
     LostMenuBlank.setScale(1.75, 1.75);
-    LostMenuBlank.setPosition(640, 360);
+    LostMenuBlank.setPosition(640 + offset.x, 360 + offset.y);
 
     RetryButton.setTexture(RetryButtonTex);
-    RetryButton.setPosition(585, 400);
+    RetryButton.setPosition(585 + offset.x, 400 + offset.y);
     RetryButton.setScale(1.75, 1.75);
 
     WinMenuBlank.setTexture(WinMenuBlankTex);
     WinMenuBlank.setOrigin(WinMenuBlank.getGlobalBounds().width / 2, WinMenuBlank.getGlobalBounds().height / 2);
     WinMenuBlank.setScale(1.75, 1.75);
-    WinMenuBlank.setPosition(640, 360);
+    WinMenuBlank.setPosition(640 + offset.x, 360 + offset.y);
 
     NextlevelButton.setTexture(NextlevelButtonTex);
-    NextlevelButton.setPosition(555, 400);
+    NextlevelButton.setPosition(555 + offset.x, 400 + offset.y);
     NextlevelButton.setScale(1.75, 1.75);
 };
 
@@ -309,39 +311,34 @@ RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 void StartLevel1()
 {
     LoadSunDropTex();
-    SetupSunDrop();
+    SetupSunDrop(offset);
     StartAnimationNS::startAnimation();
     level(2, 4, 7.0f);
 
-    PlantsNS::StartPlants();
-    box.setPosition({ 1000, 100 });
-    box.setOrigin({ 50, 50 });
+    Plants_Zombies::StartPlants();
 }
 void UpdateLevel1(RenderWindow&window)
 {
-    updateSunDrop(mouseworldposition);
+    updateSunDrop(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
     box.setPosition(MouseWorldPostion);
-    PlantsNS::UpdatePlants(box, IsPaused);
+    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 
-    for (int i = 0; i < 4; i++)
-    {
-        if (PlantsNS::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
-        {
-            PlantsNS::PlantsArray[i].takeDmg(1);
-        }
-    }
+    //for (int i = 0; i < 4; i++)
+    //{
+    //    if (Plants_Zombies::PlantsArray[i].shape.getGlobalBounds().intersects(box.getGlobalBounds()))
+    //    {
+    //        Plants_Zombies::PlantsArray[i].takeDmg(1);
+    //    }
+    //}
 }
 void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
-    if (!IsPaused)
-    {
-        drawzombies(window);
-    }
-    PlantsNS::DrawPlantsAndProjectiles(window);
-    window.draw(box);
+    drawzombies(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
+    //window.draw(box);
     DrawSunDrop(window);
 }
 
