@@ -44,7 +44,7 @@ int main()
 
 void Start()
 {
-    PlantsNS::LoadPlantTextures(); //textures loaded here once
+    Plants_Zombies::LoadPlantTextures(); //textures loaded here once
 
     CurrentState = MainMenu;
 

@@ -313,7 +313,7 @@ void StartLevel1()
     LoadSunDropTex();
     SetupSunDrop(offset);
     StartAnimationNS::startAnimation();
-    level(2, 4, 7.0f);
+
 
     Plants_Zombies::StartPlants();
 }
@@ -321,6 +321,8 @@ void UpdateLevel1(RenderWindow& window)
 {
     updateSunDrop(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
+
+    level(2, 4, 7.0f);
 
     box.setPosition(MouseWorldPostion);
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);

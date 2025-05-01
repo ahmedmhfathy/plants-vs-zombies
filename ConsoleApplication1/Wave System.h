@@ -227,67 +227,69 @@ void allwave(int numberwave) {
     }
 }
 void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
-    if (numberwave == 2) {
-        if (wave[0].check_startwave) {
-            wave[0].check_startwave = false;
-            startallwave(0, numberzombiew1, delaybetweenw1);
-        }
-        if (nowave && endRSP) { allwave(0); }
-        if (wave[0].checkexit_wave) {
-            if (movefromwavetoanother) {
-                clockwave2.restart();
-                movefromwavetoanother = false;
-                nowave = false;
+    if (endRSP)
+    {
+        if (numberwave == 2) {
+            if (wave[0].check_startwave) {
+                wave[0].check_startwave = false;
+                startallwave(0, numberzombiew1, delaybetweenw1);
             }
-            timertostartwave2 = clockwave2.getElapsedTime();
-            if (timertostartwave2 > seconds(6)) {
-                if (wave[1].check_startwave) {
-                    startallwave(1, numberzombiew1+=30, delaybetweenw1-=2.0f);
-                    wave[1].check_startwave = false;
-                    scaleFactor = 6.0f;
+            if (nowave && endRSP) { allwave(0); }
+            if (wave[0].checkexit_wave) {
+                if (movefromwavetoanother) {
+                    clockwave2.restart();
+                    movefromwavetoanother = false;
+                    nowave = false;
                 }
-                allwave(1);
-            }
-        }
-    }
-    if (numberwave == 3) {
-        if (wave[0].check_startwave) {
-            wave[0].check_startwave = false;
-            startallwave(0, numberzombiew1, delaybetweenw1);
-        }
-        if (nowave && endRSP) { allwave(0); }
-        if (wave[0].checkexit_wave) {
-            if (movefromwavetoanother) {
-                clockwave2.restart();
-                movefromwavetoanother = false;
-                nowave = false;
-            }
-            timertostartwave2 = clockwave2.getElapsedTime();
-            if (timertostartwave2 > seconds(6)) {
-                if (wave[1].check_startwave) {
-                    startallwave(1, numberzombiew1+=20, delaybetweenw1-=2.0f);
-                    wave[1].check_startwave = false;
-                    scaleFactor = 6.0f;
+                timertostartwave2 = clockwave2.getElapsedTime();
+                if (timertostartwave2 > seconds(6)) {
+                    if (wave[1].check_startwave) {
+                        startallwave(1, numberzombiew1+=30, delaybetweenw1-=2.0f);
+                        wave[1].check_startwave = false;
+                        scaleFactor = 6.0f;
+                    }
+                    allwave(1);
                 }
-                allwave(1);
             }
         }
-        if (wave[1].checkexit_wave) {
-            if (!movefromwavetoanother) {
-                clockfinalwave.restart();
-                movefromwavetoanother = true;
-                wave[0].checkexit_wave = false;
+        if (numberwave == 3) {
+            if (wave[0].check_startwave) {
+                wave[0].check_startwave = false;
+                startallwave(0, numberzombiew1, delaybetweenw1);
             }
-            timertostartwave3 = clockfinalwave.getElapsedTime();
-            if (timertostartwave3 > seconds(6)) {
-                if (wave[2].check_startwave) {
-                    startallwave(2, numberzombiew1 += 20, delaybetweenw1 -= 2.0f);
-                    wave[2].check_startwave = false;
+            if (nowave && endRSP) { allwave(0); }
+            if (wave[0].checkexit_wave) {
+                if (movefromwavetoanother) {
+                    clockwave2.restart();
+                    movefromwavetoanother = false;
+                    nowave = false;
                 }
-                allwave(2);
+                timertostartwave2 = clockwave2.getElapsedTime();
+                if (timertostartwave2 > seconds(6)) {
+                    if (wave[1].check_startwave) {
+                        startallwave(1, numberzombiew1+=20, delaybetweenw1-=2.0f);
+                        wave[1].check_startwave = false;
+                        scaleFactor = 6.0f;
+                    }
+                    allwave(1);
+                }
             }
+            if (wave[1].checkexit_wave) {
+                if (!movefromwavetoanother) {
+                    clockfinalwave.restart();
+                    movefromwavetoanother = true;
+                    wave[0].checkexit_wave = false;
+                }
+                timertostartwave3 = clockfinalwave.getElapsedTime();
+                if (timertostartwave3 > seconds(6)) {
+                    if (wave[2].check_startwave) {
+                        startallwave(2, numberzombiew1 += 20, delaybetweenw1 -= 2.0f);
+                        wave[2].check_startwave = false;
+                    }
+                    allwave(2);
+                }
 
+            }
         }
     }
-    
 }
