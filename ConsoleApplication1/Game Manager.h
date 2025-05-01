@@ -330,9 +330,9 @@ void UpdateLevel1(RenderWindow& window)
 void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
     drawzombies(window);
     DrawPlantingAndCurrencySystem(window);
-    Plants_Zombies::DrawPlantsAndProjectiles(window);
 }
 
 void StartLevel2()

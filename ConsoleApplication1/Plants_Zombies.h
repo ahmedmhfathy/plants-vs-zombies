@@ -421,11 +421,21 @@ namespace Plants_Zombies {
 	void DrawPlantsAndProjectiles(RenderWindow& window) {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			window.draw(PlantProjectilesARR[i].shape);
+			if (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter)
+			{
+				window.draw(PlantProjectilesARR[i].shape);
+			}
 		}
 		for (int i = 0; i < 45; i++)
 		{
 			window.draw(PlantsArray[i].shape);
+		}
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		{
+			if (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+			{
+				window.draw(PlantProjectilesARR[i].shape);
+			}
 		}
 	}
 
@@ -614,7 +624,7 @@ namespace Plants_Zombies {
 			}
 
 			// Plants Collision
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 45; i++)
 			{
 				for (int j = 0; j < 4; j++)
 				{
@@ -902,14 +912,9 @@ namespace Plants_Zombies {
 		{
 			if (zombie_array[i].type != Dead)
 			{
-				zombie_array[0].update(deltaTime);
-				zombie_array[1].update(deltaTime);
-				zombie_array[2].update(deltaTime);
-				zombie_array[3].update(deltaTime);
+				zombie_array[i].update(deltaTime);
 			}
-
 		}
-
 	}
 
 	void DrawZombies(RenderWindow& window) {

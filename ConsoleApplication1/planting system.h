@@ -253,7 +253,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 	{
 		if (curruntselection == shovel)
 		{
-			shovelcontainer.setTexture(shovelcontainertex);
+			shovelcontainer.setTexture(shovelcontaineruntex);
 			SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
 			SelectionHolograph.setTexture(shoveltex);
 			SelectionHolograph.setScale(1, 1);
@@ -388,9 +388,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 void DrawPlantingAndCurrencySystem(RenderWindow& window)
 {
-	for (int i = 1; i <= 45; i++) {
+	/*for (int i = 1; i <= 45; i++) {
 		window.draw(mygrid[i].shape);
-	}
+	}*/
 
 	window.draw(gradientopacity);
 	window.draw(moneytext);
