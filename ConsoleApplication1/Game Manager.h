@@ -8,6 +8,7 @@
 #include "StartAnimation.h"
 #include "Wave System.h"
 #include "plants.h"
+#include"planting system.h"
 
 using namespace std;
 using namespace sf;
@@ -307,6 +308,8 @@ RectangleShape box({ 100, 100 }); // zombie PLACE HOLDER
 #pragma region Level Functions
 void StartLevel1()
 {
+    LoadSunDropTex();
+    SetupSunDrop();
     StartAnimationNS::startAnimation();
     level(2, 4, 7.0f);
 
@@ -316,6 +319,7 @@ void StartLevel1()
 }
 void UpdateLevel1(RenderWindow&window)
 {
+    updateSunDrop(mouseworldposition);
     StartAnimationNS::updateAnimation(window);
 
     box.setPosition(MouseWorldPostion);
@@ -338,6 +342,7 @@ void DrawLevel1(RenderWindow& window)
     }
     PlantsNS::DrawPlantsAndProjectiles(window);
     window.draw(box);
+    DrawSunDrop(window);
 }
 
 void StartLevel2()
