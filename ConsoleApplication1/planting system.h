@@ -115,6 +115,7 @@ void SetupSelectionUI(Vector2f offset) {
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 }
 
+
 void SetupPlants() {
 	Plants_Zombies::PlantProjectilesARR.clear();
 
@@ -129,7 +130,9 @@ void SetupPlants() {
 
 void StartPlantingAndCurrencySystem(Vector2f offset) {
 	SetupSelectionUI(offset);
+	SetupPlants();
 
+	SunCoinClock.restart();
 	PeaShooterClock.restart();
 	SnowPeaClock.restart();
 	WallNutClock.restart();
@@ -143,8 +146,6 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 		mygrid[i].shape.setPosition(107 * c, 130 * r);
 
 		mygrid[i].isplanted = false;
-
-
 
 		c++;
 		if (i % 9 == 0)
@@ -394,10 +395,7 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 
 	window.draw(gradientopacity);
 	window.draw(moneytext);
-
 	window.draw(suncounter);
-	window.draw(moneytext);
-
 	window.draw(peashootercontainer);
 	window.draw(snowpeashootercontainer);
 	window.draw(sunflowercontainer);
@@ -410,8 +408,7 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	}
 }
 
-
-
+//plants_Zombies function
 void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 	for (int i = 0; i < 45; i++)
 	{
@@ -419,7 +416,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				if (!zombie_array[i].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
+				if (!zombie_array[j].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
 				{
 					// checks if a zombie is in front of the plant  
 					if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
@@ -429,6 +426,10 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 					{
 						PlantsArray[i].zombieInFront = true;
 						break;
+					}
+					else
+					{
+						PlantsArray[i].zombieInFront = false;
 					}
 				}
 				else

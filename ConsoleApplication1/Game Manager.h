@@ -312,8 +312,6 @@ void StartLevel1()
     StartPlantingAndCurrencySystem(offset);
 
     StartAnimationNS::startAnimation();
-
-    SetupPlants();
 }
 void UpdateLevel1(RenderWindow& window)
 {

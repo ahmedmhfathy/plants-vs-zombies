@@ -382,7 +382,7 @@ namespace Plants_Zombies {
 	// this function will be used to update the plants and remove outdated projectiles 
 	// it will be called every frame
 	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos) {
-		//deletes outdated projectiles
+		//deletes outdated projectiles and updates projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
 			if ((PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter) &&
@@ -391,27 +391,43 @@ namespace Plants_Zombies {
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
 			}
-			else if ((PlantProjectilesARR[i].type == SunFlower) &&
-				(!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
+			else if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+				&& (!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
 			}
-		}
 
-		for (int i = 0; i < PlantProjectilesARR.size(); i++)
-		{
-			PlantProjectilesARR[i].update();
-			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
-				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
-				&& Mouse::isButtonPressed(Mouse::Left))
+			if (!PlantProjectilesARR.empty())
 			{
-				score = score + 25;
-				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
-				i--;
+				PlantProjectilesARR[i].update();
+
+				if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+					&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
+					&& Mouse::isButtonPressed(Mouse::Left))
+				{
+					score += 25;
+					PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+					i--;
+				}
 			}
+
 		}
 
+		//for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		//{
+		//	PlantProjectilesARR[i].update();
+		//	if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+		//		&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
+		//		&& Mouse::isButtonPressed(Mouse::Left))
+		//	{
+		//		score += 25;
+		//		PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+		//		i--;
+		//	}
+		//}
+
+		//updates plants
 		for (int i = 0; i < 45; i++)
 		{
 			PlantsArray[i].updatePlantStruct(zombie_array);
