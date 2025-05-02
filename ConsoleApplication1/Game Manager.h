@@ -37,6 +37,11 @@ Sprite BackToGame;
 Sprite BackToMainMenu;
 Sprite BlankPauseMenu;
 Sprite Opacity;
+
+SoundBuffer PauseMenuOpen;
+Sound PauseMenuOpenSound;
+
+bool SoundOnPauseMenu = true;
 #pragma endregion
 
 #pragma region Level End Menu Textures and Sprites
@@ -62,6 +67,7 @@ Sprite NextlevelButton;
 
 #pragma region Pause Menu
 void LoadPauseMenuTextures() {
+    PauseMenuOpen.loadFromFile("Audio/tunetank.com_menu-pop.wav");
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
     MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
     BackToTheGameButtonTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button.png");
@@ -73,6 +79,8 @@ void LoadPauseMenuTextures() {
 void SetupPauseMenu()
 {
     LoadPauseMenuTextures();
+
+    PauseMenuOpenSound.setBuffer(PauseMenuOpen);
 
     BackToGame.setTexture(BackToTheGameButtonTex);
     BackToGame.setPosition(537 + offset.x, 459 + offset.y);
@@ -95,6 +103,11 @@ void PauseMenuUpdate()
     if (endRSP && Keyboard::isKeyPressed(Keyboard::Escape))
     {
         IsPaused = true;
+        if (SoundOnPauseMenu)
+        {
+        PauseMenuOpenSound.play();
+        SoundOnPauseMenu = false;
+        }
     }
     if (IsPaused && !LevelIsOver)
     {
@@ -103,6 +116,8 @@ void PauseMenuUpdate()
             BackToGame.setTexture(BackToTheGameButtonHoverTex);
             if (Mouse::isButtonPressed(Mouse::Left))
             {
+                PauseMenuOpenSound.play();
+                SoundOnPauseMenu = true;
                 IsPaused = false;
             }
         }
@@ -312,6 +327,8 @@ void StartLevel1()
     StartPlantingAndCurrencySystem(offset);
 
     StartAnimationNS::startAnimation();
+
+    SetupPlants();
 }
 void UpdateLevel1(RenderWindow& window)
 {
@@ -328,9 +345,9 @@ void UpdateLevel1(RenderWindow& window)
 void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
-    Plants_Zombies::DrawPlantsAndProjectiles(window);
     drawzombies(window);
     DrawPlantingAndCurrencySystem(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
 }
 
 void StartLevel2()

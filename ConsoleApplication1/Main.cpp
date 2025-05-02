@@ -88,6 +88,7 @@ void Update()
         LevelEndUpdate();
     }
 }
+
 // this function will be used to render the screen
 void RenderScreen()
 {

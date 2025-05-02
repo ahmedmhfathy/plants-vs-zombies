@@ -33,6 +33,16 @@ Sprite QuitButton;
 Sprite BackTOMainMenuButton;
 #pragma endregion
 
+SoundBuffer HoverMainMenu;
+
+Sound HoverMainMenuSound;
+SoundBuffer CreditsTran;
+
+Sound CreditsTranSound;
+bool SoundStart = false;
+bool SoundCredits = false;
+bool SoundQuit = false;
+
 bool ShowCredits = false;
 bool startAnim = false;
 Clock animClock;
@@ -43,6 +53,11 @@ View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 ///loads the textures for the main menu
 void LoadMainMenuTex()
 {
+    HoverMainMenu.loadFromFile("Audio/tunetank.com_interface-selection-hover.wav");
+    HoverMainMenuSound.setBuffer(HoverMainMenu);
+    CreditsTran.loadFromFile("Audio/tunetank.com_flash-screen.wav");
+    CreditsTranSound.setBuffer(CreditsTran);
+
     MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/mainmenu-no-buttons-2.png");
     StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
     StartButtonHoverTex.loadFromFile("Assets/Main Menu/startbutton-hover.png");
@@ -112,6 +127,11 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         if (mouse_pos.x >= 884 && mouse_pos.x <= 1211 && mouse_pos.y >= 202 && mouse_pos.y <= 310)
         {
             StartButton.setTexture(StartButtonHoverTex);
+            if (SoundStart)
+            {
+            HoverMainMenuSound.play();
+            SoundStart = false;
+            }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
                 SwitchState(Level1);
@@ -120,23 +140,36 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         else
         {
             StartButton.setTexture(StartButtonTex);
+            SoundStart = true;
         }
 
         if (mouse_pos.x >= 880 && mouse_pos.x <= 1190 && mouse_pos.y >= 349 && mouse_pos.y <= 410) //creidts button animation
         {
             CreditButton.setTexture(CreditButtonHoverTex);
+            if (SoundCredits)
+            {
+                HoverMainMenuSound.play();
+                SoundCredits = false;
+            }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                CreditsTranSound.play();
                 ShowCredits = true;
             }
         }
         else
         {
             CreditButton.setTexture(CreditButtonTex);
+            SoundCredits = true;
         }
 
         if (mouse_pos.x >= 891 && mouse_pos.x <= 1159 && mouse_pos.y >= 450 && mouse_pos.y <= 557)
         {
+            if (SoundQuit)
+            {
+                HoverMainMenuSound.play();
+                SoundQuit = false;
+            }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
                 window.close();
@@ -147,6 +180,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         else
         {
             QuitButton.setTexture(QuitButtonTex);
+            SoundQuit = true;
         }
     }
     else //credits menu buttons and animation
@@ -173,6 +207,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             BackTOMainMenuButton.setTexture(BackTOMainMenuHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                CreditsTranSound.play();
                 ShowCredits = false;
             }
         }

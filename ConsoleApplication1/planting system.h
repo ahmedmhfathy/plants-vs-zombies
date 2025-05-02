@@ -6,7 +6,7 @@
 #include <string>
 #include<time.h>
 #include"Plants_Zombies.h"
-
+//tunetank.com_throwing - item - low - swing
 using namespace std;
 using namespace sf;
 
@@ -49,6 +49,10 @@ Time WallNutCoolDown = seconds(30);
 
 Font font;
 Text moneytext;
+SoundBuffer PlantingSoundBuffer;
+Sound PlantingSound;
+SoundBuffer SelectingPlant;
+Sound SelectingPlantSound;
 
 enum Selection { peashooter, snowpeashooter, sunflower, shovel, wallnut, none }curruntselection;
 
@@ -60,6 +64,12 @@ struct grid {
 }mygrid[46];
 
 void LoadSelectionTexture() {
+	PlantingSoundBuffer.loadFromFile("Audio/tunetank.com_fghtimpt-impact-wood-grass-01.wav");
+	PlantingSound.setBuffer(PlantingSoundBuffer);
+	SelectingPlant.loadFromFile("Audio/tunetank.com_throwing-item-low-swing.wav");
+	SelectingPlantSound.setBuffer(SelectingPlant);
+
+
 	peashootertex.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-1.png");
 	peashooteruntex.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-2.png");
 
@@ -115,7 +125,6 @@ void SetupSelectionUI(Vector2f offset) {
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 }
 
-
 void SetupPlants() {
 	Plants_Zombies::PlantProjectilesARR.clear();
 
@@ -130,9 +139,7 @@ void SetupPlants() {
 
 void StartPlantingAndCurrencySystem(Vector2f offset) {
 	SetupSelectionUI(offset);
-	SetupPlants();
 
-	SunCoinClock.restart();
 	PeaShooterClock.restart();
 	SnowPeaClock.restart();
 	WallNutClock.restart();
@@ -146,6 +153,8 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 		mygrid[i].shape.setPosition(107 * c, 130 * r);
 
 		mygrid[i].isplanted = false;
+
+
 
 		c++;
 		if (i % 9 == 0)
@@ -185,6 +194,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (peashootercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
+			SelectingPlantSound.play();
 			isHolding = true;
 			curruntselection = peashooter;
 		}
@@ -200,6 +210,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (snowpeashootercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
+			SelectingPlantSound.play();
 			isHolding = true;
 			curruntselection = snowpeashooter;
 		}
@@ -215,6 +226,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (sunflowercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
+			SelectingPlantSound.play();
 			isHolding = true;
 			curruntselection = sunflower;
 		}
@@ -230,6 +242,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (wallnutcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
+			SelectingPlantSound.play();
 			isHolding = true;
 			curruntselection = wallnut;
 		}
@@ -254,7 +267,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 	{
 		if (curruntselection == shovel)
 		{
-			shovelcontainer.setTexture(shovelcontaineruntex);
+			shovelcontainer.setTexture(shovelcontainertex);
 			SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
 			SelectionHolograph.setTexture(shoveltex);
 			SelectionHolograph.setScale(1, 1);
@@ -303,6 +316,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 		{
 			if (mygrid[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 			{
+				
 				if (curruntselection == shovel && isHolding)
 				{
 					cout << "shovel " << i << endl;
@@ -317,6 +331,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.play();
 						cout << "peashooter " << i << endl;
 
 						mygrid[i].isplanted = true;
@@ -334,6 +349,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.play();
 						cout << "SnowPeaShooter " << i << endl;
 
 						mygrid[i].isplanted = true;
@@ -352,6 +368,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.play();
 						cout << "SunFlower " << i << endl;
 
 						mygrid[i].isplanted = true;
@@ -369,6 +386,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.play();
 						cout << "WallNut " << i << endl;
 
 						mygrid[i].isplanted = true;
@@ -389,13 +407,16 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 void DrawPlantingAndCurrencySystem(RenderWindow& window)
 {
-	/*for (int i = 1; i <= 45; i++) {
+	for (int i = 1; i <= 45; i++) {
 		window.draw(mygrid[i].shape);
-	}*/
+	}
 
 	window.draw(gradientopacity);
 	window.draw(moneytext);
+
 	window.draw(suncounter);
+	window.draw(moneytext);
+
 	window.draw(peashootercontainer);
 	window.draw(snowpeashootercontainer);
 	window.draw(sunflowercontainer);
@@ -408,7 +429,8 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	}
 }
 
-//plants_Zombies function
+
+
 void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 	for (int i = 0; i < 45; i++)
 	{
@@ -416,7 +438,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 		{
 			for (int j = 0; j < 4; j++)
 			{
-				if (!zombie_array[j].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
+				if (!zombie_array[i].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
 				{
 					// checks if a zombie is in front of the plant  
 					if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
@@ -426,10 +448,6 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 					{
 						PlantsArray[i].zombieInFront = true;
 						break;
-					}
-					else
-					{
-						PlantsArray[i].zombieInFront = false;
 					}
 				}
 				else
