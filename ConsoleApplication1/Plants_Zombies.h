@@ -44,7 +44,7 @@ namespace Plants_Zombies {
 	//will load all textures once
 	void LoadPlantTextures() {
 		//SunCoin
-		SunCoinSoundBuffer.loadFromFile("Audio/coin.ogg");
+		SunCoinSoundBuffer.loadFromFile("Audio/points.ogg");
 		SunCoinSound.setBuffer(SunCoinSoundBuffer);
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");

@@ -61,6 +61,8 @@ SoundBuffer SelectingPlant;
 SoundBuffer ShovelSoundBuffer;
 Sound ShovelSound;
 Sound SelectingPlantSound;
+SoundBuffer ShovelUseBuffer;
+Sound ShovelUse;
 
 enum Selection { peashooter, snowpeashooter, sunflower, shovel, wallnut, none }curruntselection;
 
@@ -76,8 +78,9 @@ void LoadSelectionTexture() {
 	ShovelSoundBuffer.loadFromFile("Audio/shovel.ogg");
 	ShovelSound.setBuffer(ShovelSoundBuffer);
 	PlantingSound.setBuffer(PlantingSoundBuffer);
-	SelectingPlant.loadFromFile("Audio/tunetank.com_throwing-item-low-swing.wav");
+	SelectingPlant.loadFromFile("Audio/seedlift.ogg");
 	SelectingPlantSound.setBuffer(SelectingPlant);
+	//ShovelUseBuffer.loadFromFile("Audio/");
 
 
 	peashootertex.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-1.png");
@@ -356,13 +359,16 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			{
 				if (curruntselection == shovel)
 				{
+					if (mygrid[i].isplanted)
+					{
+						PlantingSound.play();
 					cout << "shovel " << i << endl;
+						mygrid[i].isplanted = false;
+						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+						Plants_Zombies::PlantsArray[i - 1].start();
 
-					mygrid[i].isplanted = false;
-					Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
-					Plants_Zombies::PlantsArray[i - 1].start();
-
-					isHolding = false;
+						isHolding = false;
+					}
 				}
 				else if (curruntselection == peashooter)
 				{

@@ -40,6 +40,8 @@ SoundBuffer CreditsTran;
 SoundBuffer ButtonSoundBuffer;
 Sound ButtonSound;
 Sound CreditsTranSound;
+SoundBuffer ClickBuffer;
+Sound Click;
 
 bool SoundStart = false;
 bool SoundCredits = false;
@@ -56,12 +58,14 @@ View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 ///loads the textures for the main menu
 void LoadMainMenuTex()
 {
-    HoverMainMenu.loadFromFile("Audio/gravebutton.ogg");
+    HoverMainMenu.loadFromFile("Audio/tap.wav");
     HoverMainMenuSound.setBuffer(HoverMainMenu);
     CreditsTran.loadFromFile("Audio/tunetank.com_flash-screen.wav");
     CreditsTranSound.setBuffer(CreditsTran);
     ButtonSoundBuffer.loadFromFile("Audio/tap.wav");
     ButtonSound.setBuffer(ButtonSoundBuffer);
+    ClickBuffer.loadFromFile("Audio/buttonclick.ogg");
+    Click.setBuffer(ClickBuffer);
 
     MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/mainmenu-no-buttons-2.png");
     StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
@@ -139,6 +143,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                Click.play();
                 SwitchState(Level1);
             }
         }
@@ -158,7 +163,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
-                CreditsTranSound.play();
+                Click.play();
+                //CreditsTranSound.play();
                 ShowCredits = true;
             }
         }
@@ -177,6 +183,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                Click.play();
                 window.close();
             }
 
@@ -217,7 +224,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             BackTOMainMenuButton.setTexture(BackTOMainMenuHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
-                CreditsTranSound.play();
+                Click.play();
+                //CreditsTranSound.play();
                 ShowCredits = false;
             }
         }

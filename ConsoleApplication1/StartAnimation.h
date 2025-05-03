@@ -101,19 +101,19 @@ void movecars();
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
         Readytextsprite.setTexture(Readytexttexture);
         Readytextsprite.setOrigin(Readytextsprite.getGlobalBounds().width / 2.0f, Readytextsprite.getGlobalBounds().height / 2.0f);
-        Readytextsprite.setPosition(340, 310);
+        Readytextsprite.setPosition(640,360);
         Readytextsprite.setScale(1.8, 1.8);
         //** *********************(SET)************************ **
         Settexttexture.loadFromFile("Assets/Environment/StartSet.png");
         Settextsprite.setTexture(Settexttexture);
         Settextsprite.setOrigin(Settextsprite.getGlobalBounds().width / 2.0f, Settextsprite.getGlobalBounds().height / 2.0f);
-        Settextsprite.setPosition(340, 310);
+        Settextsprite.setPosition(640, 360);
         Settextsprite.setScale(1.8, 1.8);
         //***********************(PLANT)********************************
         Planttexttexture.loadFromFile("Assets/Environment/StartPlant.png");
         Planttextsprite.setTexture(Planttexttexture);
         Planttextsprite.setOrigin(Planttextsprite.getGlobalBounds().width / 2.0f, Planttextsprite.getGlobalBounds().height / 2.0f);
-        Planttextsprite.setPosition(340, 310);
+        Planttextsprite.setPosition(640, 360);
         Planttextsprite.setScale(1.8, 1.8);
         //***********************(Ready Set Plant Audio)********************************
         RSPSoundBuffer.loadFromFile("Audio/readysetplant.ogg");
@@ -188,11 +188,11 @@ void movecars();
             }
             window.draw(Readytextsprite);
         }
-        else if (time < seconds(1))
+        else if (time < seconds(1.2))
         {
             window.draw(Settextsprite);
         }
-        else if (time < seconds(1.5))
+        else if (time < seconds(2.05))
         {
             window.draw(Planttextsprite);
         }
