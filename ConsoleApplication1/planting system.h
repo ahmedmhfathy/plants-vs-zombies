@@ -47,22 +47,19 @@ Time SnowPeaCoolDown = seconds(7);
 Time WallNutCoolDown = seconds(30);
 #pragma endregion
 
-bool SnowpeaSelected = false;
-bool WallnutSelected = false;
-bool SunflowerSelected = false;
-bool PeaSelected = false;
-bool ShovelSelected = false;
+bool PlaySelectionSound = false;
 
-Font font;
-Text moneytext;
+#pragma region Sounds
 SoundBuffer PlantingSoundBuffer;
 Sound PlantingSound;
 SoundBuffer SelectingPlant;
+Sound SelectingPlantSound;
 SoundBuffer ShovelSoundBuffer;
 Sound ShovelSound;
-Sound SelectingPlantSound;
-SoundBuffer ShovelUseBuffer;
-Sound ShovelUse;
+#pragma endregion
+
+Font font;
+Text moneytext;
 
 enum Selection { peashooter, snowpeashooter, sunflower, shovel, wallnut, none }curruntselection;
 
@@ -80,8 +77,6 @@ void LoadSelectionTexture() {
 	PlantingSound.setBuffer(PlantingSoundBuffer);
 	SelectingPlant.loadFromFile("Audio/seedlift.ogg");
 	SelectingPlantSound.setBuffer(SelectingPlant);
-	//ShovelUseBuffer.loadFromFile("Audio/");
-
 
 	peashootertex.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-1.png");
 	peashooteruntex.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-2.png");
@@ -200,10 +195,10 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (peashootercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
-			if (PeaSelected)
+			if (!PlaySelectionSound)
 			{
-				PeaSelected = false;
-			SelectingPlantSound.play();
+				PlaySelectionSound = true;
+				SelectingPlantSound.play();
 			}
 			isHolding = true;
 			curruntselection = peashooter;
@@ -220,9 +215,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (snowpeashootercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
-			if (PeaSelected)
+			if (!PlaySelectionSound)
 			{
-				SnowpeaSelected = false;
+				PlaySelectionSound = true;
 				SelectingPlantSound.play();
 			}
 			isHolding = true;
@@ -240,10 +235,10 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (sunflowercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
-			if (SunflowerSelected)
+			if (!PlaySelectionSound)
 			{
+				PlaySelectionSound = true;
 				SelectingPlantSound.play();
-				SunflowerSelected = false;
 			}
 			isHolding = true;
 			curruntselection = sunflower;
@@ -260,9 +255,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (wallnutcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
-			if (WallnutSelected)
+			if (!PlaySelectionSound)
 			{
-				WallnutSelected = false;
+				PlaySelectionSound = true;
 				SelectingPlantSound.play();
 			}
 			isHolding = true;
@@ -276,10 +271,10 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 	if (shovelcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 	{
-		if (ShovelSelected)
+		if (!PlaySelectionSound)
 		{
+			PlaySelectionSound = true;
 			ShovelSound.play();
-			ShovelSelected = false;
 		}
 		isHolding = true;
 		curruntselection = shovel;
@@ -287,11 +282,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 	//for sound stuff
 	if (!isHolding)
 	{
-		SunflowerSelected = true;
-		PeaSelected = true;
-		SnowpeaSelected=true;
-		WallnutSelected = true;
-		ShovelSelected = true;
+		PlaySelectionSound = false;
 	}
 
 	//deselects

@@ -33,8 +33,8 @@ Sprite QuitButton;
 Sprite BackTOMainMenuButton;
 #pragma endregion
 
+#pragma region Sounds
 SoundBuffer HoverMainMenu;
-
 Sound HoverMainMenuSound;
 SoundBuffer CreditsTran;
 SoundBuffer ButtonSoundBuffer;
@@ -42,6 +42,7 @@ Sound ButtonSound;
 Sound CreditsTranSound;
 SoundBuffer ClickBuffer;
 Sound Click;
+#pragma endregion
 
 bool SoundStart = false;
 bool SoundCredits = false;
@@ -58,11 +59,11 @@ View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 ///loads the textures for the main menu
 void LoadMainMenuTex()
 {
-    HoverMainMenu.loadFromFile("Audio/tap.wav");
+    HoverMainMenu.loadFromFile("Audio/bleep.ogg");
     HoverMainMenuSound.setBuffer(HoverMainMenu);
     CreditsTran.loadFromFile("Audio/tunetank.com_flash-screen.wav");
     CreditsTranSound.setBuffer(CreditsTran);
-    ButtonSoundBuffer.loadFromFile("Audio/tap.wav");
+    ButtonSoundBuffer.loadFromFile("Audio/bleep.ogg");
     ButtonSound.setBuffer(ButtonSoundBuffer);
     ClickBuffer.loadFromFile("Audio/buttonclick.ogg");
     Click.setBuffer(ClickBuffer);

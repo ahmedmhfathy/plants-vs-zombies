@@ -79,8 +79,9 @@ Sound WinSound;
 
 #pragma region Pause Menu
 void LoadPauseMenuTextures() {
-    LoseAndWinAndPauseBuffer.loadFromFile("Audio/tap.wav");
+    LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
     PauseMenuOpen.loadFromFile("Audio/pause.ogg");
+
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
     MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
     BackToTheGameButtonTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button.png");
@@ -183,7 +184,7 @@ void DrawPauseMenu(RenderWindow& window)
 #pragma region Level End Menus
 void LoadLevelEndTextures() {
     //lose case
-    LoseAndWinAndPauseBuffer.loadFromFile("Audio/tap.wav");
+    LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
     LoseAndWinAndPause.setBuffer(LoseAndWinAndPauseBuffer);
     LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
     LoseSound.setBuffer(LoseSoundBuffer);
@@ -351,7 +352,6 @@ void LevelEndUpdate()
                 RetryButton.setTexture(RetryButtonTex);
             }
         }
-
     }
 }
 

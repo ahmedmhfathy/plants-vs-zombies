@@ -372,31 +372,33 @@ namespace Plants_Zombies {
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			if ((PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter) &&
-				PlantProjectilesARR[i].shape.getPosition().x > 1290) //enter despawn position
+			if (!PlantProjectilesARR.empty() 
+				&& (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter) 
+				&& PlantProjectilesARR[i].shape.getPosition().x > 1290) //enter despawn position
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
 			}
-			else if ((PlantProjectilesARR[i].type == SunFlower) &&
-				(!PlantProjectilesARR.empty() && PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
+			else if (!PlantProjectilesARR.empty() 
+				&& (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+				&& (PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
 			}
+		}
 
-			if (!PlantProjectilesARR.empty())
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		{
+			PlantProjectilesARR[i].update();
+			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
+				&& Mouse::isButtonPressed(Mouse::Left))
 			{
-				PlantProjectilesARR[i].update();
-				if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
-					&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
-					&& Mouse::isButtonPressed(Mouse::Left))
-				{
-					SunCoinSound.play();
-					score = score + 25;
-					PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
-					i--;
-				}
+				SunCoinSound.play();
+				score += 25;
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
 			}
 		}
 
