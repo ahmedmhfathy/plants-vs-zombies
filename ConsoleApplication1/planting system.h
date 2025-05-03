@@ -305,6 +305,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setTexture(shoveltex);
 			SelectionHolograph.setScale(1, 1);
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 255));
 		}
 		else if (curruntselection == peashooter)
 		{
@@ -312,6 +313,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setTexture(Plants_Zombies::PeaShooterIdleTex);
 			SelectionHolograph.setScale(3.5, 3.5);
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
 		}
 		else if (curruntselection == snowpeashooter)
 		{
@@ -319,6 +321,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setTexture(Plants_Zombies::IcePeaShooterIdleTex);
 			SelectionHolograph.setScale(3.5, 3.5);
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
 		}
 		else if (curruntselection == sunflower)
 		{
@@ -326,6 +329,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setTexture(Plants_Zombies::SunFlowerIdleTex);
 			SelectionHolograph.setScale(3.5, 3.5);
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
 		}
 		else if (curruntselection == wallnut)
 		{
@@ -333,6 +337,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setTexture(Plants_Zombies::WallNutIdleTex);
 			SelectionHolograph.setScale(3.5, 3.5);
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
 		}
 
 		SelectionHolograph.setPosition(mousepos);
