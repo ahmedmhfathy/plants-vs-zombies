@@ -8,6 +8,7 @@
 #include<time.h>
 #include"Tools.h"
 #include"StartAnimation.h"
+#include"Plants_Zombies.h"
 
 #pragma region Textures and Sprites declaration
 Texture lawntexture;
@@ -65,7 +66,7 @@ FloatRect rect2;
 const float speedzombie = 40.0f;
 
 #pragma region Functiondelaration
-void allwave(int);
+void allwave(int, int);
 void intersectioncarsandzombies(int, RenderWindow&);
 void drawzombies(RenderWindow&, string);
 void startallwave(int, int, float);
@@ -90,27 +91,23 @@ struct cars {
         }
     }
 }car[5];
-struct zombies {
-    int row[5] = {30, 150, 280, 400,520};
-    Sprite rectanglesprite;
-    bool started;
-    bool stoped;
-    void start(int x, bool finanim) {
-        rectangletexture.loadFromFile("Assets/Environment/rectangle.png");
-        rectanglesprite.setTexture(rectangletexture);
-        rectanglesprite.setScale(0.13, 0.13);
+
+
+void start( bool finanim) {
+    Plants_Zombies::StartZombies();
+    int row[5] = { 20, 100, 225, 315,435 };
+    for (int i = 0; i < 4; i++) {
         if (finanim) {
-            rectanglesprite.setPosition(1100, row[rand() % 5]);
+            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000,row[rand()%5]);
         }
         else {
-           rectanglesprite.setPosition(1100+rand()%100,( -30 +(70*rand()%600)));
+            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1100 + rand() % 100, (-30 + (70 * rand() % 600)));
         }
-    }
-    void update(float dt) {
-        rectanglesprite.move(-speedzombie * dt, 0);
+   }
+}
 
-    }
-}zombie[300];
+
+
 struct waves {
     float delaybetween;
     int numberzombie;
@@ -119,13 +116,18 @@ struct waves {
 }wave[3];
 #pragma endregion
 
+
+
 void drawzombies(RenderWindow& window) {
+    cout << "draw wave omar";;
     if (nowave) {
-        for (int i = 0; i < wave[0].numberzombie; i++) {
-            window.draw(zombie[i].rectanglesprite);
+        
+        for (int i = 0; i < 4; i++) {
+            window.draw(Plants_Zombies::zombie_array[i].zombiecollider);
+            window.draw(Plants_Zombies::zombie_array[i].zombieCont);
         }
     }
-    else if (wave[0].checkexit_wave && !nowave) {
+   /* else if (wave[0].checkexit_wave && !nowave) {
         for (int i = 0; i < wave[1].numberzombie; i++) {
             window.draw(zombie[i].rectanglesprite);
         }
@@ -134,7 +136,7 @@ void drawzombies(RenderWindow& window) {
         for (int i = 0; i < wave[2].numberzombie; i++) {
             window.draw(zombie[i].rectanglesprite);
         }
-    }
+    }*/
     for (int i = 0; i < 3; i++) {
         intersectioncarsandzombies(i, window);
     }
@@ -166,8 +168,10 @@ void drawzombies(RenderWindow& window) {
     } */
 }
 
+
+
 void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
-    Time deltatime = clockmovecars.restart();
+  /*  Time deltatime = clockmovecars.restart();
     float dt = deltatime.asSeconds();
     for (int i = 0; i < wave[numberwave].numberzombie; i++) {
         for (int x = 0; x < 5; x++) {
@@ -185,60 +189,49 @@ void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
                 }
             }
         }
-    }
+    }*/
 }
 
+
+
 void startallwave(int numberwave, int numberzombie, float delaybetween) {
+    cout << "start all wave omar";;
     srand(time(0));
     float deltaTime;
     globalClock.restart();
     deltaTime = frameClock.restart().asSeconds();
     timeSinceStart = globalClock.getElapsedTime().asSeconds();
-    for (int i = 0; i < 300; i++) {
-        zombie[i].started = false;
-    }
-    for (int i = 0; i < 300; i++) {
-        zombie[i].stoped = false;
-    }
     wave[numberwave].delaybetween = delaybetween;
     wave[numberwave].numberzombie = numberzombie;
-    for (int i = 0;i < 15; i++) {
-        zombie[i].start(i, true);
-    }
-
+    Plants_Zombies::LoadZombieTextures();
+       start( true);
 }
 
-void allwave(int numberwave) {
-    for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
-        if (timeSinceStart >= i * wave[numberwave].delaybetween) {
-            zombie[i].started = true;
-        }
-    }
-    for (int i = 0; i < wave[numberwave].numberzombie; i++) {
+
+
+void allwave(int numberwave, int numberzombie) {
+    cout << " all wave omar";
+  Plants_Zombies::UpdateZombies(deltaTime);
+  /*  for (int i = 0; i < wave[numberwave].numberzombie; i++) {
         if (zombie[i].rectanglesprite.getPosition().x > -60) {
             if (zombie[i].started) {
-                zombie[i].update(deltaTime);
-            }
-            }
-        }
-        for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
-            if (zombie[i].rectanglesprite.getPosition().x < -57) {
-                zombie[i].stoped = true;
+               Plants_Zombies::UpdateZombies(deltaTime);
             }
         }
-      for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
-        if (zombie[i].stoped != true) {
-            wave[numberwave].checkexit_wave = false;
-            break;
-        }
-        else {
+    }*/
+       
+      if (Plants_Zombies::numberofdeadzombie == numberzombie){
             wave[numberwave].checkexit_wave = true;
-
-        }
     }
-}
+     else {
+          wave[numberwave].checkexit_wave = false;
+
+                    }
+} 
+
 
 void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
+    cout << "level wave omar";;
     if (endRSP)
     {
         if (numberwave == 2) {
@@ -246,7 +239,7 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                 wave[0].check_startwave = false;
                 startallwave(0, numberzombiew1, delaybetweenw1);
             }
-            if (nowave && endRSP) { allwave(0); }
+            if (nowave && endRSP) { allwave(0, numberzombiew1); }
             if (wave[0].checkexit_wave) {
                 if (movefromwavetoanother) {
                     clockwave2.restart();
@@ -260,7 +253,7 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
-                    allwave(1);
+                    allwave(1, numberzombiew1 += 30);
                 }
             }
         }
@@ -269,7 +262,7 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                 wave[0].check_startwave = false;
                 startallwave(0, numberzombiew1, delaybetweenw1);
             }
-            if (nowave && endRSP) { allwave(0); }
+            if (nowave && endRSP) { allwave(0, numberzombiew1); }
             if (wave[0].checkexit_wave) {
                 if (movefromwavetoanother) {
                     clockwave2.restart();
@@ -283,7 +276,7 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
-                    allwave(1);
+                    allwave(1, numberzombiew1 += 20);
                 }
             }
             if (wave[1].checkexit_wave) {
@@ -298,7 +291,7 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                         startallwave(2, numberzombiew1 += 20, delaybetweenw1 -= 2.0f);
                         wave[2].check_startwave = false;
                     }
-                    allwave(2);
+                    allwave(2, numberzombiew1 += 20);
                 }
 
             }

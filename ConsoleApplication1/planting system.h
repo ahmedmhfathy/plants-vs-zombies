@@ -138,7 +138,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 	WallNutClock.restart();
 	SunFlowerClock.restart();
 
-	Plants_Zombies::score = 50;
+	Plants_Zombies::score = 1000;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {

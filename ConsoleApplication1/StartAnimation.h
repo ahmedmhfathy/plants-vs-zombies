@@ -59,12 +59,15 @@ void movecars();
 
     void startAnimation() {
         for (int i = 0; i < 5; i++) {
+           
             car[i].start(i);
         }
         loadphoto();
         srand(time(0));
-        for (int i = 0;i < 9; i++) {
-            zombie[i].start(i, false);
+       
+        for (int i = 0;i < 4; i++) {
+            Plants_Zombies::LoadZombieTextures();
+            start( false);
         }
     }
 
@@ -72,6 +75,7 @@ void movecars();
         deltatimetextstartwave2 = clockdrawtextwave2.restart();
         deltatimetextfinalwave = clockdrawtextfinalwave.restart();
         deltatimelosegame = clocklosegame.restart();
+
         movecamera(window);
         if (moveleft) {
             movecars(); // When Move Camera is end .... Start move car
@@ -208,9 +212,9 @@ void movecars();
 
     void Renderstartanimation(RenderWindow& window) {
         window.draw(gardensprite);
-        for (int i = 0; i < 40; i++) {
+       /* for (int i = 0; i < 40; i++) {
             window.draw(zombie[i].rectanglesprite);
-        }
+        }*/
         if (EntertostartdrawRSP) {
             RSP(window);
         }
