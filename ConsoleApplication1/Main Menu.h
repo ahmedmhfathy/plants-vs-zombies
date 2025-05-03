@@ -37,11 +37,14 @@ SoundBuffer HoverMainMenu;
 
 Sound HoverMainMenuSound;
 SoundBuffer CreditsTran;
-
+SoundBuffer ButtonSoundBuffer;
+Sound ButtonSound;
 Sound CreditsTranSound;
+
 bool SoundStart = false;
 bool SoundCredits = false;
 bool SoundQuit = false;
+bool SoundButton = false;
 
 bool ShowCredits = false;
 bool startAnim = false;
@@ -53,10 +56,12 @@ View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 ///loads the textures for the main menu
 void LoadMainMenuTex()
 {
-    HoverMainMenu.loadFromFile("Audio/tunetank.com_interface-selection-hover.wav");
+    HoverMainMenu.loadFromFile("Audio/gravebutton.ogg");
     HoverMainMenuSound.setBuffer(HoverMainMenu);
     CreditsTran.loadFromFile("Audio/tunetank.com_flash-screen.wav");
     CreditsTranSound.setBuffer(CreditsTran);
+    ButtonSoundBuffer.loadFromFile("Audio/tap.wav");
+    ButtonSound.setBuffer(ButtonSoundBuffer);
 
     MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/mainmenu-no-buttons-2.png");
     StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
@@ -204,6 +209,11 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         //credits menu buttons
         if (BackTOMainMenuButton.getGlobalBounds().contains(mouse_pos))
         {
+            if (SoundButton)
+            {
+                ButtonSound.play();
+                SoundButton = false;
+            }
             BackTOMainMenuButton.setTexture(BackTOMainMenuHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
@@ -214,6 +224,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         else
         {
             BackTOMainMenuButton.setTexture(BackTOMainMenuTex);
+            SoundButton = true;
         }
     }
 }

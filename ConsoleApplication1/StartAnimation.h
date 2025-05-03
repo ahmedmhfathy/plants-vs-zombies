@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iomanip>
 #include"Wave System.h"
+
 using namespace std;
 using namespace sf;
 
@@ -23,6 +24,8 @@ Texture Settexttexture;
 Sprite Settextsprite;
 Texture Planttexttexture;
 Sprite Planttextsprite;
+SoundBuffer RSPSoundBuffer;
+Sound RSPSound;
 #pragma endregion
 
 #pragma region Fuctions
@@ -35,6 +38,8 @@ bool EntertostartdrawRSP = false;
 bool moveright = false;
 bool moveleft=false;
 bool startAnimcamera = false;
+//RSP sound on
+bool RSPSonudon = true;
 
 #pragma endregion
 
@@ -110,6 +115,9 @@ void movecars();
         Planttextsprite.setOrigin(Planttextsprite.getGlobalBounds().width / 2.0f, Planttextsprite.getGlobalBounds().height / 2.0f);
         Planttextsprite.setPosition(340, 310);
         Planttextsprite.setScale(1.8, 1.8);
+        //***********************(Ready Set Plant Audio)********************************
+        RSPSoundBuffer.loadFromFile("Audio/readysetplant.ogg");
+        RSPSound.setBuffer(RSPSoundBuffer);
         //===================================**load start wave two**==================================
         Textstartwave2texture.loadFromFile("Assets/Environment/A-Huge-Wave-Of-Zombies-Is-Approaching.png");
         Textstartwave2sprite.setTexture(Textstartwave2texture);
@@ -171,15 +179,20 @@ void movecars();
             startdrawRSP = false;
         }
         time = clockRSP.getElapsedTime();
-        if (time < seconds(1.5))
+        if (time < seconds(0.5))
         {
+            if (RSPSonudon)
+            {
+                RSPSound.play();
+                RSPSonudon = false;
+            }
             window.draw(Readytextsprite);
         }
-        else if (time < seconds(3))
+        else if (time < seconds(1))
         {
             window.draw(Settextsprite);
         }
-        else if (time < seconds(4.5))
+        else if (time < seconds(1.5))
         {
             window.draw(Planttextsprite);
         }

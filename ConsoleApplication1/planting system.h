@@ -47,11 +47,19 @@ Time SnowPeaCoolDown = seconds(7);
 Time WallNutCoolDown = seconds(30);
 #pragma endregion
 
+bool SnowpeaSelected = false;
+bool WallnutSelected = false;
+bool SunflowerSelected = false;
+bool PeaSelected = false;
+bool ShovelSelected = false;
+
 Font font;
 Text moneytext;
 SoundBuffer PlantingSoundBuffer;
 Sound PlantingSound;
 SoundBuffer SelectingPlant;
+SoundBuffer ShovelSoundBuffer;
+Sound ShovelSound;
 Sound SelectingPlantSound;
 
 enum Selection { peashooter, snowpeashooter, sunflower, shovel, wallnut, none }curruntselection;
@@ -64,7 +72,9 @@ struct grid {
 }mygrid[46];
 
 void LoadSelectionTexture() {
-	PlantingSoundBuffer.loadFromFile("Audio/tunetank.com_fghtimpt-impact-wood-grass-01.wav");
+	PlantingSoundBuffer.loadFromFile("Audio/plant.ogg");
+	ShovelSoundBuffer.loadFromFile("Audio/shovel.ogg");
+	ShovelSound.setBuffer(ShovelSoundBuffer);
 	PlantingSound.setBuffer(PlantingSoundBuffer);
 	SelectingPlant.loadFromFile("Audio/tunetank.com_throwing-item-low-swing.wav");
 	SelectingPlantSound.setBuffer(SelectingPlant);
@@ -125,22 +135,36 @@ void SetupSelectionUI(Vector2f offset) {
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 }
 
+void SetupPlants() {
+	Plants_Zombies::PlantProjectilesARR.clear();
+
+	for (int i = 1; i <= 45; i++)
+	{
+		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
+		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
+		Plants_Zombies::PlantsArray[i - 1].start();
+	}
+}
+
 void StartPlantingAndCurrencySystem(Vector2f offset) {
 	SetupSelectionUI(offset);
-
-	Plants_Zombies::PlantProjectilesARR.clear();
 
 	PeaShooterClock.restart();
 	SnowPeaClock.restart();
 	WallNutClock.restart();
 	SunFlowerClock.restart();
 
-	Plants_Zombies::score = 5000;
+	Plants_Zombies::score = 50;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
 		mygrid[i].shape.setSize({ 107,130 });
 		mygrid[i].shape.setPosition(107 * c, 130 * r);
+
+		mygrid[i].isplanted = false;
+
+
 
 		c++;
 		if (i % 9 == 0)
@@ -156,13 +180,6 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 		else {
 			mygrid[i].shape.setFillColor(Color(255, 255, 255, 32));
 		}
-
-		//sets up the plants and sets them all to empty gameobjects
-		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
-		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
-		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
-		Plants_Zombies::PlantsArray[i - 1].start();
-		mygrid[i].isplanted = false;
 	}
 }
 
@@ -181,15 +198,17 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 	moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 
-
-#pragma region selection handler
-	if (PeaShooterClock.getElapsedTime() >= PeaShooterCoolDown && Plants_Zombies::score >= 100)
+	if (PeaShooterClock.getElapsedTime() > PeaShooterCoolDown && Plants_Zombies::score >= 100)
 	{
 		peashootercontainer.setTexture(peashootertex);
 
 		if (peashootercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
+			if (PeaSelected)
+			{
+				PeaSelected = false;
 			SelectingPlantSound.play();
+			}
 			isHolding = true;
 			curruntselection = peashooter;
 		}
@@ -199,13 +218,17 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 		peashootercontainer.setTexture(peashooteruntex);
 	}
 
-	if (SnowPeaClock.getElapsedTime() >= SnowPeaCoolDown && Plants_Zombies::score >= 175)
+	if (SnowPeaClock.getElapsedTime() > SnowPeaCoolDown && Plants_Zombies::score >= 175)
 	{
 		snowpeashootercontainer.setTexture(snowpeashootertex);
 
 		if (snowpeashootercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
-			SelectingPlantSound.play();
+			if (PeaSelected)
+			{
+				SnowpeaSelected = false;
+				SelectingPlantSound.play();
+			}
 			isHolding = true;
 			curruntselection = snowpeashooter;
 		}
@@ -215,13 +238,17 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 		snowpeashootercontainer.setTexture(snowpeashooteruntex);
 	}
 
-	if (SunFlowerClock.getElapsedTime() >= SunFlowerCoolDown && Plants_Zombies::score >= 50)
+	if (SunFlowerClock.getElapsedTime() > SunFlowerCoolDown && Plants_Zombies::score >= 50)
 	{
 		sunflowercontainer.setTexture(sunflowertex);
 
 		if (sunflowercontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
-			SelectingPlantSound.play();
+			if (SunflowerSelected)
+			{
+				SelectingPlantSound.play();
+				SunflowerSelected = false;
+			}
 			isHolding = true;
 			curruntselection = sunflower;
 		}
@@ -237,7 +264,11 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 		if (wallnutcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 		{
-			SelectingPlantSound.play();
+			if (WallnutSelected)
+			{
+				WallnutSelected = false;
+				SelectingPlantSound.play();
+			}
 			isHolding = true;
 			curruntselection = wallnut;
 		}
@@ -249,23 +280,34 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 	if (shovelcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 	{
+		if (ShovelSelected)
+		{
+			ShovelSound.play();
+			ShovelSelected = false;
+		}
 		isHolding = true;
 		curruntselection = shovel;
 	}
-
-#pragma endregion
+	//for sound stuff
+	if (!isHolding)
+	{
+		SunflowerSelected = true;
+		PeaSelected = true;
+		SnowpeaSelected=true;
+		WallnutSelected = true;
+		ShovelSelected = true;
+	}
 
 	//deselects
 	if (Mouse::isButtonPressed(Mouse::Right)) {
 		isHolding = false;
 	}
 
-#pragma region holograph displayer
 	if (isHolding)
 	{
 		if (curruntselection == shovel)
 		{
-			shovelcontainer.setTexture(shovelcontaineruntex);
+			shovelcontainer.setTexture(shovelcontainertex);
 			SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
 			SelectionHolograph.setTexture(shoveltex);
 			SelectionHolograph.setScale(1, 1);
@@ -307,15 +349,15 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 		shovelcontainer.setTexture(shovelcontainertex);
 		curruntselection = none;
 	}
-#pragma endregion
 
-	if (curruntselection != none && isHolding)
+	if (curruntselection != none)
 	{
 		for (int i = 1; i <= 45; i++)
 		{
 			if (mygrid[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 			{
-				if (curruntselection == shovel)
+				
+				if (curruntselection == shovel && isHolding)
 				{
 					cout << "shovel " << i << endl;
 
@@ -325,75 +367,74 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 					isHolding = false;
 				}
-				else if (curruntselection == peashooter)
+				else if (curruntselection == peashooter && isHolding)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "peashooter " << i << endl;
 
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PeaShooter;
-						Plants_Zombies::PlantsArray[i - 1].start();
 						mygrid[i].isplanted = true;
-
 						Plants_Zombies::score -= 100;
 						PeaShooterClock.restart();
+
+						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PeaShooter;
+						Plants_Zombies::PlantsArray[i - 1].start();
 
 						isHolding = false;
 						curruntselection = none;
 					}
 				}
-				else if (curruntselection == snowpeashooter)
+				else if (curruntselection == snowpeashooter && isHolding)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "SnowPeaShooter " << i << endl;
 
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SnowPeaShooter;
-						Plants_Zombies::PlantsArray[i - 1].start();
 						mygrid[i].isplanted = true;
-
 						Plants_Zombies::score -= 175;
 						SnowPeaClock.restart();
+
+						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SnowPeaShooter;
+						Plants_Zombies::PlantsArray[i - 1].start();
 
 						isHolding = false;
 						curruntselection = none;
 					}
 				}
 
-				else if (curruntselection == sunflower)
+				else if (curruntselection == sunflower && isHolding)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "SunFlower " << i << endl;
 
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunFlower;
-						Plants_Zombies::PlantsArray[i - 1].start();
 						mygrid[i].isplanted = true;
-
 						Plants_Zombies::score -= 50;
 						SunFlowerClock.restart();
+
+						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunFlower;
+						Plants_Zombies::PlantsArray[i - 1].start();
 
 						isHolding = false;
 						curruntselection = none;
 					}
 				}
-				else if (curruntselection == wallnut)
+				else if (curruntselection == wallnut && isHolding)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "WallNut " << i << endl;
 
+						mygrid[i].isplanted = true;
+						Plants_Zombies::score -= 50;
+						WallNutClock.restart();
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::WallNut;
 						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 50;
-						WallNutClock.restart();
 
 						isHolding = false;
 						curruntselection = none;
@@ -406,9 +447,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 void DrawPlantingAndCurrencySystem(RenderWindow& window)
 {
-	//for (int i = 1; i <= 45; i++) {
-	//	window.draw(mygrid[i].shape);
-	//}
+	for (int i = 1; i <= 45; i++) {
+		window.draw(mygrid[i].shape);
+	}
 
 	window.draw(gradientopacity);
 	window.draw(moneytext);
@@ -427,6 +468,8 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 		window.draw(SelectionHolograph);
 	}
 }
+
+
 
 void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 	for (int i = 0; i < 45; i++)
@@ -456,16 +499,11 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 			PlantsArray[i].animationHandler();
 			PlantsArray[i].action();
 		}
-
-		if (PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+		else // else will turn the plant into an empty gameobject  
 		{
-			mygrid[PlantsArray[i].gridIndex].isplanted = false;
-			PlantsArray[i].isDead = true;
-			PlantsArray[i].idle = false;
-			PlantsArray[i].doAction = false;
-
-			PlantsArray[i].type == EmptyPlant;
-			PlantsArray[i].start();
+			PlantsArray[i].type = EmptyPlant;
+			mygrid[gridIndex].isplanted = false;
+			PlantsArray[i].setupPrefab();
 		}
 	}
 }

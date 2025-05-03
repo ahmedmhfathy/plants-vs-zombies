@@ -18,7 +18,12 @@ void SwitchState(State NewState);
 bool LevelIsOver = false;
 bool WinLevel = false;
 bool IsPaused = false;
-
+bool ButtonTapSoundNextLevel = false;
+bool ButtonTapSoundWinMainMenu = false;
+bool ButtonTapSoundPauseBackToMainMenu = false;
+bool ButtonTapSoundBackToTheGame = false;
+bool ButtonTapSoundRetry = false;
+bool ButtonTapSoundLoseBackToMainMenu = false;
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
 
@@ -58,16 +63,24 @@ Texture NextlevelButtonHoverTex;
 
 Sprite LostMenuBlank;
 Sprite RetryButton;
+SoundBuffer LoseSoundBuffer;
+Sound LoseSound;
+
+SoundBuffer LoseAndWinAndPauseBuffer;
+Sound LoseAndWinAndPause;
 
 Sprite BackToMainMenuLevelEnd;
 
 Sprite WinMenuBlank;
 Sprite NextlevelButton;
+SoundBuffer WinSoundBuffer;
+Sound WinSound;
 #pragma endregion
 
 #pragma region Pause Menu
 void LoadPauseMenuTextures() {
-    PauseMenuOpen.loadFromFile("Audio/tunetank.com_menu-pop.wav");
+    LoseAndWinAndPauseBuffer.loadFromFile("Audio/tap.wav");
+    PauseMenuOpen.loadFromFile("Audio/pause.ogg");
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
     MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
     BackToTheGameButtonTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button.png");
@@ -80,6 +93,7 @@ void SetupPauseMenu()
 {
     LoadPauseMenuTextures();
 
+    LoseAndWinAndPause.setBuffer(LoseAndWinAndPauseBuffer);
     PauseMenuOpenSound.setBuffer(PauseMenuOpen);
 
     BackToGame.setTexture(BackToTheGameButtonTex);
@@ -113,6 +127,11 @@ void PauseMenuUpdate()
     {
         if (BackToGame.getGlobalBounds().contains(MouseWorldPostion))
         {
+            if (ButtonTapSoundBackToTheGame)
+            {
+                LoseAndWinAndPause.play();
+                ButtonTapSoundBackToTheGame = false;
+            }
             BackToGame.setTexture(BackToTheGameButtonHoverTex);
             if (Mouse::isButtonPressed(Mouse::Left))
             {
@@ -123,11 +142,17 @@ void PauseMenuUpdate()
         }
         else
         {
+            ButtonTapSoundBackToTheGame = true;
             BackToGame.setTexture(BackToTheGameButtonTex);
         }
 
         if (BackToMainMenu.getGlobalBounds().contains(MouseWorldPostion))
         {
+            if (ButtonTapSoundPauseBackToMainMenu)
+            {
+                LoseAndWinAndPause.play();
+                ButtonTapSoundPauseBackToMainMenu = false;
+            }
             BackToMainMenu.setTexture(MainMenuButtonTexHover);
             if (Mouse::isButtonPressed(Mouse::Left))
             {
@@ -137,6 +162,7 @@ void PauseMenuUpdate()
         }
         else
         {
+            ButtonTapSoundPauseBackToMainMenu = true;
             BackToMainMenu.setTexture(MainMenuButtonTex);
         }
     }
@@ -157,6 +183,10 @@ void DrawPauseMenu(RenderWindow& window)
 #pragma region Level End Menus
 void LoadLevelEndTextures() {
     //lose case
+    LoseAndWinAndPauseBuffer.loadFromFile("Audio/tap.wav");
+    LoseAndWinAndPause.setBuffer(LoseAndWinAndPauseBuffer);
+    LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
+    LoseSound.setBuffer(LoseSoundBuffer);
     LostMenuBlankTex.loadFromFile("Assets/Lost Menu/lost-menu-blank.png");
     RetryButtonTex.loadFromFile("Assets/Lost Menu/retry-button.png");
     RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
@@ -208,6 +238,7 @@ void LevelEndUpdate()
     }
     if (Keyboard::isKeyPressed(Keyboard::S))
     {
+        LoseSound.play();
         IsPaused = true;
         LevelIsOver = true;
         WinLevel = false;
@@ -219,6 +250,11 @@ void LevelEndUpdate()
         {
             if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
             {
+                if (ButtonTapSoundNextLevel)
+                {
+                    LoseAndWinAndPause.play();
+                    ButtonTapSoundNextLevel = false;
+                }
                 NextlevelButton.setTexture(NextlevelButtonHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
@@ -238,11 +274,17 @@ void LevelEndUpdate()
             }
             else
             {
+                ButtonTapSoundNextLevel = true;
                 NextlevelButton.setTexture(NextlevelButtonTex);
             }
 
             if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
             {
+                if (ButtonTapSoundWinMainMenu)
+                {
+                    LoseAndWinAndPause.play();
+                    ButtonTapSoundWinMainMenu = false;
+                }
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
@@ -251,6 +293,7 @@ void LevelEndUpdate()
             }
             else
             {
+                ButtonTapSoundWinMainMenu = true;
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
             }
 
@@ -260,6 +303,11 @@ void LevelEndUpdate()
         {
             if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
             {
+                if (ButtonTapSoundLoseBackToMainMenu)
+                {
+                    LoseAndWinAndPause.play();
+                    ButtonTapSoundLoseBackToMainMenu = false;
+                }
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
@@ -268,12 +316,18 @@ void LevelEndUpdate()
             }
             else
             {
+                ButtonTapSoundLoseBackToMainMenu = true;
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
             }
 
 
             if (RetryButton.getGlobalBounds().contains(MouseWorldPostion))
             {
+                if (ButtonTapSoundRetry)
+                {
+                    LoseAndWinAndPause.play();
+                    ButtonTapSoundRetry = false;
+                }
                 RetryButton.setTexture(RetryButtonHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
@@ -293,6 +347,7 @@ void LevelEndUpdate()
             }
             else
             {
+                ButtonTapSoundRetry = true;
                 RetryButton.setTexture(RetryButtonTex);
             }
         }
@@ -327,6 +382,8 @@ void StartLevel1()
     StartPlantingAndCurrencySystem(offset);
 
     StartAnimationNS::startAnimation();
+
+    SetupPlants();
 }
 void UpdateLevel1(RenderWindow& window)
 {
@@ -343,9 +400,9 @@ void UpdateLevel1(RenderWindow& window)
 void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
+    drawzombies(window);
     DrawPlantingAndCurrencySystem(window);
     Plants_Zombies::DrawPlantsAndProjectiles(window);
-    drawzombies(window);
 }
 
 void StartLevel2()
