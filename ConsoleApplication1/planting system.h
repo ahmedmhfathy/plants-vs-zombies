@@ -135,36 +135,22 @@ void SetupSelectionUI(Vector2f offset) {
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 }
 
-void SetupPlants() {
-	Plants_Zombies::PlantProjectilesARR.clear();
-
-	for (int i = 1; i <= 45; i++)
-	{
-		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
-		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
-		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
-		Plants_Zombies::PlantsArray[i - 1].start();
-	}
-}
-
 void StartPlantingAndCurrencySystem(Vector2f offset) {
 	SetupSelectionUI(offset);
+
+	Plants_Zombies::PlantProjectilesARR.clear();
 
 	PeaShooterClock.restart();
 	SnowPeaClock.restart();
 	WallNutClock.restart();
 	SunFlowerClock.restart();
 
-	Plants_Zombies::score = 50;
+	Plants_Zombies::score = 5000;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
 		mygrid[i].shape.setSize({ 107,130 });
 		mygrid[i].shape.setPosition(107 * c, 130 * r);
-
-		mygrid[i].isplanted = false;
-
-
 
 		c++;
 		if (i % 9 == 0)
@@ -180,6 +166,13 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 		else {
 			mygrid[i].shape.setFillColor(Color(255, 255, 255, 32));
 		}
+
+		//sets up the plants and sets them all to empty gameobjects
+		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
+		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
+		Plants_Zombies::PlantsArray[i - 1].start();
+		mygrid[i].isplanted = false;
 	}
 }
 
@@ -307,7 +300,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 	{
 		if (curruntselection == shovel)
 		{
-			shovelcontainer.setTexture(shovelcontainertex);
+			shovelcontainer.setTexture(shovelcontaineruntex);
 			SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
 			SelectionHolograph.setTexture(shoveltex);
 			SelectionHolograph.setScale(1, 1);
@@ -350,14 +343,13 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 		curruntselection = none;
 	}
 
-	if (curruntselection != none)
+	if (curruntselection != none && isHolding)
 	{
 		for (int i = 1; i <= 45; i++)
 		{
 			if (mygrid[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 			{
-				
-				if (curruntselection == shovel && isHolding)
+				if (curruntselection == shovel)
 				{
 					cout << "shovel " << i << endl;
 
@@ -367,74 +359,75 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 					isHolding = false;
 				}
-				else if (curruntselection == peashooter && isHolding)
+				else if (curruntselection == peashooter)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "peashooter " << i << endl;
 
-						mygrid[i].isplanted = true;
-						Plants_Zombies::score -= 100;
-						PeaShooterClock.restart();
-
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PeaShooter;
 						Plants_Zombies::PlantsArray[i - 1].start();
+						mygrid[i].isplanted = true;
+
+						Plants_Zombies::score -= 100;
+						PeaShooterClock.restart();
 
 						isHolding = false;
 						curruntselection = none;
 					}
 				}
-				else if (curruntselection == snowpeashooter && isHolding)
+				else if (curruntselection == snowpeashooter)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "SnowPeaShooter " << i << endl;
 
-						mygrid[i].isplanted = true;
-						Plants_Zombies::score -= 175;
-						SnowPeaClock.restart();
-
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SnowPeaShooter;
 						Plants_Zombies::PlantsArray[i - 1].start();
+						mygrid[i].isplanted = true;
+
+						Plants_Zombies::score -= 175;
+						SnowPeaClock.restart();
 
 						isHolding = false;
 						curruntselection = none;
 					}
 				}
 
-				else if (curruntselection == sunflower && isHolding)
+				else if (curruntselection == sunflower)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "SunFlower " << i << endl;
 
-						mygrid[i].isplanted = true;
-						Plants_Zombies::score -= 50;
-						SunFlowerClock.restart();
-
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunFlower;
 						Plants_Zombies::PlantsArray[i - 1].start();
+						mygrid[i].isplanted = true;
+
+						Plants_Zombies::score -= 50;
+						SunFlowerClock.restart();
 
 						isHolding = false;
 						curruntselection = none;
 					}
 				}
-				else if (curruntselection == wallnut && isHolding)
+				else if (curruntselection == wallnut)
 				{
 					if (!mygrid[i].isplanted)
 					{
 						PlantingSound.play();
 						cout << "WallNut " << i << endl;
 
-						mygrid[i].isplanted = true;
-						Plants_Zombies::score -= 50;
-						WallNutClock.restart();
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::WallNut;
 						Plants_Zombies::PlantsArray[i - 1].start();
+						mygrid[i].isplanted = true;
+
+						Plants_Zombies::score -= 50;
+						WallNutClock.restart();
 
 						isHolding = false;
 						curruntselection = none;
@@ -447,9 +440,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 void DrawPlantingAndCurrencySystem(RenderWindow& window)
 {
-	for (int i = 1; i <= 45; i++) {
-		window.draw(mygrid[i].shape);
-	}
+	//for (int i = 1; i <= 45; i++) {
+	//	window.draw(mygrid[i].shape);
+	//}
 
 	window.draw(gradientopacity);
 	window.draw(moneytext);
@@ -499,11 +492,16 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
 			PlantsArray[i].animationHandler();
 			PlantsArray[i].action();
 		}
-		else // else will turn the plant into an empty gameobject  
+
+		if (PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
 		{
-			PlantsArray[i].type = EmptyPlant;
-			mygrid[gridIndex].isplanted = false;
-			PlantsArray[i].setupPrefab();
+			mygrid[PlantsArray[i].gridIndex].isplanted = false;
+			PlantsArray[i].isDead = true;
+			PlantsArray[i].idle = false;
+			PlantsArray[i].doAction = false;
+
+			PlantsArray[i].type == EmptyPlant;
+			PlantsArray[i].start();
 		}
 	}
 }

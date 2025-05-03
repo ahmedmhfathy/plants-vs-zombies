@@ -366,25 +366,6 @@ namespace Plants_Zombies {
 		}
 	}PlantsArray[45];
 
-	//void StartPlants() {
-	//	PlantProjectilesARR.clear();
-	//	//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
-
-	//	//testing will be removed soon
-	//	PlantsArray[0].type = PeaShooter;
-	//	PlantsArray[0].shape.setPosition({ 400,100 });
-	//	PlantsArray[1].type = SnowPeaShooter;
-	//	PlantsArray[1].shape.setPosition({ 400,300 });
-	//	PlantsArray[2].type = WallNut;
-	//	PlantsArray[2].shape.setPosition({ 400,500 });
-	//	PlantsArray[3].type = SunFlower;
-	//	PlantsArray[3].shape.setPosition({ 400,600 });
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		PlantsArray[i].start();
-	//	}
-	//}
-
 	// this function will be used to update the plants and remove outdated projectiles 
 	// it will be called every frame
 	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos) {
@@ -403,19 +384,19 @@ namespace Plants_Zombies {
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
 			}
-		}
 
-		for (int i = 0; i < PlantProjectilesARR.size(); i++)
-		{
-			PlantProjectilesARR[i].update();
-			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
-				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
-				&& Mouse::isButtonPressed(Mouse::Left))
+			if (!PlantProjectilesARR.empty())
 			{
-				SunCoinSound.play();
-				score = score + 25;
-				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
-				i--;
+				PlantProjectilesARR[i].update();
+				if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+					&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
+					&& Mouse::isButtonPressed(Mouse::Left))
+				{
+					SunCoinSound.play();
+					score = score + 25;
+					PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+					i--;
+				}
 			}
 		}
 
@@ -428,11 +409,21 @@ namespace Plants_Zombies {
 	void DrawPlantsAndProjectiles(RenderWindow& window) {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			window.draw(PlantProjectilesARR[i].shape);
+			if (!(PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin))
+			{
+				window.draw(PlantProjectilesARR[i].shape);
+			}
 		}
 		for (int i = 0; i < 45; i++)
 		{
 			window.draw(PlantsArray[i].shape);
+		}
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		{
+			if (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+			{
+				window.draw(PlantProjectilesARR[i].shape);	
+			}
 		}
 	}
 
@@ -929,40 +920,4 @@ namespace Plants_Zombies {
 			}
 		}
 	}
-
-	//void Plants::updatePlantStruct(Zombie* zombie_array) {
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		if (!PlantsArray[i].isDead) // if not dead will animate and execute action  
-	//		{
-	//			for (int j = 0; j < 4; j++)
-	//			{
-	//				if (!zombie_array[i].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
-	//				{
-	//					// checks if a zombie is in front of the plant  
-	//					if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
-	//						&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-	//							&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-	//							&& (PlantsArray[i].shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left)))
-	//					{
-	//						PlantsArray[i].zombieInFront = true;
-	//						break;
-	//					}
-	//				}
-	//				else
-	//				{
-	//					PlantsArray[i].zombieInFront = false;
-	//				}
-	//			}
-	//			PlantsArray[i].animationHandler();
-	//			PlantsArray[i].action();
-	//		}
-	//		else // else will turn the plant into an empty gameobject  
-	//		{
-	//			PlantsArray[i].type = EmptyPlant;
-	//			PlantsArray[i].setupPrefab();
-	//		}
-	//	}
-	//}
-
 }
