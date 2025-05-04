@@ -334,6 +334,11 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setColor(Color(255, 255, 255, 175));
 		}
 
+		if (curruntselection != shovel)
+		{
+			shovelcontainer.setTexture(shovelcontainertex);
+		}
+
 		SelectionHolograph.setPosition(mousepos);
 	}
 	else
