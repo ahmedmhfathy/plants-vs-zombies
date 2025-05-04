@@ -81,8 +81,6 @@ void LoadMainMenuTex()
 
 void MainMenuStart(RenderWindow& window)
 { 
-    
-
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
 
@@ -116,6 +114,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
 {
     window.setView(MainMenuCamera);
 
+    float randPitch[3] = { 0.85, 1, 1.15 };
+
     //main menu buttons and animation
     if (!ShowCredits)
     {
@@ -142,12 +142,13 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             StartButton.setTexture(StartButtonHoverTex);
             if (SoundStart)
             {
-            HoverMainMenuSound.play();
-            SoundStart = false;
+                HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
+                HoverMainMenuSound.play();
+                SoundStart = false;
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
-                
+                Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
                 SwitchState(Level1);
             }
@@ -163,11 +164,13 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             CreditButton.setTexture(CreditButtonHoverTex);
             if (SoundCredits)
             {
+                HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
                 HoverMainMenuSound.play();
                 SoundCredits = false;
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
                 //CreditsTranSound.play();
                 ShowCredits = true;
@@ -183,11 +186,13 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundQuit)
             {
+                HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
                 HoverMainMenuSound.play();
                 SoundQuit = false;
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
                 window.close();
             }
@@ -223,12 +228,14 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundButton)
             {
+                ButtonSound.setPitch(randPitch[rand() % 3]);
                 ButtonSound.play();
                 SoundButton = false;
             }
             BackTOMainMenuButton.setTexture(BackTOMainMenuHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
                 //CreditsTranSound.play();
                 ShowCredits = false;

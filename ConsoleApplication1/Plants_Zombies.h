@@ -390,11 +390,13 @@ namespace Plants_Zombies {
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
+			float randPitch[3] = { 0.75, 1, 1.25};
 			PlantProjectilesARR[i].update();
 			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
 				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
 				&& Mouse::isButtonPressed(Mouse::Left))
 			{
+				SunCoinSound.setPitch(randPitch[rand() % 3]);
 				SunCoinSound.play();
 				score += 25;
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
@@ -902,14 +904,9 @@ namespace Plants_Zombies {
 		{
 			if (zombie_array[i].type != Dead)
 			{
-				zombie_array[0].update(deltaTime);
-				zombie_array[1].update(deltaTime);
-				zombie_array[2].update(deltaTime);
-				zombie_array[3].update(deltaTime);
+				zombie_array[i].update(deltaTime);
 			}
-
 		}
-
 	}
 
 	void DrawZombies(RenderWindow& window) {
@@ -918,7 +915,6 @@ namespace Plants_Zombies {
 			if (zombie_array[i].type != Dead)
 			{
 				window.draw(zombie_array[i].zombieCont);
-
 			}
 		}
 	}

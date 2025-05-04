@@ -189,6 +189,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 	moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 
+	float randPitch[3] = { 0.85, 1, 1.15 };
+
 	if (PeaShooterClock.getElapsedTime() > PeaShooterCoolDown && Plants_Zombies::score >= 100)
 	{
 		peashootercontainer.setTexture(peashootertex);
@@ -198,6 +200,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			if (!PlaySelectionSound)
 			{
 				PlaySelectionSound = true;
+				SelectingPlantSound.setPitch(randPitch[rand() % 3]);
 				SelectingPlantSound.play();
 			}
 			isHolding = true;
@@ -218,6 +221,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			if (!PlaySelectionSound)
 			{
 				PlaySelectionSound = true;
+				SelectingPlantSound.setPitch(randPitch[rand() % 3]);
 				SelectingPlantSound.play();
 			}
 			isHolding = true;
@@ -238,6 +242,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			if (!PlaySelectionSound)
 			{
 				PlaySelectionSound = true;
+				SelectingPlantSound.setPitch(randPitch[rand() % 3]);
 				SelectingPlantSound.play();
 			}
 			isHolding = true;
@@ -258,6 +263,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			if (!PlaySelectionSound)
 			{
 				PlaySelectionSound = true;
+				SelectingPlantSound.setPitch(randPitch[rand() % 3]);
 				SelectingPlantSound.play();
 			}
 			isHolding = true;
@@ -274,6 +280,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 		if (!PlaySelectionSound)
 		{
 			PlaySelectionSound = true;
+			ShovelSound.setPitch(randPitch[rand() % 3]);
 			ShovelSound.play();
 		}
 		isHolding = true;
@@ -357,6 +364,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (mygrid[i].isplanted)
 					{
+						PlantingSound.setPitch(randPitch[rand()%3]);
 						PlantingSound.play();
 					cout << "shovel " << i << endl;
 						mygrid[i].isplanted = false;
@@ -370,6 +378,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
 						cout << "peashooter " << i << endl;
 
@@ -388,6 +397,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
 						cout << "SnowPeaShooter " << i << endl;
 
@@ -407,6 +417,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
 						cout << "SunFlower " << i << endl;
 
@@ -425,6 +436,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 				{
 					if (!mygrid[i].isplanted)
 					{
+						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
 						cout << "WallNut " << i << endl;
 
