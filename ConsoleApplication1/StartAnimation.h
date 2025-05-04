@@ -221,9 +221,6 @@ void movecars();
         for (int i = 0; i < 5; i++) {
             window.draw(car[i].lawnsprite);
         }
-
-
-
     }
 }
 

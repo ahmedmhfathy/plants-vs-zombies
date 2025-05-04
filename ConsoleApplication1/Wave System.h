@@ -119,11 +119,11 @@ struct waves {
 
 
 void drawzombies(RenderWindow& window) {
-    cout << "draw wave omar";;
+    //cout << "draw wave omar";;
     if (nowave) {
         
         for (int i = 0; i < 4; i++) {
-            window.draw(Plants_Zombies::zombie_array[i].zombiecollider);
+            window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
             window.draw(Plants_Zombies::zombie_array[i].zombieCont);
         }
     }
@@ -195,7 +195,7 @@ void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
 
 
 void startallwave(int numberwave, int numberzombie, float delaybetween) {
-    cout << "start all wave omar";;
+    //cout << "start all wave omar";;
     srand(time(0));
     float deltaTime;
     globalClock.restart();
@@ -210,7 +210,7 @@ void startallwave(int numberwave, int numberzombie, float delaybetween) {
 
 
 void allwave(int numberwave, int numberzombie) {
-    cout << " all wave omar";
+    //cout << " all wave omar";
   Plants_Zombies::UpdateZombies(deltaTime);
   /*  for (int i = 0; i < wave[numberwave].numberzombie; i++) {
         if (zombie[i].rectanglesprite.getPosition().x > -60) {
@@ -220,18 +220,18 @@ void allwave(int numberwave, int numberzombie) {
         }
     }*/
        
-      if (Plants_Zombies::numberofdeadzombie == numberzombie){
-            wave[numberwave].checkexit_wave = true;
+    if (Plants_Zombies::numberofdeadzombie == numberzombie){
+        wave[numberwave].checkexit_wave = true;
     }
-     else {
-          wave[numberwave].checkexit_wave = false;
+    else {
+        wave[numberwave].checkexit_wave = false;
 
-                    }
+    }
 } 
 
 
 void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
-    cout << "level wave omar";;
+    //cout << "level wave omar";;
     if (endRSP)
     {
         if (numberwave == 2) {

@@ -82,7 +82,7 @@ namespace Plants_Zombies {
 				shape.setPosition(SpwanPos);
 				//projectileLifeSpan = seconds(5); //time to despawn
 				speed = 5;
-				damage = PlantDamage;
+				damage = 60;
 				slowMultiplier = 1; // wont affect anything
 			}
 			else if (type == SnowPeaShooter)
@@ -130,10 +130,11 @@ namespace Plants_Zombies {
 	};
 
 	struct Plants {
-		RectangleShape plantcollider;
+		RectangleShape plantCollider;
+
 		Sprite shape;
 		PlantType type;
-
+		
 		int gridIndex; //<<<<<<<<---------------<<< for the grid system
 
 		bool zombieInFront = false;
@@ -160,7 +161,7 @@ namespace Plants_Zombies {
 
 		void takeDmg(float damage) {
 			health -= damage;
-
+			cout << "Plant Health = " << health << endl;
 			if (health <= 0)
 			{
 				idle = false;
@@ -328,6 +329,8 @@ namespace Plants_Zombies {
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
+				plantCollider.setSize({ 30, 34 });
+
 				shape.setTexture(PeaShooterIdleTex);
 				shape.setScale(3.5, 3.5);
 				animationCol = rand() % 8;
@@ -336,6 +339,8 @@ namespace Plants_Zombies {
 				health = 100;
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
+
+				plantCollider.setSize({ 31, 34 });
 
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
@@ -346,6 +351,8 @@ namespace Plants_Zombies {
 				damage = 0;
 				timeForAction = seconds(24); // time to spawn sun 24
 
+				plantCollider.setSize({ 32, 34 });
+
 				shape.setTexture(SunFlowerIdleTex);
 				shape.setScale(3.5, 3.5);
 				animationCol = rand() % 6;
@@ -354,37 +361,17 @@ namespace Plants_Zombies {
 				health = 1400;
 				damage = 0;
 
+				plantCollider.setSize({ 28, 31 });
+
 				shape.setTexture(WallNutIdleTex);
 				shape.setScale(3.5, 3.5);
 				animationCol = rand() % 5;
 			}
-			plantcollider.setSize(Vector2f(plantcollider.getGlobalBounds().width, plantcollider.getGlobalBounds().height));
-			plantcollider.setFillColor(Color::Red);
+
+			plantCollider.setScale(3.5, 3.5);
+			plantCollider.setFillColor(Color(252, 186, 3, 180));
 		}
 	}PlantsArray[45];
-
-	//void StartPlants() {
-	//	PlantProjectilesARR.clear();
-	//	//here we will set all positions of the 45 plants to each box in the grid and make them all empty gameobjects
-
-	//	//testing will be removed soon
-	//	PlantsArray[0].type = PeaShooter;
-	//	PlantsArray[0].shape.setPosition({ 400,100 });
-	//	PlantsArray[1].type = SnowPeaShooter;
-	//	PlantsArray[1].shape.setPosition({ 400,300 });
-	//	PlantsArray[2].type = WallNut;
-	//	PlantsArray[2].shape.setPosition({ 400,500 });
-	//	PlantsArray[3].type = SunFlower;
-	//	PlantsArray[3].shape.setPosition({ 400,600 });
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		PlantsArray[i].start();
-	//	}
-	//}
-
-	// this function will be used to update the plants and remove outdated projectiles 
-	// it will be called every frame
-
 
 	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos) {
 		//deletes outdated projectiles
@@ -426,11 +413,6 @@ namespace Plants_Zombies {
 		}
 	}
 
-
-
-
-
-
 	void DrawPlantsAndProjectiles(RenderWindow& window) {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
@@ -441,8 +423,11 @@ namespace Plants_Zombies {
 		}
 		for (int i = 0; i < 45; i++)
 		{
-			window.draw(PlantsArray[i].plantcollider);
-			window.draw(PlantsArray[i].shape);
+			if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <=0))
+			{
+				window.draw(PlantsArray[i].plantCollider);
+				window.draw(PlantsArray[i].shape);
+			}
 		}
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
@@ -513,7 +498,7 @@ namespace Plants_Zombies {
 		Sprite zombieCont;
 		zombieType type;
 
-		RectangleShape zombiecollider;
+		RectangleShape zombieCollider;
 
 		int health;
 		float speed;
@@ -526,7 +511,7 @@ namespace Plants_Zombies {
 		bool isMoving = false;
 		bool isslowmultiply = false;
 
-		Clock Zclock;
+		Clock Zclock, EatClock;
 
 	private:
 		int CollIndex = 0;
@@ -535,15 +520,13 @@ namespace Plants_Zombies {
 		bool isIdle = false;
 		bool PlantsinFront = false;
 		bool deathOfZombie = false;
-
-		int currentplantindex = 0;
 	public:
 		void start() {
 			isIdle = false;
 			isMoving = true;
 			isAttacking = false;
 			isDamaged = false;
-			cout << "start ahmed and ammar";
+
 			switch (type)
 			{
 				
@@ -553,6 +536,8 @@ namespace Plants_Zombies {
 				speed = 5.0;
 				damage = 20;
 				
+				zombieCollider.setSize({ 42, 47 });
+				zombieCollider.setScale(3.5, 3.5);
 				zombieCont.setScale(3.5, 3.5);
 				// zombieCont.setPosition(1300,row[rand() % 5]); // sets random spawn position 
 				break;
@@ -562,6 +547,8 @@ namespace Plants_Zombies {
 				speed = 9.9;
 				damage = 20;
 
+				zombieCollider.setSize({ 44, 57 });
+				zombieCollider.setScale(3.5, 3.5);
 				zombieCont.setScale(3.5, 3.5);
 				// zombieCont.setPosition(1300, row[rand() % 5]); // sets random spawn position 
 				break;
@@ -571,6 +558,8 @@ namespace Plants_Zombies {
 				speed = 9.8;
 				damage = 20;
 
+				zombieCollider.setSize({ 37, 56 });
+				zombieCollider.setScale(3.5, 3.5);
 				zombieCont.setScale(3.5, 3.5);
 				// zombieCont.setPosition(1300, row[rand() % 5]); // sets random spawn position 
 				break;
@@ -580,6 +569,8 @@ namespace Plants_Zombies {
 				speed = 5.0;
 				damage = 20;
 
+				zombieCollider.setSize({50, 57});
+				zombieCollider.setScale(3.5, 3.5);
 				zombieCont.setScale(3.5, 3.5);
 				// zombieCont.setPosition(1300, row[rand() % 5]); // sets random spawn position 
 				break;
@@ -595,72 +586,96 @@ namespace Plants_Zombies {
 			default:
 				break;
 			}
-			zombiecollider.setSize(Vector2f(zombiecollider.getGlobalBounds().width, zombiecollider.getGlobalBounds().height));
-			zombiecollider.setFillColor(Color::Red);
+
+			zombieCollider.setFillColor(Color(252, 3, 3, 180));
 		}
 		void update(float deltaTime) {
-			cout << "update ahmed and ammar";
-			if (!isDead || type != Dead)
+
+			if (!deathOfZombie || type != Dead)
 			{
 				Movement(deltaTime);
 				CollisionZombies(PlantProjectilesARR, PlantsArray);
 				Animation();
 			}
 
-		}
-		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants* PlantsArray) {
-			// Projectiles
-			if (!PlantProjectilesARR.empty())
+			if (health <= 0 || type == Dead)
 			{
-				for (int i = 0; i < 4; i++)
-				{
-					for (int j = 0; j < PlantProjectilesARR.size(); j++) {
-						if (!PlantProjectilesARR.empty()) {
-							if (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombie_array[i].zombieCont.getGlobalBounds())) {
-								zombie_array[i].health -= PlantProjectilesARR[j].damage;
-								zombie_array[i].isDamaged = true;
-								if (PlantProjectilesARR[j].type == SnowPeaShooter)
-								{
-									zombie_array[i].speed = (speed * PlantProjectilesARR[j].slowMultiplier);
-								}
-								
-								PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
-								j--;
-								break;
-							}
-							else
-							{
-								zombie_array[i].isDamaged = false;
-							}
+				deathOfZombie = true;
+				isDead = true;
+				isIdle = false;
+				isAttacking = false;
+				isDamaged = false;
+				isMoving = false;
+			}
+
+			zombieCollider.setPosition(zombieCont.getPosition());
+		}
+
+		int CurrentPlantIndex;
+		bool PlantInfront = false;
+
+		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) {
+			// Projectiles
+			for (int j = 0; j < PlantProjectilesARR.size(); j++) {
+				if (!PlantProjectilesARR.empty()) {
+					if (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds())) {
+						cout << "Zombie Health = " << health << endl;
+						health -= PlantProjectilesARR[j].damage;
+						isDamaged = true;
+						if (PlantProjectilesARR[j].type == SnowPeaShooter)
+						{
+							speed = (speed * PlantProjectilesARR[j].slowMultiplier);
 						}
+								
+						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
+						j--;
+						break;
+					}
+					else
+					{
+						isDamaged = false;
 					}
 				}
 			}
 
-
 			// Plants
-			for (int i = 0; i < 45; i++) {
-				if (PlantsArray[i].shape.getGlobalBounds().intersects(zombieCont.getGlobalBounds())) {
-					isMoving = false;
-					isAttacking = true;
-
+			if (!PlantInfront)
+			{
+				for (int i = 0; i < 45; i++) {
+					//FloatRect plantUpdatedBounds = PlantsArray[i].shape.getGlobalBounds();
+					if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+						&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds())) {
+						CurrentPlantIndex = i;
+						PlantInfront = true;
+						break;
+					}
+					else
+					{
+						isMoving = true;
+						isAttacking = false;
+					}
 				}
-
-
-
+			}
+			else
+			{
+				isMoving = false;
+				isAttacking = true;
+				//attack clock
+				if (EatClock.getElapsedTime() >= seconds(1))
+				{
+					PlantsArray[CurrentPlantIndex].takeDmg(damage);
+					EatClock.restart();
+				}
 			}
 
-
+			// if the plant the zombie is eating died or is removed reset the zombie state
+			if (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
+			{
+				PlantInfront = false;
+				isMoving = true;
+				isAttacking = false;
+			}
 		}
-			/*for (int i = 0; i < 45; i++) {
-				if (PlantsArray[i].shape.getGlobalBounds().intersects(zombieCont.getGlobalBounds())) {
-					isMoving = false;
-					isAttacking = true;
-
-				}
-			}*/
-		
-
 	
 	private:
 		void Animation() {
@@ -867,7 +882,7 @@ namespace Plants_Zombies {
 		}
 
 		void Movement(float deltaTime) {
-			cout << "movement ahmed and ammar";
+			//cout << "movement ahmed and ammar";
 			if (health <= 0)
 			{
 				numberofdeadzombie++;
@@ -882,6 +897,7 @@ namespace Plants_Zombies {
 
 					zombieCont.setScale(Vector2f(0, 0));
 					Zclock.restart();
+					type = Dead;
 				}
 			}
 			else if (isMoving)
@@ -901,7 +917,7 @@ namespace Plants_Zombies {
 	}zombie_array[4];
 
 	void StartZombies() {
-		cout << "start zombies ahmed and ammar";
+		//cout << "start zombies ahmed and ammar";
 		zombie_array[0].type = regular;
 		zombie_array[0].zombieCont.setScale(2, 2);
 		zombie_array[0].start();
@@ -921,8 +937,6 @@ namespace Plants_Zombies {
 	}
 
 	void UpdateZombies(float deltaTime) {
-		cout << "updatezombies ahmed and ammar";
-		
 		for (int i = 0; i < 4; i++)
 		{
 			if (zombie_array[i].type != Dead)
@@ -937,45 +951,9 @@ namespace Plants_Zombies {
 		{
 			if (zombie_array[i].type != Dead)
 			{
+				window.draw(zombie_array[i].zombieCollider);
 				window.draw(zombie_array[i].zombieCont);
-
 			}
 		}
 	}
-
-	//void Plants::updatePlantStruct(Zombie* zombie_array) {
-	//	for (int i = 0; i < 4; i++)
-	//	{
-	//		if (!PlantsArray[i].isDead) // if not dead will animate and execute action  
-	//		{
-	//			for (int j = 0; j < 4; j++)
-	//			{
-	//				if (!zombie_array[i].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
-	//				{
-	//					// checks if a zombie is in front of the plant  
-	//					if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
-	//						&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-	//							&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-	//							&& (PlantsArray[i].shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left)))
-	//					{
-	//						PlantsArray[i].zombieInFront = true;
-	//						break;
-	//					}
-	//				}
-	//				else
-	//				{
-	//					PlantsArray[i].zombieInFront = false;
-	//				}
-	//			}
-	//			PlantsArray[i].animationHandler();
-	//			PlantsArray[i].action();
-	//		}
-	//		else // else will turn the plant into an empty gameobject  
-	//		{
-	//			PlantsArray[i].type = EmptyPlant;
-	//			PlantsArray[i].setupPrefab();
-	//		}
-	//	}
-	//}
-
 }
