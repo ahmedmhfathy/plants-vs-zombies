@@ -80,7 +80,9 @@ void LoadMainMenuTex()
 }
 
 void MainMenuStart(RenderWindow& window)
-{
+{ 
+    
+
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
 
@@ -132,6 +134,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             startAnim = false;
         }
+        
 
         //main menu buttons
         if (mouse_pos.x >= 884 && mouse_pos.x <= 1211 && mouse_pos.y >= 202 && mouse_pos.y <= 310)
@@ -144,6 +147,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
+                
                 Click.play();
                 SwitchState(Level1);
             }

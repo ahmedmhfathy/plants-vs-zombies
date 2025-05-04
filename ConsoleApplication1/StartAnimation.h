@@ -26,6 +26,8 @@ Texture Planttexttexture;
 Sprite Planttextsprite;
 SoundBuffer RSPSoundBuffer;
 Sound RSPSound;
+SoundBuffer ZombiesAreComingBuffer;
+Sound ZombiesAreComing;
 #pragma endregion
 
 #pragma region Fuctions
@@ -118,6 +120,9 @@ void movecars();
         //***********************(Ready Set Plant Audio)********************************
         RSPSoundBuffer.loadFromFile("Audio/readysetplant.ogg");
         RSPSound.setBuffer(RSPSoundBuffer);
+        //***********************(End RSP)********************************
+        ZombiesAreComingBuffer.loadFromFile("Audio/awooga.ogg");
+        ZombiesAreComing.setBuffer(ZombiesAreComingBuffer);
         //===================================**load start wave two**==================================
         Textstartwave2texture.loadFromFile("Assets/Environment/A-Huge-Wave-Of-Zombies-Is-Approaching.png");
         Textstartwave2sprite.setTexture(Textstartwave2texture);
@@ -196,8 +201,9 @@ void movecars();
         {
             window.draw(Planttextsprite);
         }
-        else
+        else if (time<seconds(3))
         {
+            ZombiesAreComing.play();
             endRSP = true;
         }
 

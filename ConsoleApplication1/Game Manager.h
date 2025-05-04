@@ -431,7 +431,7 @@ void DrawLevel3(RenderWindow& window)
 #pragma endregion
 
 // switches the state of the game and calls the start function of the new state
-void SwitchState(State NewState)
+void SwitchState(State NewState)    
 {
     LevelIsOver = false;
     WinLevel = false;

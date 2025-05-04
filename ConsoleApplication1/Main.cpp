@@ -11,11 +11,14 @@ using namespace std;
 using namespace sf;
 
 RenderWindow window(VideoMode(1280, 720), "Plant vs zombie");
+SoundBuffer GameMusicBuffer;
+Sound GameMusic;
 
 #pragma region Function Declaration
 void Start();
 void Update();
 void RenderScreen();
+
 #pragma endregion
 
 float DeltaTime;
@@ -43,6 +46,12 @@ int main()
 
 void Start()
 {
+    
+    GameMusicBuffer.loadFromFile("Audio/Plants vs. Zombies BackGround.wav");
+    GameMusic.setBuffer(GameMusicBuffer);
+    GameMusic.setLoop(true);
+    GameMusic.play();
+
     Plants_Zombies::LoadPlantTextures(); //textures loaded here once
     LoadSelectionTexture();
 
@@ -66,11 +75,13 @@ void Update()
 
     //calls the update function depending on current state and pause state
     if (CurrentState == MainMenu)
-    {
+    {   
+        GameMusic.setVolume(15);
         MainMenuUpdate(MouseWorldPostion, window);
     }
     else
     {
+        GameMusic.setVolume(7);
         if (CurrentState == Level1 && !IsPaused)
         {
             UpdateLevel1(window);
