@@ -412,7 +412,7 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 	if (!isDead) // if not dead will animate and execute action  
 	{
-		for (int j = 0; j < 4; j++)
+		for (int j = 0; j < 100; j++)
 		{
 			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead)) // checks if zombie is dead or not to avoid shooting dead zombies
 			{

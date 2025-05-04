@@ -23,6 +23,8 @@ Texture Settexttexture;
 Sprite Settextsprite;
 Texture Planttexttexture;
 Sprite Planttextsprite;
+Texture zombieingardentex;
+Sprite zombieingarden;
 #pragma endregion
 
 #pragma region Fuctions
@@ -44,31 +46,43 @@ Clock animcameraClock; // Clock use in animation to camera
 Clock clockRSP;
 #pragma endregion
 
- namespace  StartAnimationNS {
+namespace  StartAnimationNS {
 
 #pragma region Function Declaration
-void startAnimation();
-void updateAnimation(RenderWindow&);
-void movecamera(RenderWindow&);
-void RSP(RenderWindow&); // Ready...Set....Plant....
-void loadphoto();
-void movecars(); 
+    void startAnimation();
+    void updateAnimation(RenderWindow&);
+    void movecamera(RenderWindow&);
+    void RSP(RenderWindow&); // Ready...Set....Plant....
+    void loadphoto();
+    void movecars();
 #pragma endregion
 
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void startAnimation() {
+         startdrawRSP = true;
+         EntertostartdrawRSP = false;
+        // variable check Camera move Right And Left
+         moveright = false;
+         moveleft = false;
+         startAnimcamera = false;
+
+
+         ///////////========================================
+          nowave = true;
+          checkstart_wave2 = true;
+          checkstart_wave3 = true;
+          endRSP = false;
+          movefromwavetoanother = true;
+
+
+
         for (int i = 0; i < 5; i++) {
-           
+
             car[i].start(i);
         }
         loadphoto();
         srand(time(0));
-       
-        for (int i = 0;i < 4; i++) {
-            Plants_Zombies::LoadZombieTextures();
-            start( false);
-        }
     }
 
     void updateAnimation(RenderWindow& window) {
@@ -83,11 +97,9 @@ void movecars();
         // This Restart for the first wave..............
         deltaTime = frameClock.restart().asSeconds();
         timeSinceStart = globalClock.getElapsedTime().asSeconds();
-        if (endRSP) {
-            level(3, 3, 10);
-        }
+
     }
-    
+
     void loadphoto() {
         // =======================**load photo garden**===================================
         gardentexture.loadFromFile("Assets/Environment/Game-Environment.png");
@@ -95,24 +107,29 @@ void movecars();
         gardensprite.setPosition(-325, -265);
         gardensprite.setScale(0.65, 0.65);
         GardenCamera.setCenter({ 340, 310 });
+        // zombie in garden ....
+        zombieingardentex.loadFromFile("Assets/Environment/zombie.png");
+        zombieingarden.setTexture(zombieingardentex);
+        zombieingarden.setPosition(980, -250);
+        zombieingarden.setScale(1.4, 1.4);
         // =========================**load photo READY SET PLANT!**======================================
         //*********************(READY)******************
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
         Readytextsprite.setTexture(Readytexttexture);
         Readytextsprite.setOrigin(Readytextsprite.getGlobalBounds().width / 2.0f, Readytextsprite.getGlobalBounds().height / 2.0f);
-        Readytextsprite.setPosition(340, 310);
+        Readytextsprite.setPosition(640, 410);
         Readytextsprite.setScale(1.8, 1.8);
         //** *********************(SET)************************ **
         Settexttexture.loadFromFile("Assets/Environment/StartSet.png");
         Settextsprite.setTexture(Settexttexture);
         Settextsprite.setOrigin(Settextsprite.getGlobalBounds().width / 2.0f, Settextsprite.getGlobalBounds().height / 2.0f);
-        Settextsprite.setPosition(340, 310);
+        Settextsprite.setPosition(640, 410);
         Settextsprite.setScale(1.8, 1.8);
         //***********************(PLANT)********************************
         Planttexttexture.loadFromFile("Assets/Environment/StartPlant.png");
         Planttextsprite.setTexture(Planttexttexture);
         Planttextsprite.setOrigin(Planttextsprite.getGlobalBounds().width / 2.0f, Planttextsprite.getGlobalBounds().height / 2.0f);
-        Planttextsprite.setPosition(340, 310);
+        Planttextsprite.setPosition(640, 410);
         Planttextsprite.setScale(1.8, 1.8);
         //===================================**load start wave two**==================================
         Textstartwave2texture.loadFromFile("Assets/Environment/A-Huge-Wave-Of-Zombies-Is-Approaching.png");
@@ -131,7 +148,7 @@ void movecars();
         Textlosegamesprite.setTexture(Textlosegametexture);
         Textlosegamesprite.setPosition(-20, 10);
         Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
-        Textlosegamesprite.setPosition(1280 / 3.5f, 720/ 2.27f);
+        Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
     }
 
     void movecamera(RenderWindow& window) {
@@ -212,16 +229,13 @@ void movecars();
 
     void Renderstartanimation(RenderWindow& window) {
         window.draw(gardensprite);
-       /* for (int i = 0; i < 40; i++) {
-            window.draw(zombie[i].rectanglesprite);
-        }*/
         if (EntertostartdrawRSP) {
             RSP(window);
         }
         for (int i = 0; i < 5; i++) {
             window.draw(car[i].lawnsprite);
         }
+        window.draw(zombieingarden);
     }
+
 }
-
-

@@ -65,7 +65,8 @@ public:
 			health = 100;
 			speed = 1.0;
 			damage = 10;
-			zombieCont.setPosition(200, 0);
+			
+			(200, 0);
 			break;
 		case trafficCone:
 			zombieCont.setTexture(TrafficConeIdleText);
