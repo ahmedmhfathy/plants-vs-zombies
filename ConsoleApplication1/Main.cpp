@@ -18,22 +18,19 @@ void Update();
 void RenderScreen();
 #pragma endregion
 
-float DeltaTime;
 int main()
 {
     Start();
-    Clock clock;
     while (window.isOpen()) // game loop
     {
-#pragma region MISC
-        DeltaTime = clock.restart().asSeconds();
+        #pragma region MISC
         Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-#pragma endregion
+        #pragma endregion
 
         Update();
         RenderScreen();
@@ -53,7 +50,6 @@ void Start()
     window.setVerticalSyncEnabled(true);
 
     MainMenuStart(window); //textures loaded here once
-    //StartLevel1();
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
@@ -87,6 +83,7 @@ void Update()
 
         PauseMenuUpdate();
         LevelEndUpdate();
+        DeltaTimeManager();
     }
 }
 // this function will be used to render the screen

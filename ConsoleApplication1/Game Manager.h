@@ -15,8 +15,6 @@ using namespace sf;
 enum State { MainMenu, Level1, Level2, Level3 } CurrentState;
 void SwitchState(State NewState);
 
-bool IsPaused = false;
-
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
 
@@ -317,7 +315,7 @@ void UpdateLevel1(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(3, 4, 15.0f, IsPaused);
+    level(3, 4, 7.0f);
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
@@ -326,7 +324,7 @@ void DrawLevel1(RenderWindow& window)
     StartAnimationNS::Renderstartanimation(window);
     Plants_Zombies::DrawPlantsAndProjectiles(window);
     DrawPlantingAndCurrencySystem(window);
-    drawzombies(window);
+    DrawWavesAndZombies(window);
 }
 
 void StartLevel2()

@@ -551,7 +551,6 @@ namespace Plants_Zombies {
 
 				zombieCollider.setSize({ 42, 47 });
 
-
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
 				// zombieCont.setPosition(1300,row[rand() % 5]); // sets random spawn position 
@@ -612,6 +611,7 @@ namespace Plants_Zombies {
 				Movement(deltaTime);
 				CollisionZombies(PlantProjectilesARR, PlantsArray);
 				Animation();
+
 				if (type == trafficCone && health < 320 && !isDamaged)
 					isDamaged = true;
 				else if (type == bucketHat && health < 650 && !isDamaged)
@@ -648,7 +648,7 @@ namespace Plants_Zombies {
 		}
 
 		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) {
-			// Projectiles
+			// Projectiles // remove collision with sun coins
 			for (int j = 0; j < PlantProjectilesARR.size(); j++) {
 				if (!PlantProjectilesARR.empty()) {
 					if (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds())) {
@@ -672,10 +672,13 @@ namespace Plants_Zombies {
 			// Plants
 			if (!PlantInfront)
 			{
-				for (int i = 0; i < 45; i++) {
-					if (!isDead || type == Dead) {
+				for (int i = 0; i < 45; i++) 
+				{
+					if (!isDead || type == Dead) 
+					{
 						if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
-							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds())) {
+							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds())) 
+						{
 							CurrentPlantIndex = i;
 							PlantInfront = true;
 							break;
@@ -944,7 +947,7 @@ namespace Plants_Zombies {
 			}
 			else if (isMoving)
 			{
-				zombieCont.move(-1 * speed * 400000 * deltaTime, 0);
+				zombieCont.move(-1 * speed * deltaTime, 0);
 			}
 		}
 	}zombie_array[100];

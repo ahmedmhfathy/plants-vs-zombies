@@ -62,28 +62,24 @@ namespace  StartAnimationNS {
         animcameraClock.restart();
         clockRSP.restart();
 
-        //GardenCamera.zoom(1.3);
+        //GardenCamera.zoom(1.5);
 
-        for (int i = 0; i < 5; i++) {
-
+        for (int i = 0; i < 5; i++)
+        {
             car[i].start(i);
         }
+
         loadphoto();
         srand(time(0));
     }
 
     void updateAnimation(RenderWindow& window) {
-        deltatimetextstartwave2 = clockdrawtextwave2.restart();
-        deltatimetextfinalwave = clockdrawtextfinalwave.restart();
-
         movecamera(window);
         if (moveleft) {
             movecars(); // When Move Camera is end .... Start move car
         }
-        // This Restart for the first wave..............
-        deltaTime = frameClock.restart().asSeconds();
-        timeSinceStart = globalClock.getElapsedTime().asSeconds();
 
+        timeSinceStart = globalClock.getElapsedTime().asSeconds();
     }
 
     void loadphoto() {
