@@ -14,8 +14,6 @@
 using namespace std;
 using namespace sf;
 
-
-
 namespace  StartAnimationNS {
 
 #pragma region Function Declaration
@@ -49,34 +47,22 @@ namespace  StartAnimationNS {
     bool startAnimcamera = false;
 #pragma endregion
 
-#pragma region Hours
-    // hours
-    Clock animcameraClock; // Clock use in animation to camera
+    Clock animcameraClock;
     Clock clockRSP;
-#pragma endregion
 
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void startAnimation() {
 
-        GardenCamera.zoom(1.3);
+        startdrawRSP = true;
+        EntertostartdrawRSP = false;
+        moveright = false;
+        moveleft = false;
+        startAnimcamera = false;
+        animcameraClock.restart();
+        clockRSP.restart();
 
-         startdrawRSP = true;
-         EntertostartdrawRSP = false;
-        // variable check Camera move Right And Left
-         moveright = false;
-         moveleft = false;
-         startAnimcamera = false;
-
-
-         ///////////========================================
-          nowave = true;
-          checkstart_wave2 = true;
-          checkstart_wave3 = true;
-          endRSP = false;
-          movefromwavetoanother = true;
-
-
+        //GardenCamera.zoom(1.3);
 
         for (int i = 0; i < 5; i++) {
 
@@ -89,7 +75,6 @@ namespace  StartAnimationNS {
     void updateAnimation(RenderWindow& window) {
         deltatimetextstartwave2 = clockdrawtextwave2.restart();
         deltatimetextfinalwave = clockdrawtextfinalwave.restart();
-        deltatimelosegame = clocklosegame.restart();
 
         movecamera(window);
         if (moveleft) {
@@ -216,7 +201,7 @@ namespace  StartAnimationNS {
         int stoppedCars = 0;
      
         for (int i = 0; i < 5; i++) {
-            car[i].update(deltaTime);
+            car[i].update();
             if (car[i].lawnsprite.getPosition().x > -70) {
                 stoppedCars++;
             }
@@ -236,5 +221,4 @@ namespace  StartAnimationNS {
         }
         window.draw(zombieinStreet);
     }
-
 }

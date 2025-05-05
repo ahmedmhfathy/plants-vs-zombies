@@ -11,7 +11,7 @@
 using namespace std;
 using namespace sf;
 
-enum EaseType { CubicEaseInOut, ExpoEaseOut };
+enum EaseType { CubicEaseInOut, ExpoEaseOut, linear };
 
 #pragma region Function Declaration
 float CubicEase(float t);
@@ -35,6 +35,9 @@ float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock
         easedTime = EaseOutExpo(NormalizedTime);
         break;
     }
+    case linear: {
+        easedTime = linearEase(NormalizedTime);
+    }
     default:
         break;
     }
@@ -51,4 +54,8 @@ float CubicEase(float t) {
 float EaseOutExpo(float t) {
     // t is the normalized time from 0 to 1
     return t == 1 ? 1 : 1 - pow(2, -10 * t);
+}
+
+float linearEase(float t) {
+    return t;
 }

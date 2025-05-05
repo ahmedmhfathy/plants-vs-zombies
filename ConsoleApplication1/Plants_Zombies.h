@@ -922,9 +922,8 @@ namespace Plants_Zombies {
 			}
 		}
 
-		void Movement(float deltaTime) {
-			//cout << "movement ahmed and ammar";
-
+		void Movement(float deltaTime)
+		{
 			if (health <= 0)
 			{
 				numberofdeadzombie++;
@@ -945,10 +944,8 @@ namespace Plants_Zombies {
 			}
 			else if (isMoving)
 			{
-				zombieCont.move(-1 * speed * 40000 * deltaTime, 0);
+				zombieCont.move(-1 * speed * 400000 * deltaTime, 0);
 			}
-
-
 		}
 	}zombie_array[100];
 
