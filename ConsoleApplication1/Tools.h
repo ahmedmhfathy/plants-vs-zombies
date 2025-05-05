@@ -16,6 +16,7 @@ enum EaseType { CubicEaseInOut, ExpoEaseOut, linear };
 #pragma region Function Declaration
 float CubicEase(float t);
 float EaseOutExpo(float t);
+float linearEase(float t);
 float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock, Time Duration);
 #pragma endregion
 

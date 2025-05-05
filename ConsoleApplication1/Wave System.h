@@ -357,7 +357,7 @@ void drawzombies(RenderWindow& window) {
                 Time animDuration_ = seconds(6);
                 if (scalefactortextlosegame > minscaletextlosegame)
                 {
-                    scalefactortextlosegame = easeInOut(ExpoEaseOut, scalefactortextlosegame, minscaletextlosegame, LoseGameClock, animDuration_);
+                    scalefactortextlosegame = easeInOut(linear, scalefactortextlosegame, minscaletextlosegame, LoseGameClock, animDuration_);
                     Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
                 }
                 else if (LoseGameClock.getElapsedTime() >= seconds(7.5))
@@ -366,7 +366,6 @@ void drawzombies(RenderWindow& window) {
                     WinLevel = false;
                 }
             }
-
 
             window.draw(Textlosegamesprite);
 
