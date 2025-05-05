@@ -130,7 +130,6 @@ void SetupPlants() {
 
 void StartPlantingAndCurrencySystem(Vector2f offset) {
 	SetupSelectionUI(offset);
-	SetupPlants();
 
 	SunCoinClock.restart();
 	PeaShooterClock.restart();
@@ -138,7 +137,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 	WallNutClock.restart();
 	SunFlowerClock.restart();
 
-	Plants_Zombies::score = 1000;
+	Plants_Zombies::score = 10000;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
@@ -162,6 +161,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 			mygrid[i].shape.setFillColor(Color(255, 255, 255, 32));
 		}
 	}
+	SetupPlants();
 }
 
 void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
@@ -419,11 +419,15 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 				// checks if a zombie is in front of the plant  
 				if ((type == PeaShooter || type == SnowPeaShooter)
 					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left)))
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
+					&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
 				{
-					zombieInFront = true;
-					break;
+					if (!(zombie_array[j].type == Dead || zombie_array[j].health <= 0))
+					{
+						zombieInFront = true;
+						break;
+					}
 				}
 				else
 				{

@@ -44,6 +44,7 @@ int main()
 void Start()
 {
     Plants_Zombies::LoadPlantTextures(); //textures loaded here once
+    Plants_Zombies::LoadZombieTextures();
     LoadSelectionTexture();
 
     CurrentState = MainMenu;
@@ -52,7 +53,7 @@ void Start()
     window.setVerticalSyncEnabled(true);
 
     MainMenuStart(window); //textures loaded here once
-    StartLevel1();
+    //StartLevel1();
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
@@ -121,7 +122,6 @@ void RenderScreen()
         {
             DrawLevelEnd(window);
         }
-
     }
     window.display();
 }

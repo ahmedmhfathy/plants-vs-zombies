@@ -23,11 +23,8 @@ Texture Settexttexture;
 Sprite Settextsprite;
 Texture Planttexttexture;
 Sprite Planttextsprite;
-Texture zombieingardentex;
-Sprite zombieingarden;
-#pragma endregion
-
-#pragma region Fuctions
+Texture zombieinStreettex;
+Sprite zombieinStreet;
 #pragma endregion
 
 #pragma region boolean
@@ -37,7 +34,6 @@ bool EntertostartdrawRSP = false;
 bool moveright = false;
 bool moveleft=false;
 bool startAnimcamera = false;
-
 #pragma endregion
 
 #pragma region Hours
@@ -60,6 +56,9 @@ namespace  StartAnimationNS {
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void startAnimation() {
+
+        GardenCamera.zoom(2);
+
          startdrawRSP = true;
          EntertostartdrawRSP = false;
         // variable check Camera move Right And Left
@@ -108,10 +107,10 @@ namespace  StartAnimationNS {
         gardensprite.setScale(0.65, 0.65);
         GardenCamera.setCenter({ 340, 310 });
         // zombie in garden ....
-        zombieingardentex.loadFromFile("Assets/Environment/zombie.png");
-        zombieingarden.setTexture(zombieingardentex);
-        zombieingarden.setPosition(980, -250);
-        zombieingarden.setScale(1.4, 1.4);
+        zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
+        zombieinStreet.setTexture(zombieinStreettex);
+        zombieinStreet.setPosition(980, -250);
+        zombieinStreet.setScale(1.4, 1.4);
         // =========================**load photo READY SET PLANT!**======================================
         //*********************(READY)******************
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
@@ -213,17 +212,15 @@ namespace  StartAnimationNS {
 
     void movecars() {
         int stoppedCars = 0;
-        Time deltatime = clockmovecars.restart();
-        float dt = deltatime.asSeconds();
+     
         for (int i = 0; i < 5; i++) {
-            car[i].update(dt);
+            car[i].update(deltaTime);
             if (car[i].lawnsprite.getPosition().x > -70) {
                 stoppedCars++;
             }
         }
         if (stoppedCars == 5) {
             EntertostartdrawRSP = true;
-
         }
     }
 
@@ -235,7 +232,7 @@ namespace  StartAnimationNS {
         for (int i = 0; i < 5; i++) {
             window.draw(car[i].lawnsprite);
         }
-        window.draw(zombieingarden);
+        window.draw(zombieinStreet);
     }
 
 }
