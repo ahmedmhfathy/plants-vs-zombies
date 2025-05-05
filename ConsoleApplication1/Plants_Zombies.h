@@ -500,12 +500,12 @@ namespace Plants_Zombies {
 	int numberofdeadzombie = 0;
 	struct Zombie {
 		Sprite zombieCont;
+		RectangleShape zombieCollider;
+
 		zombieType type;
 		bool started = false;
 		bool stoped;
 		bool isSlowed = false;
-
-		RectangleShape zombieCollider;
 
 		int health;
 		float speed;
@@ -527,6 +527,10 @@ namespace Plants_Zombies {
 		bool isIdle = false;
 		bool PlantsinFront = false;
 		bool deathOfZombie = false;
+
+		int CurrentPlantIndex;
+		bool PlantInfront = false;
+
 	public:
 		void start() {
 			isIdle = false;
@@ -534,7 +538,7 @@ namespace Plants_Zombies {
 			isAttacking = false;
 			isDamaged = false;
 			isSlowed = false;
-
+			PlantInfront = false;
 
 			switch (type)
 			{
@@ -600,7 +604,6 @@ namespace Plants_Zombies {
 
 			zombieCollider.setFillColor(Color(252, 3, 3, 180));
 			zombieCont.setColor(Color(255, 255, 255, 255));
-			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 60);
 		}
 		void update(float deltaTime) {
 
@@ -644,9 +647,6 @@ namespace Plants_Zombies {
 			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 60);
 		}
 
-		int CurrentPlantIndex;
-		bool PlantInfront = false;
-
 		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) {
 			// Projectiles
 			for (int j = 0; j < PlantProjectilesARR.size(); j++) {
@@ -666,7 +666,6 @@ namespace Plants_Zombies {
 						j--;
 						break;
 					}
-					
 				}
 			}
 
@@ -701,6 +700,12 @@ namespace Plants_Zombies {
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						EatClock.restart();
 					}
+				}
+				else
+				{
+					PlantInfront = false;
+					isMoving = true;
+					isAttacking = false;
 				}
 			}
 

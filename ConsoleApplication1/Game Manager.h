@@ -310,7 +310,7 @@ void DrawLevelEnd(RenderWindow& window)
 void StartLevel1()
 {
     StartPlantingAndCurrencySystem(offset);
-
+    startZombiePositions(100);
     StartAnimationNS::startAnimation();
 }
 void UpdateLevel1(RenderWindow& window)

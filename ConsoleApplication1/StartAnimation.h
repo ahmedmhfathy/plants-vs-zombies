@@ -14,33 +14,7 @@
 using namespace std;
 using namespace sf;
 
-#pragma region Textures and sprites declaration
-Texture gardentexture;
-Sprite gardensprite;
-Texture Readytexttexture;
-Sprite  Readytextsprite;
-Texture Settexttexture;
-Sprite Settextsprite;
-Texture Planttexttexture;
-Sprite Planttextsprite;
-Texture zombieinStreettex;
-Sprite zombieinStreet;
-#pragma endregion
 
-#pragma region boolean
-bool startdrawRSP = true;
-bool EntertostartdrawRSP = false;
-// variable check Camera move Right And Left
-bool moveright = false;
-bool moveleft=false;
-bool startAnimcamera = false;
-#pragma endregion
-
-#pragma region Hours
-// hours
-Clock animcameraClock; // Clock use in animation to camera
-Clock clockRSP;
-#pragma endregion
 
 namespace  StartAnimationNS {
 
@@ -53,11 +27,39 @@ namespace  StartAnimationNS {
     void movecars();
 #pragma endregion
 
+#pragma region Textures and sprites declaration
+    Texture gardentexture;
+    Sprite gardensprite;
+    Texture Readytexttexture;
+    Sprite  Readytextsprite;
+    Texture Settexttexture;
+    Sprite Settextsprite;
+    Texture Planttexttexture;
+    Sprite Planttextsprite;
+    Texture zombieinStreettex;
+    Sprite zombieinStreet;
+#pragma endregion
+
+#pragma region boolean
+    bool startdrawRSP = true;
+    bool EntertostartdrawRSP = false;
+    // variable check Camera move Right And Left
+    bool moveright = false;
+    bool moveleft = false;
+    bool startAnimcamera = false;
+#pragma endregion
+
+#pragma region Hours
+    // hours
+    Clock animcameraClock; // Clock use in animation to camera
+    Clock clockRSP;
+#pragma endregion
+
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void startAnimation() {
 
-        GardenCamera.zoom(2);
+        GardenCamera.zoom(1.3);
 
          startdrawRSP = true;
          EntertostartdrawRSP = false;

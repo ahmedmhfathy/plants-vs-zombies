@@ -115,21 +115,9 @@ void SetupSelectionUI(Vector2f offset) {
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 }
 
-
-void SetupPlants() {
-	Plants_Zombies::PlantProjectilesARR.clear();
-
-	for (int i = 1; i <= 45; i++)
-	{
-		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
-		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
-		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
-		Plants_Zombies::PlantsArray[i - 1].start();
-	}
-}
-
 void StartPlantingAndCurrencySystem(Vector2f offset) {
 	SetupSelectionUI(offset);
+	Plants_Zombies::PlantProjectilesARR.clear();
 
 	SunCoinClock.restart();
 	PeaShooterClock.restart();
@@ -160,8 +148,12 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 		else {
 			mygrid[i].shape.setFillColor(Color(255, 255, 255, 32));
 		}
+
+		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
+		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
+		Plants_Zombies::PlantsArray[i - 1].start();
 	}
-	SetupPlants();
 }
 
 void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
@@ -421,13 +413,11 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
 					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
 					&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
-					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
+					&& (zombie_array[j].zombieCollider.getPosition().x < 960)
+					&& !(zombie_array[j].type == Dead || zombie_array[j].health <= 0 || !zombie_array[j].started))
 				{
-					if (!(zombie_array[j].type == Dead || zombie_array[j].health <= 0))
-					{
-						zombieInFront = true;
-						break;
-					}
+					zombieInFront = true;
+					break;
 				}
 				else
 				{

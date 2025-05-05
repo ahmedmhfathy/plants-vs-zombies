@@ -96,8 +96,9 @@ struct waves {
 #pragma endregion
 
 
-void start( int i) {
-    Plants_Zombies::StartZombies(i);
+void startZombiePositions( int numZombies) {
+    Plants_Zombies::StartZombies(numZombies);
+
     int row[5] = { -40, 100, 235, 360,490 };
 
     for (int i = 0; i < 100; i++) 
@@ -110,6 +111,7 @@ void start( int i) {
         if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone|| Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan) {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
         }
+        Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
     }
 }
 
@@ -138,12 +140,6 @@ void intersectioncarsandzombies(int numberwave) {
 }
 
 void startallwave(int numberwave, int numberzombie, float delaybetween) {   
-    //for (int i = 0; i < numberzombie; i++)
-    //{
-    //    Plants_Zombies::zombie_array[i].zombieCont.setPosition(2000, 2000);
-    //    Plants_Zombies::zombie_array[i].zombieCollider.setPosition(2000, 2000);
-    //}
-
     wave[numberwave].delaybetween = delaybetween;
     wave[numberwave].numberzombie = numberzombie;
     Plants_Zombies:: numberofdeadzombie = 0;
@@ -155,11 +151,7 @@ void startallwave(int numberwave, int numberzombie, float delaybetween) {
 
     timeSinceStart = globalClock.getElapsedTime().asSeconds();
 
-    //for (int i = 0; i < 100; i++) {
-    //   Plants_Zombies::zombie_array[i].stoped = false;
-    //}
-
-    start(numberzombie);
+    startZombiePositions(numberzombie);
 }
 
 void allwave(int numberwave, int numberzombie, bool isPaused) {
