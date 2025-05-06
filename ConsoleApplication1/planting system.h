@@ -6,7 +6,6 @@
 #include <string>
 #include<time.h>
 #include"Plants_Zombies.h"
-//tunetank.com_throwing - item - low - swing
 using namespace std;
 using namespace sf;
 
@@ -39,7 +38,7 @@ Sprite SelectionHolograph;
 
 #pragma region clocks and time
 Clock PeaShooterClock, SnowPeaClock, WallNutClock, SunFlowerClock, SunCoinClock;
-Time SunSpawnTime = seconds(17);
+Time SunSpawnTime = seconds(14);
 
 Time SunFlowerCoolDown = seconds(7);
 Time PeaShooterCoolDown = seconds(7);
@@ -138,6 +137,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 
 	Plants_Zombies::PlantProjectilesARR.clear();
 
+	SunCoinClock.restart();
 	PeaShooterClock.restart();
 	SnowPeaClock.restart();
 	WallNutClock.restart();
@@ -366,7 +366,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 					{
 						PlantingSound.setPitch(randPitch[rand()%3]);
 						PlantingSound.play();
-					cout << "shovel " << i << endl;
+						//cout << "shovel " << i << endl;
 						mygrid[i].isplanted = false;
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
 						Plants_Zombies::PlantsArray[i - 1].start();
@@ -380,7 +380,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 					{
 						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
-						cout << "peashooter " << i << endl;
+						//cout << "peashooter " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PeaShooter;
 						Plants_Zombies::PlantsArray[i - 1].start();
@@ -399,7 +399,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 					{
 						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
-						cout << "SnowPeaShooter " << i << endl;
+						//cout << "SnowPeaShooter " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SnowPeaShooter;
 						Plants_Zombies::PlantsArray[i - 1].start();
@@ -419,7 +419,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 					{
 						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
-						cout << "SunFlower " << i << endl;
+						//cout << "SunFlower " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunFlower;
 						Plants_Zombies::PlantsArray[i - 1].start();
@@ -438,8 +438,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 					{
 						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
-						cout << "WallNut " << i << endl;
-
+						//cout << "WallNut " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::WallNut;
 						Plants_Zombies::PlantsArray[i - 1].start();

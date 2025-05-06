@@ -43,12 +43,16 @@ namespace Plants_Zombies {
 	SoundBuffer PeaShootSoundBuffer;
 	SoundBuffer SplatSoundBuffer[3];
 	SoundBuffer ZombieEatSoundBuffer[3];
-	SoundBuffer newsmanyellbuffer;
+	SoundBuffer newsmanyellbuffer[2];
+	SoundBuffer newsManPaperRipSoundBuffer;
+	SoundBuffer BucketHatHitSoundBuffer[2];
 	Sound SunCoinSound;
 	Sound ShootSound;
 	Sound SplatSound;
 	Sound EatSound;
 	Sound newsmanyell;
+	Sound newsManPaperRipSound;
+	Sound BucketHatHitSound;
 #pragma endregion
 
 
@@ -65,8 +69,12 @@ namespace Plants_Zombies {
 		ZombieEatSoundBuffer[0].loadFromFile("Audio/Zombies/eat1.ogg");
 		ZombieEatSoundBuffer[1].loadFromFile("Audio/Zombies/eat2.ogg");
 		ZombieEatSoundBuffer[2].loadFromFile("Audio/Zombies/eat3.ogg");
-		newsmanyellbuffer.loadFromFile("Audio/Zombies/newspaper_rarrgh2.ogg");
-		newsmanyell.setBuffer(newsmanyellbuffer);
+		newsmanyellbuffer[0].loadFromFile("Audio/Zombies/newspaper_rarrgh.ogg");
+		newsmanyellbuffer[1].loadFromFile("Audio/Zombies/newspaper_rarrgh2.ogg");
+		newsManPaperRipSoundBuffer.loadFromFile("Audio/Zombies/newspaper_rip.ogg");
+		newsManPaperRipSound.setBuffer(newsManPaperRipSoundBuffer);
+		BucketHatHitSoundBuffer[0].loadFromFile("Audio/Zombies/shieldhit.ogg");
+		BucketHatHitSoundBuffer[1].loadFromFile("Audio/Zombies/shieldhit2.ogg");
 
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
@@ -398,7 +406,7 @@ namespace Plants_Zombies {
 			else if (type == SunFlower) {
 				health = 100;
 				damage = 0;
-				timeForAction = seconds(17); // time to spawn sun 24
+				timeForAction = seconds(14); // time to spawn sun 24
 
 				plantCollider.setSize({ 32, 34 });
 
@@ -518,7 +526,6 @@ namespace Plants_Zombies {
 	Texture DamegedNewsManAttackText;
 	Texture SurpriseText;
 	Texture NewsManDeath;
-
 #pragma endregion
 
 	void LoadZombieTextures() {
@@ -547,7 +554,6 @@ namespace Plants_Zombies {
 		SurpriseText.loadFromFile("Assets/Zombies/newspaper/surprised.png");
 	}
 
-	int numberofdeadzombie = 0;
 	struct Zombie {
 		Sprite zombieCont;
 		RectangleShape zombieCollider;
@@ -592,19 +598,28 @@ namespace Plants_Zombies {
 			SplatSound.setVolume(25);
 			EatSound.setVolume(25);
 			Deathclock.restart();
+			Zclock.restart();
+			EatClock.restart();
+			CrushedZombieClock.restart();
 
-			isIdle = false;
-			isMoving = true;
-			isAttacking = false;
-			isDamaged = false;
+			started = false;
+			stoped;
 			isSlowed = false;
-			PlantInfront = false;
-			deathstart = false;
 			isDead = false;
+			deathstart = false;
 			resetColIndex = false;
-
+			isActivated = false;
+			isDamaged = false;
+			isAttacking = false;
+			isMoving = false;
+			isslowmultiply = false;
 			isSquished = false;
 			SquishEffect = false;
+			wassoundplayed = false;
+			isIdle = false;
+			PlantsinFront = false;
+			deathOfZombie = false;
+			PlantInfront = false;
 
 			switch (type)
 			{
@@ -679,6 +694,7 @@ namespace Plants_Zombies {
 				isAttacking = false;
 				isDamaged = false;
 				isMoving = false;
+				PlantsinFront = false;
 
 				if (!resetColIndex)
 				{
@@ -699,9 +715,11 @@ namespace Plants_Zombies {
 					isDamaged = true;
 				else if (type == bucketHat && health < 650 && !isDamaged)
 					isDamaged = true;
-				else if (type == newsMan && health < 800 && !isDamaged) {
+				else if (type == newsMan && health < 800 && !isDamaged && !isDead) {
 					isDamaged = true;
 					if (!wassoundplayed) {
+						newsManPaperRipSound.play();
+						newsmanyell.setBuffer(newsmanyellbuffer[rand() % 2]);
 						newsmanyell.play();
 						wassoundplayed = true;
 					}
@@ -709,6 +727,7 @@ namespace Plants_Zombies {
 					damage = 30;
 				}
 
+				//set slow color
 				if (isSlowed)
 				{
 					zombieCont.setColor(Color(120, 120, 255, 255));
@@ -738,9 +757,17 @@ namespace Plants_Zombies {
 						}
 						float randPitch[3] = { 0.85, 1, 1.25 };
 
+						if (type == bucketHat)
+						{
+							BucketHatHitSound.setBuffer(BucketHatHitSoundBuffer[rand() % 2]);
+							BucketHatHitSound.setPitch(randPitch[rand() % 3]);
+							BucketHatHitSound.play();
+						}
+
 						SplatSound.setBuffer(SplatSoundBuffer[rand() % 3]);
 						SplatSound.setPitch(randPitch[rand() % 3]);
 						SplatSound.play();
+
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 						j--;
 						break;
@@ -773,7 +800,7 @@ namespace Plants_Zombies {
 			}
 			else
 			{
-				if (!(isDead || type == Dead || health <= 0))
+				if (!(health <= 0))
 				{
 					isMoving = false;
 					isAttacking = true;
@@ -812,7 +839,7 @@ namespace Plants_Zombies {
 			}
 
 			// Collision with Cars
-			if (isSquished && type != Dead) 
+			if (isSquished && type != Dead)
 			{
 				if (!SquishEffect) {
 
@@ -1080,11 +1107,10 @@ namespace Plants_Zombies {
 		{
 			if (isMoving)
 			{
-				zombieCont.move(-1 * speed * deltaTime, 0);
+				zombieCont.move(-1 * speed * 2 * deltaTime, 0);
 			}
 		}
 	}zombie_array[100];
-
 
 	//gives zombies random types
 	void StartZombies(int numerzombieinwave) {

@@ -197,14 +197,13 @@ void startZombiePositions(int numZombies) {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
         }
         Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
-        cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
+        //cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
     }
 }
 
 void startallwave(int numberwave, int numberzombie, float delaybetween) {
     wave[numberwave].delaybetween = delaybetween;
     wave[numberwave].numberzombie = numberzombie;
-    Plants_Zombies::numberofdeadzombie = 0;
 
     srand(time(0));
     globalClock.restart();
