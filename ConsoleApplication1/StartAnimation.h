@@ -71,6 +71,10 @@ namespace  StartAnimationNS {
         RSPSound.setBuffer(RSPSoundBuffer);
         ZombiesAreComingBuffer.loadFromFile("Audio/awooga.ogg");
         ZombiesAreComing.setBuffer(ZombiesAreComingBuffer);
+        HugeWaveOfZombiesSoundBuffer.loadFromFile("Audio/hugewave.ogg");
+        HugeWaveOfZombiesSound.setBuffer(HugeWaveOfZombiesSoundBuffer);
+        FinalWaveSoundBuffer.loadFromFile("Audio/finalwave.ogg");
+        FinalWaveSound.setBuffer(FinalWaveSoundBuffer);
 
         //ready text
         Readytextsprite.setTexture(Readytexttexture);

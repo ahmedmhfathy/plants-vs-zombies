@@ -31,6 +31,13 @@ Sprite Textstartfinalwavesprite;
 Sprite Textlosegamesprite;
 #pragma endregion
 
+#pragma region Sounds
+SoundBuffer HugeWaveOfZombiesSoundBuffer;
+Sound HugeWaveOfZombiesSound;
+SoundBuffer FinalWaveSoundBuffer;
+Sound FinalWaveSound;
+#pragma endregion
+
 #pragma region booleans
 bool nowave = true;
 bool checkstart_wave2 = true;
@@ -43,6 +50,7 @@ bool LevelIsOver = false;
 bool WinLevel = false;
 bool wasPausedLastFrame = IsPaused;
 bool playLoseGameAnim = false;
+bool playWaveSounds = false;
 #pragma endregion
 
 #pragma region hours and timer
@@ -154,6 +162,7 @@ void setupWaveData() {
     LevelIsOver = false;
     WinLevel = false;
     playLoseGameAnim = false;
+    playWaveSounds = false;
 
     timeSinceStart = 0;
     deltaTime = DeltaTimeClock.restart().asSeconds();
@@ -213,7 +222,7 @@ void allwave(int numberwave, int numberzombie) {
 
     for (int i = 0; i < wave[numberwave].numberzombie; i++)
     {
-        if (Plants_Zombies::zombie_array[i].health <= 0)
+        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
         {
             wave[numberwave].checkexit_wave = true;
         }
@@ -331,10 +340,10 @@ void intersectioncarsandzombies(int numberwave) {
                     Plants_Zombies::zombie_array[j].CrushedZombieClock.restart();
                 
             }
-             if (Plants_Zombies::zombie_array[j].isSquished && Plants_Zombies::zombie_array[j].CrushedZombieClock.getElapsedTime().asSeconds() > 2)
-              {
+            if (Plants_Zombies::zombie_array[j].isSquished && Plants_Zombies::zombie_array[j].CrushedZombieClock.getElapsedTime().asSeconds() > 2)
+            {
                  Plants_Zombies::zombie_array[j].zombieCont.setScale(0, 0);
-              }
+            }
             car[i].update();
         }
     }
@@ -379,12 +388,23 @@ void DrawWavesAndZombies(RenderWindow& window) {
         if (scaleFactor > minscale) {
             scaleFactor -= deltaTime * 14.0f; // ??????? ????????
         }
+        if (!playWaveSounds)
+        {
+            HugeWaveOfZombiesSound.play();
+            playWaveSounds = true;
+        }
+
         Textstartwave2sprite.setScale(scaleFactor, scaleFactor);
         window.draw(Textstartwave2sprite);
     }
     if (timertostartwave3 > seconds(2) && timertostartwave3 < seconds(6) && wave[1].checkexit_wave) {
         if (scaleFactor > minscale) {
             scaleFactor -= deltaTime * 14.0f; // ??????? ????????
+        }
+        if (playWaveSounds)
+        {
+            FinalWaveSound.play();
+            playWaveSounds = false;
         }
         Textstartfinalwavesprite.setScale(scaleFactor, scaleFactor);
         window.draw(Textstartfinalwavesprite);

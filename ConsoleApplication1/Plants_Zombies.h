@@ -41,9 +41,12 @@ namespace Plants_Zombies {
 #pragma region Sounds
 	SoundBuffer SunCoinSoundBuffer;
 	SoundBuffer PeaShootSoundBuffer;
-	SoundBuffer SplatSoundBuffer;
-	SoundBuffer ZombieEatSoundBuffer;
+	SoundBuffer SplatSoundBuffer[3];
+	SoundBuffer ZombieEatSoundBuffer[3];
 	Sound SunCoinSound;
+	Sound ShootSound;
+	Sound SplatSound;
+	Sound EatSound;
 #pragma endregion
 
 
@@ -53,8 +56,13 @@ namespace Plants_Zombies {
 		SunCoinSoundBuffer.loadFromFile("Audio/points.ogg");
 		SunCoinSound.setBuffer(SunCoinSoundBuffer);
 		PeaShootSoundBuffer.loadFromFile("Audio/Plants/peaShoot1.ogg");
-		SplatSoundBuffer.loadFromFile("Audio/Plants/splat1.ogg");
-		ZombieEatSoundBuffer.loadFromFile("Audio/Plants/splat1.ogg");
+		ShootSound.setBuffer(PeaShootSoundBuffer);
+		SplatSoundBuffer[0].loadFromFile("Audio/Plants/splat1.ogg");
+		SplatSoundBuffer[1].loadFromFile("Audio/Plants/splat2.ogg");
+		SplatSoundBuffer[2].loadFromFile("Audio/Plants/splat3.ogg");
+		ZombieEatSoundBuffer[0].loadFromFile("Audio/Zombies/eat1.ogg");
+		ZombieEatSoundBuffer[1].loadFromFile("Audio/Zombies/eat2.ogg");
+		ZombieEatSoundBuffer[2].loadFromFile("Audio/Zombies/eat3.ogg");
 
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
@@ -170,7 +178,7 @@ namespace Plants_Zombies {
 		Time timeForAction, animationSpeed = seconds(0.2); // time for each frame
 
 		bool playActionSound = true;
-		Sound ActionSound;
+		//Sound ActionSound;
 	public:
 		// calls function when you spawn the plant
 		void start() {
@@ -216,8 +224,8 @@ namespace Plants_Zombies {
 
 						if (playActionSound)
 						{
-							ActionSound.setPitch(randPitch[rand() % 3]);
-							ActionSound.play();
+							ShootSound.setPitch(randPitch[rand() % 3]);
+							ShootSound.play();
 							playActionSound = false;
 						}
 					}
@@ -244,8 +252,8 @@ namespace Plants_Zombies {
 
 						if (playActionSound)
 						{
-							ActionSound.setPitch(randPitch[rand() % 3]);
-							ActionSound.play();
+							ShootSound.setPitch(randPitch[rand() % 3]);
+							ShootSound.play();
 							playActionSound = false;
 						}
 					}
@@ -364,7 +372,7 @@ namespace Plants_Zombies {
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
-				ActionSound.setBuffer(PeaShootSoundBuffer);
+				//ActionSound.setBuffer(PeaShootSoundBuffer);
 				plantCollider.setSize({ 30, 34 });
 
 				shape.setTexture(PeaShooterIdleTex);
@@ -376,7 +384,7 @@ namespace Plants_Zombies {
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
-				ActionSound.setBuffer(PeaShootSoundBuffer);
+				//ActionSound.setBuffer(PeaShootSoundBuffer);
 				plantCollider.setSize({ 31, 34 });
 
 				shape.setTexture(IcePeaShooterProjectileTex);
@@ -559,9 +567,6 @@ namespace Plants_Zombies {
 
 		Clock Zclock, EatClock, CrushedZombieClock;
 
-		Sound hitSound;
-		Sound EatSound;
-
 	private:
 		int CollIndex = 0;
 		int RowIndex = 0;
@@ -575,9 +580,7 @@ namespace Plants_Zombies {
 
 	public:
 		void start() {
-			hitSound.setBuffer(SplatSoundBuffer);
-			hitSound.setVolume(25);
-			EatSound.setBuffer(ZombieEatSoundBuffer);
+			SplatSound.setVolume(25);
 			EatSound.setVolume(25);
 
 			isIdle = false;
@@ -709,9 +712,11 @@ namespace Plants_Zombies {
 							speed = (speed * PlantProjectilesARR[j].slowMultiplier);
 							isSlowed = true;
 						}
-						float randPitch[3] = { 0.75, 1, 1.25 };
-						hitSound.setPitch(randPitch[rand() % 3]);
-						hitSound.play();
+						float randPitch[3] = { 0.85, 1, 1.25 };
+
+						SplatSound.setBuffer(SplatSoundBuffer[rand() % 3]);
+						SplatSound.setPitch(randPitch[rand() % 3]);
+						SplatSound.play();
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 						j--;
 						break;
@@ -746,13 +751,13 @@ namespace Plants_Zombies {
 			{
 				if (!(isDead || type == Dead || health <= 0))
 				{
-					
 					isMoving = false;
 					isAttacking = true;
 					//attack clock
 					if (EatClock.getElapsedTime() >= seconds(1))
 					{
-						//EatSound.play();
+						EatSound.setBuffer(ZombieEatSoundBuffer[rand() % 3]);
+						EatSound.play();
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						EatClock.restart();
 					}
@@ -772,8 +777,6 @@ namespace Plants_Zombies {
 				isMoving = true;
 				isAttacking = false;
 			}
-
-			
 		}
 
 	private:
