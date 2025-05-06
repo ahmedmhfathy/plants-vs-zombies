@@ -95,19 +95,6 @@ namespace  StartAnimationNS {
         Planttextsprite.setOrigin(Planttextsprite.getGlobalBounds().width / 2.0f, Planttextsprite.getGlobalBounds().height / 2.0f);
         Planttextsprite.setPosition(340, 310);
         Planttextsprite.setScale(1.8, 1.8);
-    }
-
-    void SetupStartAndWaveAnimationPhotos() {
-        //garden
-        gardensprite.setTexture(gardentexture);
-        gardensprite.setPosition(-325, -265);
-        gardensprite.setScale(0.65, 0.65);
-        GardenCamera.setCenter({ 340, 310 });
-
-        //zombies in street
-        zombieinStreet.setTexture(zombieinStreettex);
-        zombieinStreet.setPosition(980, -250);
-        zombieinStreet.setScale(1.4, 1.4);
 
         // huge wave of zombies is coming text
         Textstartwave2sprite.setTexture(Textstartwave2texture);
@@ -128,6 +115,19 @@ namespace  StartAnimationNS {
         Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
     }
 
+    void SetupStartAndWaveAnimationPhotos() {
+        //garden
+        gardensprite.setTexture(gardentexture);
+        gardensprite.setPosition(-325, -265);
+        gardensprite.setScale(0.65, 0.65);
+        GardenCamera.setCenter({ 340, 310 });
+
+        //zombies in street
+        zombieinStreet.setTexture(zombieinStreettex);
+        zombieinStreet.setPosition(980, -250);
+        zombieinStreet.setScale(1.4, 1.4);
+    }
+
     void startAnimation() {
 
         startdrawRSP = true;
@@ -135,7 +135,6 @@ namespace  StartAnimationNS {
         moveright = false;
         moveleft = false;
         startAnimcamera = false;
-
         RSPSonudon = true;
         ZombiesAreComingSoundOn = true;
 

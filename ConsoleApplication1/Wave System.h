@@ -100,7 +100,7 @@ struct cars {
             if (lawnsprite.getPosition().x < 960)
             {
                 lawnsprite.move(speed * deltaTime, 0);
-                
+
             }
             else
             {
@@ -148,6 +148,12 @@ void setupWaveData() {
         car[i].intersection = false;
     }
 
+    for (int i = 0; i < 3; i++)
+    {
+        wave[i].checkexit_wave = false;
+        wave[i].check_startwave = true;
+    }
+
     clockwave2.restart();
     clockfinalwave.restart();
     globalClock.restart();
@@ -165,6 +171,11 @@ void setupWaveData() {
     WinLevel = false;
     playLoseGameAnim = false;
     playWaveSounds = false;
+
+    minscale = 1.7f;
+    scaleFactor = 6.0f;
+    minscaletextlosegame = 1.17f;
+    scalefactortextlosegame = 4.2f;
 
     timeSinceStart = 0;
     deltaTime = DeltaTimeClock.restart().asSeconds();
@@ -186,6 +197,7 @@ void startZombiePositions(int numZombies) {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
         }
         Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
+        cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
     }
 }
 
@@ -260,15 +272,18 @@ void level(int numberwave, int num, float delaybetweenw1) {
                     }
                     allwave(1, num);
 
+                    //check win status
                     if (wave[1].checkexit_wave)
                     {
                         LevelIsOver = true;
                         WinLevel = true;
+                        IsPaused = true;
                     }
                     else
                     {
                         LevelIsOver = false;
                         WinLevel = false;
+                        IsPaused = false;
                     }
                 }
             }
@@ -309,15 +324,19 @@ void level(int numberwave, int num, float delaybetweenw1) {
                     }
                     allwave(2, num);
 
+
+                    //check win status
                     if (wave[2].checkexit_wave)
                     {
                         LevelIsOver = true;
                         WinLevel = true;
+                        IsPaused = true;
                     }
                     else
                     {
                         LevelIsOver = false;
                         WinLevel = false;
+                        IsPaused = false;
                     }
                 }
             }
@@ -350,7 +369,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[0].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
@@ -359,7 +378,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[1].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
 
@@ -369,7 +388,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[2].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
