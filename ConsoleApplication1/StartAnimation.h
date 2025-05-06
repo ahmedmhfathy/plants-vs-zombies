@@ -77,6 +77,9 @@ namespace  StartAnimationNS {
         FinalWaveSound.setBuffer(FinalWaveSoundBuffer);
         LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
         LoseSound.setBuffer(LoseSoundBuffer);
+        carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
+        carsSound.setBuffer(carsSoundBuffer);
+
 
         //ready text
         Readytextsprite.setTexture(Readytexttexture);
@@ -217,7 +220,7 @@ namespace  StartAnimationNS {
         {
             window.draw(Planttextsprite);
         }
-        else if (time >= seconds(7))
+        else if (time >= seconds(25))
         {
             if (ZombiesAreComingSoundOn)
             {

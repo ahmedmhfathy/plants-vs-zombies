@@ -38,6 +38,8 @@ SoundBuffer FinalWaveSoundBuffer;
 Sound FinalWaveSound;
 SoundBuffer LoseSoundBuffer;
 Sound LoseSound;
+SoundBuffer carsSoundBuffer;
+Sound carsSound;
 #pragma endregion
 
 #pragma region booleans
@@ -75,10 +77,12 @@ float minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
 float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
 #pragma endregion
 
+
 float deltaTime;
 
 #pragma region Structs
 struct cars {
+    bool startsoundcar = true;
     bool intersection = false;
     float speed = 75;
     Sprite lawnsprite;
@@ -93,6 +97,7 @@ struct cars {
         {
             if (lawnsprite.getPosition().x < -65) {
                 lawnsprite.move(speed * deltaTime, 0);
+               
             }
         }
         else
@@ -100,10 +105,14 @@ struct cars {
             if (lawnsprite.getPosition().x < 960)
             {
                 lawnsprite.move(speed * deltaTime, 0);
-
+                if (startsoundcar) {
+                    carsSound.play();
+                    startsoundcar = false;
+                }
             }
             else
             {
+               
                 lawnsprite.setPosition(1000, 1000);
             }
         }
@@ -368,7 +377,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[0].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                   // window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
@@ -377,7 +386,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[1].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                   // window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
 
@@ -387,7 +396,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[2].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                   // window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
