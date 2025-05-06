@@ -555,6 +555,7 @@ namespace Plants_Zombies {
 		bool isDead = false;
 		bool isMoving = false;
 		bool isslowmultiply = false;
+		bool isSquished = false;
 
 		Clock Zclock, EatClock, CrushedZombieClock;
 
@@ -1001,7 +1002,7 @@ namespace Plants_Zombies {
 			}
 			if (isMoving)
 			{
-				zombieCont.move(-1 * speed *  deltaTime, 0);
+				zombieCont.move(-1 * speed * deltaTime, 0);
 			}
 		}
 	}zombie_array[100];

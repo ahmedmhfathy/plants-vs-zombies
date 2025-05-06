@@ -18,28 +18,28 @@ C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(343
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(408,27): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(600,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(601,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(607,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(608,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(611,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(612,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(618,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(619,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(622,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(623,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(629,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(630,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(633,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(634,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(704,39): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Plants_Zombies.h(705,39): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(78,34): warning C4305: 'argument': truncation from 'double' to 'float'
@@ -60,7 +60,7 @@ C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(175,90
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(186,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(327,73): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\Wave System.h(328,73): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP\ConsoleApplication1\StartAnimation.h(79,39): warning C4305: 'argument': truncation from 'double' to 'float'
