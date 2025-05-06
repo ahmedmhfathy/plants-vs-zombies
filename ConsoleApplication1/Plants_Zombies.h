@@ -43,10 +43,12 @@ namespace Plants_Zombies {
 	SoundBuffer PeaShootSoundBuffer;
 	SoundBuffer SplatSoundBuffer[3];
 	SoundBuffer ZombieEatSoundBuffer[3];
+	SoundBuffer newsmanyellbuffer;
 	Sound SunCoinSound;
 	Sound ShootSound;
 	Sound SplatSound;
 	Sound EatSound;
+	Sound newsmanyell;
 #pragma endregion
 
 
@@ -63,6 +65,8 @@ namespace Plants_Zombies {
 		ZombieEatSoundBuffer[0].loadFromFile("Audio/Zombies/eat1.ogg");
 		ZombieEatSoundBuffer[1].loadFromFile("Audio/Zombies/eat2.ogg");
 		ZombieEatSoundBuffer[2].loadFromFile("Audio/Zombies/eat3.ogg");
+		newsmanyellbuffer.loadFromFile("Audio/Zombies/newspaper_rarrgh2.ogg");
+		newsmanyell.setBuffer(newsmanyellbuffer);
 
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
@@ -696,6 +700,7 @@ namespace Plants_Zombies {
 					isDamaged = true;
 				else if (type == newsMan && health < 800 && !isDamaged) {
 					isDamaged = true;
+					newsmanyell.play();
 					speed = 120;
 					damage = 30;
 				}
