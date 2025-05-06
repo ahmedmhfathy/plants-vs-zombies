@@ -39,7 +39,7 @@ C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(583,13): warning
 C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(587,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(656,39): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(658,39): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(78,34): warning C4305: 'argument': truncation from 'double' to 'float'

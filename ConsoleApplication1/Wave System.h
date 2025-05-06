@@ -209,11 +209,18 @@ void allwave(int numberwave, int numberzombie) {
         }
     }       
 
-    if (Plants_Zombies::numberofdeadzombie == numberzombie){
-        wave[numberwave].checkexit_wave = true;
-    }
-    else {
-        wave[numberwave].checkexit_wave = false;
+
+    for (int i = 0; i < wave[numberwave].numberzombie; i++)
+    {
+        if (Plants_Zombies::zombie_array[i].health <= 0)
+        {
+            wave[numberwave].checkexit_wave = true;
+        }
+        else
+        {
+            wave[numberwave].checkexit_wave = false;
+            break;
+        }
     }
 } 
 
@@ -239,7 +246,18 @@ void level(int numberwave, int num, float delaybetweenw1) {
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
-                    allwave(1, num += 30);
+                    allwave(1, num);
+
+                    if (wave[1].checkexit_wave)
+                    {
+                        LevelIsOver = true;
+                        WinLevel = true;
+                    }
+                    else
+                    {
+                        LevelIsOver = false;
+                        WinLevel = false;
+                    }
                 }
             }
         }
@@ -278,6 +296,17 @@ void level(int numberwave, int num, float delaybetweenw1) {
                         wave[2].check_startwave = false;
                     }
                     allwave(2, num);
+
+                    if (wave[2].checkexit_wave)
+                    {
+                        LevelIsOver = true;
+                        WinLevel = true;
+                    }
+                    else
+                    {
+                        LevelIsOver = false;
+                        WinLevel = false;
+                    }
                 }
             }
         }

@@ -640,7 +640,7 @@ namespace Plants_Zombies {
 				isAttacking = false;
 				isDamaged = false;
 				isMoving = false;
-
+			
 				zombieCont.setPosition(2000, 2000);
 			}
 
@@ -651,15 +651,16 @@ namespace Plants_Zombies {
 			// Projectiles // remove collision with sun coins
 			for (int j = 0; j < PlantProjectilesARR.size(); j++) {
 				if (!PlantProjectilesARR.empty()) {
-					if (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds())) {
+					if ((PlantProjectilesARR[j].type != SunCoin || PlantProjectilesARR[j].type != SunFlower)
+						&& (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds()))) {
+						
 						cout << "Zombie Health = " << health << endl;
 						health -= PlantProjectilesARR[j].damage;
 
 						if (PlantProjectilesARR[j].type == SnowPeaShooter && !isSlowed)
 						{
-							isSlowed = true;
-
 							speed = (speed * PlantProjectilesARR[j].slowMultiplier);
+							isSlowed = true;
 						}
 
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
@@ -672,6 +673,7 @@ namespace Plants_Zombies {
 			// Plants
 			if (!PlantInfront)
 			{
+				//if not a plant infront the zombie will loop on all 45 plants and check if he collides with anyone
 				for (int i = 0; i < 45; i++) 
 				{
 					if (!isDead || type == Dead) 
@@ -952,6 +954,8 @@ namespace Plants_Zombies {
 		}
 	}zombie_array[100];
 
+
+	//gives zombies random types
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
