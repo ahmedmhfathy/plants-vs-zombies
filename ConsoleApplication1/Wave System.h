@@ -90,6 +90,7 @@ struct cars {
             if (lawnsprite.getPosition().x < 960)
             {
                 lawnsprite.move(speed * deltaTime, 0);
+                
             }
             else
             {
@@ -323,7 +324,15 @@ void intersectioncarsandzombies(int numberwave) {
 
             if (rect1.intersects(rect2)) {
                 car[i].intersection = true;
-                Plants_Zombies::zombie_array[j].isMoving = false;
+                Plants_Zombies::zombie_array[j].zombieCont.setScale(2.5,0.7);
+                Plants_Zombies::zombie_array[j].speed = 0;
+                Plants_Zombies::zombie_array[j].zombieCollider.setScale(0, 0);
+                
+                /*if (Plants_Zombies::zombie_array[j].CrushedZombieClock.getElapsedTime().asSeconds > )
+                {
+                    Plants_Zombies::zombie_array[j].zombieCont.setScale(0, 0);
+                    Plants_Zombies::zombie_array[j].CrushedZombieClock.restart();
+                }*/
             }
             car[i].update();
         }

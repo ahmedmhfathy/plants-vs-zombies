@@ -556,7 +556,7 @@ namespace Plants_Zombies {
 		bool isMoving = false;
 		bool isslowmultiply = false;
 
-		Clock Zclock, EatClock;
+		Clock Zclock, EatClock, CrushedZombieClock;
 
 		Sound hitSound;
 		Sound EatSound;
@@ -771,6 +771,8 @@ namespace Plants_Zombies {
 				isMoving = true;
 				isAttacking = false;
 			}
+
+			
 		}
 
 	private:
@@ -997,9 +999,9 @@ namespace Plants_Zombies {
 					type = Dead;
 				}
 			}
-			else if (isMoving)
+			if (isMoving)
 			{
-				zombieCont.move(-1 * speed * deltaTime, 0);
+				zombieCont.move(-1 * speed *  deltaTime, 0);
 			}
 		}
 	}zombie_array[100];
