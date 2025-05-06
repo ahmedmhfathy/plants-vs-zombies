@@ -30,9 +30,6 @@ namespace Plants_Zombies {
 	Texture SunFlowerIdleTex;
 	Texture SunFlowerProducingSunTex;
 	Texture SunFlowerSunTex;
-	//Suncoin
-	SoundBuffer SunCoinSoundBuffer;
-	Sound SunCoinSound;
 	//WallNut
 	Texture WallNutIdleTex;
 	//IcePeaShooter
@@ -41,11 +38,24 @@ namespace Plants_Zombies {
 	Texture IcePeaShooterProjectileTex;
 #pragma endregion
 
+#pragma region Sounds
+	SoundBuffer SunCoinSoundBuffer;
+	SoundBuffer PeaShootSoundBuffer;
+	SoundBuffer SplatSoundBuffer;
+	SoundBuffer ZombieEatSoundBuffer;
+	Sound SunCoinSound;
+#pragma endregion
+
+
 	//will load all textures once
-	void LoadPlantTextures() {
-		//SunCoin
+	void LoadPlantTexturesAndSounds() {
+		//Audio
 		SunCoinSoundBuffer.loadFromFile("Audio/points.ogg");
 		SunCoinSound.setBuffer(SunCoinSoundBuffer);
+		PeaShootSoundBuffer.loadFromFile("Audio/Plants/peaShoot1.ogg");
+		SplatSoundBuffer.loadFromFile("Audio/Plants/splat1.ogg");
+		ZombieEatSoundBuffer.loadFromFile("Audio/Plants/splat1.ogg");
+
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
 		PeaShooterShootTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-shooting-ST.png");
@@ -159,6 +169,8 @@ namespace Plants_Zombies {
 		Clock actionClock, animationClock;
 		Time timeForAction, animationSpeed = seconds(0.2); // time for each frame
 
+		bool playActionSound = true;
+		Sound ActionSound;
 	public:
 		// calls function when you spawn the plant
 		void start() {
@@ -178,6 +190,7 @@ namespace Plants_Zombies {
 		void updatePlantStruct(Zombie* zombie_array); // Defined at the bottom of the code
 
 	private:
+		float randPitch[3] = { 0.75, 1, 1.25 };
 		void animationHandler() {
 			if (animationSpeed <= animationClock.getElapsedTime() && type != EmptyPlant)
 			{
@@ -200,6 +213,13 @@ namespace Plants_Zombies {
 						animationCol = (animationCol + 1) % 3;
 
 						shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 34));
+
+						if (playActionSound)
+						{
+							ActionSound.setPitch(randPitch[rand() % 3]);
+							ActionSound.play();
+							playActionSound = false;
+						}
 					}
 				}
 				else if (type == SnowPeaShooter) {
@@ -222,6 +242,12 @@ namespace Plants_Zombies {
 
 						shape.setTextureRect(IntRect(animationCol * 31, 0, 31, 34));
 
+						if (playActionSound)
+						{
+							ActionSound.setPitch(randPitch[rand() % 3]);
+							ActionSound.play();
+							playActionSound = false;
+						}
 					}
 				}
 				else if (type == SunFlower) {
@@ -276,6 +302,7 @@ namespace Plants_Zombies {
 				if (type == PeaShooter && zombieInFront) //shoot
 				{
 					doAction = true;
+					playActionSound = true;
 					idle = false;
 					isDead = false;
 
@@ -287,6 +314,7 @@ namespace Plants_Zombies {
 				else if (type == SnowPeaShooter && zombieInFront) // shoot
 				{
 					doAction = true;
+					playActionSound = true;
 					idle = false;
 					isDead = false;
 
@@ -319,6 +347,7 @@ namespace Plants_Zombies {
 			doAction = false;
 			idle = true;
 			isDead = false;
+			playActionSound = true;
 
 			if (type == EmptyPlant) {
 				doAction = false;
@@ -335,6 +364,7 @@ namespace Plants_Zombies {
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
+				ActionSound.setBuffer(PeaShootSoundBuffer);
 				plantCollider.setSize({ 30, 34 });
 
 				shape.setTexture(PeaShooterIdleTex);
@@ -346,6 +376,7 @@ namespace Plants_Zombies {
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
+				ActionSound.setBuffer(PeaShootSoundBuffer);
 				plantCollider.setSize({ 31, 34 });
 
 				shape.setTexture(IcePeaShooterProjectileTex);
@@ -527,6 +558,9 @@ namespace Plants_Zombies {
 
 		Clock Zclock, EatClock;
 
+		Sound hitSound;
+		Sound EatSound;
+
 	private:
 		int CollIndex = 0;
 		int RowIndex = 0;
@@ -540,6 +574,11 @@ namespace Plants_Zombies {
 
 	public:
 		void start() {
+			hitSound.setBuffer(SplatSoundBuffer);
+			hitSound.setVolume(25);
+			EatSound.setBuffer(ZombieEatSoundBuffer);
+			EatSound.setVolume(25);
+
 			isIdle = false;
 			isMoving = true;
 			isAttacking = false;
@@ -669,7 +708,9 @@ namespace Plants_Zombies {
 							speed = (speed * PlantProjectilesARR[j].slowMultiplier);
 							isSlowed = true;
 						}
-
+						float randPitch[3] = { 0.75, 1, 1.25 };
+						hitSound.setPitch(randPitch[rand() % 3]);
+						hitSound.play();
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 						j--;
 						break;
@@ -704,11 +745,13 @@ namespace Plants_Zombies {
 			{
 				if (!(isDead || type == Dead || health <= 0))
 				{
+					
 					isMoving = false;
 					isAttacking = true;
 					//attack clock
 					if (EatClock.getElapsedTime() >= seconds(1))
 					{
+						//EatSound.play();
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						EatClock.restart();
 					}

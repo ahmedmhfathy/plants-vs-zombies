@@ -21,22 +21,19 @@ void RenderScreen();
 
 #pragma endregion
 
-float DeltaTime;
 int main()
 {
     Start();
-    Clock clock;
     while (window.isOpen()) // game loop
     {
-#pragma region MISC
-        DeltaTime = clock.restart().asSeconds();
+        #pragma region MISC
         Event event;
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-#pragma endregion
+        #pragma endregion
 
         Update();
         RenderScreen();
@@ -46,15 +43,15 @@ int main()
 
 void Start()
 {
-    
     GameMusicBuffer.loadFromFile("Audio/Plants vs. Zombies BackGround.wav");
     GameMusic.setBuffer(GameMusicBuffer);
     GameMusic.setVolume(5);
     GameMusic.setLoop(true);
     GameMusic.play();
 
-    Plants_Zombies::LoadPlantTextures(); //textures loaded here once
+    Plants_Zombies::LoadPlantTexturesAndSounds(); //textures loaded here once
     Plants_Zombies::LoadZombieTextures();
+    StartAnimationNS::LoadStartAndWaveAnimationTextures();
     LoadSelectionTexture();
 
     CurrentState = MainMenu;
@@ -89,11 +86,11 @@ void Update()
         }
         else if (CurrentState == Level2 && !IsPaused)
         {
-            UpdateLevel2();
+            UpdateLevel2(window);
         }
         else if (CurrentState == Level3 && !IsPaused)
         {
-            UpdateLevel3();
+            UpdateLevel3(window);
         }
 
         PauseMenuUpdate();

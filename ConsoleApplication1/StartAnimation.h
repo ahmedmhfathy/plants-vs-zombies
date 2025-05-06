@@ -4,12 +4,8 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
-#include <sstream>
 #include <string>
-#include <fstream>
 #include <SFML/Audio.hpp>
-#include <sstream>
-#include <iomanip>
 #include"Wave System.h"
 using namespace std;
 using namespace sf;
@@ -52,12 +48,79 @@ namespace  StartAnimationNS {
     bool startAnimcamera = false;
 
     bool RSPSonudon = true;
+    bool ZombiesAreComingSoundOn = true;
 #pragma endregion
 
     Clock animcameraClock;
     Clock clockRSP;
 
     View GardenCamera(FloatRect(0, 0, 1280, 720));
+
+    void LoadStartAndWaveAnimationTextures() {
+        gardentexture.loadFromFile("Assets/Environment/Game-Environment.png");
+        zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
+        Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
+        Settexttexture.loadFromFile("Assets/Environment/StartSet.png");
+        Planttexttexture.loadFromFile("Assets/Environment/StartPlant.png");
+
+        Textstartwave2texture.loadFromFile("Assets/Environment/A-Huge-Wave-Of-Zombies-Is-Approaching.png");
+        Textstartfinalwavetexture.loadFromFile("Assets/Environment/FinalWave.png");
+        Textlosegametexture.loadFromFile("Assets/Environment/zombie _won.png");
+
+        RSPSoundBuffer.loadFromFile("Audio/readysetplant.ogg");
+        RSPSound.setBuffer(RSPSoundBuffer);
+        ZombiesAreComingBuffer.loadFromFile("Audio/awooga.ogg");
+        ZombiesAreComing.setBuffer(ZombiesAreComingBuffer);
+
+        //ready text
+        Readytextsprite.setTexture(Readytexttexture);
+        Readytextsprite.setOrigin(Readytextsprite.getGlobalBounds().width / 2.0f, Readytextsprite.getGlobalBounds().height / 2.0f);
+        Readytextsprite.setPosition(340, 310);
+        Readytextsprite.setScale(1.8, 1.8);
+
+        // set text
+        Settextsprite.setTexture(Settexttexture);
+        Settextsprite.setOrigin(Settextsprite.getGlobalBounds().width / 2.0f, Settextsprite.getGlobalBounds().height / 2.0f);
+        Settextsprite.setPosition(340, 310);
+        Settextsprite.setScale(1.8, 1.8);
+
+        // plant text
+        Planttextsprite.setTexture(Planttexttexture);
+        Planttextsprite.setOrigin(Planttextsprite.getGlobalBounds().width / 2.0f, Planttextsprite.getGlobalBounds().height / 2.0f);
+        Planttextsprite.setPosition(340, 310);
+        Planttextsprite.setScale(1.8, 1.8);
+    }
+
+    void SetupStartAndWaveAnimationPhotos() {
+        //garden
+        gardensprite.setTexture(gardentexture);
+        gardensprite.setPosition(-325, -265);
+        gardensprite.setScale(0.65, 0.65);
+        GardenCamera.setCenter({ 340, 310 });
+
+        //zombies in street
+        zombieinStreet.setTexture(zombieinStreettex);
+        zombieinStreet.setPosition(980, -250);
+        zombieinStreet.setScale(1.4, 1.4);
+
+        // huge wave of zombies is coming text
+        Textstartwave2sprite.setTexture(Textstartwave2texture);
+        Textstartwave2sprite.setOrigin(Textstartwave2sprite.getGlobalBounds().width / 2.0f, Textstartwave2sprite.getGlobalBounds().height / 2.0f);
+        Textstartwave2sprite.setPosition(340, 310);
+        Textstartwave2sprite.setOrigin(Textstartwave2texture.getSize().x / 2.f, Textstartwave2texture.getSize().y / 2.f);
+        Textstartwave2sprite.setScale(0.8, 0.8);
+
+        // final wave text
+        Textstartfinalwavesprite.setTexture(Textstartfinalwavetexture);
+        Textstartfinalwavesprite.setOrigin(Textstartfinalwavesprite.getGlobalBounds().width / 2.0f, Textstartfinalwavesprite.getGlobalBounds().height / 2.0f);
+        Textstartfinalwavesprite.setPosition(340, 310);
+
+        // the zombies ate your brains text
+        Textlosegamesprite.setTexture(Textlosegametexture);
+        Textlosegamesprite.setPosition(-20, 10);
+        Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
+        Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
+    }
 
     void startAnimation() {
 
@@ -66,6 +129,10 @@ namespace  StartAnimationNS {
         moveright = false;
         moveleft = false;
         startAnimcamera = false;
+
+        RSPSonudon = true;
+        ZombiesAreComingSoundOn = true;
+
         animcameraClock.restart();
         clockRSP.restart();
 
@@ -76,7 +143,7 @@ namespace  StartAnimationNS {
             car[i].start(i);
         }
 
-        loadphoto();
+        SetupStartAndWaveAnimationPhotos();
         srand(time(0));
     }
 
@@ -87,63 +154,6 @@ namespace  StartAnimationNS {
         }
 
         timeSinceStart = globalClock.getElapsedTime().asSeconds();
-    }
-
-    void loadphoto() {
-        // =======================**load photo garden**===================================
-        gardentexture.loadFromFile("Assets/Environment/Game-Environment.png");
-        gardensprite.setTexture(gardentexture);
-        gardensprite.setPosition(-325, -265);
-        gardensprite.setScale(0.65, 0.65);
-        GardenCamera.setCenter({ 340, 310 });
-        // zombie in garden ....
-        zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
-        zombieinStreet.setTexture(zombieinStreettex);
-        zombieinStreet.setPosition(980, -250);
-        zombieinStreet.setScale(1.4, 1.4);
-        // =========================**load photo READY SET PLANT!**======================================
-        //*********************(READY)******************
-        Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
-        Readytextsprite.setTexture(Readytexttexture);
-        Readytextsprite.setOrigin(Readytextsprite.getGlobalBounds().width / 2.0f, Readytextsprite.getGlobalBounds().height / 2.0f);
-        Readytextsprite.setPosition(640, 410);
-        Readytextsprite.setScale(1.8, 1.8);
-        //** *********************(SET)************************ **
-        Settexttexture.loadFromFile("Assets/Environment/StartSet.png");
-        Settextsprite.setTexture(Settexttexture);
-        Settextsprite.setOrigin(Settextsprite.getGlobalBounds().width / 2.0f, Settextsprite.getGlobalBounds().height / 2.0f);
-        Settextsprite.setPosition(640, 410);
-        Settextsprite.setScale(1.8, 1.8);
-        //***********************(PLANT)********************************
-        Planttexttexture.loadFromFile("Assets/Environment/StartPlant.png");
-        Planttextsprite.setTexture(Planttexttexture);
-        Planttextsprite.setOrigin(Planttextsprite.getGlobalBounds().width / 2.0f, Planttextsprite.getGlobalBounds().height / 2.0f);
-        Planttextsprite.setPosition(640, 410);
-        Planttextsprite.setScale(1.8, 1.8);
-        //***********************(Ready Set Plant Audio)********************************
-        RSPSoundBuffer.loadFromFile("Audio/readysetplant.ogg");
-        RSPSound.setBuffer(RSPSoundBuffer);
-        //***********************(End RSP)********************************
-        ZombiesAreComingBuffer.loadFromFile("Audio/awooga.ogg");
-        ZombiesAreComing.setBuffer(ZombiesAreComingBuffer);
-        //===================================**load start wave two**==================================
-        Textstartwave2texture.loadFromFile("Assets/Environment/A-Huge-Wave-Of-Zombies-Is-Approaching.png");
-        Textstartwave2sprite.setTexture(Textstartwave2texture);
-        Textstartwave2sprite.setOrigin(Textstartwave2sprite.getGlobalBounds().width / 2.0f, Textstartwave2sprite.getGlobalBounds().height / 2.0f);
-        Textstartwave2sprite.setPosition(340, 310);
-        Textstartwave2sprite.setOrigin(Textstartwave2texture.getSize().x / 2.f, Textstartwave2texture.getSize().y / 2.f);
-        Textstartwave2sprite.setScale(0.8, 0.8);
-        //=================================**load Final Wave**=====================================
-        Textstartfinalwavetexture.loadFromFile("Assets/Environment/FinalWave.png");
-        Textstartfinalwavesprite.setTexture(Textstartfinalwavetexture);
-        Textstartfinalwavesprite.setOrigin(Textstartfinalwavesprite.getGlobalBounds().width / 2.0f, Textstartfinalwavesprite.getGlobalBounds().height / 2.0f);
-        Textstartfinalwavesprite.setPosition(340, 310);
-        // ==============================**load lose Game**========================================
-        Textlosegametexture.loadFromFile("Assets/Environment/zombie _won.png");
-        Textlosegamesprite.setTexture(Textlosegametexture);
-        Textlosegamesprite.setPosition(-20, 10);
-        Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
-        Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
     }
 
     void movecamera(RenderWindow& window) {
@@ -175,8 +185,6 @@ namespace  StartAnimationNS {
                 moveleft = true;
             }
         }
-        // End function ..... and move camera is end..
-
     }
 
     void RSP(RenderWindow& window) {
@@ -204,12 +212,15 @@ namespace  StartAnimationNS {
         {
             window.draw(Planttextsprite);
         }
-        else if (time < seconds(3))
+        else if (time >= seconds(7))
         {
-            ZombiesAreComing.play();
+            if (ZombiesAreComingSoundOn)
+            {
+                ZombiesAreComing.play();
+                ZombiesAreComingSoundOn = false;
+            }
             endRSP = true;
         }
-
     }
 
     void movecars() {
