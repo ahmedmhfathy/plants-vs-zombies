@@ -280,13 +280,13 @@ namespace Plants_Zombies {
 					}
 				}
 				else if (type == WallNut) { //always idle
-					if (health >= 400)
+					if (health >= 1000)
 					{
 						animationRow = 0;
 						animationCol = (animationCol + 1) % 5;
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 					}
-					else if (health >= 200) {
+					else if (health >= 500) {
 						animationRow = 1;
 						animationCol = (animationCol + 1) % 5;
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
@@ -394,7 +394,7 @@ namespace Plants_Zombies {
 			else if (type == SunFlower) {
 				health = 100;
 				damage = 0;
-				timeForAction = seconds(24); // time to spawn sun 24
+				timeForAction = seconds(17); // time to spawn sun 24
 
 				plantCollider.setSize({ 32, 34 });
 
@@ -472,7 +472,7 @@ namespace Plants_Zombies {
 		{
 			if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0))
 			{
-				window.draw(PlantsArray[i].plantCollider);
+				//window.draw(PlantsArray[i].plantCollider);
 				window.draw(PlantsArray[i].shape);
 			}
 		}
@@ -557,15 +557,19 @@ namespace Plants_Zombies {
 		float speed;
 		float damage;
 
+		bool isDead = false;
+		bool deathstart = false;
+		bool resetColIndex = false;
+
 		bool isActivated = false;
 		bool isDamaged = false;
 		bool isAttacking = false;
-		bool isDead = false;
 		bool isMoving = false;
 		bool isslowmultiply = false;
 		bool isSquished = false;
+		bool SquishEffect = false;
 
-		Clock Zclock, EatClock, CrushedZombieClock;
+		Clock Zclock, EatClock, CrushedZombieClock, Deathclock;
 
 	private:
 		int CollIndex = 0;
@@ -582,6 +586,7 @@ namespace Plants_Zombies {
 		void start() {
 			SplatSound.setVolume(25);
 			EatSound.setVolume(25);
+			Deathclock.restart();
 
 			isIdle = false;
 			isMoving = true;
@@ -589,6 +594,12 @@ namespace Plants_Zombies {
 			isDamaged = false;
 			isSlowed = false;
 			PlantInfront = false;
+			deathstart = false;
+			isDead = false;
+			resetColIndex = false;
+
+			isSquished = false;
+			SquishEffect = false;
 
 			switch (type)
 			{
@@ -654,9 +665,26 @@ namespace Plants_Zombies {
 			zombieCollider.setFillColor(Color(252, 3, 3, 180));
 			zombieCont.setColor(Color(255, 255, 255, 255));
 		}
-		void update(float deltaTime) {
 
-			if (!deathOfZombie || type != Dead)
+		void update(float deltaTime) {
+			if (health <= 0)
+			{
+				isDead = true;
+				isIdle = false;
+				isAttacking = false;
+				isDamaged = false;
+				isMoving = false;
+
+				if (!resetColIndex)
+				{
+					CollIndex = 0;
+					resetColIndex = true;
+				}
+				zombieCollider.setScale(0, 0);
+				//zombieCont.setPosition(2000, 2000);
+			}
+
+			if (type != Dead)
 			{
 				Movement(deltaTime);
 				CollisionZombies(PlantProjectilesARR, PlantsArray);
@@ -681,27 +709,14 @@ namespace Plants_Zombies {
 					zombieCont.setColor(Color(255, 255, 255, 255));
 				}
 			}
-
-			if (health <= 0 || type == Dead)
-			{
-				deathOfZombie = true;
-				isDead = true;
-				isIdle = false;
-				isAttacking = false;
-				isDamaged = false;
-				isMoving = false;
-
-				zombieCont.setPosition(2000, 2000);
-			}
-
-			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 60);
+			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
 		}
 
 		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) {
 			// Projectiles // remove collision with sun coins
 			for (int j = 0; j < PlantProjectilesARR.size(); j++) {
 				if (!PlantProjectilesARR.empty()) {
-					if ((PlantProjectilesARR[j].type != SunCoin || PlantProjectilesARR[j].type != SunFlower)
+					if (!(PlantProjectilesARR[j].type == SunCoin || PlantProjectilesARR[j].type == SunFlower)
 						&& (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds()))) {
 
 						cout << "Zombie Health = " << health << endl;
@@ -773,9 +788,38 @@ namespace Plants_Zombies {
 			// if the plant the zombie is eating died or is removed reset the zombie state
 			if (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
 			{
-				PlantInfront = false;
-				isMoving = true;
-				isAttacking = false;
+				if (!(isDead || type == Dead || health <= 0))
+				{
+					PlantInfront = false;
+					isMoving = true;
+					isAttacking = false;
+				}
+				else
+				{
+					PlantInfront = false;
+					isMoving = false;
+					isAttacking = false;
+				}
+			}
+
+			// Collision with Cars
+			if (isSquished && type != Dead) 
+			{
+				if (!SquishEffect) {
+
+					SquishEffect = true;
+					zombieCollider.setScale(0, 0);
+					zombieCont.setScale(3.5, 0.7);
+					zombieCont.setPosition(zombieCont.getPosition().x, (zombieCont.getPosition().y) + 100);
+					speed = 0;
+					CrushedZombieClock.restart();
+				}
+				if (CrushedZombieClock.getElapsedTime().asSeconds() >= 1.5)
+				{
+					zombieCont.setScale(0, 0);
+					zombieCont.setPosition(2000, 2000);
+					type = Dead;
+				}
 			}
 		}
 
@@ -783,7 +827,7 @@ namespace Plants_Zombies {
 		void Animation() {
 
 			// regular
-			if (type == regular) {
+			if (type == regular && !isSquished) {
 				if (isMoving)
 				{
 					zombieCont.setTexture(RegularWalkText);
@@ -805,15 +849,24 @@ namespace Plants_Zombies {
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 34));
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
 						zombieCont.setTexture(RegularDeathText);
-						CollIndex = (CollIndex + 1) % 8;
+						CollIndex++;
 						Zclock.restart();
+					}
+					if (CollIndex == 8) {
 
-						if (CollIndex == 7)
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
 						{
-							deathOfZombie = true;
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
 						}
 					}
 				}
@@ -821,7 +874,7 @@ namespace Plants_Zombies {
 			}
 
 			// Traffic Cone
-			if (type == trafficCone) {
+			if (type == trafficCone && !isSquished) {
 				if (isMoving && !isDamaged)
 				{
 					zombieCont.setTexture(TrafficConeWalkText);
@@ -860,22 +913,32 @@ namespace Plants_Zombies {
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 34));
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
 						zombieCont.setTexture(ConeDeathText);
-						CollIndex = (CollIndex + 1) % 8;
+						CollIndex++;
 						Zclock.restart();
 
-						if (CollIndex == 7)
+					}
+					if (CollIndex == 8) {
+
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
 						{
-							deathOfZombie = true;
+							zombieCont.setScale(0, 0);
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
 						}
 					}
 				}
 			}
 
 			// Bucket Hat
-			if (type == bucketHat)
+			if (type == bucketHat && !isSquished)
 			{
 				if (isMoving && !isDamaged)
 				{
@@ -916,21 +979,32 @@ namespace Plants_Zombies {
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 34));
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
 						zombieCont.setTexture(BucketDeathText);
-						CollIndex = (CollIndex + 1) % 8;
+						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 7)
-					{
-						deathOfZombie = true;
+					if (CollIndex == 8) {
+
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setScale(0, 0);
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
+						}
 					}
 				}
 			}
 
 			// news man
-			if (type == newsMan) {
+			if (type == newsMan && !isSquished) {
 				if (isMoving && !isDamaged)
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
@@ -969,15 +1043,25 @@ namespace Plants_Zombies {
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 58, 0, 58, 45));
+					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 5) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 58, 0, 58, 52));
 						zombieCont.setTexture(NewsManDeath);
-						CollIndex = (CollIndex + 1) % 6;
+						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 6)
-					{
-						deathOfZombie = true;
+					if (CollIndex == 5) {
+
+						zombieCont.setTextureRect(IntRect(5 * 58, 0, 58, 52));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setScale(0, 0);
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+						}
 					}
 				}
 			}
@@ -985,24 +1069,6 @@ namespace Plants_Zombies {
 
 		void Movement(float deltaTime)
 		{
-			if (health <= 0)
-			{
-				numberofdeadzombie++;
-				isDead = true;
-				isMoving = false;
-				isAttacking = false;
-				isDamaged = false;
-
-				// waits until zombie is dead to remove it
-				if (deathOfZombie)
-				{
-					/*if (Zclock.getElapsedTime().asSeconds()>2.5) {*/
-					//zombieCont.setScale(Vector2f(0, 0));
-					zombieCont.setPosition(2000, 2000);
-					Zclock.restart();
-					type = Dead;
-				}
-			}
 			if (isMoving)
 			{
 				zombieCont.move(-1 * speed * deltaTime, 0);

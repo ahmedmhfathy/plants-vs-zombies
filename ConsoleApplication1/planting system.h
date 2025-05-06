@@ -143,7 +143,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 	WallNutClock.restart();
 	SunFlowerClock.restart();
 
-	Plants_Zombies::score = 5000;
+	Plants_Zombies::score = 50;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
@@ -480,8 +480,6 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 		window.draw(SelectionHolograph);
 	}
 }
-
-
 
 void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 	if (!isDead) // if not dead will animate and execute action  

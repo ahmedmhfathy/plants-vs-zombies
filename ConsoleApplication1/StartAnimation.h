@@ -75,6 +75,8 @@ namespace  StartAnimationNS {
         HugeWaveOfZombiesSound.setBuffer(HugeWaveOfZombiesSoundBuffer);
         FinalWaveSoundBuffer.loadFromFile("Audio/finalwave.ogg");
         FinalWaveSound.setBuffer(FinalWaveSoundBuffer);
+        LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
+        LoseSound.setBuffer(LoseSoundBuffer);
 
         //ready text
         Readytextsprite.setTexture(Readytexttexture);

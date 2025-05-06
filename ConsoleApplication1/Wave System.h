@@ -36,6 +36,8 @@ SoundBuffer HugeWaveOfZombiesSoundBuffer;
 Sound HugeWaveOfZombiesSound;
 SoundBuffer FinalWaveSoundBuffer;
 Sound FinalWaveSound;
+SoundBuffer LoseSoundBuffer;
+Sound LoseSound;
 #pragma endregion
 
 #pragma region booleans
@@ -78,7 +80,7 @@ float deltaTime;
 #pragma region Structs
 struct cars {
     bool intersection = false;
-    float speed = 150;
+    float speed = 75;
     Sprite lawnsprite;
     void start(int i) {
         lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
@@ -90,7 +92,7 @@ struct cars {
         if (!intersection)
         {
             if (lawnsprite.getPosition().x < -65) {
-                lawnsprite.move(speed * 7 * deltaTime, 0);
+                lawnsprite.move(speed * deltaTime, 0);
             }
         }
         else
@@ -334,15 +336,6 @@ void intersectioncarsandzombies(int numberwave) {
             if (rect1.intersects(rect2)) {
                 car[i].intersection = true;
                 Plants_Zombies::zombie_array[j].isSquished = true;
-                Plants_Zombies::zombie_array[j].zombieCont.setScale(2.5,0.7);
-                Plants_Zombies::zombie_array[j].speed = 0;
-                Plants_Zombies::zombie_array[j].zombieCollider.setScale(0, 0);
-                    Plants_Zombies::zombie_array[j].CrushedZombieClock.restart();
-                
-            }
-            if (Plants_Zombies::zombie_array[j].isSquished && Plants_Zombies::zombie_array[j].CrushedZombieClock.getElapsedTime().asSeconds() > 2)
-            {
-                 Plants_Zombies::zombie_array[j].zombieCont.setScale(0, 0);
             }
             car[i].update();
         }
@@ -357,7 +350,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[0].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
@@ -366,7 +359,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[1].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
 
@@ -376,7 +369,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[2].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
@@ -415,6 +408,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
         {
             if (!playLoseGameAnim)
             {
+                LoseSound.play();
                 LoseGameClock.restart();
                 playLoseGameAnim = true;
             }

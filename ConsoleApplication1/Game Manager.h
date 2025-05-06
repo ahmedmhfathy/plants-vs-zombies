@@ -66,8 +66,6 @@ Texture NextlevelButtonHoverTex;
 
 Sprite LostMenuBlank;
 Sprite RetryButton;
-SoundBuffer LoseSoundBuffer;
-Sound LoseSound;
 
 SoundBuffer LoseAndWinAndPauseBuffer;
 Sound LoseAndWinAndPause;
@@ -198,8 +196,6 @@ void LoadLevelEndTextures() {
     //lose case
     LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
     LoseAndWinAndPause.setBuffer(LoseAndWinAndPauseBuffer);
-    LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
-    LoseSound.setBuffer(LoseSoundBuffer);
     LostMenuBlankTex.loadFromFile("Assets/Lost Menu/lost-menu-blank.png");
     RetryButtonTex.loadFromFile("Assets/Lost Menu/retry-button.png");
     RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
@@ -255,7 +251,6 @@ void LevelEndUpdate()
     }
     if (Keyboard::isKeyPressed(Keyboard::S))
     {
-        LoseSound.play();
         IsPaused = true;
         LevelIsOver = true;
         WinLevel = false;
