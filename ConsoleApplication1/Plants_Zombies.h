@@ -572,6 +572,7 @@ namespace Plants_Zombies {
 		bool isslowmultiply = false;
 		bool isSquished = false;
 		bool SquishEffect = false;
+		bool wassoundplayed = false;
 
 		Clock Zclock, EatClock, CrushedZombieClock, Deathclock;
 
@@ -700,7 +701,10 @@ namespace Plants_Zombies {
 					isDamaged = true;
 				else if (type == newsMan && health < 800 && !isDamaged) {
 					isDamaged = true;
-					newsmanyell.play();
+					if (!wassoundplayed) {
+						newsmanyell.play();
+						wassoundplayed = true;
+					}
 					speed = 120;
 					damage = 30;
 				}
