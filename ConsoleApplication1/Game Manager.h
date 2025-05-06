@@ -46,6 +46,9 @@ Sprite Opacity;
 SoundBuffer PauseMenuOpen;
 Sound PauseMenuOpenSound;
 
+SoundBuffer PauseMenuClickBuffer;
+Sound PauseMenuClick;
+
 bool SoundOnPauseMenu = true;
 #pragma endregion
 
@@ -81,6 +84,9 @@ Sound WinSound;
 void LoadPauseMenuTextures() {
     LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
     PauseMenuOpen.loadFromFile("Audio/pause.ogg");
+
+    PauseMenuClickBuffer.loadFromFile("Audio/buttonclick.ogg");
+    PauseMenuClick.setBuffer(PauseMenuClickBuffer);
 
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
     MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
@@ -137,6 +143,7 @@ void PauseMenuUpdate()
             if (Mouse::isButtonPressed(Mouse::Left))
             {
                 PauseMenuOpenSound.play();
+                PauseMenuClick.play();
                 SoundOnPauseMenu = true;
                 IsPaused = false;
             }
@@ -157,6 +164,7 @@ void PauseMenuUpdate()
             BackToMainMenu.setTexture(MainMenuButtonTexHover);
             if (Mouse::isButtonPressed(Mouse::Left))
             {
+                PauseMenuClick.play();
                 IsPaused = false;
                 CurrentState = MainMenu;
             }
@@ -183,6 +191,10 @@ void DrawPauseMenu(RenderWindow& window)
 
 #pragma region Level End Menus
 void LoadLevelEndTextures() {
+    //Button Click
+    PauseMenuClickBuffer.loadFromFile("Audio/buttonclick.ogg");
+    PauseMenuClick.setBuffer(PauseMenuClickBuffer);
+
     //lose case
     LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
     LoseAndWinAndPause.setBuffer(LoseAndWinAndPauseBuffer);
@@ -200,8 +212,7 @@ void LoadLevelEndTextures() {
     ThankYouForPlayingTex.loadFromFile("Assets/Win Menu/Game Over.png");
     ThankYouForPlaying.setTexture(ThankYouForPlayingTex);
     ThankYouForPlaying.setOrigin(640, 360);
-    ThankYouForPlaying.setScale(.7, .7);
-    ThankYouForPlaying.setPosition(-1000, 310);
+    ThankYouForPlaying.setPosition(400, 900);
     //main
     BackToMainMenuLevelEndTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button.png");
     BackToMainMenuLevelEndHoverTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button-Hover.png");
@@ -256,12 +267,13 @@ void LevelEndUpdate()
         {
             if(CurrentState==Level3&&LevelIsOver&&WinLevel)
             {
-                if (ThankYouForPlaying.getPosition().x < 340)
+                if (ThankYouForPlaying.getPosition().y > 310)
                 {
-                    ThankYouForPlaying.move(7, 0);
+                    ThankYouForPlaying.move(0, -7);
                 }
                 else if (Mouse::isButtonPressed(Mouse::Left))
                 {
+                    PauseMenuClick.play();
                     CurrentState = MainMenu;
                 }
             }
@@ -277,6 +289,7 @@ void LevelEndUpdate()
                     NextlevelButton.setTexture(NextlevelButtonHoverTex);
                     if (Mouse::isButtonPressed(Mouse::Left))
                     {
+                        PauseMenuClick.play();
                         if (CurrentState == Level1)
                         {
                             SwitchState(Level2);
@@ -303,6 +316,7 @@ void LevelEndUpdate()
                     BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
                     if (Mouse::isButtonPressed(Mouse::Left))
                     {
+                        PauseMenuClick.play();
                         CurrentState = MainMenu;
                     }
                 }
@@ -326,6 +340,7 @@ void LevelEndUpdate()
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
+                    PauseMenuClick.play();
                     CurrentState = MainMenu;
                 }
             }
@@ -346,6 +361,7 @@ void LevelEndUpdate()
                 RetryButton.setTexture(RetryButtonHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
+                    PauseMenuClick.play();
                     if (CurrentState == Level1)
                     {
                         SwitchState(Level1);
@@ -375,7 +391,6 @@ void DrawLevelEnd(RenderWindow& window)
     {
         if (CurrentState == Level3)
         {
-            window.draw(Opacity);
             window.draw(ThankYouForPlaying);
         }
         else
