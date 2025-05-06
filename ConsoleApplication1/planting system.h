@@ -483,44 +483,51 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 
 
 
-void Plants_Zombies::Plants::updatePlantStruct(Zombie* zombie_array) {
-	for (int i = 0; i < 45; i++)
+void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
+	if (!isDead) // if not dead will animate and execute action  
 	{
-		if (!PlantsArray[i].isDead) // if not dead will animate and execute action  
+		for (int j = 0; j < 100; j++)
 		{
-			for (int j = 0; j < 4; j++)
+			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead)) // checks if zombie is dead or not to avoid shooting dead zombies
 			{
-				if (!zombie_array[i].isDead) // checks if zombie is dead or not to avoid shooting dead zombies
+				// checks if a zombie is in front of the plant  
+				if ((type == PeaShooter || type == SnowPeaShooter)
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+					&& (zombie_array[j].zombieCollider.getPosition().x < 960)
+					&& !(zombie_array[j].type == Dead || zombie_array[j].health <= 0 || !zombie_array[j].started))
 				{
-					// checks if a zombie is in front of the plant  
-					if ((PlantsArray[i].type == PeaShooter || PlantsArray[i].type == SnowPeaShooter)
-						&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-							&& ((PlantsArray[i].shape.getGlobalBounds().top + PlantsArray[i].shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-							&& (PlantsArray[i].shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left)))
-					{
-						PlantsArray[i].zombieInFront = true;
-						break;
-					}
+					zombieInFront = true;
+					break;
 				}
 				else
 				{
-					PlantsArray[i].zombieInFront = false;
+					zombieInFront = false;
 				}
 			}
-
-			PlantsArray[i].animationHandler();
-			PlantsArray[i].action();
+			else
+			{
+				zombieInFront = false;
+			}
 		}
 
-		if (PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
-		{
-			mygrid[PlantsArray[i].gridIndex].isplanted = false;
-			PlantsArray[i].isDead = true;
-			PlantsArray[i].idle = false;
-			PlantsArray[i].doAction = false;
+		animationHandler();
+		action();
 
-			PlantsArray[i].type == EmptyPlant;
-			PlantsArray[i].start();
-		}
+		plantCollider.setPosition(shape.getPosition());
+	}
+	else // else will turn the plant into an empty gameobject  
+	{
+		type = EmptyPlant;
+		mygrid[gridIndex].isplanted = false;
+		setupPrefab();
+	}
+
+	if (health <= 0 || type == EmptyPlant)
+	{
+		isDead = true;
+		idle = false;
+		doAction = false;
 	}
 }

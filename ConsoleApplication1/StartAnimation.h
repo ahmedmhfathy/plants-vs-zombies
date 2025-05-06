@@ -11,86 +11,84 @@
 #include <sstream>
 #include <iomanip>
 #include"Wave System.h"
-
 using namespace std;
 using namespace sf;
 
-#pragma region Textures and sprites declaration
-Texture gardentexture;
-Sprite gardensprite;
-Texture Readytexttexture;
-Sprite  Readytextsprite;
-Texture Settexttexture;
-Sprite Settextsprite;
-Texture Planttexttexture;
-Sprite Planttextsprite;
-SoundBuffer RSPSoundBuffer;
-Sound RSPSound;
-SoundBuffer ZombiesAreComingBuffer;
-Sound ZombiesAreComing;
+namespace  StartAnimationNS {
+
+#pragma region Function Declaration
+    void startAnimation();
+    void updateAnimation(RenderWindow&);
+    void movecamera(RenderWindow&);
+    void RSP(RenderWindow&); // Ready...Set....Plant....
+    void loadphoto();
+    void movecars();
 #pragma endregion
 
-#pragma region Fuctions
+#pragma region Textures and sprites declaration
+    Texture gardentexture;
+    Sprite gardensprite;
+    Texture Readytexttexture;
+    Sprite  Readytextsprite;
+    Texture Settexttexture;
+    Sprite Settextsprite;
+    Texture Planttexttexture;
+    Sprite Planttextsprite;
+    Texture zombieinStreettex;
+    Sprite zombieinStreet;
+
+    SoundBuffer RSPSoundBuffer;
+    Sound RSPSound;
+    SoundBuffer ZombiesAreComingBuffer;
+    Sound ZombiesAreComing;
 #pragma endregion
 
 #pragma region boolean
-bool startdrawRSP = true;
-bool EntertostartdrawRSP = false;
-// variable check Camera move Right And Left
-bool moveright = false;
-bool moveleft=false;
-bool startAnimcamera = false;
-//RSP sound on
-bool RSPSonudon = true;
+    bool startdrawRSP = true;
+    bool EntertostartdrawRSP = false;
+    // variable check Camera move Right And Left
+    bool moveright = false;
+    bool moveleft = false;
+    bool startAnimcamera = false;
 
+    bool RSPSonudon = true;
 #pragma endregion
 
-#pragma region Hours
-// hours
-Clock animcameraClock; // Clock use in animation to camera
-Clock clockRSP;
-#pragma endregion
-
- namespace  StartAnimationNS {
-
-#pragma region Function Declaration
-void startAnimation();
-void updateAnimation(RenderWindow&);
-void movecamera(RenderWindow&);
-void RSP(RenderWindow&); // Ready...Set....Plant....
-void loadphoto();
-void movecars(); 
-#pragma endregion
+    Clock animcameraClock;
+    Clock clockRSP;
 
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void startAnimation() {
-        for (int i = 0; i < 5; i++) {
+
+        startdrawRSP = true;
+        EntertostartdrawRSP = false;
+        moveright = false;
+        moveleft = false;
+        startAnimcamera = false;
+        animcameraClock.restart();
+        clockRSP.restart();
+
+        //GardenCamera.zoom(1.5);
+
+        for (int i = 0; i < 5; i++)
+        {
             car[i].start(i);
         }
+
         loadphoto();
         srand(time(0));
-        for (int i = 0;i < 9; i++) {
-            zombie[i].start(i, false);
-        }
     }
 
     void updateAnimation(RenderWindow& window) {
-        deltatimetextstartwave2 = clockdrawtextwave2.restart();
-        deltatimetextfinalwave = clockdrawtextfinalwave.restart();
-        deltatimelosegame = clocklosegame.restart();
         movecamera(window);
         if (moveleft) {
             movecars(); // When Move Camera is end .... Start move car
         }
-        // This Restart for the first wave..............
-        deltaTime = frameClock.restart().asSeconds();
+
         timeSinceStart = globalClock.getElapsedTime().asSeconds();
-        if (endRSP) {
-            level(3, 3, 10);
-        }
     }
-    
+
     void loadphoto() {
         // =======================**load photo garden**===================================
         gardentexture.loadFromFile("Assets/Environment/Game-Environment.png");
@@ -98,24 +96,29 @@ void movecars();
         gardensprite.setPosition(-325, -265);
         gardensprite.setScale(0.65, 0.65);
         GardenCamera.setCenter({ 340, 310 });
+        // zombie in garden ....
+        zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
+        zombieinStreet.setTexture(zombieinStreettex);
+        zombieinStreet.setPosition(980, -250);
+        zombieinStreet.setScale(1.4, 1.4);
         // =========================**load photo READY SET PLANT!**======================================
         //*********************(READY)******************
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
         Readytextsprite.setTexture(Readytexttexture);
         Readytextsprite.setOrigin(Readytextsprite.getGlobalBounds().width / 2.0f, Readytextsprite.getGlobalBounds().height / 2.0f);
-        Readytextsprite.setPosition(640,360);
+        Readytextsprite.setPosition(640, 410);
         Readytextsprite.setScale(1.8, 1.8);
         //** *********************(SET)************************ **
         Settexttexture.loadFromFile("Assets/Environment/StartSet.png");
         Settextsprite.setTexture(Settexttexture);
         Settextsprite.setOrigin(Settextsprite.getGlobalBounds().width / 2.0f, Settextsprite.getGlobalBounds().height / 2.0f);
-        Settextsprite.setPosition(640, 360);
+        Settextsprite.setPosition(640, 410);
         Settextsprite.setScale(1.8, 1.8);
         //***********************(PLANT)********************************
         Planttexttexture.loadFromFile("Assets/Environment/StartPlant.png");
         Planttextsprite.setTexture(Planttexttexture);
         Planttextsprite.setOrigin(Planttextsprite.getGlobalBounds().width / 2.0f, Planttextsprite.getGlobalBounds().height / 2.0f);
-        Planttextsprite.setPosition(640, 360);
+        Planttextsprite.setPosition(640, 410);
         Planttextsprite.setScale(1.8, 1.8);
         //***********************(Ready Set Plant Audio)********************************
         RSPSoundBuffer.loadFromFile("Audio/readysetplant.ogg");
@@ -140,7 +143,7 @@ void movecars();
         Textlosegamesprite.setTexture(Textlosegametexture);
         Textlosegamesprite.setPosition(-20, 10);
         Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
-        Textlosegamesprite.setPosition(1280 / 3.5f, 720/ 2.27f);
+        Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
     }
 
     void movecamera(RenderWindow& window) {
@@ -201,7 +204,7 @@ void movecars();
         {
             window.draw(Planttextsprite);
         }
-        else if (time<seconds(3))
+        else if (time < seconds(3))
         {
             ZombiesAreComing.play();
             endRSP = true;
@@ -211,35 +214,26 @@ void movecars();
 
     void movecars() {
         int stoppedCars = 0;
-        Time deltatime = clockmovecars.restart();
-        float dt = deltatime.asSeconds();
+
         for (int i = 0; i < 5; i++) {
-            car[i].update(dt);
+            car[i].update();
             if (car[i].lawnsprite.getPosition().x > -70) {
                 stoppedCars++;
             }
         }
         if (stoppedCars == 5) {
             EntertostartdrawRSP = true;
-
         }
     }
 
     void Renderstartanimation(RenderWindow& window) {
         window.draw(gardensprite);
-        for (int i = 0; i < 40; i++) {
-            window.draw(zombie[i].rectanglesprite);
-        }
         if (EntertostartdrawRSP) {
             RSP(window);
         }
         for (int i = 0; i < 5; i++) {
             window.draw(car[i].lawnsprite);
         }
-
-
-
+        window.draw(zombieinStreet);
     }
 }
-
-

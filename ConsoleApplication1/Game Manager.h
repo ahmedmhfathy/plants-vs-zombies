@@ -15,15 +15,13 @@ using namespace sf;
 enum State { MainMenu, Level1, Level2, Level3 } CurrentState;
 void SwitchState(State NewState);
 
-bool LevelIsOver = false;
-bool WinLevel = false;
-bool IsPaused = false;
 bool ButtonTapSoundNextLevel = false;
 bool ButtonTapSoundWinMainMenu = false;
 bool ButtonTapSoundPauseBackToMainMenu = false;
 bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
+
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
 
@@ -379,8 +377,9 @@ void DrawLevelEnd(RenderWindow& window)
 #pragma region Level Functions
 void StartLevel1()
 {
+    setupWaveData();
     StartPlantingAndCurrencySystem(offset);
-
+    startZombiePositions(100);
     StartAnimationNS::startAnimation();
 }
 void UpdateLevel1(RenderWindow& window)
@@ -388,10 +387,7 @@ void UpdateLevel1(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    if (!IsPaused)
-    {
-        level(2, 4, 7.0f);
-    }
+    level(2, 1, 7.0f);
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
@@ -399,8 +395,8 @@ void DrawLevel1(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
     Plants_Zombies::DrawPlantsAndProjectiles(window);
-    drawzombies(window);
     DrawPlantingAndCurrencySystem(window);
+    DrawWavesAndZombies(window);
 }
 
 void StartLevel2()

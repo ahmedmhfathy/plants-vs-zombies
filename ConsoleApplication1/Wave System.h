@@ -8,69 +8,64 @@
 #include<time.h>
 #include"Tools.h"
 #include"StartAnimation.h"
+#include"Plants_Zombies.h"
+
+#pragma region Functiondelaration
+void allwave(int, int);
+void intersectioncarsandzombies(int);
+void DrawWavesAndZombies(RenderWindow&, string);
+void startallwave(int, int, float);
+void level(int, int, float);
+void DeltaTimeManager();
+#pragma endregion
 
 #pragma region Textures and Sprites declaration
 Texture lawntexture;
 Texture rectangletexture;
 Texture Textstartwave2texture;
-Sprite Textstartwave2sprite;
 Texture Textstartfinalwavetexture;
-Sprite Textstartfinalwavesprite;
 Texture Textlosegametexture;
+
+Sprite Textstartwave2sprite;
+Sprite Textstartfinalwavesprite;
 Sprite Textlosegamesprite;
 #pragma endregion
 
 #pragma region booleans
-// =====================***boolean waves**=================================
 bool nowave = true;
 bool checkstart_wave2 = true;
 bool checkstart_wave3 = true;
 bool endRSP = false;
 bool movefromwavetoanother = true;
+
+bool IsPaused = false;
+bool LevelIsOver = false;
+bool WinLevel = false;
+bool wasPausedLastFrame = IsPaused;
+bool playLoseGameAnim = false;
 #pragma endregion
 
 #pragma region hours and timer
-//================================================================================
-Clock clockmovecars; // use in move cars
-Time deltatime;
-// Hours use in 3 waves 
-Time timertostartwave2;
-Time timertostartwave3;
+Clock DeltaTimeClock;
 Clock clockwave2;
 Clock clockfinalwave;
 Clock globalClock;
-Clock frameClock;
-float deltaTime;
+Clock LoseGameClock;
+
+Time timertostartwave2;
+Time timertostartwave3;
+
 float timeSinceStart;
-// Hours  for 3 texts (start wave2, start final wave, lose game)..............
-Clock clockdrawtextwave2;              // clock for draw text start wave two.....
-Clock clockdrawtextfinalwave;           // clock for draw final wave...
-Clock clocklosegame;                      //clock for lose game.....
-// deltatime for animation 3 texts(start wave2, start final wave, lose game)......
-Time deltatimetextstartwave2, deltatimetextfinalwave, deltatimelosegame;
 #pragma endregion
 
 #pragma region Scale 
-float minscale = 1.7f;               // Min Scale For Text Start Wave Two And Text Final Wave
-float scaleFactor = 6.0f;           // First scale For  Text Start Wave Two And Text Final Wave
-float minscaletextlosegame = 1.17f;          // Min Scale For Text Lose Game
+float minscale = 1.7f;                      // Min Scale For Text Start Wave Two And Text Final Wave
+float scaleFactor = 6.0f;                   // First scale For  Text Start Wave Two And Text Final Wave
+float minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
 float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
 #pragma endregion
 
-//intersection
-FloatRect rect1;
-FloatRect rect2;
-
-// speed zombies
-const float speedzombie = 40.0f;
-
-#pragma region Functiondelaration
-void allwave(int);
-void intersectioncarsandzombies(int, RenderWindow&);
-void drawzombies(RenderWindow&, string);
-void startallwave(int, int, float);
-void level(int, int, float);
-#pragma endregion
+float deltaTime;
 
 #pragma region Structs
 struct cars {
@@ -82,171 +77,162 @@ struct cars {
         lawnsprite.setTexture(lawntexture);
         lawnsprite.setScale(0.8, 0.8);
         lawnsprite.setPosition(-90, 60 + (i * 130));
-       
     }
-    void update(float dt) {
-        if (lawnsprite.getPosition().x < -65) {
-            lawnsprite.move(speed * dt, 0);
+    void update() {
+        if (!intersection)
+        {
+            if (lawnsprite.getPosition().x < -65) {
+                lawnsprite.move(speed * deltaTime, 0);
+            }
+        }
+        else
+        {
+            if (lawnsprite.getPosition().x < 960)
+            {
+                lawnsprite.move(speed * deltaTime, 0);
+            }
+            else
+            {
+                lawnsprite.setPosition(1000, 1000);
+            }
         }
     }
 }car[5];
-struct zombies {
-    int row[5] = {30, 150, 280, 400,520};
-    Sprite rectanglesprite;
-    bool started;
-    bool stoped;
-    void start(int x, bool finanim) {
-        rectangletexture.loadFromFile("Assets/Environment/rectangle.png");
-        rectanglesprite.setTexture(rectangletexture);
-        rectanglesprite.setScale(0.13, 0.13);
-        if (finanim) {
-            rectanglesprite.setPosition(1100, row[rand() % 5]);
-        }
-        else {
-           rectanglesprite.setPosition(1100+rand()%100,( -30 +(70*rand()%600)));
-        }
-    }
-    void update(float dt) {
-        rectanglesprite.move(-speedzombie * dt, 0);
 
-    }
-}zombie[300];
 struct waves {
     float delaybetween;
     int numberzombie;
-    bool checkexit_wave=false;
+    bool checkexit_wave = false;
     bool check_startwave = true;
 }wave[3];
 #pragma endregion
 
-void drawzombies(RenderWindow& window) {
-    if (nowave) {
-        for (int i = 0; i < wave[0].numberzombie; i++) {
-            window.draw(zombie[i].rectanglesprite);
-        }
-    }
-    else if (wave[0].checkexit_wave && !nowave) {
-        for (int i = 0; i < wave[1].numberzombie; i++) {
-            window.draw(zombie[i].rectanglesprite);
-        }
-    }
-    else if (wave[1].checkexit_wave) {
-        for (int i = 0; i < wave[2].numberzombie; i++) {
-            window.draw(zombie[i].rectanglesprite);
-        }
-    }
-    for (int i = 0; i < 3; i++) {
-        intersectioncarsandzombies(i, window);
-    }
-    if (timertostartwave2 > seconds(2) && timertostartwave2 < seconds(6) && wave[0].checkexit_wave)
+//should be called in the update function
+void DeltaTimeManager()
+{
+    // Check if the game just switched FROM paused TO unpaused
+    if (wasPausedLastFrame && !IsPaused)
     {
-        if (scaleFactor > minscale) {
-            scaleFactor -= deltatimetextstartwave2.asSeconds() * 14.0f; // ??????? ????????
-        }
-        Textstartwave2sprite.setScale(scaleFactor, scaleFactor);
-        window.draw(Textstartwave2sprite);
+        DeltaTimeClock.restart();
+        deltaTime = 0.0f;
+        wasPausedLastFrame = false;
     }
-    if (timertostartwave3 > seconds(2) && timertostartwave3 < seconds(6) && wave[1].checkexit_wave) {
-        if (scaleFactor > minscale) {
-            scaleFactor -= deltatimetextfinalwave.asSeconds() * 14.0f; // ??????? ????????
-        }
-        Textstartfinalwavesprite.setScale(scaleFactor, scaleFactor);
-        window.draw(Textstartfinalwavesprite);
+    else if (!IsPaused)
+    {
+        deltaTime = DeltaTimeClock.restart().asSeconds();
     }
-   /*for (int i = 0; i < 150; i++) {
-        if (zombie[i].rectanglesprite.getPosition().x < -50 && zombie[i].started) {
-            if (scalefactortextlosegame > minscaletextlosegame) {
-                scalefactortextlosegame -= deltatimelosegame.asSeconds() * 1.5f; // ??????? ????????
-            }
-            Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
-            window.draw(Textlosegamesprite);
-            wave[0].checkexit_wave = false;
-            wave[1].checkexit_wave = false;
-        }
-    } */
+    else
+    {
+        deltaTime = 0.0f;
+        wasPausedLastFrame = true;
+    }
+    //cout << deltaTime << endl;
 }
 
-void intersectioncarsandzombies(int numberwave, RenderWindow& window) {
-    Time deltatime = clockmovecars.restart();
-    float dt = deltatime.asSeconds();
-    for (int i = 0; i < wave[numberwave].numberzombie; i++) {
-        for (int x = 0; x < 5; x++) {
-            rect1 = car[x].lawnsprite.getGlobalBounds();
-            rect2 = zombie[i].rectanglesprite.getGlobalBounds();
-            if (rect1.intersects(rect2)) {
-                car[x].intersection = true;
-            }
-            if (car[x].intersection) {
-                if (car[x].lawnsprite.getPosition().x < 960) {
-                    car[x].lawnsprite.move(5000 * dt, 0);
-                }
-                else {
-                    car[x].lawnsprite.setPosition(0, 1000);
-                }
-            }
+//resets all data so you can retry the level
+void setupWaveData() {
+
+    for (int i = 0; i < 5; i++)
+    {
+        car[i].intersection = false;
+    }
+
+    clockwave2.restart();
+    clockfinalwave.restart();
+    globalClock.restart();
+    LoseGameClock.restart();
+    DeltaTimeClock.restart();
+
+    nowave = true;
+    checkstart_wave2 = true;
+    checkstart_wave3 = true;
+    endRSP = false;
+    movefromwavetoanother = true;
+
+    IsPaused = false;
+    LevelIsOver = false;
+    WinLevel = false;
+    playLoseGameAnim = false;
+
+    timeSinceStart = 0;
+    deltaTime = DeltaTimeClock.restart().asSeconds();
+}
+
+void startZombiePositions(int numZombies) {
+    Plants_Zombies::StartZombies(numZombies);
+
+    int row[5] = { -40, 100, 235, 360,490 };
+
+    for (int i = 0; i < 100; i++)
+    {
+        Plants_Zombies::zombie_array[i].started = false;
+        Plants_Zombies::zombie_array[i].isDead = false;
+
+        Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
+
+        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan) {
+            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
         }
+        Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
     }
 }
 
 void startallwave(int numberwave, int numberzombie, float delaybetween) {
-    srand(time(0));
-    float deltaTime;
-    globalClock.restart();
-    deltaTime = frameClock.restart().asSeconds();
-    timeSinceStart = globalClock.getElapsedTime().asSeconds();
-    for (int i = 0; i < 300; i++) {
-        zombie[i].started = false;
-    }
-    for (int i = 0; i < 300; i++) {
-        zombie[i].stoped = false;
-    }
     wave[numberwave].delaybetween = delaybetween;
     wave[numberwave].numberzombie = numberzombie;
-    for (int i = 0;i < 15; i++) {
-        zombie[i].start(i, true);
-    }
+    Plants_Zombies::numberofdeadzombie = 0;
 
+    srand(time(0));
+    globalClock.restart();
+
+    timeSinceStart = globalClock.getElapsedTime().asSeconds();
+
+    startZombiePositions(numberzombie);
 }
 
-void allwave(int numberwave) {
+void allwave(int numberwave, int numberzombie) {
+
+    intersectioncarsandzombies(numberwave);
+
     for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
         if (timeSinceStart >= i * wave[numberwave].delaybetween) {
-            zombie[i].started = true;
+
+            Plants_Zombies::zombie_array[i].started = true;
         }
     }
     for (int i = 0; i < wave[numberwave].numberzombie; i++) {
-        if (zombie[i].rectanglesprite.getPosition().x > -60) {
-            if (zombie[i].started) {
-                zombie[i].update(deltaTime);
-            }
-            }
-        }
-        for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
-            if (zombie[i].rectanglesprite.getPosition().x < -57) {
-                zombie[i].stoped = true;
+        if (Plants_Zombies::zombie_array[i].started && Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead) {
+            if (!IsPaused)
+            {
+                Plants_Zombies::zombie_array[i].update(deltaTime);
             }
         }
-      for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
-        if (zombie[i].stoped != true) {
+    }
+
+
+    for (int i = 0; i < wave[numberwave].numberzombie; i++)
+    {
+        if (Plants_Zombies::zombie_array[i].health <= 0)
+        {
+            wave[numberwave].checkexit_wave = true;
+        }
+        else
+        {
             wave[numberwave].checkexit_wave = false;
             break;
-        }
-        else {
-            wave[numberwave].checkexit_wave = true;
-
         }
     }
 }
 
-void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
+void level(int numberwave, int num, float delaybetweenw1) {
     if (endRSP)
     {
         if (numberwave == 2) {
             if (wave[0].check_startwave) {
                 wave[0].check_startwave = false;
-                startallwave(0, numberzombiew1, delaybetweenw1);
+                startallwave(0, num, delaybetweenw1);
             }
-            if (nowave && endRSP) { allwave(0); }
+            if (nowave && endRSP) { allwave(0, num); }
             if (wave[0].checkexit_wave) {
                 if (movefromwavetoanother) {
                     clockwave2.restart();
@@ -256,20 +242,31 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                 timertostartwave2 = clockwave2.getElapsedTime();
                 if (timertostartwave2 > seconds(6)) {
                     if (wave[1].check_startwave) {
-                        startallwave(1, numberzombiew1+=30, delaybetweenw1-=2.0f);
+                        startallwave(1, num += 4, delaybetweenw1 -= 2.0f);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
-                    allwave(1);
+                    allwave(1, num);
+
+                    if (wave[1].checkexit_wave)
+                    {
+                        LevelIsOver = true;
+                        WinLevel = true;
+                    }
+                    else
+                    {
+                        LevelIsOver = false;
+                        WinLevel = false;
+                    }
                 }
             }
         }
-        if (numberwave == 3) {
+        else if (numberwave == 3) {
             if (wave[0].check_startwave) {
                 wave[0].check_startwave = false;
-                startallwave(0, numberzombiew1, delaybetweenw1);
+                startallwave(0, num, delaybetweenw1);
             }
-            if (nowave && endRSP) { allwave(0); }
+            if (nowave && endRSP) { allwave(0, num); }
             if (wave[0].checkexit_wave) {
                 if (movefromwavetoanother) {
                     clockwave2.restart();
@@ -279,11 +276,11 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                 timertostartwave2 = clockwave2.getElapsedTime();
                 if (timertostartwave2 > seconds(6)) {
                     if (wave[1].check_startwave) {
-                        startallwave(1, numberzombiew1+=20, delaybetweenw1-=2.0f);
+                        startallwave(1, num += 1, delaybetweenw1 -= 2.0f);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
-                    allwave(1);
+                    allwave(1, num);
                 }
             }
             if (wave[1].checkexit_wave) {
@@ -295,12 +292,123 @@ void level(int numberwave, int numberzombiew1, float delaybetweenw1) {
                 timertostartwave3 = clockfinalwave.getElapsedTime();
                 if (timertostartwave3 > seconds(6)) {
                     if (wave[2].check_startwave) {
-                        startallwave(2, numberzombiew1 += 20, delaybetweenw1 -= 2.0f);
+                        startallwave(2, num += 1, delaybetweenw1 -= 2.0f);
                         wave[2].check_startwave = false;
                     }
-                    allwave(2);
+                    allwave(2, num);
+
+                    if (wave[2].checkexit_wave)
+                    {
+                        LevelIsOver = true;
+                        WinLevel = true;
+                    }
+                    else
+                    {
+                        LevelIsOver = false;
+                        WinLevel = false;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void intersectioncarsandzombies(int numberwave) {
+    for (int i = 0; i < 5; i++)
+    {
+        for (int j = 0; j < wave[numberwave].numberzombie; j++)
+        {
+            FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
+            FloatRect rect2 = Plants_Zombies::zombie_array[j].zombieCollider.getGlobalBounds();
+
+            if (rect1.intersects(rect2)) {
+                car[i].intersection = true;
+                Plants_Zombies::zombie_array[j].isMoving = false;
+            }
+            car[i].update();
+        }
+    }
+}
+
+void DrawWavesAndZombies(RenderWindow& window) {
+    if (endRSP)
+    {
+        if (nowave) {
+
+            for (int i = 0; i < wave[0].numberzombie; i++) {
+                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
+                {
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                }
+            }
+        }
+        else if (wave[0].checkexit_wave && !nowave) {
+            for (int i = 0; i < wave[1].numberzombie; i++) {
+                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
+                {
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
 
+            }
+        }
+        else if (wave[1].checkexit_wave) {
+            for (int i = 0; i < wave[2].numberzombie; i++) {
+                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
+                {
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                }
+            }
+        }
+    }
+
+    if (timertostartwave2 > seconds(2) && timertostartwave2 < seconds(6) && wave[0].checkexit_wave)
+    {
+        if (scaleFactor > minscale) {
+            scaleFactor -= deltaTime * 14.0f; // ??????? ????????
+        }
+        Textstartwave2sprite.setScale(scaleFactor, scaleFactor);
+        window.draw(Textstartwave2sprite);
+    }
+    if (timertostartwave3 > seconds(2) && timertostartwave3 < seconds(6) && wave[1].checkexit_wave) {
+        if (scaleFactor > minscale) {
+            scaleFactor -= deltaTime * 14.0f; // ??????? ????????
+        }
+        Textstartfinalwavesprite.setScale(scaleFactor, scaleFactor);
+        window.draw(Textstartfinalwavesprite);
+    }
+
+    for (int i = 0; i < 100; i++) {
+        if (Plants_Zombies::zombie_array[i].zombieCollider.getPosition().x < -50 && Plants_Zombies::zombie_array[i].started)
+        {
+            if (!playLoseGameAnim)
+            {
+                LoseGameClock.restart();
+                playLoseGameAnim = true;
+            }
+            else
+            {
+                Time animDuration_ = seconds(6);
+                if (scalefactortextlosegame > minscaletextlosegame)
+                {
+                    scalefactortextlosegame = easeInOut(linear, scalefactortextlosegame, minscaletextlosegame, LoseGameClock, animDuration_);
+                    Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
+                }
+                else
+                {
+                    IsPaused = true;
+                    LevelIsOver = true;
+                    WinLevel = false;
+                }
+            }
+
+            window.draw(Textlosegamesprite);
+
+            for (int i = 0; i < 3; i++)
+            {
+                wave[i].checkexit_wave = false;
             }
         }
     }

@@ -54,6 +54,7 @@ void Start()
     GameMusic.play();
 
     Plants_Zombies::LoadPlantTextures(); //textures loaded here once
+    Plants_Zombies::LoadZombieTextures();
     LoadSelectionTexture();
 
     CurrentState = MainMenu;
@@ -62,7 +63,6 @@ void Start()
     window.setVerticalSyncEnabled(true);
 
     MainMenuStart(window); //textures loaded here once
-    StartLevel1();
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
@@ -98,6 +98,7 @@ void Update()
 
         PauseMenuUpdate();
         LevelEndUpdate();
+        DeltaTimeManager();
     }
 }
 
