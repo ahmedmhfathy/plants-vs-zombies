@@ -21,6 +21,8 @@ bool ButtonTapSoundPauseBackToMainMenu = false;
 bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
+Texture ThankYouForPlayingTex;
+Sprite ThankYouForPlaying;
 
 Vector2i Mousepostion;
 Vector2f MouseWorldPostion;
@@ -194,7 +196,12 @@ void LoadLevelEndTextures() {
     WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
     NextlevelButtonTex.loadFromFile("Assets/Win Menu/next-level-button.png");
     NextlevelButtonHoverTex.loadFromFile("Assets/Win Menu/next-level-button-hover.png");
-
+    //Game Over
+    ThankYouForPlayingTex.loadFromFile("Assets/Win Menu/Game Over.png");
+    ThankYouForPlaying.setTexture(ThankYouForPlayingTex);
+    ThankYouForPlaying.setOrigin(640, 360);
+    ThankYouForPlaying.setScale(.7, .7);
+    ThankYouForPlaying.setPosition(-1000, 310);
     //main
     BackToMainMenuLevelEndTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button.png");
     BackToMainMenuLevelEndHoverTex.loadFromFile("Assets/Lost Menu/Main-Menu-Button-Hover.png");
@@ -247,56 +254,65 @@ void LevelEndUpdate()
     {
         if (WinLevel)
         {
-            if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
+            if(CurrentState==Level3&&LevelIsOver&&WinLevel)
             {
-                if (ButtonTapSoundNextLevel)
+                if (ThankYouForPlaying.getPosition().x < 340)
                 {
-                    LoseAndWinAndPause.play();
-                    ButtonTapSoundNextLevel = false;
+                    ThankYouForPlaying.move(7, 0);
                 }
-                NextlevelButton.setTexture(NextlevelButtonHoverTex);
-                if (Mouse::isButtonPressed(Mouse::Left))
-                {
-                    if (CurrentState == Level1)
-                    {
-                        SwitchState(Level2);
-                    }
-                    else if (CurrentState == Level2)
-                    {
-                        SwitchState(Level3);
-                    }
-                    else
-                    {
-                        //Ty for playing();
-                    }
-                }
-            }
-            else
-            {
-                ButtonTapSoundNextLevel = true;
-                NextlevelButton.setTexture(NextlevelButtonTex);
-            }
-
-            if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
-            {
-                if (ButtonTapSoundWinMainMenu)
-                {
-                    LoseAndWinAndPause.play();
-                    ButtonTapSoundWinMainMenu = false;
-                }
-                BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
-                if (Mouse::isButtonPressed(Mouse::Left))
+                else if (Mouse::isButtonPressed(Mouse::Left))
                 {
                     CurrentState = MainMenu;
                 }
             }
             else
             {
-                ButtonTapSoundWinMainMenu = true;
-                BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
+                if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
+                {
+                    if (ButtonTapSoundNextLevel)
+                    {
+                        LoseAndWinAndPause.play();
+                        ButtonTapSoundNextLevel = false;
+                    }
+                    NextlevelButton.setTexture(NextlevelButtonHoverTex);
+                    if (Mouse::isButtonPressed(Mouse::Left))
+                    {
+                        if (CurrentState == Level1)
+                        {
+                            SwitchState(Level2);
+                        }
+                        else if (CurrentState == Level2)
+                        {
+                            SwitchState(Level3);
+                        }
+                    }
+                }
+                else
+                {
+                    ButtonTapSoundNextLevel = true;
+                    NextlevelButton.setTexture(NextlevelButtonTex);
+                }
+
+                if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
+                {
+                    if (ButtonTapSoundWinMainMenu)
+                    {
+                        LoseAndWinAndPause.play();
+                        ButtonTapSoundWinMainMenu = false;
+                    }
+                    BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
+                    if (Mouse::isButtonPressed(Mouse::Left))
+                    {
+                        CurrentState = MainMenu;
+                    }
+                }
+                else
+                {
+                    ButtonTapSoundWinMainMenu = true;
+                    BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
+                }
+
             }
-
-
         }
         if (!WinLevel)
         {
@@ -357,10 +373,18 @@ void DrawLevelEnd(RenderWindow& window)
 {
     if (WinLevel)
     {
+        if (CurrentState == Level3)
+        {
+            window.draw(Opacity);
+            window.draw(ThankYouForPlaying);
+        }
+        else
+        {
         window.draw(Opacity);
         window.draw(WinMenuBlank);
         window.draw(NextlevelButton);
         window.draw(BackToMainMenuLevelEnd);
+        }
     }
     else
     {
@@ -369,6 +393,7 @@ void DrawLevelEnd(RenderWindow& window)
         window.draw(RetryButton);
         window.draw(BackToMainMenuLevelEnd);
     }
+    
 }
 
 #pragma endregion
@@ -429,6 +454,7 @@ void StartLevel3()
     StartPlantingAndCurrencySystem(offset);
     startZombiePositions(100);
     StartAnimationNS::startAnimation();
+    
 }
 void UpdateLevel3(RenderWindow& window)
 {
