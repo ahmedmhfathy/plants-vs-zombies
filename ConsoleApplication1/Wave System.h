@@ -155,6 +155,7 @@ void setupWaveData() {
     for (int i = 0; i < 5; i++)
     {
         car[i].intersection = false;
+        car[i].startsoundcar = true;
     }
 
     for (int i = 0; i < 3; i++)
@@ -162,6 +163,7 @@ void setupWaveData() {
         wave[i].checkexit_wave = false;
         wave[i].check_startwave = true;
     }
+
 
     clockwave2.restart();
     clockfinalwave.restart();
@@ -274,7 +276,7 @@ void level(int numberwave, int num, float delaybetweenw1) {
                 timertostartwave2 = clockwave2.getElapsedTime();
                 if (timertostartwave2 > seconds(6)) {
                     if (wave[1].check_startwave) {
-                        startallwave(1, num += 4, delaybetweenw1 -= 2.0f);
+                        startallwave(1, num += 7, delaybetweenw1 -= 2.0f);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
@@ -311,7 +313,7 @@ void level(int numberwave, int num, float delaybetweenw1) {
                 timertostartwave2 = clockwave2.getElapsedTime();
                 if (timertostartwave2 > seconds(6)) {
                     if (wave[1].check_startwave) {
-                        startallwave(1, num += 1, delaybetweenw1 -= 2.0f);
+                        startallwave(1, num += 10, delaybetweenw1 -= 2.0f);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
@@ -327,7 +329,7 @@ void level(int numberwave, int num, float delaybetweenw1) {
                 timertostartwave3 = clockfinalwave.getElapsedTime();
                 if (timertostartwave3 > seconds(6)) {
                     if (wave[2].check_startwave) {
-                        startallwave(2, num += 1, delaybetweenw1 -= 2.0f);
+                        startallwave(2, num += 20, delaybetweenw1 -= 2.0f);
                         wave[2].check_startwave = false;
                     }
                     allwave(2, num);

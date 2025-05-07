@@ -57,13 +57,13 @@ C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplicatio
 C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(93,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(203,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(205,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(206,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(208,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(217,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\Wave System.h(219,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\Omar Hazem\source\repos\moody141007\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(88,39): warning C4305: 'argument': truncation from 'double' to 'float'
