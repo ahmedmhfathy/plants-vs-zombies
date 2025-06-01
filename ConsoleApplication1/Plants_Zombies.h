@@ -6,7 +6,7 @@
 #include<vector>
 using namespace std;
 using namespace sf;
-
+// bagarab el username beta3y
 namespace Plants_Zombies {
 	int score;
 #pragma region Forward Declaration for Structs
@@ -699,7 +699,8 @@ namespace Plants_Zombies {
 				if (!resetColIndex)
 				{
 					CollIndex = 0;
-					resetColIndex = true;
+					resetColIndex
+						= true;
 				}
 				zombieCollider.setScale(0, 0);
 				//zombieCont.setPosition(2000, 2000);
