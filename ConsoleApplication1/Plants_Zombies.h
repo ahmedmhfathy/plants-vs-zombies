@@ -4,6 +4,7 @@
 #include<SFML/Audio.hpp>
 #include<string>
 #include<vector>
+#include"Tools.h";
 using namespace std;
 using namespace sf;
 // bagarab el username beta3y
@@ -117,7 +118,7 @@ namespace Plants_Zombies {
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
 				//projectileLifeSpan = seconds(5); //time to despawn
-				speed = 5;
+				speed = 350;
 				damage = 60;
 				slowMultiplier = 1; // wont affect anything
 			}
@@ -127,7 +128,7 @@ namespace Plants_Zombies {
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
 				//projectileLifeSpan = seconds(5); //time to despawn
-				speed = 5;
+				speed = 350;
 				damage = PlantDamage;
 				slowMultiplier = 0.3;
 			}
@@ -138,7 +139,7 @@ namespace Plants_Zombies {
 				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
 				projectileLifeSpan = seconds(12); //time to despawn
 				shape.setScale(1.25, 1.25);
-				speed = 1;
+				speed = 65;
 				damage = PlantDamage;
 				slowMultiplier = 1;
 				sunCoinYLimt = yLimit;
@@ -148,7 +149,7 @@ namespace Plants_Zombies {
 
 			if (type == PeaShooter || type == SnowPeaShooter)
 			{
-				shape.move(speed, 0);
+				shape.move(speed * deltaTime, 0);
 			}
 			else if (type == SunFlower)
 			{
@@ -158,7 +159,7 @@ namespace Plants_Zombies {
 			{
 				if (shape.getPosition().y < sunCoinYLimt)
 				{
-					shape.move(0, speed);
+					shape.move(0, speed * deltaTime);
 				}
 				shape.rotate(0.5);
 			}
@@ -207,7 +208,7 @@ namespace Plants_Zombies {
 				isDead = true;
 			}
 		}
-		void updatePlantStruct(Zombie* zombie_array); // Defined at the bottom of the code
+		void updatePlantStruct(Zombie* zombie_array); // Defined at the planting system
 
 	private:
 		float randPitch[3] = { 0.75, 1, 1.25 };

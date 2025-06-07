@@ -7,7 +7,6 @@
 #include<SFML/Graphics.hpp>
 #include<cmath>
 #include<algorithm>
-
 using namespace std;
 using namespace sf;
 
