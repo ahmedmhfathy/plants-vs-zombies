@@ -7,7 +7,8 @@
 #include <cmath>
 #include "StartAnimation.h"
 #include "Wave System.h"
-#include"planting system.h"
+#include "planting system.h"
+#include "Tools.h";
 
 using namespace std;
 using namespace sf;
@@ -425,7 +426,7 @@ void DrawLevelEnd(RenderWindow& window)
         UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
         StartAnimationNS::updateAnimation(window);
 
-        level(2, 13, 12.0f);
+        level(2, 4, 7.0f);
 
         Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
     }

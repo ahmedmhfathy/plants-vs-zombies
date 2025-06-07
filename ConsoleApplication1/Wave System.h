@@ -49,16 +49,13 @@ bool checkstart_wave3 = true;
 bool endRSP = false;
 bool movefromwavetoanother = true;
 
-bool IsPaused = false;
 bool LevelIsOver = false;
 bool WinLevel = false;
-bool wasPausedLastFrame = IsPaused;
 bool playLoseGameAnim = false;
 bool playWaveSounds = false;
 #pragma endregion
 
 #pragma region hours and timer
-Clock DeltaTimeClock;
 Clock clockwave2;
 Clock clockfinalwave;
 Clock globalClock;
@@ -76,9 +73,6 @@ float scaleFactor = 6.0f;                   // First scale For  Text Start Wave 
 float minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
 float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
 #pragma endregion
-
-
-float deltaTime;
 
 #pragma region Structs
 struct cars {
@@ -126,28 +120,6 @@ struct waves {
     bool check_startwave = true;
 }wave[3];
 #pragma endregion
-
-//should be called in the update function
-void DeltaTimeManager()
-{
-    // Check if the game just switched FROM paused TO unpaused
-    if (wasPausedLastFrame && !IsPaused)
-    {
-        DeltaTimeClock.restart();
-        deltaTime = 0.0f;
-        wasPausedLastFrame = false;
-    }
-    else if (!IsPaused)
-    {
-        deltaTime = DeltaTimeClock.restart().asSeconds();
-    }
-    else
-    {
-        deltaTime = 0.0f;
-        wasPausedLastFrame = true;
-    }
-    //cout << deltaTime << endl;
-}
 
 //resets all data so you can retry the level
 void setupWaveData() {

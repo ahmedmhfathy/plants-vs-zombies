@@ -11,6 +11,12 @@
 using namespace std;
 using namespace sf;
 
+Clock DeltaTimeClock;
+float deltaTime;
+
+bool wasPausedLastFrame;
+bool IsPaused = false;
+
 enum EaseType { CubicEaseInOut, ExpoEaseOut, linear };
 
 #pragma region Function Declaration
@@ -20,6 +26,7 @@ float linearEase(float t);
 float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock, Time Duration);
 #pragma endregion
 
+#pragma region Easing Functions
 float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock, Time Duration) {
     float NormalizedTime = EaseClock.getElapsedTime().asSeconds() / Duration.asSeconds(); // gets the ratio between
     //the elapsed time and the duration
@@ -38,9 +45,8 @@ float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock
     }
     case linear: {
         easedTime = linearEase(NormalizedTime);
-    }
-    default:
         break;
+    }
     }
 
     float currentValue = startValue + (endValue - startValue) * easedTime;
@@ -59,4 +65,27 @@ float EaseOutExpo(float t) {
 
 float linearEase(float t) {
     return t;
+}
+#pragma endregion
+
+//should be called in the update function
+void DeltaTimeManager(bool IsPaused)
+{
+    // Check if the game just switched FROM paused TO unpaused
+    if (wasPausedLastFrame && !IsPaused)
+    {
+        DeltaTimeClock.restart();
+        deltaTime = 0.0f;
+        wasPausedLastFrame = false;
+    }
+    else if (!IsPaused)
+    {
+        deltaTime = DeltaTimeClock.restart().asSeconds();
+    }
+    else
+    {
+        deltaTime = 0.0f;
+        wasPausedLastFrame = true;
+    }
+    //cout << deltaTime << endl;
 }

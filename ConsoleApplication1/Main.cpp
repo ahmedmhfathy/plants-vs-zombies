@@ -6,7 +6,8 @@
 #include "Main Menu.h"
 #include "Game Manager.h"
 #include "StartAnimation.h"
-#include"planting system.h"
+#include "planting system.h"
+#include "Tools.h"
 using namespace std;
 using namespace sf;
 
@@ -62,6 +63,8 @@ void Start()
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
+
+    wasPausedLastFrame = IsPaused;
 }
 
 void Update()
@@ -69,6 +72,8 @@ void Update()
     //gets mouse world position from screen position
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
+
+    DeltaTimeManager(IsPaused);
 
     //calls the update function depending on current state and pause state
     if (CurrentState == MainMenu)
@@ -94,7 +99,6 @@ void Update()
 
         PauseMenuUpdate();
         LevelEndUpdate();
-        DeltaTimeManager();
     }
 }
 
