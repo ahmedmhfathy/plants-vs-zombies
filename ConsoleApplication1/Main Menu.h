@@ -1,4 +1,3 @@
-// hello from main menu
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
@@ -56,6 +55,9 @@ SoundBuffer ClickBuffer;
 Sound Click;
 #pragma endregion
 
+#pragma region Booleans
+// sound
+bool soundFinished = true;
 bool SoundStart = false;
 bool SoundCredits = false;
 bool SoundQuit = false;
@@ -64,10 +66,13 @@ bool SoundLevel1Button = false;
 bool SoundLevel2Button = false;
 bool SoundLevel3Button = false;
 
+// animation and logic
 bool ShowCredits = false;
 bool startAnim = false;
 bool startAnimLevel = false;
 bool ShowLevelSelectionMenu = false;
+#pragma endregion
+
 Clock animClock;
 Time MainMenuAnimationDuration = seconds(1.75);
 
@@ -184,6 +189,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             startAnim = false;
         }
+
+        // animation from level select ---> main menu
         if (MainMenuCamera.getCenter().y > 360)
         {
             float startValue = 1080, endValue = 360;
@@ -199,8 +206,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             startAnimLevel = false;
         }
 
-
-        //main menu buttons
+        #pragma region Main menu Buttons
+        //start adventure button
         if (mouse_pos.x >= 884 && mouse_pos.x <= 1211 && mouse_pos.y >= 202 && mouse_pos.y <= 310)
         {
             StartButton.setTexture(StartButtonHoverTex);
@@ -268,6 +275,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             QuitButton.setTexture(QuitButtonTex);
             SoundQuit = true;
         }
+        #pragma endregion        
     }
     else if (ShowCredits && !ShowLevelSelectionMenu) //credits menu buttons and animation
     {
@@ -313,6 +321,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
     }
     else if (!ShowCredits && ShowLevelSelectionMenu)
     {
+        // animation from main menu ---> level select
         if (MainMenuCamera.getCenter().y < 1080)
         {
             float startValue = 360, endValue = 1080;
@@ -328,6 +337,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             startAnimLevel = false;
         }
 
+        #pragma region Buttons
         //Back to main menu
         if (BackTOMainMenuButtonLS.getGlobalBounds().contains(mouse_pos))
         {
@@ -352,7 +362,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             BackTOMainMenuButtonLS.setTexture(BackTOMainMenuTex);
             SoundButton = true;
         }
-
+        //level 1 button
         if (Level1Button.getGlobalBounds().contains(mouse_pos))
         {
             if (SoundLevel1Button)
@@ -377,7 +387,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             Level1Button.setTexture(Level1Tex);
             SoundLevel1Button = true;
         }
-
+        //level 2 button
         if (Level2Button.getGlobalBounds().contains(mouse_pos) && MaxLevelWon >= Level1)
         {
             if (SoundLevel2Button)
@@ -411,7 +421,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             Level2Lock.setScale(0, 0);
             SoundLevel2Button = true;
         }
-
+        //level 3 button
         if (Level3Button.getGlobalBounds().contains(mouse_pos) && MaxLevelWon >= Level2)
         {
             if (SoundLevel3Button)
@@ -444,6 +454,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundLevel3Button = true;
             Level2Lock.setScale(0, 0);
         }
+        #pragma endregion
     }
 }
 

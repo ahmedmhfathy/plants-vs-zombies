@@ -21,6 +21,7 @@ bool ButtonTapSoundPauseBackToMainMenu = false;
 bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
+
 Texture ThankYouForPlayingTex;
 Sprite ThankYouForPlaying;
 
@@ -410,78 +411,86 @@ void DrawLevelEnd(RenderWindow& window)
 
 //handle the code of each level
 #pragma region Level Functions
-void StartLevel1()
-{
-    setupWaveData();
-    StartPlantingAndCurrencySystem(offset);
-    startZombiePositions(100);
-    StartAnimationNS::startAnimation();
-}
-void UpdateLevel1(RenderWindow& window)
-{
-    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
-    StartAnimationNS::updateAnimation(window);
 
-    level(2, 13, 12.0f);
+    #pragma region Level 1
+    void StartLevel1()
+    {
+        setupWaveData();
+        StartPlantingAndCurrencySystem(offset);
+        startZombiePositions(100);
+        StartAnimationNS::startAnimation();
+    }
+    void UpdateLevel1(RenderWindow& window)
+    {
+        UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+        StartAnimationNS::updateAnimation(window);
 
-    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
-}
-void DrawLevel1(RenderWindow& window)
-{
-    StartAnimationNS::Renderstartanimation(window);
-    Plants_Zombies::DrawPlantsAndProjectiles(window);
-    DrawPlantingAndCurrencySystem(window);
-    DrawWavesAndZombies(window);
-}
+        level(2, 13, 12.0f);
 
-void StartLevel2()
-{
-    setupWaveData();
-    StartPlantingAndCurrencySystem(offset);
-    startZombiePositions(100);
-    StartAnimationNS::startAnimation();
-}
-void UpdateLevel2(RenderWindow& window)
-{
-    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
-    StartAnimationNS::updateAnimation(window);
+        Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+    }
+    void DrawLevel1(RenderWindow& window)
+    {
+        StartAnimationNS::Renderstartanimation(window);
+        Plants_Zombies::DrawPlantsAndProjectiles(window);
+        DrawPlantingAndCurrencySystem(window);
+        DrawWavesAndZombies(window);
+    }
+    #pragma endregion
 
-    level(2, 20, 10.0f);
+    #pragma region Level 2
+    void StartLevel2()
+    {
+        setupWaveData();
+        StartPlantingAndCurrencySystem(offset);
+        startZombiePositions(100);
+        StartAnimationNS::startAnimation();
+    }
+    void UpdateLevel2(RenderWindow& window)
+    {
+        UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+        StartAnimationNS::updateAnimation(window);
 
-    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
-}
-void DrawLevel2(RenderWindow& window)
-{
-    StartAnimationNS::Renderstartanimation(window);
-    Plants_Zombies::DrawPlantsAndProjectiles(window);
-    DrawPlantingAndCurrencySystem(window);
-    DrawWavesAndZombies(window);
-}
+        level(2, 20, 10.0f);
 
-void StartLevel3()
-{
-    setupWaveData();
-    StartPlantingAndCurrencySystem(offset);
-    startZombiePositions(100);
-    StartAnimationNS::startAnimation();
-    
-}
-void UpdateLevel3(RenderWindow& window)
-{
-    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
-    StartAnimationNS::updateAnimation(window);
+        Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+    }
+    void DrawLevel2(RenderWindow& window)
+    {
+        StartAnimationNS::Renderstartanimation(window);
+        Plants_Zombies::DrawPlantsAndProjectiles(window);
+        DrawPlantingAndCurrencySystem(window);
+        DrawWavesAndZombies(window);
+    }
+    #pragma endregion
 
-    level(3, 30, 8.0f);
+    #pragma region Level 3
+    void StartLevel3()
+    {
+        setupWaveData();
+        StartPlantingAndCurrencySystem(offset);
+        startZombiePositions(100);
+        StartAnimationNS::startAnimation();
 
-    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
-}
-void DrawLevel3(RenderWindow& window)
-{
-    StartAnimationNS::Renderstartanimation(window);
-    Plants_Zombies::DrawPlantsAndProjectiles(window);
-    DrawPlantingAndCurrencySystem(window);
-    DrawWavesAndZombies(window);
-}
+    }
+    void UpdateLevel3(RenderWindow& window)
+    {
+        UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+        StartAnimationNS::updateAnimation(window);
+
+        level(3, 30, 8.0f);
+
+        Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+    }
+    void DrawLevel3(RenderWindow& window)
+    {
+        StartAnimationNS::Renderstartanimation(window);
+        Plants_Zombies::DrawPlantsAndProjectiles(window);
+        DrawPlantingAndCurrencySystem(window);
+        DrawWavesAndZombies(window);
+    }
+    #pragma endregion
+
 #pragma endregion
 
 // switches the state of the game and calls the start function of the new state

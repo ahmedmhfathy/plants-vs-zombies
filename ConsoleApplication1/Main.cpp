@@ -18,7 +18,6 @@ Sound GameMusic;
 void Start();
 void Update();
 void RenderScreen();
-
 #pragma endregion
 
 int main()
@@ -99,12 +98,11 @@ void Update()
     }
 }
 
-// this function will be used to render the screen
+// this function will be used to render the screen depending on current state
 void RenderScreen()
 {
     window.clear();
 
-    //draws screen depending on current state
     if (CurrentState == MainMenu)
     {
         DrawMainMenu(window);
@@ -132,7 +130,7 @@ void RenderScreen()
         {
             DrawLevelEnd(window);
         }
-
     }
+
     window.display();
 }
