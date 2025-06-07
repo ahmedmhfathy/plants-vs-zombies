@@ -28,6 +28,7 @@ Texture Level2Tex;
 Texture Level2HoverTex;
 Texture Level3Tex;
 Texture Level3HoverTex;
+Texture LevelLockTex;
 #pragma endregion
 
 #pragma region Sprite Delaration
@@ -39,6 +40,8 @@ Sprite BackTOMainMenuButton;
 Sprite Level1Button;
 Sprite Level2Button;
 Sprite Level3Button;
+Sprite Level2Lock;
+Sprite Level3Lock;
 Sprite BackTOMainMenuButtonLS;
 #pragma endregion
 
@@ -99,10 +102,12 @@ void LoadMainMenuTex()
     Level2HoverTex.loadFromFile("Assets/Main Menu/Level 2 hover.png");
     Level3Tex.loadFromFile("Assets/Main Menu/Level 3.png");
     Level3HoverTex.loadFromFile("Assets/Main Menu/Level 3 hover.png");
+    LevelLockTex.loadFromFile("Assets/Main Menu/lock.png");
 }
 
 void MainMenuStart(RenderWindow& window)
 {
+    MaxLevelWon = MainMenu;
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
 
@@ -145,7 +150,13 @@ void MainMenuStart(RenderWindow& window)
     //Back to main menu 
     BackTOMainMenuButtonLS.setTexture(BackTOMainMenuTex);
     BackTOMainMenuButtonLS.setOrigin({ BackTOMainMenuButtonLS.getLocalBounds().width / 2, BackTOMainMenuButtonLS.getLocalBounds().height / 2 });
-    BackTOMainMenuButtonLS.setPosition(978, 1093);
+    BackTOMainMenuButtonLS.setPosition(978, 1096);
+    //locks
+    Level2Lock.setTexture(LevelLockTex);
+    Level2Lock.setPosition(375, 965);
+    Level3Lock.setTexture(LevelLockTex);
+    Level3Lock.setPosition(375, 1087);
+
 #pragma endregion
 }
 
@@ -300,7 +311,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundButton = true;
         }
     }
-
     else if (!ShowCredits && ShowLevelSelectionMenu)
     {
         if (MainMenuCamera.getCenter().y < 1080)
@@ -317,6 +327,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             startAnimLevel = false;
         }
+
         //Back to main menu
         if (BackTOMainMenuButtonLS.getGlobalBounds().contains(mouse_pos))
         {
@@ -334,8 +345,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 //CreditsTranSound.play();
                 ShowLevelSelectionMenu = false;
                 ShowCredits = false;
-
-
             }
         }
         else
@@ -368,8 +377,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             Level1Button.setTexture(Level1Tex);
             SoundLevel1Button = true;
         }
-        
-        if (Level2Button.getGlobalBounds().contains(mouse_pos))
+
+        if (Level2Button.getGlobalBounds().contains(mouse_pos) && MaxLevelWon >= Level1)
         {
             if (SoundLevel2Button)
             {
@@ -377,7 +386,10 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 ButtonSound.play();
                 SoundLevel2Button = false;
             }
+
             Level2Button.setTexture(Level2HoverTex);
+            Level2Lock.setScale(0, 0);
+
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
                 Click.setPitch(randPitch[rand() % 3]);
@@ -387,14 +399,20 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
             }
+
+        }
+        else if (MaxLevelWon < Level1)
+        {
+            Level2Lock.setScale(1, 1);
         }
         else
         {
             Level2Button.setTexture(Level2Tex);
+            Level2Lock.setScale(0, 0);
             SoundLevel2Button = true;
         }
 
-        if (Level3Button.getGlobalBounds().contains(mouse_pos))
+        if (Level3Button.getGlobalBounds().contains(mouse_pos) && MaxLevelWon >= Level2)
         {
             if (SoundLevel3Button)
             {
@@ -402,7 +420,10 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 ButtonSound.play();
                 SoundLevel3Button = false;
             }
+
             Level3Button.setTexture(Level3HoverTex);
+            Level2Lock.setScale(0, 0);
+
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
                 Click.setPitch(randPitch[rand() % 3]);
@@ -413,13 +434,16 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 MainMenuCamera.setCenter(640, 360);
             }
         }
+        else if (MaxLevelWon < Level2)
+        {
+            Level3Lock.setScale(1, 1);
+        }
         else
         {
             Level3Button.setTexture(Level3Tex);
             SoundLevel3Button = true;
+            Level2Lock.setScale(0, 0);
         }
-
-
     }
 }
 
@@ -436,5 +460,6 @@ void DrawMainMenu(RenderWindow& window)
     window.draw(Level2Button);
     window.draw(Level3Button);
     window.draw(BackTOMainMenuButtonLS);
+    window.draw(Level2Lock);
+    window.draw(Level3Lock);
 }
-
