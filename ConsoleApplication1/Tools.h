@@ -14,8 +14,8 @@ using namespace sf;
 Clock DeltaTimeClock;
 float deltaTime;
 
-bool wasPausedLastFrame;
 bool IsPaused = false;
+bool wasPausedLastFrame = IsPaused;
 
 enum EaseType { CubicEaseInOut, ExpoEaseOut, linear };
 
@@ -24,6 +24,7 @@ float CubicEase(float t);
 float EaseOutExpo(float t);
 float linearEase(float t);
 float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock, Time Duration);
+void DeltaTimeManager(bool IsPaused);
 #pragma endregion
 
 #pragma region Easing Functions
