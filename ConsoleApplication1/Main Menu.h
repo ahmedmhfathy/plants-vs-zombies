@@ -57,10 +57,13 @@ bool SoundStart = false;
 bool SoundCredits = false;
 bool SoundQuit = false;
 bool SoundButton = false;
+bool SoundLevel1Button = false;
+bool SoundLevel2Button = false;
+bool SoundLevel3Button = false;
 
 bool ShowCredits = false;
 bool startAnim = false;
-//good byee :( bool startAnimLevel = false;
+bool startAnimLevel = false;
 bool ShowLevelSelectionMenu = false;
 Clock animClock;
 Time MainMenuAnimationDuration = seconds(1.75);
@@ -173,16 +176,16 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         if (MainMenuCamera.getCenter().y > 360)
         {
             float startValue = 1080, endValue = 360;
-            if (startAnim == false)
+            if (startAnimLevel == false)
             {
                 animClock.restart();
-                startAnim = true;
+                startAnimLevel = true;
             }
             MainMenuCamera.setCenter(640, easeInOut(CubicEaseInOut, startValue, endValue, animClock, MainMenuAnimationDuration));
         }
         else
         {
-            startAnim = false;
+            startAnimLevel = false;
         }
 
 
@@ -196,7 +199,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 HoverMainMenuSound.play();
                 SoundStart = false;
             }
-            if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
@@ -218,7 +221,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 HoverMainMenuSound.play();
                 SoundCredits = false;
             }
-            if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
@@ -240,7 +243,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 HoverMainMenuSound.play();
                 SoundQuit = false;
             }
-            if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
@@ -303,16 +306,16 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         if (MainMenuCamera.getCenter().y < 1080)
         {
             float startValue = 360, endValue = 1080;
-            if (startAnim == false)
+            if (startAnimLevel == false)
             {
                 animClock.restart();
-                startAnim = true;
+                startAnimLevel = true;
             }
             MainMenuCamera.setCenter(640, easeInOut(CubicEaseInOut, startValue, endValue, animClock, MainMenuAnimationDuration));
         }
         else
         {
-            startAnim = false;
+            startAnimLevel = false;
         }
         //Back to main menu
         if (BackTOMainMenuButtonLS.getGlobalBounds().contains(mouse_pos))
@@ -324,7 +327,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 SoundButton = false;
             }
             BackTOMainMenuButtonLS.setTexture(BackTOMainMenuHoverTex);
-            if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
@@ -341,9 +344,80 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundButton = true;
         }
 
+        if (Level1Button.getGlobalBounds().contains(mouse_pos))
+        {
+            if (SoundLevel1Button)
+            {
+                ButtonSound.setPitch(randPitch[rand() % 3]);
+                ButtonSound.play();
+                SoundLevel1Button = false;
+            }
+            Level1Button.setTexture(Level1HoverTex);
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
+            {
+                Click.setPitch(randPitch[rand() % 3]);
+                Click.play();
+                //CreditsTranSound.play();
+                SwitchState(Level1);
+                ShowLevelSelectionMenu = false;
+                MainMenuCamera.setCenter(640, 360);
+            }
+        }
+        else
+        {
+            Level1Button.setTexture(Level1Tex);
+            SoundLevel1Button = true;
+        }
+        
+        if (Level2Button.getGlobalBounds().contains(mouse_pos))
+        {
+            if (SoundLevel2Button)
+            {
+                ButtonSound.setPitch(randPitch[rand() % 3]);
+                ButtonSound.play();
+                SoundLevel2Button = false;
+            }
+            Level2Button.setTexture(Level2HoverTex);
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
+            {
+                Click.setPitch(randPitch[rand() % 3]);
+                Click.play();
+                //CreditsTranSound.play();
+                SwitchState(Level2);
+                ShowLevelSelectionMenu = false;
+                MainMenuCamera.setCenter(640, 360);
+            }
+        }
+        else
+        {
+            Level2Button.setTexture(Level2Tex);
+            SoundLevel2Button = true;
+        }
 
-
-
+        if (Level3Button.getGlobalBounds().contains(mouse_pos))
+        {
+            if (SoundLevel3Button)
+            {
+                ButtonSound.setPitch(randPitch[rand() % 3]);
+                ButtonSound.play();
+                SoundLevel3Button = false;
+            }
+            Level3Button.setTexture(Level3HoverTex);
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
+            {
+                Click.setPitch(randPitch[rand() % 3]);
+                Click.play();
+                //CreditsTranSound.play();
+                SwitchState(Level3);
+                ShowLevelSelectionMenu = false;
+                MainMenuCamera.setCenter(640, 360);
+            }
+        }
+        else
+        {
+            Level3Button.setTexture(Level3Tex);
+            SoundLevel3Button = true;
+        }
 
 
     }
