@@ -432,7 +432,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
 
             Level3Button.setTexture(Level3HoverTex);
-            Level2Lock.setScale(0, 0);
+            Level3Lock.setScale(0, 0);
 
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
@@ -452,7 +452,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             Level3Button.setTexture(Level3Tex);
             SoundLevel3Button = true;
-            Level2Lock.setScale(0, 0);
+            Level3Lock.setScale(0, 0);
         }
         #pragma endregion
     }
