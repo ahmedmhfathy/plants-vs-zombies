@@ -18,7 +18,7 @@ namespace Plants_Zombies {
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, EmptyPlant, SunCoin };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom ,EmptyPlant, SunCoin };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, Dead };
 #pragma endregion
 
@@ -37,6 +37,9 @@ namespace Plants_Zombies {
 	Texture IcePeaShooterIdleTex;
 	Texture IcePeaShooterShootTex;
 	Texture IcePeaShooterProjectileTex;
+	//SunShroom
+	Texture SunShroomIdleTex;
+	Texture SunShroomProducingSunTex;
 #pragma endregion
 
 #pragma region Sounds
@@ -91,6 +94,9 @@ namespace Plants_Zombies {
 		IcePeaShooterProjectileTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-bullet.png");
 		//wallnut
 		WallNutIdleTex.loadFromFile("Assets/Plants/WallNut/wallnut-ST.png");
+		//SunShroom
+		SunShroomIdleTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-idle-ST.png");
+		SunShroomProducingSunTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-producing-ST.png");
 	}
 
 	struct PlantProjectile
@@ -106,11 +112,14 @@ namespace Plants_Zombies {
 		Time projectileLifeSpan;
 		Clock clock;
 
-		int sunCoinYLimt;
 
-		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos, int yLimit) {
+		int sunCoinYLimt;
+		int sunValue;
+
+		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos, int yLimit, int sunValue_) {
 			clock.restart();
 			type = plantType;
+			sunValue = sunValue_;
 
 			if (type == PeaShooter)
 			{
@@ -132,13 +141,24 @@ namespace Plants_Zombies {
 				damage = PlantDamage;
 				slowMultiplier = 0.3;
 			}
-			else if (type == SunFlower || type == SunCoin)
+			else if (type == SunFlower || type == SunCoin || type == SunShroom)
 			{
+
 				shape.setTexture(SunFlowerSunTex);
 				shape.setPosition(SpwanPos);
+
 				shape.setOrigin({ shape.getLocalBounds().width / 2, shape.getLocalBounds().height / 2 });
 				projectileLifeSpan = seconds(12); //time to despawn
-				shape.setScale(1.25, 1.25);
+
+				if (sunValue == 25)
+				{
+					shape.setScale(1.25, 1.25);
+				}
+				else if (sunValue == 15)
+				{
+					shape.setScale(0.85, 0.85);
+				}
+
 				speed = 65;
 				damage = PlantDamage;
 				slowMultiplier = 1;
@@ -151,7 +171,7 @@ namespace Plants_Zombies {
 			{
 				shape.move(speed * deltaTime, 0);
 			}
-			else if (type == SunFlower)
+			else if (type == SunFlower || type == SunShroom)
 			{
 				shape.rotate(0.5);
 			}
@@ -187,7 +207,7 @@ namespace Plants_Zombies {
 		bool idle = true;
 		bool isDead = false;
 
-		Clock actionClock, animationClock;
+		Clock actionClock, animationClock, plantLifeClock;
 		Time timeForAction, animationSpeed = seconds(0.2); // time for each frame
 
 		bool playActionSound = true;
@@ -311,6 +331,34 @@ namespace Plants_Zombies {
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 					}
 				}
+				else if (type == SunShroom)
+				{
+					if (plantLifeClock.getElapsedTime() >= seconds(20))
+					{
+						animationRow = 1;
+					}
+
+					if (idle)
+					{
+						shape.setTexture(SunShroomIdleTex);
+						animationCol = (animationCol + 1) % 5;
+
+						shape.setTextureRect(IntRect(animationCol * 22, animationRow * 27, 22, 27));
+					}
+					else if (doAction)
+					{
+						if (animationCol + 1 == 5)
+						{
+							doAction = false;
+							idle = true;
+							isDead = false;
+						}
+						shape.setTexture(SunShroomProducingSunTex);
+						animationCol = (animationCol + 1) % 5;
+
+						shape.setTextureRect(IntRect(animationCol * 22, animationRow * 27, 22, 27));
+					}
+				}
 
 				animationClock.restart();
 			}
@@ -328,7 +376,7 @@ namespace Plants_Zombies {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12 , -24 }), 0);
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12 , -24 }), 0, 0);
 
 					PlantProjectilesARR.push_back(bullet);
 				}
@@ -340,18 +388,40 @@ namespace Plants_Zombies {
 					isDead = false;
 
 					PlantProjectile bullet;
-					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12, -24 }), 0);
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12, -24 }), 0, 0);
 
 					PlantProjectilesARR.push_back(bullet);
 				}
 				else if (type == SunFlower) //spawn sun
 				{
+					int sunValue = 25;
 					doAction = true;
 					idle = false;
 					isDead = false;
 
 					PlantProjectile sunCoin;
-					sunCoin.start(type, damage, shape.getPosition() + Vector2f({ 0, 0 }), 0);
+					sunCoin.start(type, damage, shape.getPosition() + Vector2f({ 0, 0 }), 0, sunValue);
+
+					PlantProjectilesARR.push_back(sunCoin);
+				}
+				else if(type == SunShroom)
+				{
+					int sunValue;
+					if (plantLifeClock.getElapsedTime() >= seconds(20))
+					{
+						sunValue = 25;
+					}
+					else
+					{
+						sunValue = 15;
+					}
+
+					doAction = true;
+					idle = false;
+					isDead = false;
+
+					PlantProjectile sunCoin;
+					sunCoin.start(type, damage, shape.getPosition() + Vector2f({ 0, 0 }), 0, sunValue);
 
 					PlantProjectilesARR.push_back(sunCoin);
 				}
@@ -363,6 +433,7 @@ namespace Plants_Zombies {
 		void setupPrefab() {
 			srand(time(0));		   //gives random time for the animation to be random
 			actionClock.restart(); //starts the countdown right when they are planted
+			plantLifeClock.restart();
 
 			//setup the current state of the plants
 			doAction = false;
@@ -425,6 +496,18 @@ namespace Plants_Zombies {
 				shape.setScale(3.5, 3.5);
 				animationCol = rand() % 5;
 			}
+			else if (type == SunShroom)
+			{
+				health = 50;
+				damage = 0;
+				timeForAction = seconds(14);
+
+				plantCollider.setSize({ 22, 27 });
+				shape.setTexture(SunShroomIdleTex);
+				shape.setScale(3.5, 3.5);
+				animationRow = 0;
+				animationCol = rand() % 5;
+			}
 
 			plantCollider.setScale(2.9, 2);
 			plantCollider.setFillColor(Color(252, 186, 3, 180));
@@ -444,7 +527,7 @@ namespace Plants_Zombies {
 				i--;
 			}
 			else if (!PlantProjectilesARR.empty()
-				&& (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+				&& (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
 				&& (PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
@@ -456,13 +539,13 @@ namespace Plants_Zombies {
 		{
 			float randPitch[3] = { 0.75, 1, 1.25 };
 			PlantProjectilesARR[i].update();
-			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
 				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
 				&& Mouse::isButtonPressed(Mouse::Left))
 			{
 				SunCoinSound.setPitch(randPitch[rand() % 3]);
 				SunCoinSound.play();
-				score += 25;
+				score += PlantProjectilesARR[i].sunValue;
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
 			}
@@ -485,13 +568,13 @@ namespace Plants_Zombies {
 		{
 			if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0))
 			{
-				//window.draw(PlantsArray[i].plantCollider);
+				window.draw(PlantsArray[i].plantCollider);
 				window.draw(PlantsArray[i].shape);
 			}
 		}
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			if (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin)
+			if (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
 			{
 				window.draw(PlantProjectilesARR[i].shape);
 			}
@@ -603,6 +686,7 @@ namespace Plants_Zombies {
 			EatClock.restart();
 			CrushedZombieClock.restart();
 
+			#pragma region Booleans
 			started = false;
 			stoped;
 			isSlowed = false;
@@ -621,6 +705,7 @@ namespace Plants_Zombies {
 			PlantsinFront = false;
 			deathOfZombie = false;
 			PlantInfront = false;
+			#pragma endregion
 
 			switch (type)
 			{

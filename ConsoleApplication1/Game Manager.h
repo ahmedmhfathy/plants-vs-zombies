@@ -416,10 +416,11 @@ void DrawLevelEnd(RenderWindow& window)
     #pragma region Level 1
     void StartLevel1()
     {
+        bool isNight = false;
         setupWaveData();
-        StartPlantingAndCurrencySystem(offset);
+        StartPlantingAndCurrencySystem(offset, isNight);
         startZombiePositions(100);
-        StartAnimationNS::startAnimation();
+        StartAnimationNS::startAnimation(isNight);
     }
     void UpdateLevel1(RenderWindow& window)
     {
@@ -442,10 +443,11 @@ void DrawLevelEnd(RenderWindow& window)
     #pragma region Level 2
     void StartLevel2()
     {
+        bool isNight = true;
         setupWaveData();
-        StartPlantingAndCurrencySystem(offset);
+        StartPlantingAndCurrencySystem(offset, isNight);
         startZombiePositions(100);
-        StartAnimationNS::startAnimation();
+        StartAnimationNS::startAnimation(isNight);
     }
     void UpdateLevel2(RenderWindow& window)
     {
@@ -468,10 +470,11 @@ void DrawLevelEnd(RenderWindow& window)
     #pragma region Level 3
     void StartLevel3()
     {
+        bool isNight = false;
         setupWaveData();
-        StartPlantingAndCurrencySystem(offset);
+        StartPlantingAndCurrencySystem(offset, isNight);
         startZombiePositions(100);
-        StartAnimationNS::startAnimation();
+        StartAnimationNS::startAnimation(isNight);
 
     }
     void UpdateLevel3(RenderWindow& window)

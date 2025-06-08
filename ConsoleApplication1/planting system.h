@@ -60,9 +60,10 @@ Sound ShovelSound;
 Font font;
 Text moneytext;
 
-enum Selection { peashooter, snowpeashooter, sunflower, shovel, wallnut, none }curruntselection;
+enum Selection { peashooter, snowpeashooter, sunflower, shovel, wallnut, sunshroom ,none }curruntselection;
 
 bool isHolding = false;
+bool isNight;
 
 struct grid {
 	RectangleShape shape;
@@ -132,9 +133,9 @@ void SetupSelectionUI(Vector2f offset) {
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 }
 
-void StartPlantingAndCurrencySystem(Vector2f offset) {
+void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
 	SetupSelectionUI(offset);
-
+	isNight = isNight_;
 	Plants_Zombies::PlantProjectilesARR.clear();
 
 	SunCoinClock.restart();
@@ -175,22 +176,26 @@ void StartPlantingAndCurrencySystem(Vector2f offset) {
 }
 
 void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
-	if (SunCoinClock.getElapsedTime() >= SunSpawnTime)
+	//sun spawn system
+	if (!isNight && SunCoinClock.getElapsedTime() >= SunSpawnTime)
 	{
+		int sunValue = 25;
 		Vector2f sponposition = { (float)(0 + rand() % 780), (float)(-100 + offset.y) };
 		Plants_Zombies::PlantProjectile suncoin;
 
-		suncoin.start(Plants_Zombies::SunCoin, 0, sponposition, (200 + rand() % 300) + offset.y);
+		suncoin.start(Plants_Zombies::SunCoin, 0, sponposition, (200 + rand() % 300) + offset.y, sunValue);
 		Plants_Zombies::PlantProjectilesARR.push_back(suncoin);
 		SunCoinClock.restart();
 	}
 
+	//score text updater
 	moneytext.setString(to_string(Plants_Zombies::score));
 	moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
 	moneytext.setPosition(80 + offset.x, 138 + offset.y);
 
 	float randPitch[3] = { 0.85, 1, 1.15 };
 
+	//plant select UI logic
 	if (PeaShooterClock.getElapsedTime() > PeaShooterCoolDown && Plants_Zombies::score >= 100)
 	{
 		peashootercontainer.setTexture(peashootertex);
@@ -308,6 +313,14 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
 			SelectionHolograph.setColor(Color(255, 255, 255, 255));
 		}
+		else if(curruntselection == sunflower)
+		{
+			SelectionHolograph.setTextureRect(IntRect(0, 0, 32, 34));
+			SelectionHolograph.setTexture(Plants_Zombies::SunFlowerIdleTex);
+			SelectionHolograph.setScale(3.5, 3.5);
+			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
+		}
 		else if (curruntselection == peashooter)
 		{
 			SelectionHolograph.setTextureRect(IntRect(0, 0, 30, 34));
@@ -324,18 +337,18 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
 			SelectionHolograph.setColor(Color(255, 255, 255, 175));
 		}
-		else if (curruntselection == sunflower)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 32, 34));
-			SelectionHolograph.setTexture(Plants_Zombies::SunFlowerIdleTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
 		else if (curruntselection == wallnut)
 		{
 			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
 			SelectionHolograph.setTexture(Plants_Zombies::WallNutIdleTex);
+			SelectionHolograph.setScale(3.5, 3.5);
+			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
+		}
+		else if (curruntselection == sunshroom)
+		{
+			SelectionHolograph.setTextureRect(IntRect(0, 0, 22, 27));
+			SelectionHolograph.setTexture(Plants_Zombies::SunShroomIdleTex);
 			SelectionHolograph.setScale(3.5, 3.5);
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
 			SelectionHolograph.setColor(Color(255, 255, 255, 175));
@@ -354,6 +367,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 		curruntselection = none;
 	}
 
+	//planting system
 	if (curruntselection != none && isHolding)
 	{
 		for (int i = 1; i <= 45; i++)
@@ -412,7 +426,6 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 						curruntselection = none;
 					}
 				}
-
 				else if (curruntselection == sunflower)
 				{
 					if (!mygrid[i].isplanted)
@@ -446,6 +459,25 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
 
 						Plants_Zombies::score -= 50;
 						WallNutClock.restart();
+
+						isHolding = false;
+						curruntselection = none;
+					}
+				}
+				else if (curruntselection == sunshroom)
+				{
+					if (!mygrid[i].isplanted)
+					{
+						PlantingSound.setPitch(randPitch[rand() % 3]);
+						PlantingSound.play();
+						//cout << "WallNut " << i << endl;
+
+						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunShroom;
+						Plants_Zombies::PlantsArray[i - 1].start();
+						mygrid[i].isplanted = true;
+
+						Plants_Zombies::score -= 25;
+						//WallNutClock.restart();
 
 						isHolding = false;
 						curruntselection = none;

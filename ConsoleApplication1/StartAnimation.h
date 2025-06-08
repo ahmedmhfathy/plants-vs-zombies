@@ -22,7 +22,8 @@ namespace  StartAnimationNS {
 #pragma endregion
 
 #pragma region Textures and sprites declaration
-    Texture gardentexture;
+    Texture gardenTextureDay;
+    Texture gardenTextureNight;
     Sprite gardensprite;
     Texture Readytexttexture;
     Sprite  Readytextsprite;
@@ -57,7 +58,8 @@ namespace  StartAnimationNS {
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void LoadStartAndWaveAnimationTextures() {
-        gardentexture.loadFromFile("Assets/Environment/Game-Environment.png");
+        gardenTextureDay.loadFromFile("Assets/Environment/Game-Environment.png");
+        gardenTextureNight.loadFromFile("Assets/Environment/Game-Environment-Night.png");
         zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
         Settexttexture.loadFromFile("Assets/Environment/StartSet.png");
@@ -118,9 +120,16 @@ namespace  StartAnimationNS {
         Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
     }
 
-    void SetupStartAndWaveAnimationPhotos() {
+    void SetupStartAndWaveAnimationPhotos(bool isNight) {
         //garden
-        gardensprite.setTexture(gardentexture);
+        if (isNight)
+        {
+            gardensprite.setTexture(gardenTextureNight);
+        }
+        else
+        {
+            gardensprite.setTexture(gardenTextureDay);
+        }
         gardensprite.setPosition(-325, -265);
         gardensprite.setScale(0.65, 0.65);
         GardenCamera.setCenter({ 340, 310 });
@@ -131,7 +140,7 @@ namespace  StartAnimationNS {
         zombieinStreet.setScale(1.4, 1.4);
     }
 
-    void startAnimation() {
+    void startAnimation(bool isNight) {
 
         startdrawRSP = true;
         EntertostartdrawRSP = false;
@@ -151,7 +160,7 @@ namespace  StartAnimationNS {
             car[i].start(i);
         }
 
-        SetupStartAndWaveAnimationPhotos();
+        SetupStartAndWaveAnimationPhotos(isNight);
         srand(time(0));
     }
 
