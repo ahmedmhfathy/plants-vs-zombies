@@ -172,6 +172,16 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
 		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
 		Plants_Zombies::PlantsArray[i - 1].start();
 		mygrid[i].isplanted = false;
+
+
+		//test plants
+		
+		//Plants_Zombies::PlantsArray[5].type = Plants_Zombies::SunShroom;
+		//Plants_Zombies::PlantsArray[7].type = Plants_Zombies::SunShroom;
+		//mygrid[6].isplanted = true;
+		//mygrid[8].isplanted = true;
+		//Plants_Zombies::PlantsArray[5].start();
+		//Plants_Zombies::PlantsArray[7].start();
 	}
 }
 

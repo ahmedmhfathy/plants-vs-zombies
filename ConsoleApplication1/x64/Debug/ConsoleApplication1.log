@@ -126,17 +126,17 @@ C:\Users\khali\repositries\ConsoleApplication1\planting system.h(152,44): warnin
 C:\Users\khali\repositries\ConsoleApplication1\planting system.h(152,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(186,80): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(186,80): warning C4244:         with
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(186,80): warning C4244:         [
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(186,80): warning C4244:             T=float
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(186,80): warning C4244:         ]
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(193,80): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(193,80): warning C4244:         with
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(193,80): warning C4244:         [
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(193,80): warning C4244:             T=float
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(193,80): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(196,25): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(203,25): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(196,34): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(203,34): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Game Manager.h(11,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
