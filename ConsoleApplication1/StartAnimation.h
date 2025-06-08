@@ -229,7 +229,7 @@ namespace  StartAnimationNS {
         {
             window.draw(Planttextsprite);
         }
-        else if (time >= seconds(25))// start delay, affects the pause menu though, needs to be fixed
+        else if (time >= seconds(5))// start delay, affects the pause menu though, needs to be fixed
         {
             if (ZombiesAreComingSoundOn)
             {

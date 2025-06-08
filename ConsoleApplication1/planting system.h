@@ -144,7 +144,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
 	WallNutClock.restart();
 	SunFlowerClock.restart();
 
-	Plants_Zombies::score = 50;
+	Plants_Zombies::score = 50000;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
@@ -176,12 +176,21 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
 
 		//test plants
 		
-		//Plants_Zombies::PlantsArray[5].type = Plants_Zombies::SunShroom;
-		//Plants_Zombies::PlantsArray[7].type = Plants_Zombies::SunShroom;
-		//mygrid[6].isplanted = true;
-		//mygrid[8].isplanted = true;
-		//Plants_Zombies::PlantsArray[5].start();
-		//Plants_Zombies::PlantsArray[7].start();
+		Plants_Zombies::PlantsArray[0].type = Plants_Zombies::SunShroom;
+		Plants_Zombies::PlantsArray[9].type = Plants_Zombies::ScaredyShroom;
+		Plants_Zombies::PlantsArray[9+9].type = Plants_Zombies::ScaredyShroom;
+		Plants_Zombies::PlantsArray[9+9+9].type = Plants_Zombies::ScaredyShroom;
+		Plants_Zombies::PlantsArray[9+9+9+9].type = Plants_Zombies::ScaredyShroom;
+		mygrid[1].isplanted = true;
+		mygrid[10].isplanted = true;
+		mygrid[10+9].isplanted = true;
+		mygrid[10+9+9].isplanted = true;
+		mygrid[10+9+9+9].isplanted = true;
+		Plants_Zombies::PlantsArray[0].start();
+		Plants_Zombies::PlantsArray[9].start();
+		Plants_Zombies::PlantsArray[9+9].start();
+		Plants_Zombies::PlantsArray[9+9+9].start();
+		Plants_Zombies::PlantsArray[9+9+9+9].start();
 	}
 }
 
@@ -523,19 +532,29 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 }
 
 void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
+	int lastZombieProximity = 0;
 	if (!isDead) // if not dead will animate and execute action  
 	{
 		for (int j = 0; j < 100; j++)
 		{
-			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead)) // checks if zombie is dead or not to avoid shooting dead zombies
+			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)) // checks if zombie is dead or not to avoid shooting dead zombies
 			{
 				// checks if a zombie is in front of the plant  
-				if ((type == PeaShooter || type == SnowPeaShooter)
+				if ((type == PeaShooter || type == SnowPeaShooter || type == ScaredyShroom)
 					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
 						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
 						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
-					&& (zombie_array[j].zombieCollider.getPosition().x < 960)
-					&& !(zombie_array[j].type == Dead || zombie_array[j].health <= 0 || !zombie_array[j].started))
+					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
+				{
+					zombieInFront = true;
+					break;
+				}
+				else if ((type == PuffShroom)
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+					&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 4))
+					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
 				{
 					zombieInFront = true;
 					break;
@@ -551,6 +570,33 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 			}
 		}
 
+		if (type == ScaredyShroom)
+		{
+			for (int j = 0; j < 100; j++)
+			{
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top))
+						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 5.5)))
+					{
+						//cout << "true \n";
+						zombieProximityAction = true;
+						lastZombieProximity = j;
+						break;
+					}
+					else
+					{
+						zombieProximityAction = false;
+					}
+				}
+				else if(lastZombieProximity == j)
+				{
+					zombieProximityAction = false; 
+				}
+			}
+		}
+		
 		animationHandler();
 		action();
 
@@ -560,6 +606,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 	{
 		type = EmptyPlant;
 		mygrid[gridIndex].isplanted = false;
+		zombieProximityAction = false;
 		setupPrefab();
 	}
 
@@ -568,5 +615,6 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 		isDead = true;
 		idle = false;
 		doAction = false;
+		zombieProximityAction = false;
 	}
 }

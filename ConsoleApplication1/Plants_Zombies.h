@@ -18,7 +18,7 @@ namespace Plants_Zombies {
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom ,EmptyPlant, SunCoin };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom ,EmptyPlant, SunCoin };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, Dead };
 #pragma endregion
 
@@ -40,6 +40,13 @@ namespace Plants_Zombies {
 	//SunShroom
 	Texture SunShroomIdleTex;
 	Texture SunShroomProducingSunTex;
+	//PuffShroom
+	Texture PuffShroomTex;
+	Texture PuffShroomBulletTex;
+	//ScaredyShroom
+	Texture ScaredyShroomIdleTex;
+	Texture ScaredyShroomHideTex;
+	Texture ScaredyShroomAttackTex;
 #pragma endregion
 
 #pragma region Sounds
@@ -97,6 +104,13 @@ namespace Plants_Zombies {
 		//SunShroom
 		SunShroomIdleTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-idle-ST.png");
 		SunShroomProducingSunTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-producing-ST.png");
+		//PuffShroom
+		PuffShroomTex.loadFromFile("Assets/Plants/PuffShroom/puffshroom-idle-ST.png");
+		PuffShroomBulletTex.loadFromFile("Assets/Plants/PuffShroom/puffshroom-bullet.png");
+		//ScaredyShroom
+		ScaredyShroomIdleTex.loadFromFile("Assets/Plants/ScaredyShroom/ScaredyShroom-idle-ST.png");
+		ScaredyShroomHideTex.loadFromFile("Assets/Plants/ScaredyShroom/ScaredyShroom-hide-ST.png");
+		ScaredyShroomAttackTex.loadFromFile("Assets/Plants/ScaredyShroom/ScaredyShroom-attack-ST.png");
 	}
 
 	struct PlantProjectile
@@ -112,7 +126,6 @@ namespace Plants_Zombies {
 		Time projectileLifeSpan;
 		Clock clock;
 
-
 		int sunCoinYLimt;
 		int sunValue;
 
@@ -126,9 +139,9 @@ namespace Plants_Zombies {
 				shape.setTexture(PeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				//projectileLifeSpan = seconds(5); //time to despawn
+
 				speed = 350;
-				damage = 60;
+				damage = PlantDamage;
 				slowMultiplier = 1; // wont affect anything
 			}
 			else if (type == SnowPeaShooter)
@@ -136,14 +149,23 @@ namespace Plants_Zombies {
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
 				shape.setPosition(SpwanPos);
-				//projectileLifeSpan = seconds(5); //time to despawn
+
 				speed = 350;
 				damage = PlantDamage;
 				slowMultiplier = 0.3;
 			}
+			else if (type == PuffShroom || type == ScaredyShroom)
+			{
+				shape.setTexture(PuffShroomBulletTex);
+				shape.setScale(3.5, 3.5);
+				shape.setPosition(SpwanPos);
+
+				speed = 350;
+				damage = PlantDamage;
+				slowMultiplier = 1; // wont affect anything
+			}
 			else if (type == SunFlower || type == SunCoin || type == SunShroom)
 			{
-
 				shape.setTexture(SunFlowerSunTex);
 				shape.setPosition(SpwanPos);
 
@@ -167,7 +189,7 @@ namespace Plants_Zombies {
 		}
 		void update() {
 
-			if (type == PeaShooter || type == SnowPeaShooter)
+			if (type == PeaShooter || type == SnowPeaShooter || type == PuffShroom || type == ScaredyShroom)
 			{
 				shape.move(speed * deltaTime, 0);
 			}
@@ -194,11 +216,13 @@ namespace Plants_Zombies {
 
 		int gridIndex; //<<<<<<<<---------------<<< for the grid system
 
-		bool zombieInFront = false;
-
 		float health;
 		float damage;
 	private:
+		bool zombieInFront = false;
+		bool zombieProximityAction = false;
+		bool PlayHideAnimation = false;
+		bool isHiding = false;
 
 		int animationCol = 0;
 		int animationRow = 0;
@@ -333,7 +357,7 @@ namespace Plants_Zombies {
 				}
 				else if (type == SunShroom)
 				{
-					if (plantLifeClock.getElapsedTime() >= seconds(20))
+					if (plantLifeClock.getElapsedTime() >= seconds(120))
 					{
 						animationRow = 1;
 					}
@@ -343,7 +367,7 @@ namespace Plants_Zombies {
 						shape.setTexture(SunShroomIdleTex);
 						animationCol = (animationCol + 1) % 5;
 
-						shape.setTextureRect(IntRect(animationCol * 22, animationRow * 27, 22, 27));
+						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 					}
 					else if (doAction)
 					{
@@ -356,10 +380,88 @@ namespace Plants_Zombies {
 						shape.setTexture(SunShroomProducingSunTex);
 						animationCol = (animationCol + 1) % 5;
 
-						shape.setTextureRect(IntRect(animationCol * 22, animationRow * 27, 22, 27));
+						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 					}
 				}
+				else if (type == PuffShroom)
+				{
+					if (idle)
+					{
+						shape.setTexture(PuffShroomTex);
+						animationCol = (animationCol + 1) % 5;
 
+						shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+					}
+					else if (doAction)
+					{
+						if (animationCol + 1 == 5)
+						{
+							doAction = false;
+							idle = true;
+							isDead = false;
+						}
+						shape.setTexture(PuffShroomTex);
+						animationCol = (animationCol + 1) % 5;
+
+						shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+					}
+				}
+				else if (type == ScaredyShroom)
+				{
+					cout << zombieProximityAction << endl;
+					if (!zombieProximityAction)
+					{
+						if (isHiding)
+						{
+							animationCol--;
+							if (animationCol == 0)
+							{
+								shape.setTexture(ScaredyShroomIdleTex);
+								shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+								PlayHideAnimation = true;
+								isHiding = false;
+							}
+						}
+						else if (idle)
+						{
+							shape.setTexture(ScaredyShroomIdleTex);
+							animationCol = (animationCol + 1) % 4;
+
+							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+						}
+						else if (doAction)
+						{
+							if (animationCol + 1 == 3)
+							{
+								doAction = false;
+								idle = true;
+								isDead = false;
+							}
+							shape.setTexture(ScaredyShroomAttackTex);
+							animationCol = (animationCol + 1) % 3;
+
+							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+						}
+					}
+					else
+					{
+						if (PlayHideAnimation)
+						{
+							animationCol = 0;
+							PlayHideAnimation = false;
+						}
+						isHiding = true;
+						shape.setTexture(ScaredyShroomHideTex);
+						shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+						if (animationCol < 2)
+						{
+							doAction = false;
+							idle = true;
+							isDead = false;
+							animationCol++;
+						}
+					}
+				}
 				animationClock.restart();
 			}
 		}
@@ -368,8 +470,10 @@ namespace Plants_Zombies {
 
 			if (timeForAction <= actionClock.getElapsedTime() && type != EmptyPlant)
 			{
+				
 				if (type == PeaShooter && zombieInFront) //shoot
 				{
+					animationCol = 0;
 					doAction = true;
 					playActionSound = true;
 					idle = false;
@@ -382,6 +486,7 @@ namespace Plants_Zombies {
 				}
 				else if (type == SnowPeaShooter && zombieInFront) // shoot
 				{
+					animationCol = 0;
 					doAction = true;
 					playActionSound = true;
 					idle = false;
@@ -407,7 +512,7 @@ namespace Plants_Zombies {
 				else if(type == SunShroom)
 				{
 					int sunValue;
-					if (plantLifeClock.getElapsedTime() >= seconds(20))
+					if (plantLifeClock.getElapsedTime() >= seconds(120))
 					{
 						sunValue = 25;
 					}
@@ -424,6 +529,31 @@ namespace Plants_Zombies {
 					sunCoin.start(type, damage, shape.getPosition() + Vector2f({ 0, 0 }), 0, sunValue);
 
 					PlantProjectilesARR.push_back(sunCoin);
+				}
+				else if (type == PuffShroom && zombieInFront)
+				{
+					doAction = true;
+					playActionSound = true;
+					idle = false;
+					isDead = false;
+
+					PlantProjectile bullet;
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 12 , 25 }), 0, 0);
+
+					PlantProjectilesARR.push_back(bullet);
+				}
+				else if(type == ScaredyShroom && zombieInFront && !isHiding)
+				{
+					animationCol = 0;
+					doAction = true;
+					playActionSound = true;
+					idle = false;
+					isDead = false;
+
+					PlantProjectile bullet;
+					bullet.start(type, damage, shape.getPosition() + Vector2f({ 30 , 10 }), 0, 0);
+
+					PlantProjectilesARR.push_back(bullet);
 				}
 				actionClock.restart();
 			}
@@ -508,6 +638,29 @@ namespace Plants_Zombies {
 				animationRow = 0;
 				animationCol = rand() % 5;
 			}
+			else if (type == PuffShroom)
+			{
+				health = 50;
+				damage = 20;
+				timeForAction = seconds(1.5);
+
+				plantCollider.setSize({ 22, 27 });
+				shape.setTexture(SunShroomIdleTex);
+				shape.setScale(3.5, 3.5);
+				animationCol = rand() % 5;
+			}
+			else if(type == ScaredyShroom)
+			{
+				health = 100;
+				damage = 20;
+				timeForAction = seconds(1.5);
+				zombieProximityAction = false;
+
+				plantCollider.setSize({ 22, 27 });
+				shape.setTexture(ScaredyShroomIdleTex);
+				shape.setScale(3.5, 3.5);
+				animationCol = rand() % 4;
+			}
 
 			plantCollider.setScale(2.9, 2);
 			plantCollider.setFillColor(Color(252, 186, 3, 180));
@@ -520,8 +673,8 @@ namespace Plants_Zombies {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
 			if (!PlantProjectilesARR.empty()
-				&& (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter)
-				&& PlantProjectilesARR[i].shape.getPosition().x > 1290) //enter despawn position
+				&& (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter || PlantProjectilesARR[i].type == PuffShroom)
+				&& PlantProjectilesARR[i].shape.getPosition().x > 1000) //enter despawn position
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
@@ -559,7 +712,8 @@ namespace Plants_Zombies {
 	void DrawPlantsAndProjectiles(RenderWindow& window) {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			if (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter)
+			if (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter ||
+			    PlantProjectilesARR[i].type == PuffShroom || PlantProjectilesARR[i].type == ScaredyShroom)
 			{
 				window.draw(PlantProjectilesARR[i].shape);
 			}
@@ -568,7 +722,7 @@ namespace Plants_Zombies {
 		{
 			if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0))
 			{
-				window.draw(PlantsArray[i].plantCollider);
+				//window.draw(PlantsArray[i].plantCollider);
 				window.draw(PlantsArray[i].shape);
 			}
 		}
