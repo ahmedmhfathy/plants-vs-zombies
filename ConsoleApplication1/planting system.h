@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include<time.h>
+#include"Tools.h"
 #include"Plants_Zombies.h"
 using namespace std;
 using namespace sf;
@@ -37,8 +38,9 @@ Sprite SelectionHolograph;
 #pragma endregion
 
 #pragma region clocks and time
-Clock PeaShooterClock, SnowPeaClock, WallNutClock, SunFlowerClock, SunCoinClock;
+Clock PeaShooterClock, SnowPeaClock, WallNutClock, SunFlowerClock;
 Time SunSpawnTime = seconds(14);
+float sunSpawnTimeClock;
 
 Time SunFlowerCoolDown = seconds(7);
 Time PeaShooterCoolDown = seconds(7);
@@ -138,11 +140,11 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
 	isNight = isNight_;
 	Plants_Zombies::PlantProjectilesARR.clear();
 
-	SunCoinClock.restart();
 	PeaShooterClock.restart();
 	SnowPeaClock.restart();
 	WallNutClock.restart();
 	SunFlowerClock.restart();
+	sunSpawnTimeClock = 0;
 
 	Plants_Zombies::score = 50000;
 
@@ -206,17 +208,20 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
 	}
 }
 
-void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) {
+void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) 
+{
+	sunSpawnTimeClock += deltaTime;	//updates time
+
 	//sun spawn system
-	if (!isNight && SunCoinClock.getElapsedTime() >= SunSpawnTime)
+	if (!isNight && sunSpawnTimeClock >= SunSpawnTime.asSeconds())
 	{
 		int sunValue = 25;
-		Vector2f sponposition = { (float)(0 + rand() % 780), (float)(-100 + offset.y) };
+		Vector2f spawnposition = { (float)(0 + rand() % 780), (float)(-100 + offset.y) };
 		Plants_Zombies::PlantProjectile suncoin;
 
-		suncoin.start(Plants_Zombies::SunCoin, 0, sponposition, (200 + rand() % 300) + offset.y, sunValue);
+		suncoin.start(Plants_Zombies::SunCoin, 0, spawnposition, (200 + rand() % 300) + offset.y, sunValue);
 		Plants_Zombies::PlantProjectilesARR.push_back(suncoin);
-		SunCoinClock.restart();
+		sunSpawnTimeClock = 0;
 	}
 
 	//score text updater
@@ -547,6 +552,9 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 	int lastZombieProximity = 0;
 	if (!isDead) // if not dead will animate and execute action  
 	{
+		actionTimeClock += deltaTime;
+		plantLifeTimeClock += deltaTime;
+
 		for (int j = 0; j < 100; j++)
 		{
 			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)) // checks if zombie is dead or not to avoid shooting dead zombies

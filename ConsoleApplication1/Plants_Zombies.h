@@ -1,6 +1,4 @@
 #pragma once
-#pragma once
-// push
 #include<SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
 #include<string>
@@ -8,9 +6,10 @@
 #include"Tools.h";
 using namespace std;
 using namespace sf;
-// bagarab el branch beta3y
+
 namespace Plants_Zombies {
 	int score;
+
 #pragma region Forward Declaration for Structs
 	struct Zombie;
 	struct PlantProjectile;
@@ -125,13 +124,14 @@ namespace Plants_Zombies {
 		float speed;
 
 		Time projectileLifeSpan;
-		Clock clock;
+		float clockTime;
 
 		int sunCoinYLimt;
 		int sunValue;
 
-		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos, int yLimit, int sunValue_) {
-			clock.restart();
+		void start(PlantType plantType, float PlantDamage, Vector2f SpwanPos, int yLimit, int sunValue_)
+		{
+			clockTime = 0;
 			type = plantType;
 			sunValue = sunValue_;
 
@@ -188,8 +188,9 @@ namespace Plants_Zombies {
 				sunCoinYLimt = yLimit;
 			}
 		}
-		void update() {
-
+		void update() 
+		{
+			clockTime += deltaTime;
 			if (type == PeaShooter || type == SnowPeaShooter || type == PuffShroom || type == ScaredyShroom)
 			{
 				shape.move(speed * deltaTime, 0);
@@ -232,11 +233,13 @@ namespace Plants_Zombies {
 		bool idle = true;
 		bool isDead = false;
 
-		Clock actionClock, animationClock, plantLifeClock;
+		Clock animationClock;
 		Time timeForAction, animationSpeed = seconds(0.2); // time for each frame
+		float actionTimeClock, plantLifeTimeClock;
 
 		bool playActionSound = true;
 		//Sound ActionSound;
+
 	public:
 		// calls function when you spawn the plant
 		void start() {
@@ -358,7 +361,7 @@ namespace Plants_Zombies {
 				}
 				else if (type == SunShroom)
 				{
-					if (plantLifeClock.getElapsedTime() >= seconds(120))
+					if (plantLifeTimeClock >= seconds(120).asSeconds())
 					{
 						animationRow = 1;
 					}
@@ -469,9 +472,8 @@ namespace Plants_Zombies {
 
 		void action() {
 
-			if (timeForAction <= actionClock.getElapsedTime() && type != EmptyPlant)
+			if (timeForAction.asSeconds() <= actionTimeClock && type != EmptyPlant)
 			{
-				
 				if (type == PeaShooter && zombieInFront) //shoot
 				{
 					animationCol = 0;
@@ -513,7 +515,7 @@ namespace Plants_Zombies {
 				else if(type == SunShroom)
 				{
 					int sunValue;
-					if (plantLifeClock.getElapsedTime() >= seconds(120))
+					if (plantLifeTimeClock >= seconds(120).asSeconds())
 					{
 						sunValue = 25;
 					}
@@ -556,15 +558,16 @@ namespace Plants_Zombies {
 
 					PlantProjectilesARR.push_back(bullet);
 				}
-				actionClock.restart();
+				actionTimeClock = 0;
 			}
 		}
 
 		//setup all the plants
 		void setupPrefab() {
 			srand(time(0));		   //gives random time for the animation to be random
-			actionClock.restart(); //starts the countdown right when they are planted
-			plantLifeClock.restart();
+
+			actionTimeClock = 0;
+			plantLifeTimeClock = 0;
 
 			//setup the current state of the plants
 			doAction = false;
@@ -682,7 +685,7 @@ namespace Plants_Zombies {
 			}
 			else if (!PlantProjectilesARR.empty()
 				&& (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
-				&& (PlantProjectilesARR[i].projectileLifeSpan <= PlantProjectilesARR[i].clock.getElapsedTime()))
+				&& (PlantProjectilesARR[i].projectileLifeSpan.asSeconds() <= PlantProjectilesARR[i].clockTime))
 			{
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
