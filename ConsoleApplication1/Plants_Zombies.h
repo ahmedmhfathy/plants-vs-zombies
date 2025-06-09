@@ -223,7 +223,6 @@ namespace Plants_Zombies {
 	private:
 		bool zombieInFront = false;
 		bool zombieProximityAction = false;
-		bool PlayHideAnimation = false;
 		bool isHiding = false;
 
 		int animationCol = 0;
@@ -420,18 +419,17 @@ namespace Plants_Zombies {
 							animationCol--;
 							if (animationCol == 0)
 							{
-								shape.setTexture(ScaredyShroomIdleTex);
 								shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
-								PlayHideAnimation = true;
+								shape.setTexture(ScaredyShroomIdleTex);
 								isHiding = false;
 							}
 						}
 						else if (idle)
 						{
-							shape.setTexture(ScaredyShroomIdleTex);
-							animationCol = (animationCol + 1) % 4;
-
 							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+							shape.setTexture(ScaredyShroomIdleTex);
+
+							animationCol = (animationCol + 1) % 4;
 						}
 						else if (doAction)
 						{
@@ -441,28 +439,31 @@ namespace Plants_Zombies {
 								idle = true;
 								isDead = false;
 							}
-							shape.setTexture(ScaredyShroomAttackTex);
-							animationCol = (animationCol + 1) % 3;
-
 							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+							shape.setTexture(ScaredyShroomAttackTex);
+
+							animationCol = (animationCol + 1) % 3;
 						}
 					}
 					else
 					{
-						if (PlayHideAnimation)
+						if (!isHiding)
 						{
 							animationCol = 0;
-							PlayHideAnimation = false;
+							isHiding = true;
 						}
-						isHiding = true;
-						shape.setTexture(ScaredyShroomHideTex);
-						shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
-						if (animationCol < 2)
+						else
 						{
-							doAction = false;
-							idle = true;
-							isDead = false;
-							animationCol++;
+							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+							shape.setTexture(ScaredyShroomHideTex);
+
+							if (animationCol < 2)
+							{
+								doAction = false;
+								idle = true;
+								isDead = false;
+								animationCol++;
+							}
 						}
 					}
 				}
@@ -564,16 +565,21 @@ namespace Plants_Zombies {
 
 		//setup all the plants
 		void setupPrefab() {
-			srand(time(0));		   //gives random time for the animation to be random
+			srand(time(0)); //gives random time for the animation to be random
 
 			actionTimeClock = 0;
 			plantLifeTimeClock = 0;
+
+			animationRow = 0;
+			animationCol = 0;
 
 			//setup the current state of the plants
 			doAction = false;
 			idle = true;
 			isDead = false;
 			playActionSound = true;
+			zombieProximityAction = false;
+			isHiding = false;
 
 			if (type == EmptyPlant) {
 				doAction = false;
@@ -597,7 +603,8 @@ namespace Plants_Zombies {
 				shape.setScale(3.5, 3.5);
 				animationCol = rand() % 8;
 			}
-			else if (type == SnowPeaShooter) {
+			else if (type == SnowPeaShooter)
+			{
 				health = 100;
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
@@ -653,13 +660,12 @@ namespace Plants_Zombies {
 				shape.setScale(3.5, 3.5);
 				animationCol = rand() % 5;
 			}
-			else if(type == ScaredyShroom)
+			else if (type == ScaredyShroom)
 			{
 				health = 100;
 				damage = 20;
 				timeForAction = seconds(1.5);
-				zombieProximityAction = false;
-
+				
 				plantCollider.setSize({ 22, 27 });
 				shape.setTexture(ScaredyShroomIdleTex);
 				shape.setScale(3.5, 3.5);
@@ -668,11 +674,11 @@ namespace Plants_Zombies {
 
 			plantCollider.setScale(2.9, 2);
 			plantCollider.setFillColor(Color(252, 186, 3, 180));
-			/*plantCollider.setPosition(shape.getPosition().x + 50, shape.getPosition().y + 20);*/
 		}
 	}PlantsArray[45];
 
-	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos) {
+	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos) 
+	{
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
@@ -707,6 +713,7 @@ namespace Plants_Zombies {
 				i--;
 			}
 		}
+
 		for (int i = 0; i < 45; i++)
 		{
 			PlantsArray[i].updatePlantStruct(zombie_array);
