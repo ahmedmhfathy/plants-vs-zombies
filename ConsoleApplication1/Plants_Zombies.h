@@ -19,7 +19,7 @@ namespace Plants_Zombies {
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom ,EmptyPlant, SunCoin };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, Dead };
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, Dead };
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -829,7 +829,7 @@ namespace Plants_Zombies {
 		bool SquishEffect = false;
 		bool wassoundplayed = false;
 
-		Clock Zclock, EatClock, CrushedZombieClock, Deathclock;
+		Clock Zclock, EatClock, CrushedZombieClock, Deathclock, jackClock;
 
 	private:
 		int CollIndex = 0;
@@ -851,7 +851,7 @@ namespace Plants_Zombies {
 			EatClock.restart();
 			CrushedZombieClock.restart();
 
-			#pragma region Booleans
+#pragma region Booleans
 			started = false;
 			stoped;
 			isSlowed = false;
@@ -870,7 +870,7 @@ namespace Plants_Zombies {
 			PlantsinFront = false;
 			deathOfZombie = false;
 			PlantInfront = false;
-			#pragma endregion
+#pragma endregion
 
 			switch (type)
 			{
@@ -929,12 +929,24 @@ namespace Plants_Zombies {
 				speed = 0;
 				damage = 0;
 				break;
+			case jackInTheBox:
+				zombieCont.setTexture(RegularWalkText);
+				health = 10000;
+				speed = 7.4;
+				damage = 20;
+
+				zombieCollider.setSize({ 50, 57 });
+				zombieCollider.setScale(1.4, 1);
+				zombieCont.setScale(3, 3);
+				zombieCont.setColor(Color(139, 2, 2, 180));
+
 			default:
 				break;
 			}
 
 			zombieCollider.setFillColor(Color(252, 3, 3, 180));
 			zombieCont.setColor(Color(255, 255, 255, 255));
+
 		}
 
 		void update(float deltaTime) {
@@ -984,6 +996,10 @@ namespace Plants_Zombies {
 				{
 					zombieCont.setColor(Color(120, 120, 255, 255));
 				}
+				else if (type == jackInTheBox)
+				{
+					zombieCont.setColor(Color(112, 170, 235, 255)); // blue
+				}
 				else
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
@@ -999,7 +1015,7 @@ namespace Plants_Zombies {
 					if (!(PlantProjectilesARR[j].type == SunCoin || PlantProjectilesARR[j].type == SunFlower)
 						&& (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds()))) {
 
-						cout << "Zombie Health = " << health << endl;
+						//cout << "Zombie Health = " << health << endl;
 						health -= PlantProjectilesARR[j].damage;
 
 						if (PlantProjectilesARR[j].type == SnowPeaShooter && !isSlowed)
@@ -1109,6 +1125,16 @@ namespace Plants_Zombies {
 					type = Dead;
 				}
 			}
+
+			// Jack in the box
+			if (type == jackInTheBox && !isDead) {
+				if (jackClock.getElapsedTime().asSeconds() > 5)
+				{
+					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
+					jackClock.restart();
+				}
+			}
+
 		}
 
 	private:
@@ -1353,6 +1379,59 @@ namespace Plants_Zombies {
 					}
 				}
 			}
+
+			//jack in the box --> Blue regular zombie 
+			if (type == jackInTheBox)
+			{
+				if (isMoving)
+				{
+					zombieCont.setTexture(RegularWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 47));
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+						zombieCont.setColor(Color(139, 2, 2, 180));
+
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
+						zombieCont.setTexture(RegularAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+						zombieCont.setColor(Color(139, 2, 2, 180));
+
+					}
+
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
+						zombieCont.setTexture(RegularDeathText);
+						CollIndex++;
+						Zclock.restart();
+						zombieCont.setColor(Color(139, 2, 2, 180));
+
+					}
+					if (CollIndex == 8) {
+
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
+						}
+					}
+				}
+			}
 		}
 
 		void Movement(float deltaTime)
@@ -1368,7 +1447,7 @@ namespace Plants_Zombies {
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = randomzombietype;
+			zombie_array[i].type = jackInTheBox;
 			zombie_array[i].start();
 		}
 	}
