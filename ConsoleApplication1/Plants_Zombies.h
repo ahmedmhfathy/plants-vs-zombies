@@ -1249,7 +1249,7 @@ namespace Plants_Zombies {
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 37, 0, 37, 57));
-						zombieCont.setTexture(BucketHatAttackText);
+						zombieCont.setTexture(DamegedBucketHatAttackText);
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
 					}
