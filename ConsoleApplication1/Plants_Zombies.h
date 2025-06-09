@@ -19,7 +19,7 @@ namespace Plants_Zombies {
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom ,EmptyPlant, SunCoin };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, Dead };
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, Dead };
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -917,6 +917,8 @@ namespace Plants_Zombies {
 				health = 0;
 				speed = 0;
 				damage = 0;
+				break;
+			case jackInTheBox:
 				break;
 			default:
 				break;
