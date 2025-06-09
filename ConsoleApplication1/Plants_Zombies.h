@@ -19,7 +19,7 @@ namespace Plants_Zombies {
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom ,EmptyPlant, SunCoin };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, Dead };
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, Dead };
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -938,8 +938,17 @@ namespace Plants_Zombies {
 				zombieCollider.setSize({ 50, 57 });
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
-				zombieCont.setColor(Color(139, 2, 2, 180));
+				break;
+			case soccerGuy:
+				zombieCont.setTexture(RegularWalkText);
+				health = 10000;
+				speed = 17.4;
+				damage = 20;
 
+				zombieCollider.setSize({ 50, 57 });
+				zombieCollider.setScale(1.4, 1);
+				zombieCont.setScale(3, 3);
+				break;
 			default:
 				break;
 			}
@@ -999,6 +1008,10 @@ namespace Plants_Zombies {
 				else if (type == jackInTheBox)
 				{
 					zombieCont.setColor(Color(112, 170, 235, 255)); // blue
+				}
+				else if (type == soccerGuy)
+				{
+					zombieCont.setColor(Color(255, 105, 180, 255)); // pink
 				}
 				else
 				{
@@ -1128,7 +1141,7 @@ namespace Plants_Zombies {
 
 			// Jack in the box
 			if (type == jackInTheBox && !isDead) {
-				if (jackClock.getElapsedTime().asSeconds() > 5)
+				if (jackClock.getElapsedTime().asSeconds() > 10)
 				{
 					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
 					jackClock.restart();
@@ -1383,15 +1396,13 @@ namespace Plants_Zombies {
 			//jack in the box --> Blue regular zombie 
 			if (type == jackInTheBox)
 			{
-				if (isMoving)
+				if (isMoving && !isSquished)
 				{
 					zombieCont.setTexture(RegularWalkText);
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 47));
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
-						zombieCont.setColor(Color(139, 2, 2, 180));
-
 					}
 				}
 				else if (isAttacking)
@@ -1401,8 +1412,6 @@ namespace Plants_Zombies {
 						zombieCont.setTexture(RegularAttackText);
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
-						zombieCont.setColor(Color(139, 2, 2, 180));
-
 					}
 
 				}
@@ -1413,8 +1422,53 @@ namespace Plants_Zombies {
 						zombieCont.setTexture(RegularDeathText);
 						CollIndex++;
 						Zclock.restart();
-						zombieCont.setColor(Color(139, 2, 2, 180));
+					}
+					if (CollIndex == 8) {
 
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
+						}
+					}
+				}
+			}
+
+			//soccer guy --> pink regular zombie 
+			if (type == soccerGuy && !isSquished)
+			{
+				if (isMoving)
+				{
+					zombieCont.setTexture(RegularWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 47));
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
+						zombieCont.setTexture(RegularAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
+						zombieCont.setTexture(RegularDeathText);
+						CollIndex++;
+						Zclock.restart();
 					}
 					if (CollIndex == 8) {
 
@@ -1447,7 +1501,7 @@ namespace Plants_Zombies {
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = jackInTheBox;
+			zombie_array[i].type = soccerGuy;
 			zombie_array[i].start();
 		}
 	}
