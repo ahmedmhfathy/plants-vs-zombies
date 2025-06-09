@@ -28,6 +28,8 @@ Texture Level2HoverTex;
 Texture Level3Tex;
 Texture Level3HoverTex;
 Texture LevelLockTex;
+Texture OptionsButtonTex;
+Texture OptionsButtonHoverTex;
 #pragma endregion
 
 #pragma region Sprite Delaration
@@ -42,6 +44,7 @@ Sprite Level3Button;
 Sprite Level2Lock;
 Sprite Level3Lock;
 Sprite BackTOMainMenuButtonLS;
+Sprite OptionsButton;
 #pragma endregion
 
 #pragma region Sounds
@@ -59,7 +62,8 @@ Sound Click;
 // sound
 bool soundFinished = true;
 bool SoundStart = false;
-bool SoundCredits = false;
+bool SoundOptions = false;
+bool SoundCredit = false;
 bool SoundQuit = false;
 bool SoundButton = false;
 bool SoundLevel1Button = false;
@@ -93,12 +97,14 @@ void LoadMainMenuTex()
     MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/pvz main menu new.png");
     StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
     StartButtonHoverTex.loadFromFile("Assets/Main Menu/startbutton-hover.png");
-    CreditButtonTex.loadFromFile("Assets/Main Menu/creditsbutton-default.png");
-    CreditButtonHoverTex.loadFromFile("Assets/Main Menu/creditsbutton-hover.png");
+    CreditButtonTex.loadFromFile("Assets/Main Menu/creditsbutton-default-2.png");
+    CreditButtonHoverTex.loadFromFile("Assets/Main Menu/creditsbutton-hover-2.png");
     QuitButtonTex.loadFromFile("Assets/Main Menu/quitbutton-default.png");
     QuitButtonHoverTex.loadFromFile("Assets/Main Menu/quitbutton-hover.png");
     BackTOMainMenuTex.loadFromFile("Assets/Main Menu/back to main menu button-default.png");
     BackTOMainMenuHoverTex.loadFromFile("Assets/Main Menu/back to main menu button-hover.png");
+    OptionsButtonTex.loadFromFile("Assets/Main Menu/optionsbutton-default.png");
+    OptionsButtonHoverTex.loadFromFile("Assets/Main Menu/optionsbutton-hover.png");
 
     //Level Selection 
     Level1Tex.loadFromFile("Assets/Main Menu/Level 1.png");
@@ -125,16 +131,20 @@ void MainMenuStart(RenderWindow& window)
     CreditButton.setTexture(CreditButtonTex);
     QuitButton.setTexture(QuitButtonTex);
     BackTOMainMenuButton.setTexture(BackTOMainMenuTex);
+    OptionsButton.setTexture(OptionsButtonTex);
     //set up the back to main menu button
     BackTOMainMenuButton.setPosition(2185, 436);
     //set up the start button
     StartButton.setOrigin({ StartButton.getLocalBounds().width / 2, StartButton.getLocalBounds().height / 2 });
     StartButton.rotate(6.7);
     StartButton.setPosition({ 1050, 275 });
+    //set up the Option button
+    OptionsButton.setOrigin({ OptionsButton.getLocalBounds().width / 2, OptionsButton.getLocalBounds().height / 2 });
+    OptionsButton.rotate(11);
+    OptionsButton.setPosition({ 1035, 275 + 115 });
     //set up the credits button
     CreditButton.setOrigin({ CreditButton.getLocalBounds().width / 2, CreditButton.getLocalBounds().height / 2 });
-    CreditButton.rotate(11);
-    CreditButton.setPosition({ 1035, 275 + 115 });
+    CreditButton.setPosition({ 1081, 640 });
     //set up the quit button
     QuitButton.setOrigin({ QuitButton.getLocalBounds().width / 2, QuitButton.getLocalBounds().height / 2 });
     QuitButton.rotate(13.2);
@@ -206,7 +216,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             startAnimLevel = false;
         }
 
-        #pragma region Main menu Buttons
+#pragma region Main menu Buttons
         //start adventure button
         if (mouse_pos.x >= 884 && mouse_pos.x <= 1211 && mouse_pos.y >= 202 && mouse_pos.y <= 310)
         {
@@ -232,26 +242,20 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
 
         if (mouse_pos.x >= 880 && mouse_pos.x <= 1190 && mouse_pos.y >= 349 && mouse_pos.y <= 410) //creidts button animation
         {
-            CreditButton.setTexture(CreditButtonHoverTex);
-            if (SoundCredits)
+            OptionsButton.setTexture(OptionsButtonHoverTex);
+            if (SoundOptions)
             {
                 HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
                 HoverMainMenuSound.play();
-                SoundCredits = false;
-            }
-            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
-            {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
-                //CreditsTranSound.play();
-                ShowCredits = true;
+                SoundOptions = false;
             }
         }
         else
         {
-            CreditButton.setTexture(CreditButtonTex);
-            SoundCredits = true;
+            OptionsButton.setTexture(OptionsButtonTex);
+            SoundOptions = true;
         }
+
 
         if (mouse_pos.x >= 891 && mouse_pos.x <= 1159 && mouse_pos.y >= 450 && mouse_pos.y <= 557)
         {
@@ -275,7 +279,30 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             QuitButton.setTexture(QuitButtonTex);
             SoundQuit = true;
         }
-        #pragma endregion        
+
+        if (CreditButton.getGlobalBounds().contains(mouse_pos))
+        {
+            CreditButton.setTexture(CreditButtonHoverTex);
+            if (SoundCredit)
+            {
+                ButtonSound.setPitch(randPitch[rand() % 3]);
+                ButtonSound.play();
+                SoundCredit = false;
+            }
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
+            {
+                Click.setPitch(randPitch[rand() % 3]);
+                Click.play();
+                //CreditsTranSound.play();
+                ShowCredits = true;
+            }
+        }
+        else
+        {
+            CreditButton.setTexture(CreditButtonTex);
+            SoundCredit = true;
+        }
+#pragma endregion        
     }
     else if (ShowCredits && !ShowLevelSelectionMenu) //credits menu buttons and animation
     {
@@ -337,7 +364,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             startAnimLevel = false;
         }
 
-        #pragma region Buttons
+#pragma region Buttons
         //Back to main menu
         if (BackTOMainMenuButtonLS.getGlobalBounds().contains(mouse_pos))
         {
@@ -454,7 +481,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundLevel3Button = true;
             Level3Lock.setScale(0, 0);
         }
-        #pragma endregion
+#pragma endregion
     }
 }
 
@@ -464,8 +491,9 @@ void DrawMainMenu(RenderWindow& window)
 {
     window.draw(MainMenuBackGround);
     window.draw(StartButton);
-    window.draw(CreditButton);
+    window.draw(OptionsButton);
     window.draw(QuitButton);
+    window.draw(CreditButton);
     window.draw(BackTOMainMenuButton);
     window.draw(Level1Button);
     window.draw(Level2Button);
