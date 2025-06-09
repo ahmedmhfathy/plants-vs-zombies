@@ -22,6 +22,12 @@ bool ButtonTapSoundPauseBackToMainMenu = false;
 bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
+bool IsFullScreen = false;
+bool IsSoundEffects = true;
+bool IsMusic = true;
+
+Time TickBoxDelay=seconds(.25);
+Clock DelayClock;
 
 Texture ThankYouForPlayingTex;
 Sprite ThankYouForPlaying;
@@ -38,11 +44,16 @@ Texture MainMenuButtonTexHover;
 Texture BackToTheGameButtonTex;
 Texture BackToTheGameButtonHoverTex;
 Texture PauseMenuBlank;
+Texture TickBoxBlankTex;
+Texture TickBoxSelectedTex;
 Texture OpacityTex;
 
 Sprite BackToGame;
 Sprite BackToMainMenu;
 Sprite BlankPauseMenu;
+Sprite FullScreenTickBox;
+Sprite SoundEffectTickBox;
+Sprite MusicTickBox;
 Sprite Opacity;
 
 SoundBuffer PauseMenuOpen;
@@ -92,8 +103,12 @@ void LoadPauseMenuTextures() {
     MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
     BackToTheGameButtonTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button.png");
     BackToTheGameButtonHoverTex.loadFromFile("Assets/Pause Menu/Back-To-Game-Button-Hover.png");
-    PauseMenuBlank.loadFromFile("Assets/Pause Menu/Pause-Menu-Blank.png");
+    PauseMenuBlank.loadFromFile("Assets/Pause Menu/Pause-Menu-Blank-2.png");
     OpacityTex.loadFromFile("Assets/Pause Menu/50-Percent-Opacity-Screen.png");
+
+    TickBoxBlankTex.loadFromFile("Assets/Pause Menu/blank.png");
+    TickBoxSelectedTex.loadFromFile("Assets/Pause Menu/Selected.png");
+
 }
 
 void SetupPauseMenu()
@@ -104,11 +119,11 @@ void SetupPauseMenu()
     PauseMenuOpenSound.setBuffer(PauseMenuOpen);
 
     BackToGame.setTexture(BackToTheGameButtonTex);
-    BackToGame.setPosition(537 + offset.x, 459 + offset.y);
+    BackToGame.setPosition(537 + offset.x, 486 + offset.y);
     BackToGame.setScale(1.75, 1.75);
 
     BackToMainMenu.setTexture(MainMenuButtonTex);
-    BackToMainMenu.setPosition(555 + offset.x, 400 + offset.y);
+    BackToMainMenu.setPosition(555 + offset.x, 433 + offset.y);
     BackToMainMenu.setScale(1.75, 1.75);
 
     BlankPauseMenu.setTexture(PauseMenuBlank);
@@ -117,6 +132,22 @@ void SetupPauseMenu()
     BlankPauseMenu.setPosition(640 + offset.x, 360 + offset.y);
     Opacity.setTexture(OpacityTex);
     Opacity.setPosition(offset.x, offset.y);
+
+    FullScreenTickBox.setTexture(TickBoxBlankTex);
+    FullScreenTickBox.setOrigin(FullScreenTickBox.getGlobalBounds().width / 2, FullScreenTickBox.getGlobalBounds().height / 2);
+    FullScreenTickBox.setScale(1.75, 1.75);
+    FullScreenTickBox.setPosition(430,265);
+
+    SoundEffectTickBox.setTexture(TickBoxSelectedTex);
+    SoundEffectTickBox.setOrigin(SoundEffectTickBox.getGlobalBounds().width / 2, SoundEffectTickBox.getGlobalBounds().height / 2);
+    SoundEffectTickBox.setScale(1.75, 1.75);
+    SoundEffectTickBox.setPosition(430, 302);
+
+    MusicTickBox.setTexture(TickBoxSelectedTex);
+    MusicTickBox.setOrigin(MusicTickBox.getGlobalBounds().width / 2, MusicTickBox.getGlobalBounds().height / 2);
+    MusicTickBox.setScale(1.75, 1.75);
+    MusicTickBox.setPosition(430, 339);
+
 }
 
 void PauseMenuUpdate()
@@ -126,8 +157,8 @@ void PauseMenuUpdate()
         IsPaused = true;
         if (SoundOnPauseMenu)
         {
-        PauseMenuOpenSound.play();
-        SoundOnPauseMenu = false;
+            PauseMenuOpenSound.play();
+            SoundOnPauseMenu = false;
         }
     }
     if (IsPaused && !LevelIsOver)
@@ -174,6 +205,57 @@ void PauseMenuUpdate()
             ButtonTapSoundPauseBackToMainMenu = true;
             BackToMainMenu.setTexture(MainMenuButtonTex);
         }
+
+    #pragma region Pause menu option
+        if (FullScreenTickBox.getGlobalBounds().contains(MouseWorldPostion) && Mouse::isButtonPressed(Mouse::Left))
+        {
+            if (IsFullScreen && DelayClock.getElapsedTime() >=TickBoxDelay)
+            {
+                DelayClock.restart();
+                FullScreenTickBox.setTexture(TickBoxBlankTex);
+                IsFullScreen = false;
+            }
+            else if(DelayClock.getElapsedTime() >= TickBoxDelay)
+            {
+                DelayClock.restart();
+                IsFullScreen = true;
+                FullScreenTickBox.setTexture(TickBoxSelectedTex);
+            }
+        }
+
+        if (SoundEffectTickBox.getGlobalBounds().contains(MouseWorldPostion) && Mouse::isButtonPressed(Mouse::Left))
+        {
+            if (!IsSoundEffects && DelayClock.getElapsedTime() >= TickBoxDelay)
+            {
+                DelayClock.restart();
+                SoundEffectTickBox.setTexture(TickBoxSelectedTex);
+                IsSoundEffects = true;
+            }
+            else if (DelayClock.getElapsedTime() >= TickBoxDelay)
+            {
+                DelayClock.restart();
+                SoundEffectTickBox.setTexture(TickBoxBlankTex);
+                IsSoundEffects = false;
+            }
+        }
+        
+        if (MusicTickBox.getGlobalBounds().contains(MouseWorldPostion) && Mouse::isButtonPressed(Mouse::Left))
+        {
+            if (!IsMusic && DelayClock.getElapsedTime() >= TickBoxDelay)
+            {
+                DelayClock.restart();
+                IsMusic = true;
+                MusicTickBox.setTexture(TickBoxSelectedTex);
+            }
+            else if (DelayClock.getElapsedTime() >= TickBoxDelay)
+            {
+                DelayClock.restart();
+                IsMusic = false;
+                MusicTickBox.setTexture(TickBoxBlankTex);
+            }
+        }
+    #pragma endregion
+
     }
 }
 
@@ -185,6 +267,9 @@ void DrawPauseMenu(RenderWindow& window)
         window.draw(BlankPauseMenu);
         window.draw(BackToGame);
         window.draw(BackToMainMenu);
+        window.draw(FullScreenTickBox);
+        window.draw(SoundEffectTickBox);
+        window.draw(MusicTickBox);
     }
 }
 #pragma endregion
@@ -262,7 +347,7 @@ void LevelEndUpdate()
     {
         if (WinLevel)
         {
-            if(CurrentState==Level3&&LevelIsOver&&WinLevel)
+            if (CurrentState == Level3 && LevelIsOver && WinLevel)
             {
                 if (ThankYouForPlaying.getPosition().y > 310)
                 {
@@ -392,10 +477,10 @@ void DrawLevelEnd(RenderWindow& window)
         }
         else
         {
-        window.draw(Opacity);
-        window.draw(WinMenuBlank);
-        window.draw(NextlevelButton);
-        window.draw(BackToMainMenuLevelEnd);
+            window.draw(Opacity);
+            window.draw(WinMenuBlank);
+            window.draw(NextlevelButton);
+            window.draw(BackToMainMenuLevelEnd);
         }
     }
     else
@@ -405,7 +490,7 @@ void DrawLevelEnd(RenderWindow& window)
         window.draw(RetryButton);
         window.draw(BackToMainMenuLevelEnd);
     }
-    
+
 }
 
 #pragma endregion
@@ -413,92 +498,92 @@ void DrawLevelEnd(RenderWindow& window)
 //handle the code of each level
 #pragma region Level Functions
 
-    #pragma region Level 1
-    void StartLevel1()
-    {
-        bool isNight = false;
-        setupWaveData();
-        StartPlantingAndCurrencySystem(offset, isNight);
-        startZombiePositions(100);
-        StartAnimationNS::startAnimation(isNight);
-    }
-    void UpdateLevel1(RenderWindow& window)
-    {
-        UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
-        StartAnimationNS::updateAnimation(window);
+#pragma region Level 1
+void StartLevel1()
+{
+    bool isNight = false;
+    setupWaveData();
+    StartPlantingAndCurrencySystem(offset, isNight);
+    startZombiePositions(100);
+    StartAnimationNS::startAnimation(isNight);
+}
+void UpdateLevel1(RenderWindow& window)
+{
+    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+    StartAnimationNS::updateAnimation(window);
 
-        level(2, 4, 7.0f);
+    level(2, 4, 7.0f);
 
-        Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
-    }
-    void DrawLevel1(RenderWindow& window)
-    {
-        StartAnimationNS::Renderstartanimation(window);
-        Plants_Zombies::DrawPlantsAndProjectiles(window);
-        DrawPlantingAndCurrencySystem(window);
-        DrawWavesAndZombies(window);
-    }
-    #pragma endregion
+    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+}
+void DrawLevel1(RenderWindow& window)
+{
+    StartAnimationNS::Renderstartanimation(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
+    DrawPlantingAndCurrencySystem(window);
+    DrawWavesAndZombies(window);
+}
+#pragma endregion
 
-    #pragma region Level 2
-    void StartLevel2()
-    {
-        bool isNight = true;
-        setupWaveData();
-        StartPlantingAndCurrencySystem(offset, isNight);
-        startZombiePositions(100);
-        StartAnimationNS::startAnimation(isNight);
-    }
-    void UpdateLevel2(RenderWindow& window)
-    {
-        UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
-        StartAnimationNS::updateAnimation(window);
+#pragma region Level 2
+void StartLevel2()
+{
+    bool isNight = true;
+    setupWaveData();
+    StartPlantingAndCurrencySystem(offset, isNight);
+    startZombiePositions(100);
+    StartAnimationNS::startAnimation(isNight);
+}
+void UpdateLevel2(RenderWindow& window)
+{
+    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+    StartAnimationNS::updateAnimation(window);
 
-        level(2, 20, 10.0f);
+    level(2, 20, 10.0f);
 
-        Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
-    }
-    void DrawLevel2(RenderWindow& window)
-    {
-        StartAnimationNS::Renderstartanimation(window);
-        Plants_Zombies::DrawPlantsAndProjectiles(window);
-        DrawPlantingAndCurrencySystem(window);
-        DrawWavesAndZombies(window);
-    }
-    #pragma endregion
+    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+}
+void DrawLevel2(RenderWindow& window)
+{
+    StartAnimationNS::Renderstartanimation(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
+    DrawPlantingAndCurrencySystem(window);
+    DrawWavesAndZombies(window);
+}
+#pragma endregion
 
-    #pragma region Level 3
-    void StartLevel3()
-    {
-        bool isNight = false;
-        setupWaveData();
-        StartPlantingAndCurrencySystem(offset, isNight);
-        startZombiePositions(100);
-        StartAnimationNS::startAnimation(isNight);
+#pragma region Level 3
+void StartLevel3()
+{
+    bool isNight = false;
+    setupWaveData();
+    StartPlantingAndCurrencySystem(offset, isNight);
+    startZombiePositions(100);
+    StartAnimationNS::startAnimation(isNight);
 
-    }
-    void UpdateLevel3(RenderWindow& window)
-    {
-        UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
-        StartAnimationNS::updateAnimation(window);
+}
+void UpdateLevel3(RenderWindow& window)
+{
+    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+    StartAnimationNS::updateAnimation(window);
 
-        level(3, 30, 8.0f);
+    level(3, 30, 8.0f);
 
-        Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
-    }
-    void DrawLevel3(RenderWindow& window)
-    {
-        StartAnimationNS::Renderstartanimation(window);
-        Plants_Zombies::DrawPlantsAndProjectiles(window);
-        DrawPlantingAndCurrencySystem(window);
-        DrawWavesAndZombies(window);
-    }
-    #pragma endregion
+    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+}
+void DrawLevel3(RenderWindow& window)
+{
+    StartAnimationNS::Renderstartanimation(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
+    DrawPlantingAndCurrencySystem(window);
+    DrawWavesAndZombies(window);
+}
+#pragma endregion
 
 #pragma endregion
 
 // switches the state of the game and calls the start function of the new state
-void SwitchState(State NewState)    
+void SwitchState(State NewState)
 {
     LevelIsOver = false;
     WinLevel = false;

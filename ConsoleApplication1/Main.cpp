@@ -73,6 +73,11 @@ void Update()
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
 
+    if (Mouse::isButtonPressed(Mouse::Left))
+    {
+        cout << int(MouseWorldPostion.x) << "    " << int(MouseWorldPostion.y) << endl;
+    }
+
     DeltaTimeManager(IsPaused);
 
     //calls the update function depending on current state and pause state
@@ -83,7 +88,14 @@ void Update()
     }
     else
     {
-        GameMusic.setVolume(1);
+        if (!IsMusic)
+        {
+            GameMusic.setVolume(0);
+        }
+        else if (IsMusic)
+        {
+            GameMusic.setVolume(10);
+        }
         if (CurrentState == Level1 && !IsPaused)
         {
             UpdateLevel1(window);
