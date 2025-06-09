@@ -247,7 +247,7 @@ namespace Plants_Zombies {
 
 		void takeDmg(float damage) {
 			health -= damage;
-			cout << "Plant Health = " << health << endl;
+			//cout << "Plant Health = " << health << endl;
 			if (health <= 0)
 			{
 				idle = false;
@@ -411,7 +411,7 @@ namespace Plants_Zombies {
 				}
 				else if (type == ScaredyShroom)
 				{
-					cout << zombieProximityAction << endl;
+					//cout << zombieProximityAction << endl;
 					if (!zombieProximityAction)
 					{
 						if (isHiding)
@@ -1501,7 +1501,7 @@ namespace Plants_Zombies {
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = soccerGuy;
+			zombie_array[i].type = randomzombietype;
 			zombie_array[i].start();
 		}
 	}
