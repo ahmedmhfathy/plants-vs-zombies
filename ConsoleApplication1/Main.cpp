@@ -45,7 +45,7 @@ void Start()
 {
     GameMusicBuffer.loadFromFile("Audio/Plants vs. Zombies BackGround.wav");
     GameMusic.setBuffer(GameMusicBuffer);
-    GameMusic.setVolume(0);
+    GameMusic.setVolume(5);
     GameMusic.setLoop(true);
     GameMusic.play();
 
@@ -80,22 +80,33 @@ void Update()
 
     DeltaTimeManager(IsPaused);
 
+
+    if (IsMusic || IsMusicO)
+    {
+        GameMusic.setVolume(5);
+    }
+    if (!IsMusic || !IsMusicO)
+    {
+        GameMusic.setVolume(0);
+    }
+
     //calls the update function depending on current state and pause state
     if (CurrentState == MainMenu)
     {   
+        /*if (IsMusic || IsMusicO) 
+        {
+        GameMusic.setVolume(5);
+        }
+        else if (!IsMusic || !IsMusicO)
+        {
         GameMusic.setVolume(0);
+        }*/
         MainMenuUpdate(MouseWorldPostion, window);
     }
+
     else
     {
-        if (!IsMusic)
-        {
-            GameMusic.setVolume(0);
-        }
-        else if (IsMusic)
-        {
-            GameMusic.setVolume(10);
-        }
+
         if (CurrentState == Level1 && !IsPaused)
         {
             UpdateLevel1(window);

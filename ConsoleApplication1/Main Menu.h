@@ -30,6 +30,12 @@ Texture Level3HoverTex;
 Texture LevelLockTex;
 Texture OptionsButtonTex;
 Texture OptionsButtonHoverTex;
+Texture OptionsBlankTex;
+Texture OpacityOPtions;
+Texture BackFromOptionsTex;
+Texture BackFromOptionsHoverTex;
+Texture TickBoxBlankTexO;
+Texture TickBoxSelectedTexO;
 #pragma endregion
 
 #pragma region Sprite Delaration
@@ -45,6 +51,12 @@ Sprite Level2Lock;
 Sprite Level3Lock;
 Sprite BackTOMainMenuButtonLS;
 Sprite OptionsButton;
+Sprite OptionOpacityTex;
+Sprite OptionsBlank;
+Sprite FullScreenTickBoxO;
+Sprite SoundEffectTickBoxO;
+Sprite MusicTickBoxO;
+Sprite BackFromOptions;
 #pragma endregion
 
 #pragma region Sounds
@@ -69,16 +81,24 @@ bool SoundButton = false;
 bool SoundLevel1Button = false;
 bool SoundLevel2Button = false;
 bool SoundLevel3Button = false;
+bool BackFromOptionsSound = false;
 
 // animation and logic
 bool ShowCredits = false;
+bool ShowOptions = false;
 bool startAnim = false;
 bool startAnimLevel = false;
 bool ShowLevelSelectionMenu = false;
+
+// 
+bool IsMusicO = true;
 #pragma endregion
 
 Clock animClock;
 Time MainMenuAnimationDuration = seconds(1.75);
+
+Clock DelayClockO;
+Time TickBoxDelayO=seconds(.25);
 
 View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 
@@ -114,6 +134,15 @@ void LoadMainMenuTex()
     Level3Tex.loadFromFile("Assets/Main Menu/Level 3.png");
     Level3HoverTex.loadFromFile("Assets/Main Menu/Level 3 hover.png");
     LevelLockTex.loadFromFile("Assets/Main Menu/lock.png");
+
+    //Options
+    OptionsBlankTex.loadFromFile("Assets/Main Menu/Options-Menu-Blank.png");
+    OpacityOPtions.loadFromFile("Assets/Pause Menu/50-Percent-Opacity-Screen.png");
+    BackFromOptionsTex.loadFromFile("Assets/Main Menu/Options-Backbutton-default.png");
+    BackFromOptionsHoverTex.loadFromFile("Assets/Main Menu/Options-Backbutton-hover.png");
+
+    TickBoxBlankTexO.loadFromFile("Assets/Main Menu/blank.png");
+    TickBoxSelectedTexO.loadFromFile("Assets/Main Menu/Selected.png");
 }
 
 void MainMenuStart(RenderWindow& window)
@@ -171,6 +200,33 @@ void MainMenuStart(RenderWindow& window)
     Level2Lock.setPosition(375, 965);
     Level3Lock.setTexture(LevelLockTex);
     Level3Lock.setPosition(375, 1087);
+    //Options set up
+    OptionsBlank.setTexture(OptionsBlankTex);
+    OptionsBlank.setOrigin(OptionsBlank.getGlobalBounds().width / 2, OptionsBlank.getGlobalBounds().height / 2);
+    OptionsBlank.setScale(2, 2);
+    OptionsBlank.setPosition(640,360);
+    OptionOpacityTex.setTexture(OpacityOPtions);
+    OptionOpacityTex.setPosition(0, 0);
+    BackFromOptions.setTexture(BackFromOptionsTex);
+    BackFromOptions.setOrigin(BackFromOptions.getGlobalBounds().width / 2, BackFromOptions.getGlobalBounds().height / 2);
+    BackFromOptions.setScale(2.25, 2.25);
+    BackFromOptions.setPosition(629, 497);
+
+    FullScreenTickBoxO.setTexture(TickBoxBlankTexO);
+    FullScreenTickBoxO.setOrigin(FullScreenTickBoxO.getGlobalBounds().width / 2, FullScreenTickBoxO.getGlobalBounds().height / 2);
+    FullScreenTickBoxO.setScale(2, 2);
+    FullScreenTickBoxO.setPosition(750,335);
+
+   SoundEffectTickBoxO.setTexture(TickBoxSelectedTexO);
+   SoundEffectTickBoxO.setOrigin(SoundEffectTickBoxO.getGlobalBounds().width / 2, SoundEffectTickBoxO.getGlobalBounds().height / 2);
+   SoundEffectTickBoxO.setScale(2, 2);
+   SoundEffectTickBoxO.setPosition(750, 385);
+
+    MusicTickBoxO.setTexture(TickBoxSelectedTexO);
+    MusicTickBoxO.setOrigin(MusicTickBoxO.getGlobalBounds().width / 2, MusicTickBoxO.getGlobalBounds().height / 2);
+    MusicTickBoxO.setScale(2, 2);
+    MusicTickBoxO.setPosition(750, 435);
+
 
 #pragma endregion
 }
@@ -218,7 +274,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
 
 #pragma region Main menu Buttons
         //start adventure button
-        if (mouse_pos.x >= 884 && mouse_pos.x <= 1211 && mouse_pos.y >= 202 && mouse_pos.y <= 310)
+        if (mouse_pos.x >= 884 && mouse_pos.x <= 1211 && mouse_pos.y >= 202 && mouse_pos.y <= 310 && !ShowOptions)
         {
             StartButton.setTexture(StartButtonHoverTex);
             if (SoundStart)
@@ -240,7 +296,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundStart = true;
         }
 
-        if (mouse_pos.x >= 880 && mouse_pos.x <= 1190 && mouse_pos.y >= 349 && mouse_pos.y <= 410) //creidts button animation
+        if (mouse_pos.x >= 880 && mouse_pos.x <= 1190 && mouse_pos.y >= 349 && mouse_pos.y <= 410 && !ShowOptions) //creidts button animation
         {
             OptionsButton.setTexture(OptionsButtonHoverTex);
             if (SoundOptions)
@@ -248,6 +304,12 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
                 HoverMainMenuSound.play();
                 SoundOptions = false;
+            }
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
+            {
+                Click.setPitch(randPitch[rand() % 3]);
+                Click.play();
+                ShowOptions = true;
             }
         }
         else
@@ -257,7 +319,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         }
 
 
-        if (mouse_pos.x >= 891 && mouse_pos.x <= 1159 && mouse_pos.y >= 450 && mouse_pos.y <= 557)
+        if (mouse_pos.x >= 891 && mouse_pos.x <= 1159 && mouse_pos.y >= 450 && mouse_pos.y <= 557 && !ShowOptions)
         {
             if (SoundQuit)
             {
@@ -280,7 +342,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundQuit = true;
         }
 
-        if (CreditButton.getGlobalBounds().contains(mouse_pos))
+        if (CreditButton.getGlobalBounds().contains(mouse_pos) && !ShowOptions)
         {
             CreditButton.setTexture(CreditButtonHoverTex);
             if (SoundCredit)
@@ -363,7 +425,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             startAnimLevel = false;
         }
-
 #pragma region Buttons
         //Back to main menu
         if (BackTOMainMenuButtonLS.getGlobalBounds().contains(mouse_pos))
@@ -483,6 +544,90 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         }
 #pragma endregion
     }
+
+#pragma region Options
+    if (ShowOptions)
+    {
+        if (BackFromOptions.getGlobalBounds().contains(mouse_pos))
+        {
+            BackFromOptions.setTexture(BackFromOptionsHoverTex);
+            cout << 1 << endl;
+            if (BackFromOptionsSound)
+            {
+                ButtonSound.setPitch(randPitch[rand() % 3]);
+                ButtonSound.play();
+                BackFromOptionsSound = false;
+            }
+
+            if (Mouse::isButtonPressed(Mouse::Left))
+            {
+                Click.setPitch(randPitch[rand() % 3]);
+                Click.play();
+                ShowOptions = false;
+            }
+        }
+        else
+        {
+            BackFromOptions.setTexture(BackFromOptionsTex);
+            BackFromOptionsSound = true;
+        }
+
+        if (FullScreenTickBoxO.getGlobalBounds().contains(mouse_pos) && Mouse::isButtonPressed(Mouse::Left))
+        {
+            if (IsFullScreen && DelayClock.getElapsedTime() >= TickBoxDelayO)
+            {
+                DelayClock.restart();
+                FullScreenTickBoxO.setTexture(TickBoxBlankTexO);
+                IsFullScreen = false;
+            }
+            else if (DelayClock.getElapsedTime() >= TickBoxDelayO)
+            {
+                DelayClock.restart();
+                IsFullScreen = true;
+                FullScreenTickBoxO.setTexture(TickBoxSelectedTexO);
+            }
+        }
+
+        if (SoundEffectTickBoxO.getGlobalBounds().contains(mouse_pos) && Mouse::isButtonPressed(Mouse::Left))
+        {
+            if (!IsSoundEffects && DelayClockO.getElapsedTime() >= TickBoxDelayO)
+            {
+                DelayClockO.restart();
+                SoundEffectTickBoxO.setTexture(TickBoxSelectedTexO);
+                IsSoundEffects = true;
+            }
+            else if (DelayClockO.getElapsedTime() >= TickBoxDelayO)
+            {
+                DelayClockO.restart();
+                SoundEffectTickBoxO.setTexture(TickBoxBlankTexO);
+                IsSoundEffects = false;
+            }
+        }
+
+
+        if (MusicTickBoxO.getGlobalBounds().contains(mouse_pos) && Mouse::isButtonPressed(Mouse::Left))
+        {
+            if (!IsMusicO && DelayClockO.getElapsedTime() >= TickBoxDelayO)
+            {
+                DelayClockO.restart();
+                IsMusicO = true;
+                IsMusic = true;
+                MusicTickBoxO.setTexture(TickBoxSelectedTexO);
+                MusicTickBox.setTexture(TickBoxSelectedTex);
+            }
+            else if (DelayClockO.getElapsedTime() >= TickBoxDelayO)
+            {
+                DelayClockO.restart();
+                IsMusicO = false;
+                IsMusic = false;
+                MusicTickBoxO.setTexture(TickBoxBlankTexO);
+                MusicTickBox.setTexture(TickBoxBlankTex);
+            }
+        }
+
+    }
+#pragma endregion
+
 }
 
 
@@ -501,4 +646,13 @@ void DrawMainMenu(RenderWindow& window)
     window.draw(BackTOMainMenuButtonLS);
     window.draw(Level2Lock);
     window.draw(Level3Lock);
+    if (ShowOptions)
+    {
+        window.draw(OptionOpacityTex);
+        window.draw(OptionsBlank);
+        window.draw(BackFromOptions);
+        window.draw(FullScreenTickBoxO);
+        window.draw(SoundEffectTickBoxO);
+        window.draw(MusicTickBoxO);
+    }
 }
