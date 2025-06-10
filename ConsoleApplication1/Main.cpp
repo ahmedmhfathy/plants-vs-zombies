@@ -8,10 +8,13 @@
 #include "StartAnimation.h"
 #include "planting system.h"
 #include "Tools.h"
+#include "Game Settings And Audio.h"
 using namespace std;
 using namespace sf;
 
-RenderWindow window(VideoMode(1280, 720), "Plant vs zombie");
+RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies");
+RenderWindow fullScreenWindow(VideoMode(1280, 720), "Plants VS Zombies", Style::Fullscreen);
+
 SoundBuffer GameMusicBuffer;
 Sound GameMusic;
 
@@ -81,11 +84,11 @@ void Update()
     DeltaTimeManager(IsPaused);
 
 
-    if (IsMusic || IsMusicO)
+    if (IsMusic)
     {
         GameMusic.setVolume(5);
     }
-    if (!IsMusic || !IsMusicO)
+    if (!IsMusic)
     {
         GameMusic.setVolume(0);
     }

@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game Manager.h" />
+    <ClInclude Include="Game Settings And Audio.h" />
     <ClInclude Include="Main Menu.h" />
     <ClInclude Include="planting system.h" />
     <ClInclude Include="Plants_Zombies.h" />

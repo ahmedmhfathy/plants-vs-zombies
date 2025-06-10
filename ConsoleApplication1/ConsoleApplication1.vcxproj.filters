@@ -26,9 +26,6 @@
     <ClInclude Include="Main Menu.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="plants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Tools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -42,6 +39,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Wave System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Plants_Zombies.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Game Settings And Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

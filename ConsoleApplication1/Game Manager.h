@@ -9,6 +9,7 @@
 #include "Wave System.h"
 #include "planting system.h"
 #include "Tools.h";
+#include "Game Settings And Audio.h"
 
 using namespace std;
 using namespace sf;
@@ -22,9 +23,6 @@ bool ButtonTapSoundPauseBackToMainMenu = false;
 bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
-bool IsFullScreen = false;
-bool IsSoundEffects = true;
-bool IsMusic = true;
 
 Time TickBoxDelay=seconds(.25);
 Clock DelayClock;
@@ -133,21 +131,34 @@ void SetupPauseMenu()
     Opacity.setTexture(OpacityTex);
     Opacity.setPosition(offset.x, offset.y);
 
-    FullScreenTickBox.setTexture(TickBoxBlankTex);
+#pragma region tickboxes and options
+    if (IsFullScreen)
+        FullScreenTickBox.setTexture(TickBoxSelectedTex);
+    else
+        FullScreenTickBox.setTexture(TickBoxBlankTex);
+
     FullScreenTickBox.setOrigin(FullScreenTickBox.getGlobalBounds().width / 2, FullScreenTickBox.getGlobalBounds().height / 2);
     FullScreenTickBox.setScale(1.75, 1.75);
-    FullScreenTickBox.setPosition(430,265);
+    FullScreenTickBox.setPosition(430, 265);
 
-    SoundEffectTickBox.setTexture(TickBoxSelectedTex);
+    if (IsSoundEffects)
+        SoundEffectTickBox.setTexture(TickBoxSelectedTex);
+    else
+        SoundEffectTickBox.setTexture(TickBoxBlankTex);
+
     SoundEffectTickBox.setOrigin(SoundEffectTickBox.getGlobalBounds().width / 2, SoundEffectTickBox.getGlobalBounds().height / 2);
     SoundEffectTickBox.setScale(1.75, 1.75);
     SoundEffectTickBox.setPosition(430, 302);
 
-    MusicTickBox.setTexture(TickBoxSelectedTex);
+    if (IsMusic)
+        MusicTickBox.setTexture(TickBoxSelectedTex);
+    else
+        MusicTickBox.setTexture(TickBoxBlankTex);
+
     MusicTickBox.setOrigin(MusicTickBox.getGlobalBounds().width / 2, MusicTickBox.getGlobalBounds().height / 2);
     MusicTickBox.setScale(1.75, 1.75);
     MusicTickBox.setPosition(430, 339);
-
+#pragma endregion
 }
 
 void PauseMenuUpdate()
@@ -206,20 +217,35 @@ void PauseMenuUpdate()
             BackToMainMenu.setTexture(MainMenuButtonTex);
         }
 
-    #pragma region Pause menu option
+    #pragma region Update Tick Boxes
+        if (IsFullScreen)
+            FullScreenTickBox.setTexture(TickBoxSelectedTex);
+        else
+            FullScreenTickBox.setTexture(TickBoxBlankTex);
+        
+        if (IsSoundEffects)
+            SoundEffectTickBox.setTexture(TickBoxSelectedTex);
+        else
+            SoundEffectTickBox.setTexture(TickBoxBlankTex);
+
+        if (IsMusic)
+            MusicTickBox.setTexture(TickBoxSelectedTex);
+        else
+            MusicTickBox.setTexture(TickBoxBlankTex);
+    #pragma endregion
+
+    #pragma region Pause menu options logic
         if (FullScreenTickBox.getGlobalBounds().contains(MouseWorldPostion) && Mouse::isButtonPressed(Mouse::Left))
         {
             if (IsFullScreen && DelayClock.getElapsedTime() >=TickBoxDelay)
             {
                 DelayClock.restart();
-                FullScreenTickBox.setTexture(TickBoxBlankTex);
                 IsFullScreen = false;
             }
             else if(DelayClock.getElapsedTime() >= TickBoxDelay)
             {
                 DelayClock.restart();
                 IsFullScreen = true;
-                FullScreenTickBox.setTexture(TickBoxSelectedTex);
             }
         }
 
@@ -228,13 +254,11 @@ void PauseMenuUpdate()
             if (!IsSoundEffects && DelayClock.getElapsedTime() >= TickBoxDelay)
             {
                 DelayClock.restart();
-                SoundEffectTickBox.setTexture(TickBoxSelectedTex);
                 IsSoundEffects = true;
             }
             else if (DelayClock.getElapsedTime() >= TickBoxDelay)
             {
                 DelayClock.restart();
-                SoundEffectTickBox.setTexture(TickBoxBlankTex);
                 IsSoundEffects = false;
             }
         }
@@ -245,13 +269,11 @@ void PauseMenuUpdate()
             {
                 DelayClock.restart();
                 IsMusic = true;
-                MusicTickBox.setTexture(TickBoxSelectedTex);
             }
             else if (DelayClock.getElapsedTime() >= TickBoxDelay)
             {
                 DelayClock.restart();
                 IsMusic = false;
-                MusicTickBox.setTexture(TickBoxBlankTex);
             }
         }
     #pragma endregion

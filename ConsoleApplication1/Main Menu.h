@@ -5,6 +5,7 @@
 #include <string>
 #include "Game Manager.h"
 #include "Tools.h"
+#include "Game Settings And Audio.h"
 
 using namespace std;
 using namespace sf;
@@ -89,9 +90,6 @@ bool ShowOptions = false;
 bool startAnim = false;
 bool startAnimLevel = false;
 bool ShowLevelSelectionMenu = false;
-
-// 
-bool IsMusicO = true;
 #pragma endregion
 
 Clock animClock;
@@ -546,8 +544,26 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
     }
 
 #pragma region Options
+
     if (ShowOptions)
     {
+        #pragma region update TickBoxes
+        if (IsFullScreen)
+            FullScreenTickBoxO.setTexture(TickBoxSelectedTexO);
+        else
+            FullScreenTickBoxO.setTexture(TickBoxBlankTexO);
+
+        if (IsSoundEffects)
+            SoundEffectTickBoxO.setTexture(TickBoxSelectedTexO);
+        else
+            SoundEffectTickBoxO.setTexture(TickBoxBlankTexO);
+
+        if (IsMusic)
+            MusicTickBoxO.setTexture(TickBoxSelectedTexO);
+        else
+            MusicTickBoxO.setTexture(TickBoxBlankTexO);
+        #pragma endregion
+
         if (BackFromOptions.getGlobalBounds().contains(mouse_pos))
         {
             BackFromOptions.setTexture(BackFromOptionsHoverTex);
@@ -577,14 +593,12 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             if (IsFullScreen && DelayClock.getElapsedTime() >= TickBoxDelayO)
             {
                 DelayClock.restart();
-                FullScreenTickBoxO.setTexture(TickBoxBlankTexO);
                 IsFullScreen = false;
             }
             else if (DelayClock.getElapsedTime() >= TickBoxDelayO)
             {
                 DelayClock.restart();
                 IsFullScreen = true;
-                FullScreenTickBoxO.setTexture(TickBoxSelectedTexO);
             }
         }
 
@@ -593,38 +607,28 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             if (!IsSoundEffects && DelayClockO.getElapsedTime() >= TickBoxDelayO)
             {
                 DelayClockO.restart();
-                SoundEffectTickBoxO.setTexture(TickBoxSelectedTexO);
                 IsSoundEffects = true;
             }
             else if (DelayClockO.getElapsedTime() >= TickBoxDelayO)
             {
                 DelayClockO.restart();
-                SoundEffectTickBoxO.setTexture(TickBoxBlankTexO);
                 IsSoundEffects = false;
             }
         }
 
-
         if (MusicTickBoxO.getGlobalBounds().contains(mouse_pos) && Mouse::isButtonPressed(Mouse::Left))
         {
-            if (!IsMusicO && DelayClockO.getElapsedTime() >= TickBoxDelayO)
+            if (!IsMusic && DelayClockO.getElapsedTime() >= TickBoxDelayO)
             {
                 DelayClockO.restart();
-                IsMusicO = true;
                 IsMusic = true;
-                MusicTickBoxO.setTexture(TickBoxSelectedTexO);
-                MusicTickBox.setTexture(TickBoxSelectedTex);
             }
             else if (DelayClockO.getElapsedTime() >= TickBoxDelayO)
             {
                 DelayClockO.restart();
-                IsMusicO = false;
                 IsMusic = false;
-                MusicTickBoxO.setTexture(TickBoxBlankTexO);
-                MusicTickBox.setTexture(TickBoxBlankTex);
             }
         }
-
     }
 #pragma endregion
 
