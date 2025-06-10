@@ -241,11 +241,13 @@ void PauseMenuUpdate()
             {
                 DelayClock.restart();
                 IsFullScreen = false;
+                changeFullScreenState = true;
             }
             else if(DelayClock.getElapsedTime() >= TickBoxDelay)
             {
                 DelayClock.restart();
                 IsFullScreen = true;
+                changeFullScreenState = true;
             }
         }
 

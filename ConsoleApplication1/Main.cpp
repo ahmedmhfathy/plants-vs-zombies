@@ -12,9 +12,6 @@
 using namespace std;
 using namespace sf;
 
-RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies");
-RenderWindow fullScreenWindow(VideoMode(1280, 720), "Plants VS Zombies", Style::Fullscreen);
-
 SoundBuffer GameMusicBuffer;
 Sound GameMusic;
 
@@ -46,6 +43,8 @@ int main()
 
 void Start()
 {
+    SetupGameSettings();
+
     GameMusicBuffer.loadFromFile("Audio/Plants vs. Zombies BackGround.wav");
     GameMusic.setBuffer(GameMusicBuffer);
     GameMusic.setVolume(5);
@@ -59,9 +58,6 @@ void Start()
 
     CurrentState = MainMenu;
 
-    window.setFramerateLimit(60);
-    window.setVerticalSyncEnabled(true);
-
     MainMenuStart(window); //textures loaded here once
 
     SetupPauseMenu(); //textures loaded here once
@@ -72,17 +68,17 @@ void Start()
 
 void Update()
 {
+    DeltaTimeManager(IsPaused);
+    GameSettingsUpdate();
+
     //gets mouse world position from screen position
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
 
-    if (Mouse::isButtonPressed(Mouse::Left))
-    {
-        cout << int(MouseWorldPostion.x) << "    " << int(MouseWorldPostion.y) << endl;
-    }
-
-    DeltaTimeManager(IsPaused);
-
+    //if (Mouse::isButtonPressed(Mouse::Left))
+    //{
+    //    cout << int(MouseWorldPostion.x) << "    " << int(MouseWorldPostion.y) << endl;
+    //}
 
     if (IsMusic)
     {
@@ -96,20 +92,10 @@ void Update()
     //calls the update function depending on current state and pause state
     if (CurrentState == MainMenu)
     {   
-        /*if (IsMusic || IsMusicO) 
-        {
-        GameMusic.setVolume(5);
-        }
-        else if (!IsMusic || !IsMusicO)
-        {
-        GameMusic.setVolume(0);
-        }*/
         MainMenuUpdate(MouseWorldPostion, window);
     }
-
     else
     {
-
         if (CurrentState == Level1 && !IsPaused)
         {
             UpdateLevel1(window);

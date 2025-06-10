@@ -145,7 +145,7 @@ void LoadMainMenuTex()
 
 void MainMenuStart(RenderWindow& window)
 {
-    MaxLevelWon = MainMenu;
+    MaxLevelWon = Level3;
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
 
@@ -594,11 +594,13 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             {
                 DelayClock.restart();
                 IsFullScreen = false;
+                changeFullScreenState = true;
             }
             else if (DelayClock.getElapsedTime() >= TickBoxDelayO)
             {
                 DelayClock.restart();
                 IsFullScreen = true;
+                changeFullScreenState = true;
             }
         }
 
