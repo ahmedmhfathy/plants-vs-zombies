@@ -203,22 +203,24 @@ void MainMenuStart(RenderWindow& window)
     OptionsBlank.setOrigin(OptionsBlank.getGlobalBounds().width / 2, OptionsBlank.getGlobalBounds().height / 2);
     OptionsBlank.setScale(2, 2);
     OptionsBlank.setPosition(640,360);
+
     OptionOpacityTex.setTexture(OpacityOPtions);
     OptionOpacityTex.setPosition(0, 0);
+
     BackFromOptions.setTexture(BackFromOptionsTex);
     BackFromOptions.setOrigin(BackFromOptions.getGlobalBounds().width / 2, BackFromOptions.getGlobalBounds().height / 2);
     BackFromOptions.setScale(2.25, 2.25);
-    BackFromOptions.setPosition(629, 497);
+    BackFromOptions.setPosition(638, 497);
 
     FullScreenTickBoxO.setTexture(TickBoxBlankTexO);
     FullScreenTickBoxO.setOrigin(FullScreenTickBoxO.getGlobalBounds().width / 2, FullScreenTickBoxO.getGlobalBounds().height / 2);
     FullScreenTickBoxO.setScale(2, 2);
     FullScreenTickBoxO.setPosition(750,335);
 
-   SoundEffectTickBoxO.setTexture(TickBoxSelectedTexO);
-   SoundEffectTickBoxO.setOrigin(SoundEffectTickBoxO.getGlobalBounds().width / 2, SoundEffectTickBoxO.getGlobalBounds().height / 2);
-   SoundEffectTickBoxO.setScale(2, 2);
-   SoundEffectTickBoxO.setPosition(750, 385);
+    SoundEffectTickBoxO.setTexture(TickBoxSelectedTexO);
+    SoundEffectTickBoxO.setOrigin(SoundEffectTickBoxO.getGlobalBounds().width / 2, SoundEffectTickBoxO.getGlobalBounds().height / 2);
+    SoundEffectTickBoxO.setScale(2, 2);
+    SoundEffectTickBoxO.setPosition(750, 385);
 
     MusicTickBoxO.setTexture(TickBoxSelectedTexO);
     MusicTickBoxO.setOrigin(MusicTickBoxO.getGlobalBounds().width / 2, MusicTickBoxO.getGlobalBounds().height / 2);
