@@ -3,11 +3,12 @@
 #include<SFML/Audio.hpp>
 #include<string>
 #include<vector>
-#include"Tools.h";
+#include "Game Settings And Audio.h"
 using namespace std;
 using namespace sf;
 
-namespace Plants_Zombies {
+namespace Plants_Zombies 
+{
 	int score;
 
 #pragma region Forward Declaration for Structs
@@ -66,7 +67,7 @@ namespace Plants_Zombies {
 	Sound BucketHatHitSound;
 #pragma endregion
 
-
+#pragma region Plants
 	//will load all textures once
 	void LoadPlantTexturesAndSounds() {
 		//Audio
@@ -124,7 +125,7 @@ namespace Plants_Zombies {
 		float speed;
 
 		Time projectileLifeSpan;
-		float clockTime;
+		float clockTime = 0;
 
 		int sunCoinYLimt;
 		int sunValue;
@@ -188,7 +189,7 @@ namespace Plants_Zombies {
 				sunCoinYLimt = yLimit;
 			}
 		}
-		void update() 
+		void update()
 		{
 			clockTime += deltaTime;
 			if (type == PeaShooter || type == SnowPeaShooter || type == PuffShroom || type == ScaredyShroom)
@@ -234,7 +235,7 @@ namespace Plants_Zombies {
 
 		Clock animationClock;
 		Time timeForAction, animationSpeed = seconds(0.2); // time for each frame
-		float actionTimeClock, plantLifeTimeClock;
+		float actionTimeClock, plantLifeTimeClock = 0;
 
 		bool playActionSound = true;
 		//Sound ActionSound;
@@ -513,7 +514,7 @@ namespace Plants_Zombies {
 
 					PlantProjectilesARR.push_back(sunCoin);
 				}
-				else if(type == SunShroom)
+				else if (type == SunShroom)
 				{
 					int sunValue;
 					if (plantLifeTimeClock >= seconds(120).asSeconds())
@@ -546,7 +547,7 @@ namespace Plants_Zombies {
 
 					PlantProjectilesARR.push_back(bullet);
 				}
-				else if(type == ScaredyShroom && zombieInFront && !isHiding)
+				else if (type == ScaredyShroom && zombieInFront && !isHiding)
 				{
 					animationCol = 0;
 					doAction = true;
@@ -665,7 +666,7 @@ namespace Plants_Zombies {
 				health = 100;
 				damage = 20;
 				timeForAction = seconds(1.5);
-				
+
 				plantCollider.setSize({ 22, 27 });
 				shape.setTexture(ScaredyShroomIdleTex);
 				shape.setScale(3.5, 3.5);
@@ -677,7 +678,7 @@ namespace Plants_Zombies {
 		}
 	}PlantsArray[45];
 
-	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos) 
+	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos)
 	{
 		//deletes outdated projectiles
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
@@ -724,7 +725,7 @@ namespace Plants_Zombies {
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
 			if (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter ||
-			    PlantProjectilesARR[i].type == PuffShroom || PlantProjectilesARR[i].type == ScaredyShroom)
+				PlantProjectilesARR[i].type == PuffShroom || PlantProjectilesARR[i].type == ScaredyShroom)
 			{
 				window.draw(PlantProjectilesARR[i].shape);
 			}
@@ -745,10 +746,10 @@ namespace Plants_Zombies {
 			}
 		}
 	}
+#pragma endregion
 
-	// ZOMBIES =============================================
-
-#pragma region Texture Decalration
+#pragma region Zombies
+	#pragma region Texture Decalration
 	//Regular
 	Texture RegularWalkText;
 	Texture RegularIdleText;
@@ -775,7 +776,7 @@ namespace Plants_Zombies {
 	Texture DamegedNewsManAttackText;
 	Texture SurpriseText;
 	Texture NewsManDeath;
-#pragma endregion
+	#pragma endregion
 
 	void LoadZombieTextures() {
 		//regular
@@ -1505,4 +1506,5 @@ namespace Plants_Zombies {
 			zombie_array[i].start();
 		}
 	}
+#pragma endregion
 }

@@ -5,12 +5,10 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include "Game Settings And Audio.h"
+#include "planting system.h"
 #include "StartAnimation.h"
 #include "Wave System.h"
-#include "planting system.h"
-#include "Tools.h";
-#include "Game Settings And Audio.h"
-
 using namespace std;
 using namespace sf;
 
@@ -67,22 +65,19 @@ bool SoundOnPauseMenu = true;
 Texture LostMenuBlankTex;
 Texture RetryButtonTex;
 Texture RetryButtonHoverTex;
-
 Texture BackToMainMenuLevelEndTex;
 Texture BackToMainMenuLevelEndHoverTex;
-
 Texture WinMenuBlankTex;
 Texture NextlevelButtonTex;
 Texture NextlevelButtonHoverTex;
 
-Sprite LostMenuBlank;
-Sprite RetryButton;
-
 SoundBuffer LoseAndWinAndPauseBuffer;
 Sound LoseAndWinAndPause;
 
-Sprite BackToMainMenuLevelEnd;
+Sprite LostMenuBlank;
+Sprite RetryButton;
 
+Sprite BackToMainMenuLevelEnd;
 Sprite WinMenuBlank;
 Sprite NextlevelButton;
 SoundBuffer WinSoundBuffer;
@@ -516,7 +511,6 @@ void DrawLevelEnd(RenderWindow& window)
     }
 
 }
-
 #pragma endregion
 
 //handle the code of each level

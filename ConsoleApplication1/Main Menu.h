@@ -3,9 +3,9 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <string>
+#include "Game Settings And Audio.h"
 #include "Game Manager.h"
 #include "Tools.h"
-#include "Game Settings And Audio.h"
 
 using namespace std;
 using namespace sf;
@@ -62,13 +62,11 @@ Sprite BackFromOptions;
 
 #pragma region Sounds
 SoundBuffer HoverMainMenu;
-Sound HoverMainMenuSound;
-SoundBuffer CreditsTran;
-SoundBuffer ButtonSoundBuffer;
-Sound ButtonSound;
-Sound CreditsTranSound;
 SoundBuffer ClickBuffer;
+SoundBuffer ButtonSoundBuffer;
+Sound HoverMainMenuSound;
 Sound Click;
+Sound ButtonSound;
 #pragma endregion
 
 #pragma region Booleans
@@ -96,7 +94,7 @@ Clock animClock;
 Time MainMenuAnimationDuration = seconds(1.75);
 
 Clock DelayClockO;
-Time TickBoxDelayO=seconds(.25);
+Time TickBoxDelayO = seconds(.25);
 
 View MainMenuCamera(FloatRect(0, 0, 1280, 720));
 
@@ -105,8 +103,6 @@ void LoadMainMenuTex()
 {
     HoverMainMenu.loadFromFile("Audio/bleep.ogg");
     HoverMainMenuSound.setBuffer(HoverMainMenu);
-    CreditsTran.loadFromFile("Audio/tunetank.com_flash-screen.wav");
-    CreditsTranSound.setBuffer(CreditsTran);
     ButtonSoundBuffer.loadFromFile("Audio/bleep.ogg");
     ButtonSound.setBuffer(ButtonSoundBuffer);
     ClickBuffer.loadFromFile("Audio/buttonclick.ogg");
@@ -151,7 +147,7 @@ void MainMenuStart(RenderWindow& window)
 
     LoadMainMenuTex();
 
-#pragma region setup elements
+    #pragma region setup elements
     //sets the textures
     MainMenuBackGround.setTexture(MainMenuBackGroundTex);
     StartButton.setTexture(StartButtonTex);
@@ -198,37 +194,40 @@ void MainMenuStart(RenderWindow& window)
     Level2Lock.setPosition(375, 965);
     Level3Lock.setTexture(LevelLockTex);
     Level3Lock.setPosition(375, 1087);
-    //Options set up
+
+    #pragma region Options menu setup
+    //blank menu
     OptionsBlank.setTexture(OptionsBlankTex);
     OptionsBlank.setOrigin(OptionsBlank.getGlobalBounds().width / 2, OptionsBlank.getGlobalBounds().height / 2);
     OptionsBlank.setScale(2, 2);
-    OptionsBlank.setPosition(640,360);
-
+    OptionsBlank.setPosition(640, 360);
+    //opacity bg
     OptionOpacityTex.setTexture(OpacityOPtions);
     OptionOpacityTex.setPosition(0, 0);
-
+    //back button
     BackFromOptions.setTexture(BackFromOptionsTex);
     BackFromOptions.setOrigin(BackFromOptions.getGlobalBounds().width / 2, BackFromOptions.getGlobalBounds().height / 2);
     BackFromOptions.setScale(2.25, 2.25);
     BackFromOptions.setPosition(638, 497);
 
+    //tickboxes
+    //fullscreen tickbox
     FullScreenTickBoxO.setTexture(TickBoxBlankTexO);
     FullScreenTickBoxO.setOrigin(FullScreenTickBoxO.getGlobalBounds().width / 2, FullScreenTickBoxO.getGlobalBounds().height / 2);
     FullScreenTickBoxO.setScale(2, 2);
-    FullScreenTickBoxO.setPosition(750,335);
-
+    FullScreenTickBoxO.setPosition(750, 335);
+    //sound effect tickbox
     SoundEffectTickBoxO.setTexture(TickBoxSelectedTexO);
     SoundEffectTickBoxO.setOrigin(SoundEffectTickBoxO.getGlobalBounds().width / 2, SoundEffectTickBoxO.getGlobalBounds().height / 2);
     SoundEffectTickBoxO.setScale(2, 2);
     SoundEffectTickBoxO.setPosition(750, 385);
-
+    //music tick box
     MusicTickBoxO.setTexture(TickBoxSelectedTexO);
     MusicTickBoxO.setOrigin(MusicTickBoxO.getGlobalBounds().width / 2, MusicTickBoxO.getGlobalBounds().height / 2);
     MusicTickBoxO.setScale(2, 2);
     MusicTickBoxO.setPosition(750, 435);
-
-
-#pragma endregion
+    #pragma endregion
+    #pragma endregion
 }
 
 void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
@@ -355,7 +354,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
-                //CreditsTranSound.play();
                 ShowCredits = true;
             }
         }
@@ -398,7 +396,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
-                //CreditsTranSound.play();
                 ShowCredits = false;
             }
         }
@@ -425,7 +422,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             startAnimLevel = false;
         }
-#pragma region Buttons
+
+        #pragma region Buttons
         //Back to main menu
         if (BackTOMainMenuButtonLS.getGlobalBounds().contains(mouse_pos))
         {
@@ -440,7 +438,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
-                //CreditsTranSound.play();
                 ShowLevelSelectionMenu = false;
                 ShowCredits = false;
             }
@@ -464,7 +461,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
-                //CreditsTranSound.play();
                 SwitchState(Level1);
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
@@ -492,7 +488,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
-                //CreditsTranSound.play();
                 SwitchState(Level2);
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
@@ -526,7 +521,6 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             {
                 Click.setPitch(randPitch[rand() % 3]);
                 Click.play();
-                //CreditsTranSound.play();
                 SwitchState(Level3);
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
@@ -542,11 +536,10 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundLevel3Button = true;
             Level3Lock.setScale(0, 0);
         }
-#pragma endregion
+        #pragma endregion
     }
 
-#pragma region Options
-
+    #pragma region Options
     if (ShowOptions)
     {
         #pragma region update TickBoxes
@@ -634,10 +627,8 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
         }
     }
-#pragma endregion
-
+    #pragma endregion
 }
-
 
 //draws the main menu
 void DrawMainMenu(RenderWindow& window)
@@ -654,6 +645,7 @@ void DrawMainMenu(RenderWindow& window)
     window.draw(BackTOMainMenuButtonLS);
     window.draw(Level2Lock);
     window.draw(Level3Lock);
+
     if (ShowOptions)
     {
         window.draw(OptionOpacityTex);

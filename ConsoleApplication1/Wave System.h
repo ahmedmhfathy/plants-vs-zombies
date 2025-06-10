@@ -7,6 +7,7 @@
 #include <string>
 #include<time.h>
 #include"Tools.h"
+#include "Game Settings And Audio.h"
 #include"StartAnimation.h"
 #include"Plants_Zombies.h"
 
@@ -16,7 +17,6 @@ void intersectioncarsandzombies(int);
 void DrawWavesAndZombies(RenderWindow&, string);
 void startallwave(int, int, float);
 void level(int, int, float);
-void DeltaTimeManager();
 #pragma endregion
 
 #pragma region Textures and Sprites declaration

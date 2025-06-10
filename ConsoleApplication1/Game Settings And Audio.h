@@ -6,10 +6,38 @@ using namespace sf;
 
 RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies");
 
+Clock DeltaTimeClock;
+float deltaTime;
+
+bool IsPaused = false;
+bool wasPausedLastFrame = IsPaused;
+
 bool IsFullScreen = false;
 bool IsSoundEffects = true;
 bool IsMusic = true;
 bool changeFullScreenState = true;
+
+//should be called in the update function
+void DeltaTimeManager(bool IsPaused)
+{
+	// Check if the game just switched FROM paused TO unpaused
+	if (wasPausedLastFrame && !IsPaused)
+	{
+		DeltaTimeClock.restart();
+		deltaTime = 0.0f;
+		wasPausedLastFrame = false;
+	}
+	else if (!IsPaused)
+	{
+		deltaTime = DeltaTimeClock.restart().asSeconds();
+	}
+	else
+	{
+		deltaTime = 0.0f;
+		wasPausedLastFrame = true;
+	}
+	//cout << deltaTime << endl;
+}
 
 void SetupGameSettings() 
 {
@@ -23,7 +51,6 @@ void SetupGameSettings()
 }
 
 View lastCameraPos;
-
 void GameSettingsUpdate() 
 {
 	lastCameraPos = window.getView();
