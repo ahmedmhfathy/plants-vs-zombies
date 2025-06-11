@@ -90,12 +90,27 @@ void GameSettingsUpdate()
 
 void PlaySoundEffect(SoundBuffer& buffer) 
 {
-	float randPitch[3] = { 0.85, 1, 1.15 };
+	float randPitch[5] = {0.75, 0.85, 1, 1.15, 1.25 };
 
 	if (IsSoundEffects) {
 		Sound sound;
 		sound.setBuffer(buffer);
-		sound.setPitch(randPitch[rand() % 3]);
+		sound.setPitch(randPitch[rand() % 5]);
+
+		soundEffects.push_back(sound);
+		soundEffects.back().play();
+	}
+}
+
+void PlaySoundEffect(SoundBuffer buffer[], int size, int volume = 100) 
+{
+	float randPitch[5] = { 0.75, 0.85, 1, 1.15, 1.25 };
+
+	if (IsSoundEffects) {
+		Sound sound;
+		sound.setBuffer(buffer[rand()%size]);
+		sound.setVolume(volume);
+		sound.setPitch(randPitch[rand() % 5]);
 
 		soundEffects.push_back(sound);
 		soundEffects.back().play();
@@ -117,7 +132,10 @@ void SoundsUpdate()
 	{
 		cout << soundEffects.size() << endl;
 
-		//traditional for loop to remove stopped sounds
+		if (!soundEffects.empty() && (soundEffects.front().getStatus() == SoundSource::Status::Stopped))
+		{
+			soundEffects.pop_front();
+		}
 		
 		//for (int i = 0; i < soundEffects.size(); i++)
 		//{
@@ -129,9 +147,9 @@ void SoundsUpdate()
 		//}
 
 		//lamda function to remove stopped sounds
-		soundEffects.erase(remove_if(soundEffects.begin(), soundEffects.end(),
-			[](const Sound& sound) 
-			{ return sound.getStatus() == SoundSource::Status::Stopped; }),
-			soundEffects.end());
+		//soundEffects.erase(remove_if(soundEffects.begin(), soundEffects.end(),
+		//	[](const Sound& sound) 
+		//	{ return sound.getStatus() == SoundSource::Status::Stopped; }),
+		//	soundEffects.end());
 	}
 }
