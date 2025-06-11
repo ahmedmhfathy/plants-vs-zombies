@@ -351,7 +351,10 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[0].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                   // window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox && !Plants_Zombies::zombie_array[i].isDead)
+                    {
+                        window.draw(Plants_Zombies::zombie_array[i].jackCollider);
+                    }
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
@@ -360,7 +363,10 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[1].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                   // window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox && !Plants_Zombies::zombie_array[i].isDead)
+                    {
+                        window.draw(Plants_Zombies::zombie_array[i].jackCollider);
+                    }
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
 
@@ -370,7 +376,11 @@ void DrawWavesAndZombies(RenderWindow& window) {
             for (int i = 0; i < wave[2].numberzombie; i++) {
                 if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
                 {
-                   // window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox && !Plants_Zombies::zombie_array[i].isDead)
+                    {
+                        window.draw(Plants_Zombies::zombie_array[i].jackCollider);
+
+                    }
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
                 }
             }
