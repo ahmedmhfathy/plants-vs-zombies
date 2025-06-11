@@ -1,6 +1,9 @@
 #pragma once
 #include<SFML\Graphics.hpp>
 #include<SFML\Audio.hpp>
+#include<vector>
+#include<deque>
+#include<algorithm>
 using namespace std;
 using namespace sf;
 
@@ -17,9 +20,13 @@ bool IsSoundEffects = true;
 bool IsMusic = true;
 bool changeFullScreenState = true;
 
+deque<Sound> soundEffects;
+SoundBuffer GameMusicBuffer;
+Sound GameMusic;
+
 //should be called in the update function
-void DeltaTimeManager(bool IsPaused)
-{
+void DeltaTimeManager()
+{	
 	// Check if the game just switched FROM paused TO unpaused
 	if (wasPausedLastFrame && !IsPaused)
 	{
@@ -48,6 +55,12 @@ void SetupGameSettings()
 
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
+
+	GameMusicBuffer.loadFromFile("Audio/Plants vs. Zombies BackGround.wav");
+	GameMusic.setBuffer(GameMusicBuffer);
+	GameMusic.setVolume(5);
+	GameMusic.setLoop(true);
+	GameMusic.play();
 }
 
 View lastCameraPos;
@@ -72,5 +85,53 @@ void GameSettingsUpdate()
 		window.setView(lastCameraPos);
 
 		changeFullScreenState = false;
+	}
+}
+
+void PlaySoundEffect(SoundBuffer& buffer) 
+{
+	float randPitch[3] = { 0.85, 1, 1.15 };
+
+	if (IsSoundEffects) {
+		Sound sound;
+		sound.setBuffer(buffer);
+		sound.setPitch(randPitch[rand() % 3]);
+
+		soundEffects.push_back(sound);
+		soundEffects.back().play();
+	}
+}
+
+void SoundsUpdate() 
+{
+	if (IsMusic)
+	{
+		GameMusic.setVolume(5);
+	}
+	else
+	{
+		GameMusic.setVolume(0);
+	}
+
+	if (IsSoundEffects)
+	{
+		cout << soundEffects.size() << endl;
+
+		//traditional for loop to remove stopped sounds
+		
+		//for (int i = 0; i < soundEffects.size(); i++)
+		//{
+		//	if (soundEffects[i].getStatus() == SoundSource::Status::Stopped)
+		//	{
+		//		soundEffects.erase(soundEffects.begin() + i);
+		//		i--;
+		//	}
+		//}
+
+		//lamda function to remove stopped sounds
+		soundEffects.erase(remove_if(soundEffects.begin(), soundEffects.end(),
+			[](const Sound& sound) 
+			{ return sound.getStatus() == SoundSource::Status::Stopped; }),
+			soundEffects.end());
 	}
 }

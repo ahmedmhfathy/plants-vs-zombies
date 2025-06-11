@@ -63,10 +63,8 @@ Sprite BackFromOptions;
 #pragma region Sounds
 SoundBuffer HoverMainMenu;
 SoundBuffer ClickBuffer;
-SoundBuffer ButtonSoundBuffer;
 Sound HoverMainMenuSound;
 Sound Click;
-Sound ButtonSound;
 #pragma endregion
 
 #pragma region Booleans
@@ -103,22 +101,28 @@ void LoadMainMenuTex()
 {
     HoverMainMenu.loadFromFile("Audio/bleep.ogg");
     HoverMainMenuSound.setBuffer(HoverMainMenu);
-    ButtonSoundBuffer.loadFromFile("Audio/bleep.ogg");
-    ButtonSound.setBuffer(ButtonSoundBuffer);
     ClickBuffer.loadFromFile("Audio/buttonclick.ogg");
     Click.setBuffer(ClickBuffer);
 
     MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/pvz main menu new.png");
     StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
+	StartButtonTex.setSmooth(true);
     StartButtonHoverTex.loadFromFile("Assets/Main Menu/startbutton-hover.png");
+	StartButtonHoverTex.setSmooth(true);
     CreditButtonTex.loadFromFile("Assets/Main Menu/creditsbutton-default-2.png");
+	CreditButtonTex.setSmooth(true);
     CreditButtonHoverTex.loadFromFile("Assets/Main Menu/creditsbutton-hover-2.png");
+	CreditButtonHoverTex.setSmooth(true);
     QuitButtonTex.loadFromFile("Assets/Main Menu/quitbutton-default.png");
+	QuitButtonTex.setSmooth(true);
     QuitButtonHoverTex.loadFromFile("Assets/Main Menu/quitbutton-hover.png");
+	QuitButtonHoverTex.setSmooth(true);
     BackTOMainMenuTex.loadFromFile("Assets/Main Menu/back to main menu button-default.png");
     BackTOMainMenuHoverTex.loadFromFile("Assets/Main Menu/back to main menu button-hover.png");
     OptionsButtonTex.loadFromFile("Assets/Main Menu/optionsbutton-default.png");
+	OptionsButtonTex.setSmooth(true);
     OptionsButtonHoverTex.loadFromFile("Assets/Main Menu/optionsbutton-hover.png");
+	OptionsButtonHoverTex.setSmooth(true);
 
     //Level Selection 
     Level1Tex.loadFromFile("Assets/Main Menu/Level 1.png");
@@ -278,14 +282,16 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             StartButton.setTexture(StartButtonHoverTex);
             if (SoundStart)
             {
-                HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
-                HoverMainMenuSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
+                //HoverMainMenuSound.play();
                 SoundStart = false;
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+				PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
                 ShowLevelSelectionMenu = true;
             }
         }
@@ -300,14 +306,16 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             OptionsButton.setTexture(OptionsButtonHoverTex);
             if (SoundOptions)
             {
-                HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
-                HoverMainMenuSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
+                //HoverMainMenuSound.play();
                 SoundOptions = false;
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
                 ShowOptions = true;
             }
         }
@@ -322,14 +330,16 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundQuit)
             {
-                HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
-                HoverMainMenuSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //HoverMainMenuSound.setPitch(randPitch[rand() % 3]);
+                //HoverMainMenuSound.play();
                 SoundQuit = false;
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
                 window.close();
             }
 
@@ -346,14 +356,16 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             CreditButton.setTexture(CreditButtonHoverTex);
             if (SoundCredit)
             {
-                ButtonSound.setPitch(randPitch[rand() % 3]);
-                ButtonSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
                 SoundCredit = false;
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
                 ShowCredits = true;
             }
         }
@@ -387,15 +399,17 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundButton)
             {
-                ButtonSound.setPitch(randPitch[rand() % 3]);
-                ButtonSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
                 SoundButton = false;
             }
             BackTOMainMenuButton.setTexture(BackTOMainMenuHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
                 ShowCredits = false;
             }
         }
@@ -429,15 +443,17 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundButton)
             {
-                ButtonSound.setPitch(randPitch[rand() % 3]);
-                ButtonSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
                 SoundButton = false;
             }
             BackTOMainMenuButtonLS.setTexture(BackTOMainMenuHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
                 ShowLevelSelectionMenu = false;
                 ShowCredits = false;
             }
@@ -452,16 +468,20 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundLevel1Button)
             {
-                ButtonSound.setPitch(randPitch[rand() % 3]);
-                ButtonSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
                 SoundLevel1Button = false;
             }
             Level1Button.setTexture(Level1HoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
+
                 SwitchState(Level1);
+
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
             }
@@ -476,8 +496,9 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundLevel2Button)
             {
-                ButtonSound.setPitch(randPitch[rand() % 3]);
-                ButtonSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
                 SoundLevel2Button = false;
             }
 
@@ -486,9 +507,12 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
 
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
+
                 SwitchState(Level2);
+
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
             }
@@ -509,8 +533,9 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         {
             if (SoundLevel3Button)
             {
-                ButtonSound.setPitch(randPitch[rand() % 3]);
-                ButtonSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
                 SoundLevel3Button = false;
             }
 
@@ -519,9 +544,12 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
 
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
+
                 SwitchState(Level3);
+
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
             }
@@ -562,18 +590,19 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         if (BackFromOptions.getGlobalBounds().contains(mouse_pos))
         {
             BackFromOptions.setTexture(BackFromOptionsHoverTex);
-            cout << 1 << endl;
             if (BackFromOptionsSound)
             {
-                ButtonSound.setPitch(randPitch[rand() % 3]);
-                ButtonSound.play();
+                PlaySoundEffect(HoverMainMenu);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
                 BackFromOptionsSound = false;
             }
 
             if (Mouse::isButtonPressed(Mouse::Left))
             {
-                Click.setPitch(randPitch[rand() % 3]);
-                Click.play();
+                PlaySoundEffect(ClickBuffer);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
                 ShowOptions = false;
             }
         }

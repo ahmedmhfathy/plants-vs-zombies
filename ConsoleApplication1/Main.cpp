@@ -12,9 +12,6 @@
 using namespace std;
 using namespace sf;
 
-SoundBuffer GameMusicBuffer;
-Sound GameMusic;
-
 #pragma region Function Declaration
 void Start();
 void Update();
@@ -45,12 +42,6 @@ void Start()
 {
     SetupGameSettings();
 
-    GameMusicBuffer.loadFromFile("Audio/Plants vs. Zombies BackGround.wav");
-    GameMusic.setBuffer(GameMusicBuffer);
-    GameMusic.setVolume(5);
-    GameMusic.setLoop(true);
-    GameMusic.play();
-
     Plants_Zombies::LoadPlantTexturesAndSounds(); //textures loaded here once
     Plants_Zombies::LoadZombieTextures();
     StartAnimationNS::LoadStartAndWaveAnimationTextures();
@@ -62,14 +53,13 @@ void Start()
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
-
-    wasPausedLastFrame = IsPaused;
 }
 
 void Update()
 {
-    DeltaTimeManager(IsPaused);
+    DeltaTimeManager();
     GameSettingsUpdate();
+    SoundsUpdate();
 
     //gets mouse world position from screen position
     Mousepostion = Mouse::getPosition(window);
@@ -79,15 +69,6 @@ void Update()
     //{
     //    cout << int(MouseWorldPostion.x) << "    " << int(MouseWorldPostion.y) << endl;
     //}
-
-    if (IsMusic)
-    {
-        GameMusic.setVolume(5);
-    }
-    if (!IsMusic)
-    {
-        GameMusic.setVolume(0);
-    }
 
     //calls the update function depending on current state and pause state
     if (CurrentState == MainMenu)
