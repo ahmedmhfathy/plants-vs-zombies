@@ -58,13 +58,13 @@ namespace Plants_Zombies
 	SoundBuffer newsmanyellbuffer[2];
 	SoundBuffer newsManPaperRipSoundBuffer;
 	SoundBuffer BucketHatHitSoundBuffer[2];
-	//Sound SunCoinSound;
-	//Sound ShootSound;
-	//Sound SplatSound;
-	//Sound EatSound;
-	//Sound newsmanyell;
-	//Sound newsManPaperRipSound;
-	//Sound BucketHatHitSound;
+	Sound SunCoinSound;
+	Sound ShootSound;
+	Sound SplatSound;
+	Sound EatSound;
+	Sound newsmanyell;
+	Sound newsManPaperRipSound;
+	Sound BucketHatHitSound;
 #pragma endregion
 
 #pragma region Plants
@@ -72,9 +72,9 @@ namespace Plants_Zombies
 	void LoadPlantTexturesAndSounds() {
 		//Audio
 		SunCoinSoundBuffer.loadFromFile("Audio/points.ogg");
-		//SunCoinSound.setBuffer(SunCoinSoundBuffer);
+		SunCoinSound.setBuffer(SunCoinSoundBuffer);
 		PeaShootSoundBuffer.loadFromFile("Audio/Plants/peaShoot1.ogg");
-		//ShootSound.setBuffer(PeaShootSoundBuffer);
+		ShootSound.setBuffer(PeaShootSoundBuffer);
 		SplatSoundBuffer[0].loadFromFile("Audio/Plants/splat1.ogg");
 		SplatSoundBuffer[1].loadFromFile("Audio/Plants/splat2.ogg");
 		SplatSoundBuffer[2].loadFromFile("Audio/Plants/splat3.ogg");
@@ -84,7 +84,7 @@ namespace Plants_Zombies
 		newsmanyellbuffer[0].loadFromFile("Audio/Zombies/newspaper_rarrgh.ogg");
 		newsmanyellbuffer[1].loadFromFile("Audio/Zombies/newspaper_rarrgh2.ogg");
 		newsManPaperRipSoundBuffer.loadFromFile("Audio/Zombies/newspaper_rip.ogg");
-		//newsManPaperRipSound.setBuffer(newsManPaperRipSoundBuffer);
+		newsManPaperRipSound.setBuffer(newsManPaperRipSoundBuffer);
 		BucketHatHitSoundBuffer[0].loadFromFile("Audio/Zombies/shieldhit.ogg");
 		BucketHatHitSoundBuffer[1].loadFromFile("Audio/Zombies/shieldhit2.ogg");
 
@@ -285,9 +285,8 @@ namespace Plants_Zombies
 
 						if (playActionSound)
 						{
-							PlaySoundEffect(PeaShootSoundBuffer);
-							//ShootSound.setPitch(randPitch[rand() % 3]);
-							//ShootSound.play();
+							ShootSound.setPitch(randPitch[rand() % 3]);
+							ShootSound.play();
 							playActionSound = false;
 						}
 					}
@@ -314,9 +313,8 @@ namespace Plants_Zombies
 
 						if (playActionSound)
 						{
-							PlaySoundEffect(PeaShootSoundBuffer);
-							//ShootSound.setPitch(randPitch[rand() % 3]);
-							//ShootSound.play();
+							ShootSound.setPitch(randPitch[rand() % 3]);
+							ShootSound.play();
 							playActionSound = false;
 						}
 					}
@@ -410,14 +408,6 @@ namespace Plants_Zombies
 						animationCol = (animationCol + 1) % 5;
 
 						shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
-
-						if (playActionSound)
-						{
-							PlaySoundEffect(PeaShootSoundBuffer);
-							//ShootSound.setPitch(randPitch[rand() % 3]);
-							//ShootSound.play();
-							playActionSound = false;
-						}
 					}
 				}
 				else if (type == ScaredyShroom)
@@ -454,14 +444,6 @@ namespace Plants_Zombies
 							shape.setTexture(ScaredyShroomAttackTex);
 
 							animationCol = (animationCol + 1) % 3;
-
-							if (playActionSound)
-							{
-								PlaySoundEffect(PeaShootSoundBuffer);
-								//ShootSound.setPitch(randPitch[rand() % 3]);
-								//ShootSound.play();
-								playActionSound = false;
-							}
 						}
 					}
 					else
@@ -725,9 +707,8 @@ namespace Plants_Zombies
 				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
 				&& Mouse::isButtonPressed(Mouse::Left))
 			{
-				PlaySoundEffect(SunCoinSoundBuffer);
-				//SunCoinSound.setPitch(randPitch[rand() % 3]);
-				//SunCoinSound.play();
+				SunCoinSound.setPitch(randPitch[rand() % 3]);
+				SunCoinSound.play();
 				score += PlantProjectilesARR[i].sunValue;
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
@@ -869,8 +850,8 @@ namespace Plants_Zombies
 
 	public:
 		void start() {
-			//SplatSound.setVolume(25);
-			//EatSound.setVolume(25);
+			SplatSound.setVolume(25);
+			EatSound.setVolume(25);
 			Deathclock.restart();
 			Zclock.restart();
 			EatClock.restart();
@@ -961,11 +942,11 @@ namespace Plants_Zombies
 				health = 100000;
 				speed = 20.4;
 				damage = 20;
-				Extra_damage = 1000;
+				Extra_damage = 10000;
 
 				zombieCollider.setSize({ 50, 57 });
 				zombieCollider.setScale(1.4, 1);
-				jackCollider.setSize({ 150,150 });
+				jackCollider.setSize({ 200,200 });
 				jackCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
 				break;
@@ -1032,11 +1013,9 @@ namespace Plants_Zombies
 				else if (type == newsMan && health < 800 && !isDamaged && !isDead) {
 					isDamaged = true;
 					if (!wassoundplayed) {
-						PlaySoundEffect(newsManPaperRipSoundBuffer);
-						PlaySoundEffect(newsmanyellbuffer, 2, 25);
-						//newsManPaperRipSound.play();
-						//newsmanyell.setBuffer(newsmanyellbuffer[rand() % 2]);
-						//newsmanyell.play();
+						newsManPaperRipSound.play();
+						newsmanyell.setBuffer(newsmanyellbuffer[rand() % 2]);
+						newsmanyell.play();
 						wassoundplayed = true;
 					}
 					speed = 120;
@@ -1076,7 +1055,9 @@ namespace Plants_Zombies
 				isDead = true;
 				isMoving = false;
 				isAttacking = false;
+				health = 0;
 			}
+			jackCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
 			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
 
 		}
@@ -1100,16 +1081,14 @@ namespace Plants_Zombies
 
 						if (type == bucketHat)
 						{
-							PlaySoundEffect(BucketHatHitSoundBuffer, 2);
-							//BucketHatHitSound.setBuffer(BucketHatHitSoundBuffer[rand() % 2]);
-							//BucketHatHitSound.setPitch(randPitch[rand() % 3]);
-							//BucketHatHitSound.play();
+							BucketHatHitSound.setBuffer(BucketHatHitSoundBuffer[rand() % 2]);
+							BucketHatHitSound.setPitch(randPitch[rand() % 3]);
+							BucketHatHitSound.play();
 						}
 
-						PlaySoundEffect(SplatSoundBuffer, 3, 25);
-						//SplatSound.setBuffer(SplatSoundBuffer[rand() % 3]);
-						//SplatSound.setPitch(randPitch[rand() % 3]);
-						//SplatSound.play();
+						SplatSound.setBuffer(SplatSoundBuffer[rand() % 3]);
+						SplatSound.setPitch(randPitch[rand() % 3]);
+						SplatSound.play();
 
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 						j--;
@@ -1150,18 +1129,14 @@ namespace Plants_Zombies
 					//attack clock
 					if (EatClock.getElapsedTime() >= seconds(1))
 					{
-						PlaySoundEffect(ZombieEatSoundBuffer, 3, 25);
-						//EatSound.setBuffer(ZombieEatSoundBuffer[rand() % 3]);
-						//EatSound.play();
+						EatSound.setBuffer(ZombieEatSoundBuffer[rand() % 3]);
+						EatSound.play();
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						EatClock.restart();
 					}
 
-					//Jack in The Box
-					if (type == jackInTheBox && jackBomb)
-					{
-						PlantsArray[CurrentPlantIndex].takeDmg(Extra_damage);
-					}
+					
+
 				}
 				else
 				{
@@ -1209,7 +1184,7 @@ namespace Plants_Zombies
 			}
 
 			// Jack in the box
-			if (type == jackInTheBox && !isDead)
+			if (type == jackInTheBox && !isDead && health > 0)
 			{
 				jackCollider.setPosition(zombieCont.getPosition().x - 30, zombieCont.getPosition().y + 40);
 				if (started && !jackBomb && jackClock.getElapsedTime().asSeconds() > 40)
@@ -1219,6 +1194,21 @@ namespace Plants_Zombies
 					jackClock.restart();
 
 				}
+
+				//Jack in The Box
+				if (jackBomb)
+				{
+					for (int i = 0; i < 45; i++)
+					{
+						if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+							&& jackCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
+						{
+							PlantsArray[i].takeDmg(Extra_damage);
+						}
+					}
+				}
+				
+
 			}
 
 		}
@@ -1621,7 +1611,7 @@ namespace Plants_Zombies
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = randomzombietype;
+			zombie_array[i].type = jackInTheBox;
 			zombie_array[i].start();
 		}
 	}
