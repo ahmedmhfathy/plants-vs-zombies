@@ -136,20 +136,5 @@ void SoundsUpdate()
 		{
 			soundEffects.pop_front();
 		}
-		
-		//for (int i = 0; i < soundEffects.size(); i++)
-		//{
-		//	if (soundEffects[i].getStatus() == SoundSource::Status::Stopped)
-		//	{
-		//		soundEffects.erase(soundEffects.begin() + i);
-		//		i--;
-		//	}
-		//}
-
-		//lamda function to remove stopped sounds
-		//soundEffects.erase(remove_if(soundEffects.begin(), soundEffects.end(),
-		//	[](const Sound& sound) 
-		//	{ return sound.getStatus() == SoundSource::Status::Stopped; }),
-		//	soundEffects.end());
 	}
 }
