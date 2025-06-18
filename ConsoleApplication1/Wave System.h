@@ -58,8 +58,8 @@ bool playWaveSounds = false;
 #pragma region hours and timer
 Clock clockwave2;
 Clock clockfinalwave;
-Clock GlobalClock;
 Clock LoseGameClock;
+//Clock GlobalClock;
 
 Time timertostartwave2;
 Time timertostartwave3;
@@ -141,7 +141,7 @@ void setupWaveData() {
     clockfinalwave.restart();
     LoseGameClock.restart();
     DeltaTimeClock.restart();
-    GlobalClock.restart();
+    //GlobalClock.restart();
 
     nowave = true;
     checkstart_wave2 = true;
@@ -161,7 +161,7 @@ void setupWaveData() {
     scalefactortextlosegame = 4.2f;
 
     timeSinceStart = 0;
-	deltaTime = DeltaTimeClock.restart().asSeconds();
+	//deltaTime = DeltaTimeClock.restart().asSeconds();
 }
 
 void startZombiePositions(int numZombies) {
@@ -190,9 +190,10 @@ void startallwave(int numberwave, int numberzombie, float delaybetween) {
 
     srand(time(0));
 
-    GlobalClock.restart();
+    //GlobalClock.restart();
+    //timeSinceStart = GlobalClock.getElapsedTime().asSeconds();
 
-    timeSinceStart = GlobalClock.getElapsedTime().asSeconds();
+    timeSinceStart = 0;
 
     startZombiePositions(numberzombie);
 }
@@ -238,7 +239,10 @@ void allwave(int numberwave, int numberzombie) {
     }
 }
 
-void level(int numberwave, int num, float delaybetweenw1) {
+void level(int numberwave, int num, float delaybetweenw1) 
+{
+    timeSinceStart += deltaTime;
+
     if (endRSP)
     {
         if (numberwave == 2) {
@@ -364,6 +368,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
                         window.draw(Plants_Zombies::zombie_array[i].jackCollider);
                     }*/
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                 }
             }
         }
@@ -376,6 +381,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
                         window.draw(Plants_Zombies::zombie_array[i].jackCollider);
                     }*/
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                 }
 
             }
@@ -387,9 +393,9 @@ void DrawWavesAndZombies(RenderWindow& window) {
                     /*if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox && !Plants_Zombies::zombie_array[i].isDead)
                     {
                         window.draw(Plants_Zombies::zombie_array[i].jackCollider);
-
                     }*/
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                    //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                 }
             }
         }

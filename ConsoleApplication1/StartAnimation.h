@@ -169,7 +169,7 @@ namespace  StartAnimationNS {
         if (moveleft) {
             movecars(); // When Move Camera is end .... Start move car
         }
-        timeSinceStart = GlobalClock.getElapsedTime().asSeconds();
+        //timeSinceStart = GlobalClock.getElapsedTime().asSeconds();
     }
 
     void movecamera(RenderWindow& window) {

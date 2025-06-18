@@ -831,6 +831,8 @@ namespace Plants_Zombies
 		RectangleShape jackCollider;
 
 		zombieType type;
+
+		#pragma region booleans
 		bool started = false;
 		bool stoped;
 		bool isSlowed = false;
@@ -853,12 +855,12 @@ namespace Plants_Zombies
 		bool SquishEffect = false;
 		bool wassoundplayed = false;
 		bool startJackClock = true;
+		#pragma endregion
 
 		Clock Zclock, EatClock, CrushedZombieClock, Deathclock, jackClock;
 
 	private:
 		int CollIndex = 0;
-		int RowIndex = 0;
 
 		bool isIdle = false;
 		bool PlantsinFront = false;
@@ -870,15 +872,13 @@ namespace Plants_Zombies
 
 	public:
 		void start() {
-			//SplatSound.setVolume(25);
-			//EatSound.setVolume(25);
 			Deathclock.restart();
 			Zclock.restart();
 			EatClock.restart();
 			CrushedZombieClock.restart();
 			jackClock.restart();
 
-#pragma region Booleans
+			#pragma region Booleans
 			started = false;
 			stoped;
 			isSlowed = false;
@@ -899,7 +899,7 @@ namespace Plants_Zombies
 			PlantInfront = false;
 			jackBomb = false;
 			startJackClock = true;
-#pragma endregion
+			#pragma endregion
 
 			switch (type)
 			{
@@ -925,7 +925,6 @@ namespace Plants_Zombies
 				zombieCollider.setSize({ 44, 57 });
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
-				// zombieCont.setPosition(1300, row[rand() % 5]); // sets random spawn position 
 				break;
 			case bucketHat:
 				zombieCont.setTexture(BucketHatWalkText);
@@ -936,7 +935,6 @@ namespace Plants_Zombies
 				zombieCollider.setSize({ 37, 56 });
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
-				// zombieCont.setPosition(1300, row[rand() % 5]); // sets random spawn position 
 				break;
 			case newsMan:
 				zombieCont.setTexture(RegularWalkText);
@@ -947,7 +945,6 @@ namespace Plants_Zombies
 				zombieCollider.setSize({ 50, 57 });
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
-				// zombieCont.setPosition(1300, row[rand() % 5]); // sets random spawn position 
 				break;
 			case Dead:
 				isDead = true;
@@ -963,12 +960,12 @@ namespace Plants_Zombies
 				health = 100000;
 				speed = 20.4;
 				damage = 20;
-				Extra_damage = 10000;
+				Extra_damage = 9999999;
 
 				zombieCollider.setSize({ 50, 57 });
 				zombieCollider.setScale(1.4, 1);
-				jackCollider.setSize({ 200,200 });
-				jackCollider.setScale(1.4, 1);
+				jackCollider.setSize({ 280,330 });
+				jackCollider.setScale(1, 1);
 				zombieCont.setScale(3, 3);
 				break;
 			case soccerGuy:
@@ -994,8 +991,8 @@ namespace Plants_Zombies
 				break;
 			}
 
-			zombieCollider.setFillColor(Color(252, 3, 3, 180));
-			jackCollider.setFillColor(Color(150, 150, 150, 255));
+			zombieCollider.setFillColor(Color(255, 0, 0, 180));
+			jackCollider.setFillColor(Color(150, 150, 150, 180));
 			zombieCont.setColor(Color(255, 255, 255, 255));
 
 		}
@@ -1080,7 +1077,8 @@ namespace Plants_Zombies
 				isAttacking = false;
 				health = 0;
 			}
-			jackCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
+
+			jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
 			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
 
 		}
@@ -1211,7 +1209,6 @@ namespace Plants_Zombies
 			// Jack in the box
 			if (type == jackInTheBox && !isDead && health > 0)
 			{
-				jackCollider.setPosition(zombieCont.getPosition().x - 30, zombieCont.getPosition().y + 40);
 				if (started && !jackBomb && jackClock.getElapsedTime().asSeconds() > 15)
 				{
 					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
