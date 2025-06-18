@@ -88,21 +88,29 @@ void GameSettingsUpdate()
 	}
 }
 
-void PlaySoundEffect(SoundBuffer& buffer) 
+void PlaySoundEffect(SoundBuffer& buffer, bool Pitch) 
 {
 	float randPitch[5] = {0.75, 0.85, 1, 1.15, 1.25 };
 
 	if (IsSoundEffects) {
 		Sound sound;
 		sound.setBuffer(buffer);
-		sound.setPitch(randPitch[rand() % 5]);
+
+		if (Pitch)
+		{
+			sound.setPitch(randPitch[rand() % 5]);
+		}
+		else
+		{
+			sound.setPitch(1.0f);
+		}
 
 		soundEffects.push_back(sound);
 		soundEffects.back().play();
 	}
 }
 
-void PlaySoundEffect(SoundBuffer buffer[], int size, int volume = 100) 
+void PlaySoundEffect(SoundBuffer buffer[], bool Pitch , int size, int volume = 100) 
 {
 	float randPitch[5] = { 0.75, 0.85, 1, 1.15, 1.25 };
 
@@ -110,7 +118,15 @@ void PlaySoundEffect(SoundBuffer buffer[], int size, int volume = 100)
 		Sound sound;
 		sound.setBuffer(buffer[rand()%size]);
 		sound.setVolume(volume);
-		sound.setPitch(randPitch[rand() % 5]);
+
+		if (Pitch)
+		{
+			sound.setPitch(randPitch[rand() % 5]);
+		}
+		else
+		{
+			sound.setPitch(1.0f);
+		}
 
 		soundEffects.push_back(sound);
 		soundEffects.back().play();

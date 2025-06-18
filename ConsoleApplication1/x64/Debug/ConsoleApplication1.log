@@ -6,13 +6,13 @@ C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(93,30):
 C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(93,39): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(107,31): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(115,31): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(107,40): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(115,40): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(112,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(120,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Tools.h(51,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data

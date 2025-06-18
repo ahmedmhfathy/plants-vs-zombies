@@ -285,7 +285,7 @@ namespace Plants_Zombies
 
 						if (playActionSound)
 						{
-							PlaySoundEffect(PeaShootSoundBuffer);
+							PlaySoundEffect(PeaShootSoundBuffer, true);
 							//ShootSound.setPitch(randPitch[rand() % 3]);
 							//ShootSound.play();
 							playActionSound = false;
@@ -314,7 +314,7 @@ namespace Plants_Zombies
 
 						if (playActionSound)
 						{
-							PlaySoundEffect(PeaShootSoundBuffer);
+							PlaySoundEffect(PeaShootSoundBuffer, true);
 							//ShootSound.setPitch(randPitch[rand() % 3]);
 							//ShootSound.play();
 							playActionSound = false;
@@ -413,7 +413,7 @@ namespace Plants_Zombies
 
 						if (playActionSound)
 						{
-							PlaySoundEffect(PeaShootSoundBuffer);
+							PlaySoundEffect(PeaShootSoundBuffer, true);
 							//ShootSound.setPitch(randPitch[rand() % 3]);
 							//ShootSound.play();
 							playActionSound = false;
@@ -457,7 +457,7 @@ namespace Plants_Zombies
 
 							if (playActionSound)
 							{
-								PlaySoundEffect(PeaShootSoundBuffer);
+								PlaySoundEffect(PeaShootSoundBuffer, true);
 								//ShootSound.setPitch(randPitch[rand() % 3]);
 								//ShootSound.play();
 								playActionSound = false;
@@ -725,7 +725,7 @@ namespace Plants_Zombies
 				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
 				&& Mouse::isButtonPressed(Mouse::Left))
 			{
-				PlaySoundEffect(SunCoinSoundBuffer);
+				PlaySoundEffect(SunCoinSoundBuffer, true);
 				//SunCoinSound.setPitch(randPitch[rand() % 3]);
 				//SunCoinSound.play();
 				score += PlantProjectilesARR[i].sunValue;
@@ -1036,8 +1036,8 @@ namespace Plants_Zombies
 				else if (type == newsMan && health < 800 && !isDamaged && !isDead) {
 					isDamaged = true;
 					if (!wassoundplayed) {
-						PlaySoundEffect(newsManPaperRipSoundBuffer);
-						PlaySoundEffect(newsmanyellbuffer, 2, 25);
+						PlaySoundEffect(newsManPaperRipSoundBuffer, true);
+						PlaySoundEffect(newsmanyellbuffer, false, 2, 25);
 						//newsManPaperRipSound.play();
 						//newsmanyell.setBuffer(newsmanyellbuffer[rand() % 2]);
 						//newsmanyell.play();
@@ -1108,13 +1108,13 @@ namespace Plants_Zombies
 
 						if (type == bucketHat)
 						{
-							PlaySoundEffect(BucketHatHitSoundBuffer, 2);
+							PlaySoundEffect(BucketHatHitSoundBuffer, true, 2);
 							//BucketHatHitSound.setBuffer(BucketHatHitSoundBuffer[rand() % 2]);
 							//BucketHatHitSound.setPitch(randPitch[rand() % 3]);
 							//BucketHatHitSound.play();
 						}
 
-						PlaySoundEffect(SplatSoundBuffer, 3, 25);
+						PlaySoundEffect(SplatSoundBuffer, true ,3, 25);
 						//SplatSound.setBuffer(SplatSoundBuffer[rand() % 3]);
 						//SplatSound.setPitch(randPitch[rand() % 3]);
 						//SplatSound.play();
@@ -1160,7 +1160,7 @@ namespace Plants_Zombies
 					if (EatTimer.asSeconds() <= EatClock)
 					{
 						cout << "ana bakol" << endl;
-						PlaySoundEffect(ZombieEatSoundBuffer, 3, 25);
+						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
 						//EatSound.setBuffer(ZombieEatSoundBuffer[rand() % 3]);
 						//EatSound.play();
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
