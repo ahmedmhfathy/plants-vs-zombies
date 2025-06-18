@@ -208,7 +208,7 @@ void allwave(int numberwave, int numberzombie) {
         {
             if (Plants_Zombies::zombie_array[i].startJackClock)
             {
-                Plants_Zombies::zombie_array[i].jackClock.restart();
+                Plants_Zombies::zombie_array[i].jackClock = 0;
 				Plants_Zombies::zombie_array[i].startJackClock = false;
             }
             Plants_Zombies::zombie_array[i].started = true;

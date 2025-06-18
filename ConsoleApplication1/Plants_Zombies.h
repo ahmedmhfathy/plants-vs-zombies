@@ -857,7 +857,9 @@ namespace Plants_Zombies
 		bool startJackClock = true;
 		#pragma endregion
 
-		Clock Zclock, EatClock, CrushedZombieClock, Deathclock, jackClock;
+		Clock Zclock, Deathclock;
+		float EatClock, CrushedZombieClock,  jackClock;
+		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(25);
 
 	private:
 		int CollIndex = 0;
@@ -874,9 +876,9 @@ namespace Plants_Zombies
 		void start() {
 			Deathclock.restart();
 			Zclock.restart();
-			EatClock.restart();
-			CrushedZombieClock.restart();
-			jackClock.restart();
+			EatClock = 0;
+			CrushedZombieClock = 0;
+			jackClock = 0;
 
 			#pragma region Booleans
 			started = false;
@@ -998,6 +1000,9 @@ namespace Plants_Zombies
 		}
 
 		void update(float deltaTime) {
+			EatClock +=deltaTime;
+			CrushedZombieClock += deltaTime;
+			jackClock += deltaTime;
 			if (health <= 0)
 			{
 				isDead = true;
@@ -1152,13 +1157,15 @@ namespace Plants_Zombies
 					isMoving = false;
 					isAttacking = true;
 					//attack clock
-					if (EatClock.getElapsedTime() >= seconds(1))
+					if (EatTimer.asSeconds() <= EatClock)
 					{
+						cout << "ana bakol" << endl;
 						PlaySoundEffect(ZombieEatSoundBuffer, 3, 25);
 						//EatSound.setBuffer(ZombieEatSoundBuffer[rand() % 3]);
 						//EatSound.play();
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
-						EatClock.restart();
+						//EatClock.restart();
+						EatClock = 0;
 					}
 				}
 				else
@@ -1196,9 +1203,9 @@ namespace Plants_Zombies
 					zombieCont.setScale(3.5, 0.7);
 					zombieCont.setPosition(zombieCont.getPosition().x, (zombieCont.getPosition().y) + 100);
 					speed = 0;
-					CrushedZombieClock.restart();
+					CrushedZombieClock = 0;
 				}
-				if (CrushedZombieClock.getElapsedTime().asSeconds() >= 1.5)
+				if (CrushedTimer.asSeconds() <= CrushedZombieClock)
 				{
 					zombieCont.setScale(0, 0);
 					zombieCont.setPosition(2000, 2000);
@@ -1209,11 +1216,12 @@ namespace Plants_Zombies
 			// Jack in the box
 			if (type == jackInTheBox && !isDead && health > 0)
 			{
-				if (started && !jackBomb && jackClock.getElapsedTime().asSeconds() > 15)
+				if (started && !jackBomb && jackTimer.asSeconds() <= jackClock)
 				{
 					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
 					jackBomb = true;
-					jackClock.restart();
+					//jackClock.restart();
+					jackClock = 0;
 
 				}
 
@@ -1630,7 +1638,7 @@ namespace Plants_Zombies
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = jackInTheBox;
+			zombie_array[i].type = randomzombietype;
 			zombie_array[i].start();
 		}
 	}
