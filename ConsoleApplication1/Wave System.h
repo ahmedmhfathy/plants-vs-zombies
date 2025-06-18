@@ -161,6 +161,7 @@ void setupWaveData() {
     scalefactortextlosegame = 4.2f;
 
     timeSinceStart = 0;
+	deltaTime = DeltaTimeClock.restart().asSeconds();
 }
 
 void startZombiePositions(int numZombies) {
@@ -189,7 +190,9 @@ void startallwave(int numberwave, int numberzombie, float delaybetween) {
 
     srand(time(0));
 
+    GlobalClock.restart();
 
+    timeSinceStart = GlobalClock.getElapsedTime().asSeconds();
 
     startZombiePositions(numberzombie);
 }
@@ -221,7 +224,6 @@ void allwave(int numberwave, int numberzombie) {
         }
     }
 
-
     for (int i = 0; i < wave[numberwave].numberzombie; i++)
     {
         if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
@@ -237,8 +239,6 @@ void allwave(int numberwave, int numberzombie) {
 }
 
 void level(int numberwave, int num, float delaybetweenw1) {
-    timeSinceStart += deltaTime;
-
     if (endRSP)
     {
         if (numberwave == 2) {
