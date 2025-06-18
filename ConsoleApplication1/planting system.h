@@ -1,54 +1,73 @@
 #pragma once
-#include<SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include <vector>
 #include <string>
-#include<time.h>
-#include"Tools.h"
-#include"Plants_Zombies.h"
+#include <time.h>
+#include "Tools.h"
+#include "Plants_Zombies.h"
 using namespace std;
 using namespace sf;
 
 #pragma region texture declaration
-Texture peashootertex;
-Texture peashooteruntex;
-Texture sunflowertex;
-Texture sunfloweruntex;
-Texture wallnuttex;
-Texture wallnutuntex;
-Texture snowpeashootertex;
-Texture snowpeashooteruntex;
+Texture sunflowerAvailableTex;
+Texture sunflowerUnavailableTex;
+Texture peashooterAvailableTex;
+Texture peashooterUnavailableTex;
+Texture snowpeaAvailableTex;
+Texture snowpeaUnavailableTex;
+Texture wallnutAvailableTex;
+Texture wallnutUnavailableTex;
+Texture sunshroomAvailableTex;
+Texture sunshroomUnavailableTex;
+Texture puffshroomAvailableTex;
+Texture puffshroomUnavailableTex;
+Texture scaredyshroomAvailableTex;
+Texture scaredyshroomUnavailableTex;
+
+Texture emptySeedPacketTex;
 Texture shoveltex;
-Texture shovelcontainertex;
-Texture shovelcontaineruntex;
+Texture ShovelContainerAvailable;
+Texture ShovelContainerEmpty;
 Texture gradientopacitytex;
-Texture suncountertex;
+Texture sunContainerTex;
 #pragma endregion
 
 #pragma region sprite declaration
-Sprite peashootercontainer;
-Sprite snowpeashootercontainer;
-Sprite wallnutcontainer;
-Sprite sunflowercontainer;
+Sprite sunflowerSeedPacket;
+Sprite peashooterSeedPacket;
+Sprite snowpeashooterSeedPacket;
+Sprite wallnutSeedPacket;
+Sprite sunshroomSeedPacket;
+Sprite puffshroomSeedPacket;
+Sprite scaredyshroomSeedPacket;
+
+Sprite emptySeedPacket1;
+Sprite emptySeedPacket2;
+
 Sprite shovelcontainer;
-Sprite suncounter;
+Sprite sunContainer;
 Sprite gradientopacity;
 Sprite SelectionHolograph;
 #pragma endregion
 
 #pragma region clocks and time
-Clock PeaShooterClock, SnowPeaClock, WallNutClock, SunFlowerClock;
+float sunSpawnTimeClock = 0;
 Time SunSpawnTime = seconds(14);
-float sunSpawnTimeClock;
 
-Time SunFlowerCoolDown = seconds(7);
-Time PeaShooterCoolDown = seconds(7);
-Time SnowPeaCoolDown = seconds(7);
-Time WallNutCoolDown = seconds(30);
+float SunFlowerClock = 0;
+float PeaShooterClock = 0;
+float SnowPeaClock = 0;
+float WallNutClock = 0;
+float SunShroomClock = 0;
+float PuffShroomClock = 0;
+float ScaredyShroomClock = 0;
+
+Time LongCoolDown = seconds(50);
+Time MediumCoolDown = seconds(30);
+Time ShortCoolDown = seconds(7);
 #pragma endregion
-
-bool PlaySelectionSound = false;
 
 #pragma region Sounds
 SoundBuffer PlantingSoundBuffer;
@@ -62,8 +81,9 @@ Sound ShovelSound;
 Font font;
 Text moneytext;
 
-enum Selection { peashooter, snowpeashooter, sunflower, shovel, wallnut, sunshroom ,none }curruntselection;
+enum Selection { peashooter, snowpeashooter, sunflower, wallnut, sunshroom , puffshroom, scaredyshroom, shovel, none }curruntselection;
 
+bool PlaySelectionSound = false;
 bool isHolding = false;
 bool isNight;
 
@@ -80,51 +100,83 @@ void LoadSelectionTexture() {
 	SelectingPlant.loadFromFile("Audio/seedlift.ogg");
 	SelectingPlantSound.setBuffer(SelectingPlant);
 
-	peashootertex.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-1.png");
-	peashooteruntex.loadFromFile("Assets/Currency System and planting/peashooter-seedpacket-2.png");
-
-	sunflowertex.loadFromFile("Assets/Currency System and planting/sunflower-seedpacket-1.png");
-	sunfloweruntex.loadFromFile("Assets/Currency System and planting/sunflower-seedpacket-2.png");
-
-	wallnuttex.loadFromFile("Assets/Currency System and planting/wallnut-seedpacket-1.png");
-	wallnutuntex.loadFromFile("Assets/Currency System and planting/wallnut-seedpacket-2.png");
-
-	snowpeashootertex.loadFromFile("Assets/Currency System and planting/snowpea-seedpacket-1.png");
-	snowpeashooteruntex.loadFromFile("Assets/Currency System and planting/snowpea-seedpacket-2.png");
-
 	shoveltex.loadFromFile("Assets/Currency System and planting/shovel.png");
-	shovelcontainertex.loadFromFile("Assets/Currency System and planting/container-with-shovel.png");
-	shovelcontaineruntex.loadFromFile("Assets/Currency System and planting/empty-container.png");
+	ShovelContainerAvailable.loadFromFile("Assets/Currency System and planting/container-with-shovel.png");
+	ShovelContainerEmpty.loadFromFile("Assets/Currency System and planting/empty-container.png");
 
 	gradientopacitytex.loadFromFile("Assets/Currency System and planting/Gradient-opacity-layer.png");
-
-	suncountertex.loadFromFile("Assets/Currency System and planting/sun-cointainer.png");
+	sunContainerTex.loadFromFile("Assets/Currency System and planting/sun-cointainer.png");
+	emptySeedPacketTex.loadFromFile("Assets/Currency System and planting/New/seedpacket-container.png");
 
 	font.loadFromFile("Assets/HouseofTerror Regular.otf");
+
+	sunflowerAvailableTex.loadFromFile("Assets/Currency System and planting/New/sunflower-available.png");
+	sunflowerUnavailableTex.loadFromFile("Assets/Currency System and planting/New/sunflower-unavailable.png");
+	peashooterAvailableTex.loadFromFile("Assets/Currency System and planting/New/peashooter-available.png");
+	peashooterUnavailableTex.loadFromFile("Assets/Currency System and planting/New/peashooter-unavailable.png");
+	snowpeaAvailableTex.loadFromFile("Assets/Currency System and planting/New/snowpea-available.png");
+	snowpeaUnavailableTex.loadFromFile("Assets/Currency System and planting/New/snowpea-unavailable.png");
+	wallnutAvailableTex.loadFromFile("Assets/Currency System and planting/New/wallnut-available.png");
+	wallnutUnavailableTex.loadFromFile("Assets/Currency System and planting/New/wallnut-unavailable.png");
+	sunshroomAvailableTex.loadFromFile("Assets/Currency System and planting/New/sunshroom-available.png");
+	sunshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/sunshroom-unavailable.png");
+	puffshroomAvailableTex.loadFromFile("Assets/Currency System and planting/New/puffshroom-available.png");
+	puffshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/puffshroom-unavailable.png");
+	scaredyshroomAvailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-available.png");
+	scaredyshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-unavailable.png");
 }
 
-void SetupSelectionUI(Vector2f offset) {
+void SetupSelectionUI(Vector2f offset) 
+{
+	if (isNight)
+	{
+		sunshroomSeedPacket.setTexture(sunshroomUnavailableTex);
+		sunshroomSeedPacket.setPosition(29 + offset.x, 15 + offset.y);
+
+		scaredyshroomSeedPacket.setTexture(scaredyshroomUnavailableTex);
+		scaredyshroomSeedPacket.setPosition(29 + offset.x, 119 + offset.y);
+
+		puffshroomSeedPacket.setTexture(puffshroomUnavailableTex);
+		puffshroomSeedPacket.setPosition(29 + offset.x, 243 + offset.y);
+
+		peashooterSeedPacket.setTexture(peashooterUnavailableTex);
+		peashooterSeedPacket.setPosition(29 + offset.x, 357 + offset.y);
+
+		snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
+		snowpeashooterSeedPacket.setPosition(29 + offset.x, 476 + offset.y);
+
+		wallnutSeedPacket.setTexture(wallnutUnavailableTex);
+		wallnutSeedPacket.setPosition(29 + offset.x, 580 + offset.y);
+	}
+	else
+	{
+		sunflowerSeedPacket.setTexture(sunflowerUnavailableTex);
+		sunflowerSeedPacket.setPosition(24 + offset.x, 5 + offset.y);
+
+		peashooterSeedPacket.setTexture(peashooterUnavailableTex);
+		peashooterSeedPacket.setPosition(29 + offset.x, 129 + offset.y);
+
+		snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
+		snowpeashooterSeedPacket.setPosition(29 + offset.x, 248 + offset.y);
+
+		wallnutSeedPacket.setTexture(wallnutUnavailableTex);
+		wallnutSeedPacket.setPosition(29 + offset.x, 352 + offset.y);
+
+		emptySeedPacket1.setTexture(emptySeedPacketTex);
+		emptySeedPacket1.setPosition(29 + offset.x, 481 + offset.y);
+
+		emptySeedPacket2.setTexture(emptySeedPacketTex);
+		emptySeedPacket2.setPosition(29 + offset.x, 595 + offset.y);
+	}
 
 	gradientopacity.setTexture(gradientopacitytex);
 	gradientopacity.setPosition(0 + offset.x, 0 + offset.y);
 
-	suncounter.setTexture(suncountertex);
-	suncounter.setPosition(30 + offset.x, 20 + offset.y);
+	shovelcontainer.setTexture(ShovelContainerAvailable);
+	shovelcontainer.setPosition(170 + offset.x, 595 + offset.y);
 
-	sunflowercontainer.setTexture(sunflowertex);
-	sunflowercontainer.setPosition(23 + offset.x, 183 + offset.y);
-
-	peashootercontainer.setTexture(peashootertex);
-	peashootercontainer.setPosition(27 + offset.x, 292 + offset.y);
-
-	snowpeashootercontainer.setTexture(snowpeashootertex);
-	snowpeashootercontainer.setPosition(27 + offset.x, 393 + offset.y);
-
-	wallnutcontainer.setTexture(wallnuttex);
-	wallnutcontainer.setPosition(27 + offset.x, 490 + offset.y);
-
-	shovelcontainer.setTexture(shovelcontainertex);
-	shovelcontainer.setPosition(27 + offset.x, 595 + offset.y);
+	sunContainer.setTexture(sunContainerTex);
+	sunContainer.setPosition(170 + offset.x, 25 + offset.y);
 
 	moneytext.setFont(font);
 	moneytext.setString(to_string(Plants_Zombies::score));
@@ -132,19 +184,22 @@ void SetupSelectionUI(Vector2f offset) {
 	moneytext.setFillColor(Color::White);
 	moneytext.setOutlineThickness(3);
 	moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
-	moneytext.setPosition(80 + offset.x, 138 + offset.y);
+	moneytext.setPosition(170 + 53 + offset.x, 145 + offset.y);
 }
 
-void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
-	SetupSelectionUI(offset);
+void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) 
+{
 	isNight = isNight_;
+	SetupSelectionUI(offset);
 	Plants_Zombies::PlantProjectilesARR.clear();
 
-	PeaShooterClock.restart();
-	SnowPeaClock.restart();
-	WallNutClock.restart();
-	SunFlowerClock.restart();
-	sunSpawnTimeClock = 0;
+	SunFlowerClock = 0;
+	PeaShooterClock = 0;
+	SnowPeaClock = 0;
+	WallNutClock = 0;
+	SunShroomClock = 0;
+	PuffShroomClock = 0;
+	ScaredyShroomClock = 0;
 
 	Plants_Zombies::score = 50000;
 
@@ -210,7 +265,15 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_) {
 
 void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset) 
 {
-	sunSpawnTimeClock += deltaTime;	//updates time
+	//Update Time
+	sunSpawnTimeClock += deltaTime;
+	SunFlowerClock += deltaTime;
+	PeaShooterClock += deltaTime;
+	SnowPeaClock += deltaTime;
+	WallNutClock += deltaTime;
+	SunShroomClock += deltaTime;
+	PuffShroomClock += deltaTime;
+	ScaredyShroomClock += deltaTime;
 
 	//sun spawn system
 	if (!isNight && sunSpawnTimeClock >= SunSpawnTime.asSeconds())
@@ -227,12 +290,227 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 	//score text updater
 	moneytext.setString(to_string(Plants_Zombies::score));
 	moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
-	moneytext.setPosition(80 + offset.x, 138 + offset.y);
+	moneytext.setPosition(170 + 53 + offset.x, 145 + offset.y);
 
 	float randPitch[3] = { 0.85, 1, 1.15 };
 
 	//plant select UI logic
-	if (PeaShooterClock.getElapsedTime() > PeaShooterCoolDown && Plants_Zombies::score >= 100)
+	if (isNight)
+	{
+		if (SunShroomClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 25)
+		{
+			sunshroomSeedPacket.setTexture(sunshroomAvailableTex);
+
+			if (sunshroomSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = sunshroom;
+			}
+		}
+		else
+		{
+			sunshroomSeedPacket.setTexture(sunshroomUnavailableTex);
+		}
+
+		if (PuffShroomClock > ShortCoolDown.asSeconds())
+		{
+			puffshroomSeedPacket.setTexture(puffshroomAvailableTex);
+
+			if (puffshroomSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = puffshroom;
+			}
+		}
+		else
+		{
+			puffshroomSeedPacket.setTexture(puffshroomUnavailableTex);
+		}
+
+		if (ScaredyShroomClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 25)
+		{
+			scaredyshroomSeedPacket.setTexture(scaredyshroomAvailableTex);
+
+			if (scaredyshroomSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = scaredyshroom;
+			}
+		}
+		else
+		{
+			scaredyshroomSeedPacket.setTexture(scaredyshroomUnavailableTex);
+		}
+
+		if (PeaShooterClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 100)
+		{
+			peashooterSeedPacket.setTexture(peashooterAvailableTex);
+
+			if (peashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = peashooter;
+			}
+		}
+		else
+		{
+			peashooterSeedPacket.setTexture(peashooterUnavailableTex);
+		}
+
+		if (SnowPeaClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 175)
+		{
+			snowpeashooterSeedPacket.setTexture(snowpeaAvailableTex);
+
+			if (snowpeashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = snowpeashooter;
+			}
+		}
+		else
+		{
+			snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
+		}
+		
+		if (WallNutClock > MediumCoolDown.asSeconds() && Plants_Zombies::score >= 50)
+		{
+			wallnutSeedPacket.setTexture(wallnutAvailableTex);
+
+			if (wallnutSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = wallnut;
+			}
+		}
+		else
+		{
+			wallnutSeedPacket.setTexture(wallnutUnavailableTex);
+		}
+	}
+	else
+	{
+		if (SunFlowerClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 50)
+		{
+			sunflowerSeedPacket.setTexture(sunflowerAvailableTex);
+
+			if (sunflowerSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = sunflower;
+			}
+		}
+		else
+		{
+			sunflowerSeedPacket.setTexture(sunflowerUnavailableTex);
+		}
+
+		if (PeaShooterClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 100)
+		{
+			peashooterSeedPacket.setTexture(peashooterAvailableTex);
+
+			if (peashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = peashooter;
+			}
+		}
+		else
+		{
+			peashooterSeedPacket.setTexture(peashooterUnavailableTex);
+		}
+
+		if (SnowPeaClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 175)
+		{
+			snowpeashooterSeedPacket.setTexture(snowpeaAvailableTex);
+
+			if (snowpeashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = snowpeashooter;
+			}
+		}
+		else
+		{
+			snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
+		}
+
+		if (WallNutClock > MediumCoolDown.asSeconds() && Plants_Zombies::score >= 50)
+		{
+			wallnutSeedPacket.setTexture(wallnutAvailableTex);
+
+			if (wallnutSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
+					SelectingPlantSound.play();
+				}
+				isHolding = true;
+				curruntselection = wallnut;
+			}
+		}
+		else
+		{
+			wallnutSeedPacket.setTexture(wallnutUnavailableTex);
+		}
+	}
+
+	/*if (PeaShooterClock.getElapsedTime() > PeaShooterCoolDown && Plants_Zombies::score >= 100)
 	{
 		peashootercontainer.setTexture(peashootertex);
 
@@ -314,7 +592,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 	else
 	{
 		wallnutcontainer.setTexture(wallnutuntex);
-	}
+	}*/
 
 	if (shovelcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 	{
@@ -327,22 +605,18 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 		isHolding = true;
 		curruntselection = shovel;
 	}
-	//for sound stuff
-	if (!isHolding)
-	{
-		PlaySelectionSound = false;
-	}
 
 	//deselects
 	if (Mouse::isButtonPressed(Mouse::Right)) {
 		isHolding = false;
 	}
 
+	//selection hologram logic
 	if (isHolding)
 	{
 		if (curruntselection == shovel)
 		{
-			shovelcontainer.setTexture(shovelcontaineruntex);
+			shovelcontainer.setTexture(ShovelContainerEmpty);
 			SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
 			SelectionHolograph.setTexture(shoveltex);
 			SelectionHolograph.setScale(1, 1);
@@ -383,8 +657,24 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 		}
 		else if (curruntselection == sunshroom)
 		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 22, 27));
+			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
 			SelectionHolograph.setTexture(Plants_Zombies::SunShroomIdleTex);
+			SelectionHolograph.setScale(3.5, 3.5);
+			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
+		}
+		else if (curruntselection == puffshroom)
+		{
+			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
+			SelectionHolograph.setTexture(Plants_Zombies::PuffShroomTex);
+			SelectionHolograph.setScale(3.5, 3.5);
+			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+			SelectionHolograph.setColor(Color(255, 255, 255, 175));
+		}
+		else if (curruntselection == scaredyshroom)
+		{
+			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
+			SelectionHolograph.setTexture(Plants_Zombies::ScaredyShroomIdleTex);
 			SelectionHolograph.setScale(3.5, 3.5);
 			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
 			SelectionHolograph.setColor(Color(255, 255, 255, 175));
@@ -392,14 +682,15 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 
 		if (curruntselection != shovel)
 		{
-			shovelcontainer.setTexture(shovelcontainertex);
+			shovelcontainer.setTexture(ShovelContainerAvailable);
 		}
 
 		SelectionHolograph.setPosition(mousepos);
 	}
 	else
 	{
-		shovelcontainer.setTexture(shovelcontainertex);
+		shovelcontainer.setTexture(ShovelContainerAvailable);
+		PlaySelectionSound = false;
 		curruntselection = none;
 	}
 
@@ -437,7 +728,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 						mygrid[i].isplanted = true;
 
 						Plants_Zombies::score -= 100;
-						PeaShooterClock.restart();
+						PeaShooterClock = 0;
 
 						isHolding = false;
 						curruntselection = none;
@@ -456,7 +747,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 						mygrid[i].isplanted = true;
 
 						Plants_Zombies::score -= 175;
-						SnowPeaClock.restart();
+						SnowPeaClock = 0;
 
 						isHolding = false;
 						curruntselection = none;
@@ -475,7 +766,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 						mygrid[i].isplanted = true;
 
 						Plants_Zombies::score -= 50;
-						SunFlowerClock.restart();
+						SunFlowerClock = 0;
 
 						isHolding = false;
 						curruntselection = none;
@@ -494,7 +785,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 						mygrid[i].isplanted = true;
 
 						Plants_Zombies::score -= 50;
-						WallNutClock.restart();
+						WallNutClock = 0;
 
 						isHolding = false;
 						curruntselection = none;
@@ -506,14 +797,52 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 					{
 						PlantingSound.setPitch(randPitch[rand() % 3]);
 						PlantingSound.play();
-						//cout << "WallNut " << i << endl;
+						//cout << "SunShroom " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunShroom;
 						Plants_Zombies::PlantsArray[i - 1].start();
 						mygrid[i].isplanted = true;
 
 						Plants_Zombies::score -= 25;
-						//WallNutClock.restart();
+						SunShroomClock = 0;
+
+						isHolding = false;
+						curruntselection = none;
+					}
+				}
+				else if (curruntselection == puffshroom) 
+				{
+					if (!mygrid[i].isplanted)
+					{
+						PlantingSound.setPitch(randPitch[rand() % 3]);
+						PlantingSound.play();
+						//cout << "PuffShroom " << i << endl;
+
+						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PuffShroom;
+						Plants_Zombies::PlantsArray[i - 1].start();
+						mygrid[i].isplanted = true;
+
+						Plants_Zombies::score -= 0;
+						PuffShroomClock = 0;
+
+						isHolding = false;
+						curruntselection = none;
+					}
+				}
+				else if (curruntselection == scaredyshroom)
+				{
+					if (!mygrid[i].isplanted)
+					{
+						PlantingSound.setPitch(randPitch[rand() % 3]);
+						PlantingSound.play();
+						//cout << "ScaredyShroom " << i << endl;
+
+						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::ScaredyShroom;
+						Plants_Zombies::PlantsArray[i - 1].start();
+						mygrid[i].isplanted = true;
+
+						Plants_Zombies::score -= 25;
+						ScaredyShroomClock = 0;
 
 						isHolding = false;
 						curruntselection = none;
@@ -531,15 +860,28 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	//}
 
 	window.draw(gradientopacity);
-	window.draw(moneytext);
 
-	window.draw(suncounter);
-	window.draw(moneytext);
+	if (isNight)
+	{
+		window.draw(scaredyshroomSeedPacket);
+		window.draw(sunshroomSeedPacket);
+		window.draw(puffshroomSeedPacket);
+		window.draw(peashooterSeedPacket);
+		window.draw(snowpeashooterSeedPacket);
+		window.draw(wallnutSeedPacket);
+	}
+	else
+	{
+		window.draw(sunflowerSeedPacket);
+		window.draw(peashooterSeedPacket);
+		window.draw(snowpeashooterSeedPacket);
+		window.draw(wallnutSeedPacket);
+		window.draw(emptySeedPacket1);
+		window.draw(emptySeedPacket2);
+	}
 
-	window.draw(peashootercontainer);
-	window.draw(snowpeashootercontainer);
-	window.draw(sunflowercontainer);
-	window.draw(wallnutcontainer);
+	window.draw(sunContainer);
+	window.draw(moneytext);
 	window.draw(shovelcontainer);
 
 	if (isHolding)
