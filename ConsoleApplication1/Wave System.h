@@ -58,7 +58,7 @@ bool playWaveSounds = false;
 #pragma region hours and timer
 Clock clockwave2;
 Clock clockfinalwave;
-Clock globalClock;
+Clock GlobalClock;
 Clock LoseGameClock;
 
 Time timertostartwave2;
@@ -78,7 +78,7 @@ float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
 struct cars {
     bool startsoundcar = true;
     bool intersection = false;
-    float speed = 75;
+    float speed = 40;
     Sprite lawnsprite;
     void start(int i) {
         lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
@@ -89,9 +89,9 @@ struct cars {
     void update() {
         if (!intersection)
         {
-            if (lawnsprite.getPosition().x < -65) {
-                lawnsprite.move(speed * deltaTime, 0);
-               
+            if (lawnsprite.getPosition().x < -65) 
+            {
+                lawnsprite.move(speed * 1.8f * deltaTime, 0);
             }
         }
         else
@@ -139,9 +139,9 @@ void setupWaveData() {
 
     clockwave2.restart();
     clockfinalwave.restart();
-    globalClock.restart();
     LoseGameClock.restart();
     DeltaTimeClock.restart();
+    GlobalClock.restart();
 
     nowave = true;
     checkstart_wave2 = true;
@@ -161,13 +161,12 @@ void setupWaveData() {
     scalefactortextlosegame = 4.2f;
 
     timeSinceStart = 0;
-    deltaTime = DeltaTimeClock.restart().asSeconds();
 }
 
 void startZombiePositions(int numZombies) {
     Plants_Zombies::StartZombies(numZombies);
 
-    int row[5] = { -40, 100, 235, 360,490 };
+    int row[5] = { -40, 100, 235, 360, 490 };
 
     for (int i = 0; i < 100; i++)
     {
@@ -189,9 +188,8 @@ void startallwave(int numberwave, int numberzombie, float delaybetween) {
     wave[numberwave].numberzombie = numberzombie;
 
     srand(time(0));
-    globalClock.restart();
 
-    timeSinceStart = globalClock.getElapsedTime().asSeconds();
+
 
     startZombiePositions(numberzombie);
 }
@@ -200,14 +198,22 @@ void allwave(int numberwave, int numberzombie) {
 
     intersectioncarsandzombies(numberwave);
 
-    for (int i = 0; i < wave[numberwave].numberzombie; ++i) {
-        if (timeSinceStart >= i * wave[numberwave].delaybetween) {
-
+    for (int i = 0; i < wave[numberwave].numberzombie; ++i) 
+    {
+        if (timeSinceStart >= i * wave[numberwave].delaybetween) 
+        {
+            if (Plants_Zombies::zombie_array[i].startJackClock)
+            {
+                Plants_Zombies::zombie_array[i].jackClock.restart();
+				Plants_Zombies::zombie_array[i].startJackClock = false;
+            }
             Plants_Zombies::zombie_array[i].started = true;
         }
     }
-    for (int i = 0; i < wave[numberwave].numberzombie; i++) {
-        if (Plants_Zombies::zombie_array[i].started && Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead) {
+    for (int i = 0; i < wave[numberwave].numberzombie; i++) 
+    {
+        if (Plants_Zombies::zombie_array[i].started && Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead) 
+        {
             if (!IsPaused)
             {
                 Plants_Zombies::zombie_array[i].update(deltaTime);
@@ -231,6 +237,8 @@ void allwave(int numberwave, int numberzombie) {
 }
 
 void level(int numberwave, int num, float delaybetweenw1) {
+    timeSinceStart += deltaTime;
+
     if (endRSP)
     {
         if (numberwave == 2) {

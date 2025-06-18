@@ -833,6 +833,7 @@ namespace Plants_Zombies
 		bool isSquished = false;
 		bool SquishEffect = false;
 		bool wassoundplayed = false;
+		bool startJackClock = true;
 
 		Clock Zclock, EatClock, CrushedZombieClock, Deathclock, jackClock;
 
@@ -878,6 +879,7 @@ namespace Plants_Zombies
 			deathOfZombie = false;
 			PlantInfront = false;
 			jackBomb = false;
+			startJackClock = true;
 #pragma endregion
 
 			switch (type)
@@ -1134,9 +1136,6 @@ namespace Plants_Zombies
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						EatClock.restart();
 					}
-
-					
-
 				}
 				else
 				{
@@ -1187,7 +1186,7 @@ namespace Plants_Zombies
 			if (type == jackInTheBox && !isDead && health > 0)
 			{
 				jackCollider.setPosition(zombieCont.getPosition().x - 30, zombieCont.getPosition().y + 40);
-				if (started && !jackBomb && jackClock.getElapsedTime().asSeconds() > 40)
+				if (started && !jackBomb && jackClock.getElapsedTime().asSeconds() > 15)
 				{
 					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
 					jackBomb = true;
@@ -1207,10 +1206,7 @@ namespace Plants_Zombies
 						}
 					}
 				}
-				
-
 			}
-
 		}
 
 	private:

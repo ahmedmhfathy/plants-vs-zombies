@@ -531,7 +531,7 @@ void UpdateLevel1(RenderWindow& window)
     StartAnimationNS::updateAnimation(window);
 
     level(2, 4, 7.0f);
-
+    
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
 void DrawLevel1(RenderWindow& window)
