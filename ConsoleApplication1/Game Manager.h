@@ -53,10 +53,8 @@ Sprite MusicTickBox;
 Sprite Opacity;
 
 SoundBuffer PauseMenuOpen;
-Sound PauseMenuOpenSound;
 
 SoundBuffer PauseMenuClickBuffer;
-Sound PauseMenuClick;
 
 bool SoundOnPauseMenu = true;
 #pragma endregion
@@ -72,7 +70,6 @@ Texture NextlevelButtonTex;
 Texture NextlevelButtonHoverTex;
 
 SoundBuffer LoseAndWinAndPauseBuffer;
-Sound LoseAndWinAndPause;
 
 Sprite LostMenuBlank;
 Sprite RetryButton;
@@ -80,6 +77,7 @@ Sprite RetryButton;
 Sprite BackToMainMenuLevelEnd;
 Sprite WinMenuBlank;
 Sprite NextlevelButton;
+
 SoundBuffer WinSoundBuffer;
 Sound WinSound;
 #pragma endregion
@@ -90,7 +88,6 @@ void LoadPauseMenuTextures() {
     PauseMenuOpen.loadFromFile("Audio/pause.ogg");
 
     PauseMenuClickBuffer.loadFromFile("Audio/buttonclick.ogg");
-    PauseMenuClick.setBuffer(PauseMenuClickBuffer);
 
     MainMenuButtonTex.loadFromFile("Assets/Pause Menu/Main-Menu-Button.png");
     MainMenuButtonTexHover.loadFromFile("Assets/Pause Menu/Main-Menu-Button-Hover.png");
@@ -108,8 +105,7 @@ void SetupPauseMenu()
 {
     LoadPauseMenuTextures();
 
-    LoseAndWinAndPause.setBuffer(LoseAndWinAndPauseBuffer);
-    PauseMenuOpenSound.setBuffer(PauseMenuOpen);
+    
 
     BackToGame.setTexture(BackToTheGameButtonTex);
     BackToGame.setPosition(537 + offset.x, 486 + offset.y);
@@ -163,7 +159,7 @@ void PauseMenuUpdate()
         IsPaused = true;
         if (SoundOnPauseMenu)
         {
-            PauseMenuOpenSound.play();
+            PlaySoundEffect(PauseMenuOpen, false);
             SoundOnPauseMenu = false;
         }
     }
@@ -173,14 +169,14 @@ void PauseMenuUpdate()
         {
             if (ButtonTapSoundBackToTheGame)
             {
-                LoseAndWinAndPause.play();
+                PlaySoundEffect(LoseAndWinAndPauseBuffer,false);
                 ButtonTapSoundBackToTheGame = false;
             }
             BackToGame.setTexture(BackToTheGameButtonHoverTex);
             if (Mouse::isButtonPressed(Mouse::Left))
             {
-                PauseMenuOpenSound.play();
-                PauseMenuClick.play();
+                PlaySoundEffect(PauseMenuOpen, false);
+                PlaySoundEffect(PauseMenuClickBuffer, false);
                 SoundOnPauseMenu = true;
                 IsPaused = false;
             }
@@ -195,13 +191,13 @@ void PauseMenuUpdate()
         {
             if (ButtonTapSoundPauseBackToMainMenu)
             {
-                LoseAndWinAndPause.play();
+                PlaySoundEffect(LoseAndWinAndPauseBuffer, false);
                 ButtonTapSoundPauseBackToMainMenu = false;
             }
             BackToMainMenu.setTexture(MainMenuButtonTexHover);
             if (Mouse::isButtonPressed(Mouse::Left))
             {
-                PauseMenuClick.play();
+                PlaySoundEffect(PauseMenuClickBuffer, false);
                 IsPaused = false;
                 CurrentState = MainMenu;
             }
@@ -297,11 +293,11 @@ void DrawPauseMenu(RenderWindow& window)
 void LoadLevelEndTextures() {
     //Button Click
     PauseMenuClickBuffer.loadFromFile("Audio/buttonclick.ogg");
-    PauseMenuClick.setBuffer(PauseMenuClickBuffer);
+    
 
     //lose case
     LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
-    LoseAndWinAndPause.setBuffer(LoseAndWinAndPauseBuffer);
+    
     LostMenuBlankTex.loadFromFile("Assets/Lost Menu/lost-menu-blank.png");
     RetryButtonTex.loadFromFile("Assets/Lost Menu/retry-button.png");
     RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
@@ -374,7 +370,7 @@ void LevelEndUpdate()
                 }
                 else if (Mouse::isButtonPressed(Mouse::Left))
                 {
-                    PauseMenuClick.play();
+                    PlaySoundEffect(PauseMenuClickBuffer, false);
                     CurrentState = MainMenu;
                 }
             }
@@ -384,13 +380,13 @@ void LevelEndUpdate()
                 {
                     if (ButtonTapSoundNextLevel)
                     {
-                        LoseAndWinAndPause.play();
+                        PlaySoundEffect(LoseAndWinAndPauseBuffer, false);
                         ButtonTapSoundNextLevel = false;
                     }
                     NextlevelButton.setTexture(NextlevelButtonHoverTex);
                     if (Mouse::isButtonPressed(Mouse::Left))
                     {
-                        PauseMenuClick.play();
+                        PlaySoundEffect(PauseMenuClickBuffer, false);
                         if (CurrentState == Level1)
                         {
                             SwitchState(Level2);
@@ -411,13 +407,13 @@ void LevelEndUpdate()
                 {
                     if (ButtonTapSoundWinMainMenu)
                     {
-                        LoseAndWinAndPause.play();
+                        PlaySoundEffect(LoseAndWinAndPauseBuffer, false);
                         ButtonTapSoundWinMainMenu = false;
                     }
                     BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
                     if (Mouse::isButtonPressed(Mouse::Left))
                     {
-                        PauseMenuClick.play();
+                        PlaySoundEffect(PauseMenuClickBuffer, false);
                         CurrentState = MainMenu;
                     }
                 }
@@ -435,13 +431,13 @@ void LevelEndUpdate()
             {
                 if (ButtonTapSoundLoseBackToMainMenu)
                 {
-                    LoseAndWinAndPause.play();
+                    PlaySoundEffect(LoseAndWinAndPauseBuffer, false);
                     ButtonTapSoundLoseBackToMainMenu = false;
                 }
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
-                    PauseMenuClick.play();
+                    PlaySoundEffect(PauseMenuClickBuffer,false);
                     CurrentState = MainMenu;
                 }
             }
@@ -456,13 +452,13 @@ void LevelEndUpdate()
             {
                 if (ButtonTapSoundRetry)
                 {
-                    LoseAndWinAndPause.play();
+                    PlaySoundEffect(LoseAndWinAndPauseBuffer, false);
                     ButtonTapSoundRetry = false;
                 }
                 RetryButton.setTexture(RetryButtonHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
-                    PauseMenuClick.play();
+                    PlaySoundEffect(PauseMenuClickBuffer, false);
                     if (CurrentState == Level1)
                     {
                         SwitchState(Level1);
