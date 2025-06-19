@@ -229,37 +229,6 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
 		Plants_Zombies::PlantsArray[i - 1].start();
 		mygrid[i].isplanted = false;
-
-
-		//test plants
-
-		//Plants_Zombies::PlantsArray[0].type = Plants_Zombies::SunShroom;
-		//Plants_Zombies::PlantsArray[9].type = Plants_Zombies::ScaredyShroom;
-		//Plants_Zombies::PlantsArray[10].type = Plants_Zombies::PuffShroom;
-		//Plants_Zombies::PlantsArray[9 + 9].type = Plants_Zombies::ScaredyShroom;
-		//Plants_Zombies::PlantsArray[9 + 9 + 1].type = Plants_Zombies::SunShroom;
-		//Plants_Zombies::PlantsArray[9 + 9 + 9].type = Plants_Zombies::ScaredyShroom;
-		//Plants_Zombies::PlantsArray[9 + 9 + 9 + 1].type = Plants_Zombies::SunShroom;
-		//Plants_Zombies::PlantsArray[9 + 9 + 9 + 9].type = Plants_Zombies::ScaredyShroom;
-		//Plants_Zombies::PlantsArray[9 + 9 + 9 + 9 + 1].type = Plants_Zombies::PuffShroom;
-		//mygrid[1].isplanted = true;
-		//mygrid[10].isplanted = true;
-		//mygrid[11].isplanted = true;
-		//mygrid[10 + 9].isplanted = true;
-		//mygrid[10 + 9 + 1].isplanted = true;
-		//mygrid[10 + 9 + 9].isplanted = true;
-		//mygrid[10 + 9 + 9 + 1].isplanted = true;
-		//mygrid[10 + 9 + 9 + 9].isplanted = true;
-		//mygrid[10 + 9 + 9 + 9 + 1].isplanted = true;
-		//Plants_Zombies::PlantsArray[0].start();
-		//Plants_Zombies::PlantsArray[9].start();
-		//Plants_Zombies::PlantsArray[10].start();
-		//Plants_Zombies::PlantsArray[9 + 9].start();
-		//Plants_Zombies::PlantsArray[9 + 9 + 1].start();
-		//Plants_Zombies::PlantsArray[9 + 9 + 9].start();
-		//Plants_Zombies::PlantsArray[9 + 9 + 9 + 1].start();
-		//Plants_Zombies::PlantsArray[9 + 9 + 9 + 9].start();
-		//Plants_Zombies::PlantsArray[9 + 9 + 9 + 9 + 1].start();
 	}
 }
 

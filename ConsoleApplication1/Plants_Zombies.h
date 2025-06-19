@@ -753,7 +753,7 @@ namespace Plants_Zombies
 		{
 			if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0))
 			{
-				//window.draw(PlantsArray[i].plantCollider);
+				window.draw(PlantsArray[i].plantCollider);
 				window.draw(PlantsArray[i].shape);
 			}
 		}
@@ -859,7 +859,7 @@ namespace Plants_Zombies
 
 		Clock Zclock, Deathclock;
 		float EatClock, CrushedZombieClock,  jackClock;
-		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(25);
+		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22);
 
 	private:
 		int CollIndex = 0;
@@ -959,12 +959,12 @@ namespace Plants_Zombies
 				break;
 			case jackInTheBox:
 				zombieCont.setTexture(RegularWalkText);
-				health = 100000;
+				health = 1300;
 				speed = 20.4;
 				damage = 20;
 				Extra_damage = 9999999;
 
-				zombieCollider.setSize({ 50, 57 });
+				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
 				jackCollider.setSize({ 280,330 });
 				jackCollider.setScale(1, 1);
@@ -972,20 +972,20 @@ namespace Plants_Zombies
 				break;
 			case soccerGuy:
 				zombieCont.setTexture(RegularWalkText);
-				health = 10000;
+				health = 1400;
 				speed = 17.4;
 				damage = 20;
 
-				zombieCollider.setSize({ 50, 57 });
+				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
 				break;
 			case screenDoor:
 				zombieCont.setTexture(RegularWalkText);
-				health = 1000;
+				health = 1400;
 				speed = 9.4;
 				damage = 20;
-				zombieCollider.setSize({ 50, 57 });
+				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
 				break;
@@ -994,7 +994,7 @@ namespace Plants_Zombies
 			}
 
 			zombieCollider.setFillColor(Color(255, 0, 0, 180));
-			jackCollider.setFillColor(Color(150, 150, 150, 180));
+			jackCollider.setFillColor(Color(150, 150, 150, 120));
 			zombieCont.setColor(Color(255, 255, 255, 255));
 
 		}
@@ -1003,6 +1003,8 @@ namespace Plants_Zombies
 			EatClock +=deltaTime;
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
+
+			//setup death animation data
 			if (health <= 0)
 			{
 				isDead = true;
@@ -1023,6 +1025,7 @@ namespace Plants_Zombies
 				//zombieCont.setPosition(2000, 2000);
 			}
 
+			//normal update
 			if (type != Dead)
 			{
 				Movement(deltaTime);
@@ -1159,7 +1162,7 @@ namespace Plants_Zombies
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
-						cout << "ana bakol" << endl;
+						//cout << "ana bakol" << endl;
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
 						//EatSound.setBuffer(ZombieEatSoundBuffer[rand() % 3]);
 						//EatSound.play();
