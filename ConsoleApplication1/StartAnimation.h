@@ -35,9 +35,7 @@ namespace  StartAnimationNS {
     Sprite zombieinStreet;
 
     SoundBuffer RSPSoundBuffer;
-    Sound RSPSound;
     SoundBuffer ZombiesAreComingBuffer;
-    Sound ZombiesAreComing;
 #pragma endregion
 
 #pragma region boolean
@@ -70,18 +68,13 @@ namespace  StartAnimationNS {
         Textlosegametexture.loadFromFile("Assets/Environment/zombie _won.png");
 
         RSPSoundBuffer.loadFromFile("Audio/readysetplant.ogg");
-        RSPSound.setBuffer(RSPSoundBuffer);
         ZombiesAreComingBuffer.loadFromFile("Audio/awooga.ogg");
-        ZombiesAreComing.setBuffer(ZombiesAreComingBuffer);
         HugeWaveOfZombiesSoundBuffer.loadFromFile("Audio/hugewave.ogg");
-        HugeWaveOfZombiesSound.setBuffer(HugeWaveOfZombiesSoundBuffer);
         FinalWaveSoundBuffer.loadFromFile("Audio/finalwave.ogg");
-        FinalWaveSound.setBuffer(FinalWaveSoundBuffer);
         LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
-        LoseSound.setBuffer(LoseSoundBuffer);
         carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
         carsSound.setBuffer(carsSoundBuffer);
-       
+        Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
         
         //ready text
         Readytextsprite.setTexture(Readytexttexture);
@@ -216,7 +209,7 @@ namespace  StartAnimationNS {
         {
             if (RSPSonudon)
             {
-                RSPSound.play();
+                PlaySoundEffect(RSPSoundBuffer, false);
                 RSPSonudon = false;
             }
             window.draw(Readytextsprite);
@@ -233,7 +226,7 @@ namespace  StartAnimationNS {
         {
             if (ZombiesAreComingSoundOn)
             {
-                ZombiesAreComing.play();
+                PlaySoundEffect(ZombiesAreComingBuffer, false);
                 ZombiesAreComingSoundOn = false;
             }
             endRSP = true;

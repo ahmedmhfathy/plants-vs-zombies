@@ -75,11 +75,8 @@ Time ShortCoolDown = seconds(7);
 
 #pragma region Sounds
 SoundBuffer PlantingSoundBuffer;
-Sound PlantingSound;
 SoundBuffer SelectingPlant;
-Sound SelectingPlantSound;
 SoundBuffer ShovelSoundBuffer;
-Sound ShovelSound;
 #pragma endregion
 
 Font font;
@@ -99,10 +96,7 @@ struct grid {
 void LoadSelectionTexture() {
 	PlantingSoundBuffer.loadFromFile("Audio/plant.ogg");
 	ShovelSoundBuffer.loadFromFile("Audio/shovel.ogg");
-	ShovelSound.setBuffer(ShovelSoundBuffer);
-	PlantingSound.setBuffer(PlantingSoundBuffer);
 	SelectingPlant.loadFromFile("Audio/seedlift.ogg");
-	SelectingPlantSound.setBuffer(SelectingPlant);
 
 	shoveltex.loadFromFile("Assets/Currency System and planting/shovel.png");
 	ShovelContainerAvailable.loadFromFile("Assets/Currency System and planting/container-with-shovel.png");
@@ -290,8 +284,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = sunshroom;
@@ -311,8 +304,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = puffshroom;
@@ -332,8 +324,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = scaredyshroom;
@@ -353,8 +344,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = peashooter;
@@ -374,8 +364,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = snowpeashooter;
@@ -395,8 +384,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = wallnut;
@@ -418,8 +406,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = sunflower;
@@ -439,8 +426,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = peashooter;
@@ -460,8 +446,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = snowpeashooter;
@@ -481,8 +466,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				if (!PlaySelectionSound)
 				{
 					PlaySelectionSound = true;
-					SelectingPlantSound.setPitch(randPitch[rand() % 3]);
-					SelectingPlantSound.play();
+					PlaySoundEffect(SelectingPlant, true);
 				}
 				isHolding = true;
 				curruntselection = wallnut;
@@ -499,8 +483,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 		if (!PlaySelectionSound)
 		{
 			PlaySelectionSound = true;
-			ShovelSound.setPitch(randPitch[rand() % 3]);
-			ShovelSound.play();
+			PlaySoundEffect(ShovelSoundBuffer, true);
 		}
 		isHolding = true;
 		curruntselection = shovel;
@@ -605,8 +588,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "shovel " << i << endl;
 						mygrid[i].isplanted = false;
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
@@ -619,8 +601,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (!mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "peashooter " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PeaShooter;
@@ -638,8 +619,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (!mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "SnowPeaShooter " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SnowPeaShooter;
@@ -657,8 +637,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (!mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "SunFlower " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunFlower;
@@ -676,8 +655,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (!mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "WallNut " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::WallNut;
@@ -695,8 +673,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (!mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "SunShroom " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunShroom;
@@ -714,8 +691,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (!mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "PuffShroom " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PuffShroom;
@@ -733,8 +709,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				{
 					if (!mygrid[i].isplanted)
 					{
-						PlantingSound.setPitch(randPitch[rand() % 3]);
-						PlantingSound.play();
+						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "ScaredyShroom " << i << endl;
 
 						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::ScaredyShroom;

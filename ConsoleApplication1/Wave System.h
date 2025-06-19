@@ -32,13 +32,9 @@ Sprite Textlosegamesprite;
 
 #pragma region Sounds
 SoundBuffer HugeWaveOfZombiesSoundBuffer;
-Sound HugeWaveOfZombiesSound;
 SoundBuffer FinalWaveSoundBuffer;
-Sound FinalWaveSound;
 SoundBuffer LoseSoundBuffer;
-Sound LoseSound;
 SoundBuffer carsSoundBuffer;
-Sound carsSound;
 #pragma endregion
 
 #pragma region booleans
@@ -99,7 +95,7 @@ struct cars {
             {
                 lawnsprite.move(speed * deltaTime, 0);
                 if (startsoundcar) {
-                    carsSound.play();
+                    PlaySoundEffect(carsSoundBuffer,false);
                     startsoundcar = false;
                 }
             }
@@ -408,7 +404,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
         }
         if (!playWaveSounds)
         {
-            HugeWaveOfZombiesSound.play();
+            PlaySoundEffect(HugeWaveOfZombiesSoundBuffer, false);
             playWaveSounds = true;
         }
 
@@ -421,7 +417,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
         }
         if (playWaveSounds)
         {
-            FinalWaveSound.play();
+            PlaySoundEffect(FinalWaveSoundBuffer, false);
             playWaveSounds = false;
         }
         Textstartfinalwavesprite.setScale(scaleFactor, scaleFactor);
@@ -433,7 +429,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
         {
             if (!playLoseGameAnim)
             {
-                LoseSound.play();
+                PlaySoundEffect(LoseSoundBuffer, false);
                 LoseGameClock.restart();
                 playLoseGameAnim = true;
             }
