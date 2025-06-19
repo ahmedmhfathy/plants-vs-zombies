@@ -970,7 +970,7 @@ namespace Plants_Zombies
 				break;
 			case jackInTheBox:
 				zombieCont.setTexture(JackWalkText);
-				health = 1150;
+				health = 640;
 				speed = 20.4;
 				damage = 20;
 				Extra_damage = 9999999;
@@ -1068,10 +1068,6 @@ namespace Plants_Zombies
 				if (isSlowed)
 				{
 					zombieCont.setColor(Color(120, 120, 255, 255));
-				}
-				else if (type == jackInTheBox)
-				{
-					zombieCont.setColor(Color(112, 170, 235, 255)); // blue
 				}
 				else if (type == soccerGuy)
 				{
