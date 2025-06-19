@@ -39,49 +39,49 @@ C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(587,14): warning
 C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(694,27): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(922,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(928,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(929,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(935,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(933,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(939,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(939,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(945,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(943,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(949,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(949,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(955,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(953,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(959,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(968,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(974,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(973,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(979,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(981,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(987,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(985,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(991,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(991,13): warning C4305: '=': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(997,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(994,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(1000,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(1106,39): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(1112,39): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(1210,31): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(1216,31): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\planting system.h(209,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
@@ -115,10 +115,10 @@ C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(87,40): warning C42
 C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(175,84): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(178,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(181,90): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(189,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(192,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\StartAnimation.h(90,39): warning C4305: 'argument': truncation from 'double' to 'float'

@@ -174,7 +174,10 @@ void startZombiePositions(int numZombies) {
 
         Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
 
-        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan) {
+        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone 
+            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan 
+            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox) 
+        {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
         }
         Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
