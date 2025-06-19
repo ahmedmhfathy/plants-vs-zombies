@@ -25,7 +25,7 @@ Texture rectangletexture;
 Texture Textstartwave2texture;
 Texture Textstartfinalwavetexture;
 Texture Textlosegametexture;
-
+Texture Textgraves;
 Sprite Textstartwave2sprite;
 Sprite Textstartfinalwavesprite;
 Sprite Textlosegamesprite;
@@ -48,7 +48,7 @@ bool checkstart_wave2 = true;
 bool checkstart_wave3 = true;
 bool endRSP = false;
 bool movefromwavetoanother = true;
-
+bool enter = true;
 bool LevelIsOver = false;
 bool WinLevel = false;
 bool playLoseGameAnim = false;
@@ -112,7 +112,7 @@ struct cars {
         }
     }
 }car[5];
-
+Sprite graves[4];
 struct waves {
     float delaybetween;
     int numberzombie;
@@ -166,9 +166,7 @@ void setupWaveData() {
 
 void startZombiePositions(int numZombies) {
     Plants_Zombies::StartZombies(numZombies);
-
     int row[5] = { -40, 100, 235, 360, 490 };
-
     for (int i = 0; i < 100; i++)
     {
         Plants_Zombies::zombie_array[i].started = false;
@@ -184,7 +182,7 @@ void startZombiePositions(int numZombies) {
     }
 }
 
-void startallwave(int numberwave, int numberzombie, float delaybetween) {
+void startallwave(int numberwave, int numberzombie, float delaybetween ) {
     wave[numberwave].delaybetween = delaybetween;
     wave[numberwave].numberzombie = numberzombie;
 
@@ -356,6 +354,9 @@ void intersectioncarsandzombies(int numberwave) {
 }
 
 void DrawWavesAndZombies(RenderWindow& window) {
+    for (int i = 0; i < 4; i++) {
+        window.draw(graves[i]);
+    }
     if (endRSP)
     {
         if (nowave) {
