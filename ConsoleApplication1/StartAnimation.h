@@ -81,7 +81,7 @@ namespace  StartAnimationNS {
         LoseSound.setBuffer(LoseSoundBuffer);
         carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
         carsSound.setBuffer(carsSoundBuffer);
-        Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
+       
         
         //ready text
         Readytextsprite.setTexture(Readytexttexture);
@@ -124,15 +124,8 @@ namespace  StartAnimationNS {
         //garden
         if (isNight)
         {
-            int col[3] = { 740, 640, 530 };
-            int row2[5] = { -20, 125, 255, 375, 510 };
             gardensprite.setTexture(gardenTextureNight);
-            for (int x = 0; x < 4;x++) {
-                graves[x].setTexture(Textgraves);
-                graves[x].setTextureRect(IntRect((4 + x) * 34, 0, 34, 38));
-                graves[x].setScale(3, 3.1);
-                graves[x].setPosition(col[rand() % 3], row2[rand() % 5]);
-            }
+         
         }
         else
         {

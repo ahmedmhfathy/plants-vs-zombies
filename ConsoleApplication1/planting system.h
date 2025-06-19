@@ -32,6 +32,8 @@ Texture ShovelContainerAvailable;
 Texture ShovelContainerEmpty;
 Texture gradientopacitytex;
 Texture sunContainerTex;
+///=============================
+Texture Textgraves;
 #pragma endregion
 
 #pragma region sprite declaration
@@ -50,6 +52,8 @@ Sprite shovelcontainer;
 Sprite sunContainer;
 Sprite gradientopacity;
 Sprite SelectionHolograph;
+//===================================
+Sprite graves[4];
 #pragma endregion
 
 #pragma region clocks and time
@@ -124,6 +128,8 @@ void LoadSelectionTexture() {
 	puffshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/puffshroom-unavailable.png");
 	scaredyshroomAvailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-available.png");
 	scaredyshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-unavailable.png");
+	//==============================
+	Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
 }
 
 void SetupSelectionUI(Vector2f offset)
@@ -214,7 +220,16 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 			c = 0;
 			r++;
 		}
-
+		
+		int plantgraveson[20] = { 6, 7, 8, 9, 15, 16, 17, 18, 24, 25, 26, 27, 33, 34, 35, 36, 42, 43, 44, 45};
+		for (int x = 0; x < 4;x++) {
+			graves[x].setTexture(Textgraves);
+			graves[x].setTextureRect(IntRect((4 + x) * 34, 0, 34, 38));
+			graves[x].setScale(3, 3.1);
+			int randindex = plantgraveson[rand() % 20];
+			graves[x].setPosition(mygrid[randindex].shape.getPosition());
+			mygrid[randindex].isplanted = true;
+		}
 		//colours the grid
 		if (i % 2 == 0) {
 			mygrid[i].shape.setFillColor(Color(255, 255, 255, 64));
@@ -745,7 +760,7 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	//}
 
 	window.draw(gradientopacity);
-
+	
 	if (isNight)
 	{
 		window.draw(scaredyshroomSeedPacket);
@@ -754,6 +769,9 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 		window.draw(peashooterSeedPacket);
 		window.draw(snowpeashooterSeedPacket);
 		window.draw(wallnutSeedPacket);
+		for (int i = 0; i < 4; i++) {
+			window.draw(graves[i]);
+		}
 	}
 	else
 	{

@@ -25,7 +25,6 @@ Texture rectangletexture;
 Texture Textstartwave2texture;
 Texture Textstartfinalwavetexture;
 Texture Textlosegametexture;
-Texture Textgraves;
 Sprite Textstartwave2sprite;
 Sprite Textstartfinalwavesprite;
 Sprite Textlosegamesprite;
@@ -112,7 +111,6 @@ struct cars {
         }
     }
 }car[5];
-Sprite graves[4];
 struct waves {
     float delaybetween;
     int numberzombie;
@@ -357,9 +355,7 @@ void intersectioncarsandzombies(int numberwave) {
 }
 
 void DrawWavesAndZombies(RenderWindow& window) {
-    for (int i = 0; i < 4; i++) {
-        window.draw(graves[i]);
-    }
+   
     if (endRSP)
     {
         if (nowave) {
