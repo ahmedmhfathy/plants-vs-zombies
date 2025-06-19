@@ -146,7 +146,7 @@ void SoundsUpdate()
 
 	if (IsSoundEffects)
 	{
-		cout << soundEffects.size() << endl;
+		//cout << soundEffects.size() << endl;
 
 		if (!soundEffects.empty() && (soundEffects.front().getStatus() == SoundSource::Status::Stopped))
 		{

@@ -797,6 +797,8 @@ namespace Plants_Zombies
 	Texture DamegedNewsManAttackText;
 	Texture SurpriseText;
 	Texture NewsManDeath;
+	//jack
+	Texture JackExplosionText;
 #pragma endregion
 
 	void LoadZombieTextures() {
@@ -823,6 +825,8 @@ namespace Plants_Zombies
 		DamegedNewsManAttackText.loadFromFile("Assets/Zombies/newspaper/damegednewspapereat.png");
 		NewsManDeath.loadFromFile("Assets/Zombies/newspaper/newspaperdeath.png");
 		SurpriseText.loadFromFile("Assets/Zombies/newspaper/surprised.png");
+		//jack
+		JackExplosionText.loadFromFile("Assets/Zombies/jackinthebox/jack-explosion-ST.png");
 	}
 
 	struct Zombie {
@@ -859,7 +863,7 @@ namespace Plants_Zombies
 
 		Clock Zclock, Deathclock;
 		float EatClock, CrushedZombieClock,  jackClock;
-		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22);
+		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(15);
 
 	private:
 		int CollIndex = 0;
@@ -868,6 +872,7 @@ namespace Plants_Zombies
 		bool PlantsinFront = false;
 		bool deathOfZombie = false;
 		bool jackBomb = false;
+		bool checkdeathpos = false;
 
 		int CurrentPlantIndex;
 		bool PlantInfront = false;
@@ -1077,7 +1082,6 @@ namespace Plants_Zombies
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
 				}
-
 			}
 			if (type == jackInTheBox && jackBomb && !isDead) {
 				isDead = true;
@@ -1510,25 +1514,22 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
-						zombieCont.setTexture(RegularDeathText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 11) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 66));
+						zombieCont.setTexture(JackExplosionText);
+
+						if (checkdeathpos == false) {
+							zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 30);
+							checkdeathpos = true;
+						}
+
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 8) {
-
-						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
-						if (deathstart == false) {
-							Deathclock.restart();
-							deathstart = true;
-						}
-						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
-						{
-							zombieCont.setPosition(2000, 2000);
-							type = Dead;
-
-						}
+					if (CollIndex == 11) 
+					{
+						zombieCont.setPosition(2000, 2000);
+						type = Dead;
 					}
 				}
 			}
