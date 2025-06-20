@@ -800,6 +800,12 @@ namespace Plants_Zombies
 	Texture JackEatText;
 	Texture JackDeathText;
 	Texture JackExplosionText;
+	//screendoor
+	Texture ScreenDoorWalkText;
+	Texture ScreenDoorEatText;
+	Texture ScreenDoorDeathText;
+	Texture ScreenDoorDamagedWalkText;
+	Texture ScreenDoorDamagedEatText;
 #pragma endregion
 
 	void LoadZombieTextures() {
@@ -831,6 +837,12 @@ namespace Plants_Zombies
 		JackWalkText.loadFromFile("Assets/Zombies/jackinthebox/jack-default-walk-ST.png");
 		JackEatText.loadFromFile("Assets/Zombies/jackinthebox/jack-default-eat-ST.png");
 		JackDeathText.loadFromFile("Assets/Zombies/jackinthebox/jack-default-death-ST.png");
+		//screendoor
+		ScreenDoorWalkText.loadFromFile("Assets/Zombies/screendoor/screendoor-walk-ST.png");
+		ScreenDoorEatText.loadFromFile("Assets/Zombies/screendoor/screendoor-eat-ST.png");
+		ScreenDoorDeathText.loadFromFile("Assets/Zombies/screendoor/screendoor-death-ST.png");
+		ScreenDoorDamagedWalkText.loadFromFile("Assets/Zombies/screendoor/screendoor-walk-damaged2-ST.png");
+		ScreenDoorDamagedEatText.loadFromFile("Assets/Zombies/screendoor/screendoor-eat-damaged2-ST.png");
 	}
 
 	struct Zombie {
@@ -990,7 +1002,7 @@ namespace Plants_Zombies
 				zombieCont.setScale(3, 3);
 				break;
 			case screenDoor:
-				zombieCont.setTexture(RegularWalkText);
+				zombieCont.setTexture(ScreenDoorWalkText);
 				health = 1400;
 				speed = 9.4;
 				damage = 20;
@@ -1071,13 +1083,13 @@ namespace Plants_Zombies
 				{
 					zombieCont.setColor(Color(255, 105, 180, 255)); // pink
 				}
-				else if (type == screenDoor)
-				{
-					if (!isDamaged)
-						zombieCont.setColor(Color(212, 15, 10, 255)); // red 
-					else if (isDamaged)
-						zombieCont.setColor(Color(19, 255, 5, 255)); // green 
-				}
+				//else if (type == screenDoor)
+				//{
+				//	if (!isDamaged)
+				//		zombieCont.setColor(Color(212, 15, 10, 255)); // red 
+				//	else if (isDamaged)
+				//		zombieCont.setColor(Color(19, 255, 5, 255)); // green 
+				//}
 				else
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
@@ -1510,13 +1522,13 @@ namespace Plants_Zombies
 
 						if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 11)
 						{
-							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 66));
-							zombieCont.setTexture(JackExplosionText);
-
 							if (checkdeathpos == false) {
 								zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
 								checkdeathpos = true;
 							}
+
+							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 66));
+							zombieCont.setTexture(JackExplosionText);
 
 							CollIndex++;
 							Zclock.restart();
@@ -1529,14 +1541,16 @@ namespace Plants_Zombies
 					}
 					else
 					{
-						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7) {
-							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
-							zombieCont.setTexture(JackDeathText);
-
-							if (checkdeathpos == false) {
+						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7) 
+						{
+							if (checkdeathpos == false) 
+							{
 								zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
 								checkdeathpos = true;
 							}
+							
+							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
+							zombieCont.setTexture(JackDeathText);
 
 							CollIndex++;
 							Zclock.restart();
@@ -1613,34 +1627,67 @@ namespace Plants_Zombies
 			{
 				if (isMoving)
 				{
-					zombieCont.setTexture(RegularWalkText);
-					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 47));
-						CollIndex = (CollIndex + 1) % 6;
-						Zclock.restart();
+					if (isDamaged)
+					{
+						if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 52));
+							zombieCont.setTexture(ScreenDoorDamagedWalkText);
+							CollIndex = (CollIndex + 1) % 7;
+							Zclock.restart();
+						}
 					}
+					else
+					{
+						if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 52));
+							zombieCont.setTexture(ScreenDoorWalkText);
+							CollIndex = (CollIndex + 1) % 7;
+							Zclock.restart();
+						}
+					}
+
 				}
 				else if (isAttacking)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
-						zombieCont.setTexture(RegularAttackText);
-						CollIndex = (CollIndex + 1) % 6;
-						Zclock.restart();
+					if (isDamaged)
+					{
+						if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 52));
+							zombieCont.setTexture(ScreenDoorDamagedEatText);
+							CollIndex = (CollIndex + 1) % 7;
+							Zclock.restart();
+						}
 					}
+					else
+					{
+						if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 52));
+							zombieCont.setTexture(ScreenDoorEatText);
+							CollIndex = (CollIndex + 1) % 7;
+							Zclock.restart();
+						}
+					}
+
 
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
-						zombieCont.setTexture(RegularDeathText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) 
+					{
+						if (checkdeathpos == false)
+						{
+							zombieCont.setPosition(zombieCont.getPosition().x - 100, zombieCont.getPosition().y - 2);
+							checkdeathpos = true;
+						}
+
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 50));
+						zombieCont.setTexture(ScreenDoorDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
 					if (CollIndex == 8) {
 
-						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 50));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
@@ -1649,7 +1696,6 @@ namespace Plants_Zombies
 						{
 							zombieCont.setPosition(2000, 2000);
 							type = Dead;
-
 						}
 					}
 				}
@@ -1669,7 +1715,7 @@ namespace Plants_Zombies
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = randomzombietype;
+			zombie_array[i].type = screenDoor;
 			zombie_array[i].start();
 		}
 	}
