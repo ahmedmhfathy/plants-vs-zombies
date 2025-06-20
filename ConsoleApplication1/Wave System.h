@@ -222,16 +222,15 @@ void allwave(int numberwave, int numberzombie) {
     {
         if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
         {
-            if (!Plants_Zombies::zombie_array[i].isDead)
+            if (!Plants_Zombies::zombie_array[i].isDead && Plants_Zombies::zombie_array[i].started)
             {
                 jackMusicOn = true;
                 break;
             }
-            else
+            else if(Plants_Zombies::zombie_array[i].isDead || !Plants_Zombies::zombie_array[i].started)
             {
                 jackMusicOn = false;
             }
-            
         }
     }
 

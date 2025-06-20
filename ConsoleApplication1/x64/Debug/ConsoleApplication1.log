@@ -1,18 +1,18 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (ConsoleApplication1.vcxproj, SFML Template.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Main.cpp
-D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(100,30): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(102,30): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(100,39): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(102,39): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(122,31): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(124,31): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(122,40): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(124,40): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(127,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Game Settings And Audio.h(129,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
 D:\Projects\Coding Projects\Repositories\ahmedmhfathy\plants-vs-zombies\ConsoleApplication1\Tools.h(51,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data

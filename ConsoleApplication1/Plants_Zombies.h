@@ -971,7 +971,7 @@ namespace Plants_Zombies
 				break;
 			case jackInTheBox:
 				zombieCont.setTexture(JackWalkText);
-				health = 640;
+				health = 750;
 				speed = 20.4;
 				damage = 20;
 				Extra_damage = 9999999;
