@@ -202,7 +202,11 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 	PuffShroomClock = 0;
 	ScaredyShroomClock = 0;
 
-	Plants_Zombies::score = 50000;
+	Plants_Zombies::score = 50;
+	curruntselection = none;
+
+	bool PlaySelectionSound = false;
+	bool isHolding = false;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {

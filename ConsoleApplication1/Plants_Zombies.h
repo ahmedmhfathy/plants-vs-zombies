@@ -658,7 +658,7 @@ namespace Plants_Zombies
 			{
 				health = 50;
 				damage = 0;
-				timeForAction = seconds(14);
+				timeForAction = seconds(10);
 
 				plantCollider.setSize({ 22, 27 });
 				shape.setTexture(SunShroomIdleTex);
@@ -854,7 +854,6 @@ namespace Plants_Zombies
 		bool deathstart = false;
 		bool resetColIndex = false;
 
-		bool isActivated = false;
 		bool isDamaged = false;
 		bool isAttacking = false;
 		bool isMoving = false;
@@ -866,7 +865,7 @@ namespace Plants_Zombies
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
-		float EatClock, CrushedZombieClock,  jackClock, jackBombClock;
+		float EatClock, CrushedZombieClock,  jackClock;
 		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22);
 
 	private:
@@ -890,7 +889,6 @@ namespace Plants_Zombies
 			EatClock = 0;
 			CrushedZombieClock = 0;
 			jackClock = 0;
-			jackBombClock = 0;
 
 			#pragma region Booleans
 			started = false;
@@ -899,7 +897,6 @@ namespace Plants_Zombies
 			isDead = false;
 			deathstart = false;
 			resetColIndex = false;
-			isActivated = false;
 			isDamaged = false;
 			isAttacking = false;
 			isMoving = false;
@@ -971,7 +968,7 @@ namespace Plants_Zombies
 				break;
 			case jackInTheBox:
 				zombieCont.setTexture(JackWalkText);
-				health = 750;
+				health = 500;
 				speed = 20.4;
 				damage = 20;
 				Extra_damage = 9999999;
@@ -1015,7 +1012,6 @@ namespace Plants_Zombies
 			EatClock +=deltaTime;
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
-			jackBombClock += deltaTime;
 
 			//setup death animation data
 			if (health <= 0)
@@ -1103,7 +1099,7 @@ namespace Plants_Zombies
 			// Projectiles // remove collision with sun coins
 			for (int j = 0; j < PlantProjectilesARR.size(); j++) {
 				if (!PlantProjectilesARR.empty()) {
-					if (!(PlantProjectilesARR[j].type == SunCoin || PlantProjectilesARR[j].type == SunFlower)
+					if (!(PlantProjectilesARR[j].type == SunCoin || PlantProjectilesARR[j].type == SunFlower || PlantProjectilesARR[j].type == SunShroom)
 						&& (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds()))) {
 
 						//cout << "Zombie Health = " << health << endl;
@@ -1115,21 +1111,12 @@ namespace Plants_Zombies
 							isSlowed = true;
 						}
 
-						//float randPitch[3] = { 0.85, 1, 1.25 };
-
 						if (type == bucketHat)
 						{
 							PlaySoundEffect(BucketHatHitSoundBuffer, true, 2);
-							//BucketHatHitSound.setBuffer(BucketHatHitSoundBuffer[rand() % 2]);
-							//BucketHatHitSound.setPitch(randPitch[rand() % 3]);
-							//BucketHatHitSound.play();
 						}
 
 						PlaySoundEffect(SplatSoundBuffer, true ,3, 25);
-						//SplatSound.setBuffer(SplatSoundBuffer[rand() % 3]);
-						//SplatSound.setPitch(randPitch[rand() % 3]);
-						//SplatSound.play();
-
 
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 						j--;
@@ -1170,12 +1157,8 @@ namespace Plants_Zombies
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
-						//cout << "ana bakol" << endl;
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
-						//EatSound.setBuffer(ZombieEatSoundBuffer[rand() % 3]);
-						//EatSound.play();
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
-						//EatClock.restart();
 						EatClock = 0;
 					}
 				}
@@ -1231,7 +1214,6 @@ namespace Plants_Zombies
 				{
 					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
 					jackBomb = true;
-					//jackClock.restart();
 					jackClock = 0;
 					PlaySoundEffect(jackBombSound, true);
 
@@ -1687,7 +1669,7 @@ namespace Plants_Zombies
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = jackInTheBox;
+			zombie_array[i].type = randomzombietype;
 			zombie_array[i].start();
 		}
 	}

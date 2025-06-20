@@ -541,7 +541,7 @@ void UpdateLevel1(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(2, 4, 7.0f);
+    level(2, 10, 10.0f); // 2, 10 , 10;
     
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
@@ -568,7 +568,7 @@ void UpdateLevel2(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(2, 20, 10.0f);
+    level(2, 15, 10.0f); // 2, 15 , 10
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
@@ -584,7 +584,7 @@ void DrawLevel2(RenderWindow& window)
 #pragma region Level 3
 void StartLevel3()
 {
-    bool isNight = false;
+    bool isNight = true;
     setupWaveData();
     StartPlantingAndCurrencySystem(offset, isNight);
     startZombiePositions(100);
@@ -596,7 +596,7 @@ void UpdateLevel3(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(3, 30, 8.0f);
+    level(3, 35, 7.0f); // 3 , 35 , 7
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }

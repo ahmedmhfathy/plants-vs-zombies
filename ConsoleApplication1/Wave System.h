@@ -200,7 +200,6 @@ void allwave(int numberwave, int numberzombie) {
         {
             if (Plants_Zombies::zombie_array[i].startJackClock)
             {
-                jackMusicOn = true;
                 Plants_Zombies::zombie_array[i].jackClock = 0;
 				Plants_Zombies::zombie_array[i].startJackClock = false;
             }
@@ -227,10 +226,14 @@ void allwave(int numberwave, int numberzombie) {
                 jackMusicOn = true;
                 break;
             }
-            else if(Plants_Zombies::zombie_array[i].isDead || !Plants_Zombies::zombie_array[i].started)
+            else if(Plants_Zombies::zombie_array[i].isDead || !Plants_Zombies::zombie_array[i].started || Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
             {
                 jackMusicOn = false;
             }
+        }
+        else
+        {
+            jackMusicOn = false;
         }
     }
 
