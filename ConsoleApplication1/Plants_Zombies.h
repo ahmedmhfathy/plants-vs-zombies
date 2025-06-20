@@ -58,6 +58,8 @@ namespace Plants_Zombies
 	SoundBuffer newsmanyellbuffer[2];
 	SoundBuffer newsManPaperRipSoundBuffer;
 	SoundBuffer BucketHatHitSoundBuffer[2];
+	SoundBuffer jackSong;
+	SoundBuffer jackBombSound;
 	//Sound SunCoinSound;
 	//Sound ShootSound;
 	//Sound SplatSound;
@@ -87,6 +89,9 @@ namespace Plants_Zombies
 		//newsManPaperRipSound.setBuffer(newsManPaperRipSoundBuffer);
 		BucketHatHitSoundBuffer[0].loadFromFile("Audio/Zombies/shieldhit.ogg");
 		BucketHatHitSoundBuffer[1].loadFromFile("Audio/Zombies/shieldhit2.ogg");
+		// Jack in The box
+		jackBombSound.loadFromFile("Audio/Zombies/jackBomb.ogg");
+		jackSong.loadFromFile("Audio/Zombies/jackSong.ogg");
 
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
@@ -868,7 +873,7 @@ namespace Plants_Zombies
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
-		float EatClock, CrushedZombieClock,  jackClock;
+		float EatClock, CrushedZombieClock,  jackClock, jackBombClock;
 		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22);
 
 	private:
@@ -890,6 +895,7 @@ namespace Plants_Zombies
 			EatClock = 0;
 			CrushedZombieClock = 0;
 			jackClock = 0;
+			jackBombClock = 0;
 
 			#pragma region Booleans
 			started = false;
@@ -1014,6 +1020,7 @@ namespace Plants_Zombies
 			EatClock +=deltaTime;
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
+			jackBombClock += deltaTime;
 
 			//setup death animation data
 			if (health <= 0)
@@ -1231,6 +1238,7 @@ namespace Plants_Zombies
 					jackBomb = true;
 					//jackClock.restart();
 					jackClock = 0;
+					PlaySoundEffect(jackBombSound, true);
 
 				}
 
@@ -1492,7 +1500,7 @@ namespace Plants_Zombies
 				}
 			}
 
-			//jack in the box --> Blue regular zombie 
+			//jack in the box  
 			if (type == jackInTheBox)
 			{
 				if (isMoving && !isSquished)
@@ -1684,7 +1692,7 @@ namespace Plants_Zombies
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = randomzombietype;
+			zombie_array[i].type = jackInTheBox;
 			zombie_array[i].start();
 		}
 	}
