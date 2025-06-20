@@ -73,7 +73,6 @@ namespace  StartAnimationNS {
         FinalWaveSoundBuffer.loadFromFile("Audio/finalwave.ogg");
         LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
         carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
-        carsSound.setBuffer(carsSoundBuffer);
         Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
         
         //ready text
