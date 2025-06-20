@@ -596,7 +596,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 			{
 				if (curruntselection == shovel)
 				{
-					if (mygrid[i].isplanted)
+					if (mygrid[i].isplanted && !mygrid[i].gravePlanted)
 					{
 						PlaySoundEffect(PlantingSoundBuffer, true);
 						//cout << "shovel " << i << endl;
