@@ -145,10 +145,11 @@ void LoadMainMenuTex()
 
 void MainMenuStart(RenderWindow& window)
 {
+    jackMusicOn = false;
     MaxLevelWon = MainMenu;
+
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
-
     LoadMainMenuTex();
 
     #pragma region setup elements
@@ -236,6 +237,7 @@ void MainMenuStart(RenderWindow& window)
 
 void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
 {
+    jackMusicOn = false;
     window.setView(MainMenuCamera);
 
     float randPitch[3] = { 0.85, 1, 1.15 };

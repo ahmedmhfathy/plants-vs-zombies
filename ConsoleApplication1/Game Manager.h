@@ -617,6 +617,7 @@ void SwitchState(State NewState)
     LevelIsOver = false;
     WinLevel = false;
     IsPaused = false;
+	jackMusicOn = false;
     CurrentState = NewState;
 
     if (CurrentState == Level1)

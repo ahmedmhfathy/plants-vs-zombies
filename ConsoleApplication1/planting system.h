@@ -82,7 +82,7 @@ SoundBuffer ShovelSoundBuffer;
 Font font;
 Text moneytext;
 
-enum Selection { peashooter, snowpeashooter, sunflower, wallnut, sunshroom, puffshroom, scaredyshroom, shovel, grave, none }curruntselection;
+enum Selection { peashooter, snowpeashooter, sunflower, wallnut, sunshroom, puffshroom, scaredyshroom, shovel, none }curruntselection;
 
 bool PlaySelectionSound = false;
 bool isHolding = false;
@@ -854,7 +854,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 
 		plantCollider.setPosition(shape.getPosition());
 	}
-	else if(!mygrid[gridIndex].gravePlanted)// else will turn the plant into an empty gameobject  
+	else if(!mygrid[gridIndex].gravePlanted)// else if there is not a grave planted there will turn the plant into an empty gameobject  
 	{
 		type = EmptyPlant;
 		mygrid[gridIndex].isplanted = false;

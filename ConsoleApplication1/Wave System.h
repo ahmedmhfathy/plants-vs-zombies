@@ -130,12 +130,12 @@ void setupWaveData() {
         wave[i].check_startwave = true;
     }
 
-
     clockwave2.restart();
     clockfinalwave.restart();
     LoseGameClock.restart();
     DeltaTimeClock.restart();
-    //GlobalClock.restart();
+
+	jackMusic.stop();
 
     nowave = true;
     checkstart_wave2 = true;
@@ -148,6 +148,7 @@ void setupWaveData() {
     WinLevel = false;
     playLoseGameAnim = false;
     playWaveSounds = false;
+    jackMusicOn = false;
 
     minscale = 1.7f;
     scaleFactor = 6.0f;
@@ -155,7 +156,6 @@ void setupWaveData() {
     scalefactortextlosegame = 4.2f;
 
     timeSinceStart = 0;
-	//deltaTime = DeltaTimeClock.restart().asSeconds();
 }
 
 void startZombiePositions(int numZombies) {
@@ -185,9 +185,6 @@ void startallwave(int numberwave, int numberzombie, float delaybetween ) {
 
     srand(time(0));
 
-    //GlobalClock.restart();
-    //timeSinceStart = GlobalClock.getElapsedTime().asSeconds();
-
     timeSinceStart = 0;
 
     startZombiePositions(numberzombie);
@@ -203,6 +200,7 @@ void allwave(int numberwave, int numberzombie) {
         {
             if (Plants_Zombies::zombie_array[i].startJackClock)
             {
+                jackMusicOn = true;
                 Plants_Zombies::zombie_array[i].jackClock = 0;
 				Plants_Zombies::zombie_array[i].startJackClock = false;
             }
@@ -222,6 +220,23 @@ void allwave(int numberwave, int numberzombie) {
 
     for (int i = 0; i < wave[numberwave].numberzombie; i++)
     {
+        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+        {
+            if (!Plants_Zombies::zombie_array[i].isDead)
+            {
+                jackMusicOn = true;
+                break;
+            }
+            else
+            {
+                jackMusicOn = false;
+            }
+            
+        }
+    }
+
+    for (int i = 0; i < wave[numberwave].numberzombie; i++)
+    {
         if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
         {
             wave[numberwave].checkexit_wave = true;
@@ -231,6 +246,11 @@ void allwave(int numberwave, int numberzombie) {
             wave[numberwave].checkexit_wave = false;
             break;
         }
+    }
+
+    if (wave[numberwave].checkexit_wave == true)
+    {
+        jackMusicOn = false;
     }
 }
 

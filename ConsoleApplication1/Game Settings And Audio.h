@@ -19,10 +19,13 @@ bool IsFullScreen = false;
 bool IsSoundEffects = true;
 bool IsMusic = true;
 bool changeFullScreenState = true;
+bool jackMusicOn = false;
 
 deque<Sound> soundEffects;
 SoundBuffer GameMusicBuffer;
 Sound GameMusic;
+SoundBuffer jackMusicBuffer;
+Sound jackMusic;
 
 //should be called in the update function
 void DeltaTimeManager()
@@ -61,6 +64,10 @@ void SetupGameSettings()
 	GameMusic.setVolume(5);
 	GameMusic.setLoop(true);
 	GameMusic.play();
+	jackMusicBuffer.loadFromFile("Audio/Zombies/jackSong.ogg");
+	jackMusic.setBuffer(jackMusicBuffer);
+	jackMusic.setLoop(true);
+	jackMusic.stop();
 }
 
 View lastCameraPos;
@@ -146,11 +153,27 @@ void SoundsUpdate()
 
 	if (IsSoundEffects)
 	{
-		//cout << soundEffects.size() << endl;
+		//cout << soundEffects.size() + jackSongsQueue.size() << endl;
 
 		if (!soundEffects.empty() && (soundEffects.front().getStatus() == SoundSource::Status::Stopped))
 		{
 			soundEffects.pop_front();
 		}
+
+		if (jackMusicOn)
+		{
+			if (jackMusic.getStatus() == Sound::Status::Paused || jackMusic.getStatus() == Sound::Status::Stopped)
+			{
+				jackMusic.play();
+			}
+		}
+		else
+		{
+			jackMusic.stop();
+		}
+	}
+	else
+	{
+		jackMusic.stop();
 	}
 }

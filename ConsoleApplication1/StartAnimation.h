@@ -74,7 +74,7 @@ namespace  StartAnimationNS {
         LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
         carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
         Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
-        
+
         //ready text
         Readytextsprite.setTexture(Readytexttexture);
         Readytextsprite.setOrigin(Readytextsprite.getGlobalBounds().width / 2.0f, Readytextsprite.getGlobalBounds().height / 2.0f);

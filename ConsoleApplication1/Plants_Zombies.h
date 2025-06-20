@@ -60,13 +60,6 @@ namespace Plants_Zombies
 	SoundBuffer BucketHatHitSoundBuffer[2];
 	SoundBuffer jackSong;
 	SoundBuffer jackBombSound;
-	//Sound SunCoinSound;
-	//Sound ShootSound;
-	//Sound SplatSound;
-	//Sound EatSound;
-	//Sound newsmanyell;
-	//Sound newsManPaperRipSound;
-	//Sound BucketHatHitSound;
 #pragma endregion
 
 #pragma region Plants
@@ -887,6 +880,8 @@ namespace Plants_Zombies
 
 		int CurrentPlantIndex;
 		bool PlantInfront = false;
+
+
 
 	public:
 		void start() {
