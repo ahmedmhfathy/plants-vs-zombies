@@ -12,6 +12,7 @@
 using namespace std;
 using namespace sf;
 
+enum State { MainMenu, Level1, Level2, Level3 } CurrentState, MaxLevelWon;
 void SwitchState(State NewState);
 
 bool ButtonTapSoundNextLevel = false;
