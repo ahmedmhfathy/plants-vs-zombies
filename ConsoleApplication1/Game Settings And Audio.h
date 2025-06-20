@@ -55,6 +55,7 @@ void SetupGameSettings()
 	IsSoundEffects = true;
 	IsMusic = true;
 	changeFullScreenState = true;
+	jackMusicOn = false;
 
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
@@ -64,6 +65,7 @@ void SetupGameSettings()
 	GameMusic.setVolume(5);
 	GameMusic.setLoop(true);
 	GameMusic.play();
+
 	jackMusicBuffer.loadFromFile("Audio/Zombies/jackSong.ogg");
 	jackMusic.setBuffer(jackMusicBuffer);
 	jackMusic.setLoop(true);
