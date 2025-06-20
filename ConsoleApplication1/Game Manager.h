@@ -12,7 +12,6 @@
 using namespace std;
 using namespace sf;
 
-enum State { MainMenu, Level1, Level2, Level3 } CurrentState, MaxLevelWon;
 void SwitchState(State NewState);
 
 bool ButtonTapSoundNextLevel = false;
@@ -293,7 +292,6 @@ void DrawPauseMenu(RenderWindow& window)
 void LoadLevelEndTextures() {
     //Button Click
     PauseMenuClickBuffer.loadFromFile("Audio/buttonclick.ogg");
-    
 
     //lose case
     LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
@@ -373,9 +371,24 @@ void LevelEndUpdate()
                     PlaySoundEffect(PauseMenuClickBuffer, false);
                     CurrentState = MainMenu;
                 }
+
+                MaxLevelWon = Level3;
             }
             else
             {
+                if (CurrentState == Level1)
+                {
+                    MaxLevelWon = Level1;
+                }
+                else if (CurrentState == Level2)
+                {
+                    MaxLevelWon = Level2;
+                }
+                else if(CurrentState == Level3)
+                {
+					MaxLevelWon = Level3;
+                }
+
                 if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
                 {
                     if (ButtonTapSoundNextLevel)
@@ -390,6 +403,7 @@ void LevelEndUpdate()
                         if (CurrentState == Level1)
                         {
                             SwitchState(Level2);
+                            MaxLevelWon = Level3;
                         }
                         else if (CurrentState == Level2)
                         {
@@ -518,7 +532,7 @@ void StartLevel1()
     bool isNight = false;
     setupWaveData();
     StartPlantingAndCurrencySystem(offset, isNight);
-  //   startZombiePositions(100);
+    startZombiePositions(100);
     StartAnimationNS::startAnimation(isNight);
 }
 void UpdateLevel1(RenderWindow& window)
@@ -545,7 +559,7 @@ void StartLevel2()
     bool isNight = true;
     setupWaveData();
     StartPlantingAndCurrencySystem(offset, isNight);
-   // startZombiePositions(100);
+    startZombiePositions(100);
     StartAnimationNS::startAnimation(isNight);
 }
 void UpdateLevel2(RenderWindow& window)
@@ -572,7 +586,7 @@ void StartLevel3()
     bool isNight = false;
     setupWaveData();
     StartPlantingAndCurrencySystem(offset, isNight);
-  //  startZombiePositions(100);
+    startZombiePositions(100);
     StartAnimationNS::startAnimation(isNight);
 
 }

@@ -145,7 +145,7 @@ void LoadMainMenuTex()
 
 void MainMenuStart(RenderWindow& window)
 {
-    MaxLevelWon = Level3;
+    MaxLevelWon = MainMenu;
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
 

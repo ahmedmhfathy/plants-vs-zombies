@@ -8,8 +8,8 @@
 #include<time.h>
 #include"Tools.h"
 #include "Game Settings And Audio.h"
-#include"StartAnimation.h"
-#include"Plants_Zombies.h"
+#include "StartAnimation.h"
+#include "Plants_Zombies.h"
 
 #pragma region Functiondelaration
 void allwave(int, int);

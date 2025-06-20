@@ -8,6 +8,7 @@ using namespace std;
 using namespace sf;
 
 RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies");
+enum State { MainMenu, Level1, Level2, Level3 } CurrentState, MaxLevelWon;
 
 Clock DeltaTimeClock;
 float deltaTime;

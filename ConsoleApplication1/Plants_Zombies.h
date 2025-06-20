@@ -1684,7 +1684,7 @@ namespace Plants_Zombies
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = jackInTheBox;
+			zombie_array[i].type = randomzombietype;
 			zombie_array[i].start();
 		}
 	}
