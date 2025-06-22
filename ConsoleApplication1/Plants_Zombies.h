@@ -855,7 +855,7 @@ namespace Plants_Zombies
 		bool started = false;
 		bool stoped;
 		bool isSlowed = false;
-		bool moved = false;
+		//bool moved = false;
 		int health;
 		float speed;
 		float damage;

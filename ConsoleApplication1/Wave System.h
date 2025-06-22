@@ -1,12 +1,12 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include<algorithm>
+#include <algorithm>
 #include <iostream>
 #include <vector>
 #include <string>
-#include<time.h>
-#include"Tools.h"
+#include <time.h>
+#include "Tools.h"
 #include "Game Settings And Audio.h"
 #include "StartAnimation.h"
 #include "Plants_Zombies.h"
@@ -43,11 +43,11 @@ bool checkstart_wave2 = true;
 bool checkstart_wave3 = true;
 bool endRSP = false;
 bool movefromwavetoanother = true;
-bool enter = true;
 bool LevelIsOver = false;
 bool WinLevel = false;
 bool playLoseGameAnim = false;
 bool playWaveSounds = false;
+bool isNightLevel = false;
 #pragma endregion
 
 #pragma region hours and timer
@@ -114,9 +114,11 @@ struct waves {
     bool check_startwave = true;
 }wave[3];
 #pragma endregion
+
 int x;
 //resets all data so you can retry the level
-void setupWaveData() {
+void setupWaveData(bool isNight_) {
+    isNightLevel = isNight_;
 
     for (int i = 0; i < 5; i++)
     {
@@ -158,31 +160,14 @@ void setupWaveData() {
     timeSinceStart = 0;
 }
 
-void startZombiePositions(int numZombies, int numlevel, int numberwave) {
+void startZombiePositions(int numZombies, int numberwave) 
+{
     Plants_Zombies::StartZombies(numZombies);
-    for (int i = 0; i < 100; i++) {
-        Plants_Zombies::zombie_array[i].moved = false;
-    }
-    int row[5] = { -40, 100, 235, 360, 490 };
-    if ((numlevel == 2 || numlevel == 3)&&(numberwave ==1||numberwave==2)) {
-        x = 4;
-        for (int i = 0; i < 4; i++) {
-            Plants_Zombies::zombie_array[i].started = false;
-            Plants_Zombies::zombie_array[i].isDead = false;
-            Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y-30);
 
-            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
-                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
-                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
-            {
-                Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y - 55);
-            }
-        }
-    }
-    else if (numlevel==1){
-        x = 0;
-    }
-    for (int i = x; i < 100; i++)
+    int row[5] = { -40, 100, 235, 360, 490 };
+
+	//normal zombies
+    for (int i = x; i < 100; i++) 
     {
         Plants_Zombies::zombie_array[i].started = false;
         Plants_Zombies::zombie_array[i].isDead = false;
@@ -195,12 +180,67 @@ void startZombiePositions(int numZombies, int numlevel, int numberwave) {
         {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
         }
+
         Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
         //cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
     }
+    
+    //grave zombies
+    if (isNightLevel && numberwave >= 1)
+    {
+        for (int i = 0; i < numGraves; i++)
+        {
+            Plants_Zombies::zombie_array[i].started = false;
+            Plants_Zombies::zombie_array[i].isDead = false;
+
+            Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y-30);
+
+            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y - 55);
+            }
+        }
+    }
+    //for (int i = 0; i < 100; i++) {
+    //    Plants_Zombies::zombie_array[i].moved = false;
+    //}
+    //int row[5] = { -40, 100, 235, 360, 490 };
+    //if ((numlevel == 2 || numlevel == 3)&&(numberwave ==1||numberwave==2)) {
+    //    x = 4;
+    //    for (int i = 0; i < 4; i++) {
+    //        Plants_Zombies::zombie_array[i].started = false;
+    //        Plants_Zombies::zombie_array[i].isDead = false;
+    //        Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y-30);
+    //        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
+    //            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
+    //            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+    //        {
+    //            Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y - 55);
+    //        }
+    //    }
+    //}
+    //else if (numlevel==1){
+    //    x = 0;
+    //}
+    //for (int i = x; i < 100; i++)
+    //{
+    //    Plants_Zombies::zombie_array[i].started = false;
+    //    Plants_Zombies::zombie_array[i].isDead = false;
+    //    Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
+    //    if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
+    //        || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
+    //        || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+    //    {
+    //        Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
+    //    }
+    //    Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
+    //    //cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
+    //}
 }
 
-void startallwave(int numberwave, int numberzombie, float delaybetween,int numlevel ) {
+void startallwave(int numberwave, int numberzombie, float delaybetween) {
     wave[numberwave].delaybetween = delaybetween;
     wave[numberwave].numberzombie = numberzombie;
 
@@ -208,101 +248,99 @@ void startallwave(int numberwave, int numberzombie, float delaybetween,int numle
 
     timeSinceStart = 0;
 
-    startZombiePositions(numberzombie,numlevel,numberwave);
+    startZombiePositions(numberzombie,numberwave);
 }
 
-void allwave(int numberwave, int numberzombie) {
-
+void allwave(int numberwave, int numberzombie) 
+{
     intersectioncarsandzombies(numberwave);
 
+    //spawn zombies
     for (int i = 0; i < wave[numberwave].numberzombie; ++i)
     {
-        timeSinceStart;
-        if (i >= 0 && i <= 8 && (numberwave == 1 || numberwave == 2)) {
-            cout << timeSinceStart << endl;
-            if (timeSinceStart >= i * 1) {
-                Plants_Zombies::zombie_array[i].moved = true;
-                if (Plants_Zombies::zombie_array[i].startJackClock)
-                {
-                    Plants_Zombies::zombie_array[i].jackClock = 0;
-                    Plants_Zombies::zombie_array[i].startJackClock = false;
-                }
-                Plants_Zombies::zombie_array[i].started = true;
-            }
-        }
-        else {
-            cout << timeSinceStart << endl;
-            if (timeSinceStart >= i * wave[numberwave].delaybetween) {
-                Plants_Zombies::zombie_array[i].moved = true;
-                if (Plants_Zombies::zombie_array[i].startJackClock)
-                {
-                    Plants_Zombies::zombie_array[i].jackClock = 0;
-                    Plants_Zombies::zombie_array[i].startJackClock = false;
-                }
-                Plants_Zombies::zombie_array[i].started = true;
-            }
-        }
-    
-    }
-        for (int i = 0; i < wave[numberwave].numberzombie; i++)
+        // swarm of zombies
+        if (i >= 0 && i <= 8 && (numberwave == 1 || numberwave == 2))
         {
-            if (i >= 0 && i <=8 && (numberwave == 1 || numberwave == 2)) {
-                if (Plants_Zombies::zombie_array[i].started && Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
-                {
-                    if (!IsPaused)
-                    {
-                        Plants_Zombies::zombie_array[i].update(deltaTime);
-                    }
-                }
-
-            }
-            else {
-                if (Plants_Zombies::zombie_array[i].started && Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
-                {
-                    if (!IsPaused)
-                    {
-                        Plants_Zombies::zombie_array[i].update(deltaTime);
-                    }
-                }
-            }
-        }
-        for (int i = 0; i < wave[numberwave].numberzombie; i++)
-        {
-            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+            //cout << timeSinceStart << endl;
+            if (timeSinceStart >= (float)(i * 0.5))
             {
-                if (!Plants_Zombies::zombie_array[i].isDead && Plants_Zombies::zombie_array[i].started)
+                if (Plants_Zombies::zombie_array[i].startJackClock)
                 {
-                    jackMusicOn = true;
-                    break;
+                    Plants_Zombies::zombie_array[i].jackClock = 0;
+                    Plants_Zombies::zombie_array[i].startJackClock = false;
                 }
-                else if (Plants_Zombies::zombie_array[i].isDead || !Plants_Zombies::zombie_array[i].started || Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
-                {
-                    jackMusicOn = false;
-                }
+                Plants_Zombies::zombie_array[i].started = true;
             }
-            else
+        }
+
+        // normal behaviour
+        else  
+        {
+            //cout << timeSinceStart << endl;
+            if (timeSinceStart >= i * wave[numberwave].delaybetween) 
+            {
+                if (Plants_Zombies::zombie_array[i].startJackClock)
+                {
+                    Plants_Zombies::zombie_array[i].jackClock = 0;
+                    Plants_Zombies::zombie_array[i].startJackClock = false;
+                }
+                Plants_Zombies::zombie_array[i].started = true;
+            }
+        }
+    }
+
+	// update zombies
+    for (int i = 0; i < wave[numberwave].numberzombie; i++)
+    {
+        if (Plants_Zombies::zombie_array[i].started && Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
+        {
+            if (!IsPaused)
+            {
+                Plants_Zombies::zombie_array[i].update(deltaTime);
+            }
+        }
+    }
+
+	// check if jack in the box music should play
+    for (int i = 0; i < wave[numberwave].numberzombie; i++)
+    {
+        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+        {
+            if (!Plants_Zombies::zombie_array[i].isDead && Plants_Zombies::zombie_array[i].started)
+            {
+                jackMusicOn = true;
+                break;
+            }
+            else if (Plants_Zombies::zombie_array[i].isDead || !Plants_Zombies::zombie_array[i].started || Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
             {
                 jackMusicOn = false;
             }
         }
-
-        for (int i = 0; i < wave[numberwave].numberzombie; i++)
-        {
-            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
-            {
-                wave[numberwave].checkexit_wave = true;
-            }
-            else
-            {
-                wave[numberwave].checkexit_wave = false;
-                break;
-            }
-        }
-
-        if (wave[numberwave].checkexit_wave == true)
+        else
         {
             jackMusicOn = false;
         }
+    }
+
+	// check if all zombies are dead
+    for (int i = 0; i < wave[numberwave].numberzombie; i++)
+    {
+        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
+        {
+            wave[numberwave].checkexit_wave = true;
+        }
+        else
+        {
+            wave[numberwave].checkexit_wave = false;
+            break;
+        }
+    }
+
+    //if wave is finished stop playing jack music
+    if (wave[numberwave].checkexit_wave == true)
+    {
+        jackMusicOn = false;
+    }
 }
 
 void level(int numberwave, int num, float delaybetweenw1, int numlevel) 
@@ -312,21 +350,29 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
     if (endRSP)
     {
         if (numberwave == 2) {
-            if (wave[0].check_startwave) {
+            if (wave[0].check_startwave) 
+            {
                 wave[0].check_startwave = false;
-                startallwave(0, num, delaybetweenw1, numlevel);
+                startallwave(0, num, delaybetweenw1);
             }
-            if (nowave && endRSP) { allwave(0, num); }
-            if (wave[0].checkexit_wave) {
-                if (movefromwavetoanother) {
+            if (nowave && endRSP) 
+            {
+                allwave(0, num); 
+            }
+            if (wave[0].checkexit_wave) 
+            {
+                if (movefromwavetoanother) 
+                {
                     clockwave2.restart();
                     movefromwavetoanother = false;
                     nowave = false;
                 }
                 timertostartwave2 = clockwave2.getElapsedTime();
-                if (timertostartwave2 > seconds(6)) {
-                    if (wave[1].check_startwave) {
-                        startallwave(1, num += 20, delaybetweenw1 -= 5.0f, numlevel);
+                if (timertostartwave2 > seconds(6)) 
+                {
+                    if (wave[1].check_startwave) 
+                    {
+                        startallwave(1, num += 20, delaybetweenw1 -= 5.0f);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
@@ -348,42 +394,63 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                 }
             }
         }
-        else if (numberwave == 3) {
-            if (wave[0].check_startwave) {
+        else if (numberwave == 3) 
+        {
+            if (wave[0].check_startwave) 
+            {
                 wave[0].check_startwave = false;
-                startallwave(0, num, delaybetweenw1, numlevel);
+                startallwave(0, num, delaybetweenw1);
             }
-            if (nowave && endRSP) { allwave(0, num); }
-            if (wave[0].checkexit_wave) {
-                if (movefromwavetoanother) {
+
+            if (nowave && endRSP)
+            {
+                allwave(0, num); 
+            }
+
+            if (wave[0].checkexit_wave) 
+            {
+                if (movefromwavetoanother) 
+                {
                     clockwave2.restart();
                     movefromwavetoanother = false;
                     nowave = false;
                 }
+
                 timertostartwave2 = clockwave2.getElapsedTime();
-                if (timertostartwave2 > seconds(6)) {
-                    if (wave[1].check_startwave) {
-                        startallwave(1, num += 20, delaybetweenw1 -= 4.0f, numlevel);
+
+                if (timertostartwave2 > seconds(6)) 
+                {
+                    if (wave[1].check_startwave) 
+                    {
+                        startallwave(1, num += 20, delaybetweenw1 -= 4.0f);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
+
                     allwave(1, num);
                 }
             }
-            if (wave[1].checkexit_wave) {
-                if (!movefromwavetoanother) {
+
+            if (wave[1].checkexit_wave) 
+            {
+                if (!movefromwavetoanother) 
+                {
                     clockfinalwave.restart();
                     movefromwavetoanother = true;
                     wave[0].checkexit_wave = false;
                 }
+
                 timertostartwave3 = clockfinalwave.getElapsedTime();
-                if (timertostartwave3 > seconds(6)) {
-                    if (wave[2].check_startwave) {
-                        startallwave(2, num += 20, delaybetweenw1 -= 6.0f, numlevel);
+
+                if (timertostartwave3 > seconds(6)) 
+                {
+                    if (wave[2].check_startwave)
+                    {
+                        startallwave(2, num += 20, delaybetweenw1 -= 6.0f);
                         wave[2].check_startwave = false;
                     }
-                    allwave(2, num);
 
+                    allwave(2, num);
 
                     //check win status
                     if (wave[2].checkexit_wave)
@@ -428,7 +495,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
         if (nowave) {
 
             for (int i = 0; i < wave[0].numberzombie; i++) {
-                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead&& Plants_Zombies::zombie_array[i].moved)
+                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead && Plants_Zombies::zombie_array[i].started)
                 {
                     /*if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox && !Plants_Zombies::zombie_array[i].isDead)
                     {
@@ -441,7 +508,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
         }
         else if (wave[0].checkexit_wave && !nowave) {
             for (int i = 0; i < wave[1].numberzombie; i++) {
-                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead&&Plants_Zombies::zombie_array[i].moved)
+                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead && Plants_Zombies::zombie_array[i].started)
                 {
                     /*if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox && !Plants_Zombies::zombie_array[i].isDead)
                     {
@@ -455,7 +522,7 @@ void DrawWavesAndZombies(RenderWindow& window) {
         }
         else if (wave[1].checkexit_wave) {
             for (int i = 0; i < wave[2].numberzombie; i++) {
-                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead&& Plants_Zombies::zombie_array[i].moved)
+                if (Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead && Plants_Zombies::zombie_array[i].started)
                 {
                     /*if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox && !Plants_Zombies::zombie_array[i].isDead)
                     {

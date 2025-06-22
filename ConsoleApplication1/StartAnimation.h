@@ -117,7 +117,6 @@ namespace  StartAnimationNS {
         if (isNight)
         {
             gardensprite.setTexture(gardenTextureNight);
-         
         }
         else
         {
@@ -157,46 +156,60 @@ namespace  StartAnimationNS {
         srand(time(0));
     }
 
-    void updateAnimation(RenderWindow& window) {
+    void updateAnimation(RenderWindow& window) 
+    {
         movecamera(window);
-        if (moveleft) {
+
+        if (moveleft) 
+        {
             movecars(); // When Move Camera is end .... Start move car
         }
-        //timeSinceStart = GlobalClock.getElapsedTime().asSeconds();
     }
 
-    void movecamera(RenderWindow& window) {
-        // Start Move Camera From Left To Right..... Then From Right To Left.....
+    void movecamera(RenderWindow& window) 
+    {
+        // Start Move Camera From Left To Right.....
         window.setView(GardenCamera);
-        if (!moveright) {
-            if (GardenCamera.getCenter().x <= 849) {
+        if (!moveright) 
+        {
+            if (GardenCamera.getCenter().x <= 849) 
+            {
                 float startValue = 340, endValue = 850;
-                if (startAnimcamera == false) {
+                if (startAnimcamera == false) 
+                {
                     animcameraClock.restart();
                     startAnimcamera = true;
                 }
                 GardenCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animcameraClock, seconds(3)), 310);
             }
-            else {
+            else 
+            {
                 moveright = true;
             }
         }
-        if (!moveleft && moveright) {
-            if (GardenCamera.getCenter().x > 341) {
+
+        // Start Move Camera From Right To Left.....
+        if (!moveleft && moveright) 
+        {
+            if (GardenCamera.getCenter().x > 341) 
+            {
                 float startValue = 850, endValue = 340;
-                if (startAnimcamera == true) {
+                if (startAnimcamera == true) 
+                {
                     animcameraClock.restart();
                     startAnimcamera = false;
                 }
                 GardenCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animcameraClock, seconds(4)), 310);
             }
-            else {
+            else 
+            {
                 moveleft = true;
             }
         }
     }
 
-    void RSP(RenderWindow& window) {
+    void RSP(RenderWindow& window) 
+    {
         Time time;
         if (startdrawRSP)
         {
@@ -204,6 +217,7 @@ namespace  StartAnimationNS {
             startdrawRSP = false;
         }
         time = clockRSP.getElapsedTime();
+
         if (time < seconds(0.5))
         {
             if (RSPSonudon)
@@ -232,28 +246,38 @@ namespace  StartAnimationNS {
         }
     }
 
-    void movecars() {
+    void movecars() 
+    {
         int stoppedCars = 0;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) 
+        {
             car[i].update();
-            if (car[i].lawnsprite.getPosition().x > -70) {
+            if (car[i].lawnsprite.getPosition().x > -70) 
+            {
                 stoppedCars++;
             }
         }
-        if (stoppedCars == 5) {
+
+        if (stoppedCars == 5) 
+        {
             EntertostartdrawRSP = true;
         }
     }
 
-    void Renderstartanimation(RenderWindow& window) {
+    void Renderstartanimation(RenderWindow& window) 
+    {
         window.draw(gardensprite);
-        if (EntertostartdrawRSP) {
+
+        if (EntertostartdrawRSP) 
+        {
             RSP(window);
         }
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) 
+        {
             window.draw(car[i].lawnsprite);
         }
+
         window.draw(zombieinStreet);
     }
 }

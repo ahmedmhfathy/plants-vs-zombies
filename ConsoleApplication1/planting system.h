@@ -10,6 +10,8 @@
 using namespace std;
 using namespace sf;
 
+const int numGraves = 4;
+
 #pragma region texture declaration
 Texture sunflowerAvailableTex;
 Texture sunflowerUnavailableTex;
@@ -53,7 +55,7 @@ Sprite sunContainer;
 Sprite gradientopacity;
 Sprite SelectionHolograph;
 //===================================
-Sprite graves[4];
+Sprite graves[numGraves];
 #pragma endregion
 
 #pragma region clocks and time
@@ -241,14 +243,20 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 	{
 		int plantgraveson[20] = { 6, 7, 8, 9, 15, 16, 17, 18, 24, 25, 26, 27, 33, 34, 35, 36, 42, 43, 44, 45 };
 
-		for (int x = 0; x < 4; x++)
+		for (int x = 0; x < numGraves; x++)
 		{
 			int randindex = plantgraveson[rand() % 20];
 
+			while (mygrid[randindex].gravePlanted == true) // so no two graves will be on top of eachother
+			{
+				randindex = plantgraveson[rand() % 20];
+			}
+
 			graves[x].setTexture(Textgraves);
-			graves[x].setTextureRect(IntRect((4 + x) * 34, 0, 34, 38));
+			graves[x].setTextureRect(IntRect((rand() % 8) * 34, 0, 34, 38));
 			graves[x].setScale(3, 3.1);
 			graves[x].setPosition(mygrid[randindex].shape.getPosition());
+
 			mygrid[randindex].isplanted = true;
 			mygrid[randindex].gravePlanted = true;
 		}
@@ -759,7 +767,7 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 		window.draw(snowpeashooterSeedPacket);
 		window.draw(wallnutSeedPacket);
 
-		for (int i = 0; i < 4; i++) 
+		for (int i = 0; i < numGraves; i++) 
 		{
 			window.draw(graves[i]);
 		}
