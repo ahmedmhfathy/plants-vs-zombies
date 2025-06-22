@@ -96,6 +96,26 @@ struct grid {
 	bool gravePlanted = false;
 }mygrid[46];
 
+struct SeedPacket {
+	Selection type;
+	Sprite shape;
+
+	bool isAvailable = false;
+	bool isSelected = false;
+	float seedPacketClock;
+
+	void SetSeedPacket(Selection type_, Texture& texture, Vector2f position) {
+		type = type_;
+		shape.setTexture(texture);
+		shape.setPosition(position);
+		shape.setScale(3.5f, 3.5f);
+	}
+
+	void updateSeedPacket() {
+
+	}
+}seedpacketsArr[7];
+
 void LoadSelectionTexture() {
 	PlantingSoundBuffer.loadFromFile("Audio/plant.ogg");
 	ShovelSoundBuffer.loadFromFile("Audio/shovel.ogg");
