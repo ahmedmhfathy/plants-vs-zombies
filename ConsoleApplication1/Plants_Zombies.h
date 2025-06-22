@@ -851,12 +851,11 @@ namespace Plants_Zombies
 		RectangleShape jackCollider;
 
 		zombieType type;
-
 		#pragma region booleans
 		bool started = false;
 		bool stoped;
 		bool isSlowed = false;
-
+		bool moved = false;
 		int health;
 		float speed;
 		float damage;
@@ -1715,7 +1714,7 @@ namespace Plants_Zombies
 	void StartZombies(int numerzombieinwave) {
 		for (int i = 0; i < numerzombieinwave; i++) {
 			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = screenDoor;
+			zombie_array[i].type = randomzombietype;
 			zombie_array[i].start();
 		}
 	}
