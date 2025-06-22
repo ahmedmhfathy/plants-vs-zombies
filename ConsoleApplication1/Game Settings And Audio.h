@@ -7,11 +7,12 @@
 using namespace std;
 using namespace sf;
 
-RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies");
+RenderWindow window(VideoMode(1280, 720), "Plants VS Zombies", Style::Close);
 
 Clock DeltaTimeClock;
 float deltaTime;
 
+#pragma region booleans
 bool IsPaused = false;
 bool wasPausedLastFrame = IsPaused;
 
@@ -19,13 +20,17 @@ bool IsFullScreen = false;
 bool IsSoundEffects = true;
 bool IsMusic = true;
 bool changeFullScreenState = true;
+
 bool jackMusicOn = false;
+#pragma endregion
 
 deque<Sound> soundEffects;
 SoundBuffer GameMusicBuffer;
 Sound GameMusic;
 SoundBuffer jackMusicBuffer;
 Sound jackMusic;
+
+Image PVZIcon;
 
 //should be called in the update function
 void DeltaTimeManager()
@@ -59,6 +64,8 @@ void SetupGameSettings()
 
 	window.setFramerateLimit(60);
 	window.setVerticalSyncEnabled(true);
+	PVZIcon.loadFromFile("Assets/PVZ-icon.png");
+	window.setIcon(256, 256, PVZIcon.getPixelsPtr());
 
 	GameMusicBuffer.loadFromFile("Audio/Plants vs. Zombies BackGround.wav");
 	GameMusic.setBuffer(GameMusicBuffer);
@@ -82,10 +89,12 @@ void GameSettingsUpdate()
 		if (IsFullScreen)
 		{
 			window.create(VideoMode(1280, 720), "Plants VS Zombies", Style::Fullscreen);
+			window.setIcon(256, 256, PVZIcon.getPixelsPtr());
 		}
 		else
 		{
-			window.create(VideoMode(1280, 720), "Plants VS Zombies");
+			window.create(VideoMode(1280, 720), "Plants VS Zombies", Style::Close);
+			window.setIcon(256, 256, PVZIcon.getPixelsPtr());
 		}
 
 		window.setFramerateLimit(60);
@@ -97,6 +106,7 @@ void GameSettingsUpdate()
 	}
 }
 
+//for single sound effect
 void PlaySoundEffect(SoundBuffer& buffer, bool Pitch) 
 {
 	float randPitch[5] = {0.75, 0.85, 1, 1.15, 1.25 };
@@ -119,6 +129,7 @@ void PlaySoundEffect(SoundBuffer& buffer, bool Pitch)
 	}
 }
 
+//for array of sound effects
 void PlaySoundEffect(SoundBuffer buffer[], bool Pitch , int size, int volume = 100) 
 {
 	float randPitch[5] = { 0.75, 0.85, 1, 1.15, 1.25 };

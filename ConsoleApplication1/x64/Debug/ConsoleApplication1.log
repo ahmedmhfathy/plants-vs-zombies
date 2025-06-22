@@ -1,18 +1,18 @@
 ﻿C:\Program Files\Microsoft Visual Studio\2022\Community\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(531,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (ConsoleApplication1.vcxproj, SFML Template.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Main.cpp
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(102,30): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(108,30): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(102,39): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(108,39): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(124,31): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(130,31): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(124,40): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(130,40): warning C4305: 'initializing': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(129,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Game Settings And Audio.h(135,19): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Tools.h(51,14): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
