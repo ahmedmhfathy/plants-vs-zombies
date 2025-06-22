@@ -842,7 +842,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 				{
 					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
 						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top))
-						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 4.5)))
+						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 3.5)))
 					{
 						//cout << "true \n";
 						zombieProximityAction = true;

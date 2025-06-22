@@ -265,98 +265,100 @@ namespace Plants_Zombies
 				{
 					if (idle)
 					{
+						shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 34));
 						shape.setTexture(PeaShooterIdleTex);
 						animationCol = (animationCol + 1) % 8;
-						shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 34));
 					}
-					else if (doAction) {
+					else if (doAction) 
+					{
 						if (animationCol + 1 == 3)
 						{
 							doAction = false;
 							idle = true;
 							isDead = false;
 						}
+
+						shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 34));
 						shape.setTexture(PeaShooterShootTex);
 						animationCol = (animationCol + 1) % 3;
 
-						shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 34));
-
 						if (playActionSound)
 						{
 							PlaySoundEffect(PeaShootSoundBuffer, true);
-							//ShootSound.setPitch(randPitch[rand() % 3]);
-							//ShootSound.play();
 							playActionSound = false;
 						}
 					}
 				}
-				else if (type == SnowPeaShooter) {
+				else if (type == SnowPeaShooter) 
+				{
 					if (idle)
 					{
-						shape.setTexture(IcePeaShooterIdleTex);
-						animationCol = (animationCol + 1) % 8;
-
 						shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 34));
+						shape.setTexture(IcePeaShooterIdleTex);
+
+						animationCol = (animationCol + 1) % 8;
 					}
-					else if (doAction) {
+					else if (doAction) 
+					{
 						if (animationCol + 1 == 3)
 						{
 							doAction = false;
 							idle = true;
 							isDead = false;
 						}
-						shape.setTexture(IcePeaShooterShootTex);
-						animationCol = (animationCol + 1) % 3;
-
 						shape.setTextureRect(IntRect(animationCol * 31, 0, 31, 34));
+						shape.setTexture(IcePeaShooterShootTex);
+
+						animationCol = (animationCol + 1) % 3;
 
 						if (playActionSound)
 						{
 							PlaySoundEffect(PeaShootSoundBuffer, true);
-							//ShootSound.setPitch(randPitch[rand() % 3]);
-							//ShootSound.play();
 							playActionSound = false;
 						}
 					}
 				}
-				else if (type == SunFlower) {
+				else if (type == SunFlower) 
+				{
 					if (idle)
 					{
-						shape.setTexture(SunFlowerIdleTex);
-						animationCol = (animationCol + 1) % 6;
-
 						shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 34));
+						shape.setTexture(SunFlowerIdleTex);
+
+						animationCol = (animationCol + 1) % 6;
 					}
-					else if (doAction) {
+					else if (doAction) 
+					{
 						if (animationCol + 1 == 6)
 						{
 							doAction = false;
 							idle = true;
 							isDead = false;
 						}
-						shape.setTexture(SunFlowerProducingSunTex);
-						animationCol = (animationCol + 1) % 6;
 
 						shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 34));
+						shape.setTexture(SunFlowerProducingSunTex);
+					
+						animationCol = (animationCol + 1) % 6;
 					}
 				}
 				else if (type == WallNut) { //always idle
 					if (health >= 1000)
 					{
 						animationRow = 0;
-						animationCol = (animationCol + 1) % 5;
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
+						animationCol = (animationCol + 1) % 5;
 					}
 					else if (health >= 500) {
 						animationRow = 1;
-						animationCol = (animationCol + 1) % 5;
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
+						animationCol = (animationCol + 1) % 5;
 					}
 					else
 					{
 						animationRow = 2;
-						animationCol = (animationCol + 1) % 5;
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
+						animationCol = (animationCol + 1) % 5;
 					}
 				}
 				else if (type == SunShroom)
@@ -368,10 +370,9 @@ namespace Plants_Zombies
 
 					if (idle)
 					{
+						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 						shape.setTexture(SunShroomIdleTex);
 						animationCol = (animationCol + 1) % 5;
-
-						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 					}
 					else if (doAction)
 					{
@@ -381,20 +382,20 @@ namespace Plants_Zombies
 							idle = true;
 							isDead = false;
 						}
-						shape.setTexture(SunShroomProducingSunTex);
-						animationCol = (animationCol + 1) % 5;
-
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
+						shape.setTexture(SunShroomProducingSunTex);
+
+						animationCol = (animationCol + 1) % 5;
 					}
 				}
 				else if (type == PuffShroom)
 				{
 					if (idle)
 					{
-						shape.setTexture(PuffShroomTex);
-						animationCol = (animationCol + 1) % 5;
-
 						shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+						shape.setTexture(PuffShroomTex);
+
+						animationCol = (animationCol + 1) % 5;
 					}
 					else if (doAction)
 					{
@@ -404,16 +405,15 @@ namespace Plants_Zombies
 							idle = true;
 							isDead = false;
 						}
-						shape.setTexture(PuffShroomTex);
-						animationCol = (animationCol + 1) % 5;
 
 						shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+						shape.setTexture(PuffShroomTex);
+
+						animationCol = (animationCol + 1) % 5;
 
 						if (playActionSound)
 						{
 							PlaySoundEffect(PeaShootSoundBuffer, true);
-							//ShootSound.setPitch(randPitch[rand() % 3]);
-							//ShootSound.play();
 							playActionSound = false;
 						}
 					}
@@ -421,6 +421,8 @@ namespace Plants_Zombies
 				else if (type == ScaredyShroom)
 				{
 					//cout << zombieProximityAction << endl;
+					shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+
 					if (!zombieProximityAction)
 					{
 						if (isHiding)
@@ -428,14 +430,13 @@ namespace Plants_Zombies
 							animationCol--;
 							if (animationCol == 0)
 							{
-								shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
 								shape.setTexture(ScaredyShroomIdleTex);
 								isHiding = false;
 							}
 						}
 						else if (idle)
 						{
-							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+							//shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
 							shape.setTexture(ScaredyShroomIdleTex);
 
 							animationCol = (animationCol + 1) % 4;
@@ -448,7 +449,8 @@ namespace Plants_Zombies
 								idle = true;
 								isDead = false;
 							}
-							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+
+							//shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
 							shape.setTexture(ScaredyShroomAttackTex);
 
 							animationCol = (animationCol + 1) % 3;
@@ -456,8 +458,6 @@ namespace Plants_Zombies
 							if (playActionSound)
 							{
 								PlaySoundEffect(PeaShootSoundBuffer, true);
-								//ShootSound.setPitch(randPitch[rand() % 3]);
-								//ShootSound.play();
 								playActionSound = false;
 							}
 						}
@@ -471,7 +471,7 @@ namespace Plants_Zombies
 						}
 						else
 						{
-							shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
+							//shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
 							shape.setTexture(ScaredyShroomHideTex);
 
 							if (animationCol < 2)
@@ -616,9 +616,10 @@ namespace Plants_Zombies
 				//ActionSound.setBuffer(PeaShootSoundBuffer);
 				plantCollider.setSize({ 30, 34 });
 
+				animationCol = rand() % 8;
+				shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 34));
 				shape.setTexture(PeaShooterIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 8;
 			}
 			else if (type == SnowPeaShooter)
 			{
@@ -626,12 +627,12 @@ namespace Plants_Zombies
 				damage = 20;
 				timeForAction = seconds(1.5); // time to shoot
 
-				//ActionSound.setBuffer(PeaShootSoundBuffer);
 				plantCollider.setSize({ 31, 34 });
 
+				animationCol = rand() % 8;
+				shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 34));
 				shape.setTexture(IcePeaShooterProjectileTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 8;
 			}
 			else if (type == SunFlower) {
 				health = 100;
@@ -640,19 +641,20 @@ namespace Plants_Zombies
 
 				plantCollider.setSize({ 32, 34 });
 
+				animationCol = rand() % 6;
+				shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 34));
 				shape.setTexture(SunFlowerIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 6;
 			}
 			else if (type == WallNut) {
 				health = 1400;
 				damage = 0;
 
+				animationCol = rand() % 5;
 				plantCollider.setSize({ 28, 31 });
-
+				shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 				shape.setTexture(WallNutIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 5;
 			}
 			else if (type == SunShroom)
 			{
@@ -661,10 +663,12 @@ namespace Plants_Zombies
 				timeForAction = seconds(10);
 
 				plantCollider.setSize({ 22, 27 });
+
+				animationCol = rand() % 5;
+				shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 				shape.setTexture(SunShroomIdleTex);
 				shape.setScale(3.5, 3.5);
 				animationRow = 0;
-				animationCol = rand() % 5;
 			}
 			else if (type == PuffShroom)
 			{
@@ -673,9 +677,11 @@ namespace Plants_Zombies
 				timeForAction = seconds(1.5);
 
 				plantCollider.setSize({ 22, 27 });
+
+				animationCol = rand() % 5;
+				shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
 				shape.setTexture(SunShroomIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 5;
 			}
 			else if (type == ScaredyShroom)
 			{
@@ -684,9 +690,10 @@ namespace Plants_Zombies
 				timeForAction = seconds(1.5);
 
 				plantCollider.setSize({ 22, 27 });
+				animationCol = rand() % 4;
+				shape.setTextureRect(IntRect(animationCol * 28, 0, 28, 31));
 				shape.setTexture(ScaredyShroomIdleTex);
 				shape.setScale(3.5, 3.5);
-				animationCol = rand() % 4;
 			}
 
 			plantCollider.setScale(2.9, 2);
