@@ -533,7 +533,7 @@ void StartLevel1()
     bool isNight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight);
-    startZombiePositions(100,1);
+    startZombiePositions(100,1,1);
     StartAnimationNS::startAnimation(isNight);
 }
 void UpdateLevel1(RenderWindow& window)
@@ -560,7 +560,7 @@ void StartLevel2()
     bool isNight = true;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight);
-    startZombiePositions(100,2);
+    startZombiePositions(100,2,2);
     StartAnimationNS::startAnimation(isNight);
 }
 void UpdateLevel2(RenderWindow& window)
@@ -587,7 +587,7 @@ void StartLevel3()
     bool isNight = true;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight);
-    startZombiePositions(100,3);
+    startZombiePositions(100,3,3);
     StartAnimationNS::startAnimation(isNight);
 
 }

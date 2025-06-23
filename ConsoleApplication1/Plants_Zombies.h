@@ -1718,13 +1718,32 @@ namespace Plants_Zombies
 	}zombie_array[100];
 
 	//gives zombies random types
-	void StartZombies(int numerzombieinwave) {
-		for (int i = 0; i < numerzombieinwave; i++) {
-			zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-			zombie_array[i].type = randomzombietype;
-			zombie_array[i].start();
+	// 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, Dead };
+	void StartZombies(int numerzombieinwave, int numberlevel) {
+		if (numberlevel == 1) {
+			for (int i = 0; i < numerzombieinwave; i++) {
+				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
+				zombie_array[i].type = randomzombietype;
+				zombie_array[i].start();
+			}
 		}
+		else if (numberlevel == 2) {
+			for (int i = 0; i < numerzombieinwave; i++) {
+				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
+				zombie_array[i].type = randomzombietype;
+				zombie_array[i].start();
+			}
+		}
+		else if (numberlevel == 3) {
+			for (int i = 0; i < numerzombieinwave; i++) {
+				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
+				zombie_array[i].type = randomzombietype;
+				zombie_array[i].start();
+			}
+		}
+
 	}
+
 
 #pragma endregion
 }

@@ -114,7 +114,6 @@ struct waves {
     bool check_startwave = true;
 }wave[3];
 #pragma endregion
-
 int x;
 //resets all data so you can retry the level
 void setupWaveData(bool isNight_) {
@@ -160,9 +159,9 @@ void setupWaveData(bool isNight_) {
     timeSinceStart = 0;
 }
 
-void startZombiePositions(int numZombies, int numberwave) 
+void startZombiePositions(int numZombies, int numberwave,int numlevel) 
 {
-    Plants_Zombies::StartZombies(numZombies);
+    Plants_Zombies::StartZombies(numZombies, numlevel);
 
     int row[5] = { -40, 100, 235, 360, 490 };
 
@@ -240,7 +239,7 @@ void startZombiePositions(int numZombies, int numberwave)
     //}
 }
 
-void startallwave(int numberwave, int numberzombie, float delaybetween) {
+void startallwave(int numberwave, int numberzombie, float delaybetween, int numlevel) {
     wave[numberwave].delaybetween = delaybetween;
     wave[numberwave].numberzombie = numberzombie;
 
@@ -248,7 +247,7 @@ void startallwave(int numberwave, int numberzombie, float delaybetween) {
 
     timeSinceStart = 0;
 
-    startZombiePositions(numberzombie,numberwave);
+    startZombiePositions(numberzombie,numberwave, numlevel);
 }
 
 void allwave(int numberwave, int numberzombie) 
@@ -353,7 +352,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
             if (wave[0].check_startwave) 
             {
                 wave[0].check_startwave = false;
-                startallwave(0, num, delaybetweenw1);
+                startallwave(0, num, delaybetweenw1,numlevel);
             }
             if (nowave && endRSP) 
             {
@@ -372,7 +371,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                 {
                     if (wave[1].check_startwave) 
                     {
-                        startallwave(1, num += 20, delaybetweenw1 -= 5.0f);
+                        startallwave(1, num += 20, delaybetweenw1 -= 5.0f,numlevel);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
@@ -399,7 +398,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
             if (wave[0].check_startwave) 
             {
                 wave[0].check_startwave = false;
-                startallwave(0, num, delaybetweenw1);
+                startallwave(0, num, delaybetweenw1,numlevel);
             }
 
             if (nowave && endRSP)
@@ -422,7 +421,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                 {
                     if (wave[1].check_startwave) 
                     {
-                        startallwave(1, num += 20, delaybetweenw1 -= 4.0f);
+                        startallwave(1, num += 20, delaybetweenw1 -= 4.0f, numlevel);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
@@ -446,7 +445,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                 {
                     if (wave[2].check_startwave)
                     {
-                        startallwave(2, num += 20, delaybetweenw1 -= 6.0f);
+                        startallwave(2, num += 20, delaybetweenw1 -= 6.0f,numlevel);
                         wave[2].check_startwave = false;
                     }
 
