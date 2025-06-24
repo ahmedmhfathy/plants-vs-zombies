@@ -666,17 +666,29 @@ void DrawLevel4(RenderWindow& window)
 #pragma region Level 5
 void StartLevel5()
 {
+    bool isNight = true;
+    bool onRoof = true;
+    setupWaveData(isNight);
+    StartPlantingAndCurrencySystem(offset, isNight);
+    startZombiePositions(100, 3, 3);
+    StartAnimationNS::startAnimation(isNight, onRoof);
 
 }
-
 void UpdateLevel5(RenderWindow& window)
 {
+    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+    StartAnimationNS::updateAnimation(window);
 
+    level(3, 35, 10.0f, 3); // 3 , 35 , 7
+
+    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
-
 void DrawLevel5(RenderWindow& window)
 {
-
+    StartAnimationNS::Renderstartanimation(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
+    DrawPlantingAndCurrencySystem(window);
+    DrawWavesAndZombies(window);
 }
 #pragma endregion
 #pragma endregion

@@ -513,7 +513,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 //Click.setPitch(randPitch[rand() % 3]);
                 //Click.play();
 
-                SwitchState(Level2);
+                SwitchState(Level5);
 
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
