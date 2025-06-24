@@ -12,7 +12,7 @@
 using namespace std;
 using namespace sf;
 
-enum State { MainMenu, Level1, Level2, Level3 } CurrentState, MaxLevelWon;
+enum State { MainMenu, Level1, Level2, Level3,Level4,Level5 } CurrentState, MaxLevelWon;
 void SwitchState(State NewState);
 
 bool ButtonTapSoundNextLevel = false;
@@ -609,6 +609,40 @@ void DrawLevel3(RenderWindow& window)
 }
 #pragma endregion
 
+#pragma region Level 4
+void StartLevel4()
+{
+
+}
+
+void UpdateLevel4(RenderWindow& window)
+{
+
+}
+
+void DrawLevel4(RenderWindow& window)
+{
+
+}
+
+#pragma endregion
+
+#pragma region Level 5
+void StartLevel5()
+{
+
+}
+
+void UpdateLevel5(RenderWindow& window)
+{
+
+}
+
+void DrawLevel5(RenderWindow& window)
+{
+
+}
+#pragma endregion
 #pragma endregion
 
 // switches the state of the game and calls the start function of the new state

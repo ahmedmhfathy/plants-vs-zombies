@@ -146,7 +146,7 @@ void LoadMainMenuTex()
 void MainMenuStart(RenderWindow& window)
 {
     jackMusicOn = false;
-    MaxLevelWon = MainMenu;
+    MaxLevelWon = Level2;
 
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
