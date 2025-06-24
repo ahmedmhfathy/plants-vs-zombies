@@ -25,6 +25,8 @@ namespace  StartAnimationNS {
 #pragma region Textures and sprites declaration
     Texture gardenTextureDay;
     Texture gardenTextureNight;
+	Texture roofTextureDay;
+	Texture roofTextureNight;
     Sprite gardensprite;
     Texture Readytexttexture;
     Sprite  Readytextsprite;
@@ -57,6 +59,9 @@ namespace  StartAnimationNS {
     void LoadStartAndWaveAnimationTextures() {
         gardenTextureDay.loadFromFile("Assets/Environment/Game-Environment.png");
         gardenTextureNight.loadFromFile("Assets/Environment/Game-Environment-Night.png");
+		roofTextureDay.loadFromFile("Assets/Environment/Roof-Day.png");
+		roofTextureNight.loadFromFile("Assets/Environment/Roof-Night.png");
+
         zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
         Settexttexture.loadFromFile("Assets/Environment/StartSet.png");
@@ -111,15 +116,30 @@ namespace  StartAnimationNS {
         Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
     }
 
-    void SetupStartAndWaveAnimationPhotos(bool isNight) {
+    void SetupStartAndWaveAnimationPhotos(bool isNight, bool onRoof) {
         //garden
         if (isNight)
         {
-            gardensprite.setTexture(gardenTextureNight);
+            if (onRoof)
+            {
+				gardensprite.setTexture(roofTextureNight);
+            }
+            else
+            {
+                gardensprite.setTexture(gardenTextureNight);
+            }
+            
         }
         else
         {
-            gardensprite.setTexture(gardenTextureDay);
+			if (onRoof)
+			{
+				gardensprite.setTexture(roofTextureDay);
+			}
+            else 
+            {
+                gardensprite.setTexture(gardenTextureDay);
+            }
         }
         gardensprite.setPosition(-325, -265);
         gardensprite.setScale(0.65, 0.65);
@@ -131,7 +151,7 @@ namespace  StartAnimationNS {
         zombieinStreet.setScale(1.4, 1.4);
     }
 
-    void startAnimation(bool isNight) {
+    void startAnimation(bool isNight, bool onRoof) {
 
         startdrawRSP = true;
         EntertostartdrawRSP = false;
@@ -151,7 +171,7 @@ namespace  StartAnimationNS {
             car[i].start(i);
         }
 
-        SetupStartAndWaveAnimationPhotos(isNight);
+        SetupStartAndWaveAnimationPhotos(isNight, onRoof);
         srand(time(0));
     }
 

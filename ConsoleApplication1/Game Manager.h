@@ -12,7 +12,7 @@
 using namespace std;
 using namespace sf;
 
-enum State { MainMenu, Level1, Level2, Level3,Level4,Level5 } CurrentState, MaxLevelWon;
+enum State { MainMenu, Level1, Level2, Level3, Level4, Level5 } CurrentState, MaxLevelWon;
 void SwitchState(State NewState);
 
 bool ButtonTapSoundNextLevel = false;
@@ -340,17 +340,18 @@ void LevelEndSetup()
     NextlevelButton.setTexture(NextlevelButtonTex);
     NextlevelButton.setPosition(555 + offset.x, 400 + offset.y);
     NextlevelButton.setScale(1.75, 1.75);
-};
+}
 
 void LevelEndUpdate()
 {
-    if (Keyboard::isKeyPressed(Keyboard::W))
+    //for testing will be removed in full release
+    if (Keyboard::isKeyPressed(Keyboard::PageUp))
     {
         IsPaused = true;
         LevelIsOver = true;
         WinLevel = true;
     }
-    if (Keyboard::isKeyPressed(Keyboard::S))
+    if (Keyboard::isKeyPressed(Keyboard::PageDown))
     {
         IsPaused = true;
         LevelIsOver = true;
@@ -389,7 +390,16 @@ void LevelEndUpdate()
                 {
 					MaxLevelWon = Level3;
                 }
+				else if (CurrentState == Level4)
+                {
+                    MaxLevelWon == Level4;
+				}
+				else if (CurrentState == Level5)
+				{
+					MaxLevelWon = Level5;
+				}
 
+                //go to next level button logic
                 if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
                 {
                     if (ButtonTapSoundNextLevel)
@@ -418,6 +428,7 @@ void LevelEndUpdate()
                     NextlevelButton.setTexture(NextlevelButtonTex);
                 }
 
+				//back to main menu button logic
                 if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
                 {
                     if (ButtonTapSoundWinMainMenu)
@@ -437,11 +448,11 @@ void LevelEndUpdate()
                     ButtonTapSoundWinMainMenu = true;
                     BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
                 }
-
             }
         }
         if (!WinLevel)
         {
+            //back to main menu button logic
             if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
             {
                 if (ButtonTapSoundLoseBackToMainMenu)
@@ -462,18 +473,21 @@ void LevelEndUpdate()
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
             }
 
-
+			//retry button logic
             if (RetryButton.getGlobalBounds().contains(MouseWorldPostion))
             {
+                RetryButton.setTexture(RetryButtonHoverTex);
+
                 if (ButtonTapSoundRetry)
                 {
                     PlaySoundEffect(LoseAndWinAndPauseBuffer, false);
                     ButtonTapSoundRetry = false;
                 }
-                RetryButton.setTexture(RetryButtonHoverTex);
+
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
                     PlaySoundEffect(PauseMenuClickBuffer, false);
+
                     if (CurrentState == Level1)
                     {
                         SwitchState(Level1);
@@ -485,6 +499,14 @@ void LevelEndUpdate()
                     else if (CurrentState == Level3)
                     {
                         SwitchState(Level3);
+                    }
+                    else if(CurrentState == Level4)
+                    {
+						SwitchState(Level4);
+                    }
+                    else if (CurrentState == Level5) 
+                    {
+						SwitchState(Level5);
                     }
                 }
             }
@@ -531,10 +553,11 @@ void DrawLevelEnd(RenderWindow& window)
 void StartLevel1()
 {
     bool isNight = false;
+    bool onRoof = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight);
     startZombiePositions(100,1,1);
-    StartAnimationNS::startAnimation(isNight);
+    StartAnimationNS::startAnimation(isNight, onRoof);
 }
 void UpdateLevel1(RenderWindow& window)
 {
@@ -558,10 +581,11 @@ void DrawLevel1(RenderWindow& window)
 void StartLevel2()
 {
     bool isNight = true;
+    bool onRoof = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight);
     startZombiePositions(100,2,2);
-    StartAnimationNS::startAnimation(isNight);
+    StartAnimationNS::startAnimation(isNight, onRoof);
 }
 void UpdateLevel2(RenderWindow& window)
 {
@@ -585,10 +609,11 @@ void DrawLevel2(RenderWindow& window)
 void StartLevel3()
 {
     bool isNight = true;
+	bool onRoof = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight);
     startZombiePositions(100,3,3);
-    StartAnimationNS::startAnimation(isNight);
+    StartAnimationNS::startAnimation(isNight, onRoof);
 
 }
 void UpdateLevel3(RenderWindow& window)
@@ -612,19 +637,30 @@ void DrawLevel3(RenderWindow& window)
 #pragma region Level 4
 void StartLevel4()
 {
+    bool isNight = false;
+    bool onRoof = true;
+    setupWaveData(isNight);
+    StartPlantingAndCurrencySystem(offset, isNight);
+    startZombiePositions(100, 3, 3);
+    StartAnimationNS::startAnimation(isNight, onRoof);
 
 }
-
 void UpdateLevel4(RenderWindow& window)
 {
+    UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
+    StartAnimationNS::updateAnimation(window);
 
+    level(3, 35, 10.0f, 3); // 3 , 35 , 7
+
+    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
-
 void DrawLevel4(RenderWindow& window)
 {
-
+    StartAnimationNS::Renderstartanimation(window);
+    Plants_Zombies::DrawPlantsAndProjectiles(window);
+    DrawPlantingAndCurrencySystem(window);
+    DrawWavesAndZombies(window);
 }
-
 #pragma endregion
 
 #pragma region Level 5
@@ -665,5 +701,13 @@ void SwitchState(State NewState)
     else if (CurrentState == Level3)
     {
         StartLevel3();
-    }
+	}
+	else if (CurrentState == Level4)
+	{
+		StartLevel4();
+	}
+	else if (CurrentState == Level5)
+	{
+		StartLevel5();
+	}
 }

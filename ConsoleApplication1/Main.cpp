@@ -89,6 +89,14 @@ void Update()
         {
             UpdateLevel3(window);
         }
+        else if(CurrentState == Level4 && !IsPaused)
+        {
+			UpdateLevel4(window);
+        }
+        else if (CurrentState == Level5 && !IsPaused)
+        {
+            UpdateLevel5(window);
+        }
 
         PauseMenuUpdate();
         LevelEndUpdate();
@@ -117,6 +125,14 @@ void RenderScreen()
         else if (CurrentState == Level3)
         {
             DrawLevel3(window);
+        }
+        else if (CurrentState == Level4)
+        {
+			DrawLevel4(window);
+        }
+        else if (CurrentState == Level5)
+        {
+			DrawLevel5(window);
         }
 
         if (IsPaused && !LevelIsOver)
