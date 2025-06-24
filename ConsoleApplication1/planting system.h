@@ -27,7 +27,7 @@ Texture puffshroomAvailableTex;
 Texture puffshroomUnavailableTex;
 Texture scaredyshroomAvailableTex;
 Texture scaredyshroomUnavailableTex;
-
+///=============================
 Texture emptySeedPacketTex;
 Texture shoveltex;
 Texture ShovelContainerAvailable;
@@ -35,25 +35,21 @@ Texture ShovelContainerEmpty;
 Texture gradientopacitytex;
 Texture sunContainerTex;
 ///=============================
+Texture plantSelectionBlankTex;
+Texture LetsRockTex;
+Texture LetsRockHoverTex;
+///=============================
 Texture Textgraves;
 #pragma endregion
 
 #pragma region sprite declaration
-Sprite sunflowerSeedPacket;
-Sprite peashooterSeedPacket;
-Sprite snowpeashooterSeedPacket;
-Sprite wallnutSeedPacket;
-Sprite sunshroomSeedPacket;
-Sprite puffshroomSeedPacket;
-Sprite scaredyshroomSeedPacket;
-
-Sprite emptySeedPacket1;
-Sprite emptySeedPacket2;
-
 Sprite shovelcontainer;
 Sprite sunContainer;
 Sprite gradientopacity;
 Sprite SelectionHolograph;
+//==================================
+Sprite plantSelectionBlank;
+Sprite LetsRockButton;
 //===================================
 Sprite graves[numGraves];
 #pragma endregion
@@ -62,59 +58,283 @@ Sprite graves[numGraves];
 float sunSpawnTimeClock = 0;
 Time SunSpawnTime = seconds(14);
 
-float SunFlowerClock = 0;
-float PeaShooterClock = 0;
-float SnowPeaClock = 0;
-float WallNutClock = 0;
-float SunShroomClock = 0;
-float PuffShroomClock = 0;
-float ScaredyShroomClock = 0;
-
 Time LongCoolDown = seconds(50);
 Time MediumCoolDown = seconds(30);
 Time ShortCoolDown = seconds(7);
+Clock PlantSelectionAnimationClock;
 #pragma endregion
 
 #pragma region Sounds
 SoundBuffer PlantingSoundBuffer;
 SoundBuffer SelectingPlant;
 SoundBuffer ShovelSoundBuffer;
+
+SoundBuffer HoverButtonBuffer;
+SoundBuffer ClickButtonBuffer;
 #pragma endregion
+
+Plants_Zombies::PlantType currentselection;
+
+#pragma region struct declaration
+struct grid;
+struct PlantSelection;
+struct SelectedSeedPacket;
+#pragma endregion
+
+#pragma region animation stuff
+Vector2f animationCenter = { 0, 0 };
+int opacityAnimation = 0;
+
+Vector2f letsrockstartPos;
+Vector2f shovelstartPos;
+Vector2f sunContainerStartPos;
+Vector2f moneytextStartPos;
+Vector2f selectedPlantsStartPos[6];
+Vector2f plantsToSelectStartPos[4][3];
+#pragma endregion
+
+#pragma region booleans
+bool isNight;
+bool isHolding = false;
+bool plantselectionMenu = true;
+bool animatePlantSelection = false;
+bool resetClocksAtStart = true;
+
+bool PlaySelectionSound = false;
+bool playHoverSound = false;
+//from start animation
+bool moveright = false;
+bool moveleft = false;
+#pragma endregion
+
+int currentSelectionIndex = -1;
 
 Font font;
 Text moneytext;
 
-enum Selection { peashooter, snowpeashooter, sunflower, wallnut, sunshroom, puffshroom, scaredyshroom, shovel, none }curruntselection;
-
-bool PlaySelectionSound = false;
-bool isHolding = false;
-bool isNight;
-
+#pragma region structs
 struct grid {
 	RectangleShape shape;
 	bool isplanted = false;
 	bool gravePlanted = false;
 }mygrid[46];
 
-struct SeedPacket {
-	Selection type;
+struct SelectedSeedPacket {
+	Plants_Zombies::PlantType type;
 	Sprite shape;
 
-	bool isAvailable = false;
-	bool isSelected = false;
+	Texture AvailableTexture;
+	Texture UnavailableTexture;
+
+	//bool isAvailable = false;
+	bool isAdded = false;
+	int index;
+	int price;
+
 	float seedPacketClock;
+	Time CoolDown;
 
-	void SetSeedPacket(Selection type_, Texture& texture, Vector2f position) {
+	Vector2f offset;
+
+	void SetSeedPacket(Plants_Zombies::PlantType type_, Texture& AvailavbleTex, Texture& UnAvailableTex, Vector2f offset_, Time coolDown_, int price_, int i)
+	{
+		index = i;
 		type = type_;
-		shape.setTexture(texture);
-		shape.setPosition(position);
-		shape.setScale(3.5f, 3.5f);
+		AvailableTexture = AvailavbleTex;
+		UnavailableTexture = UnAvailableTex;
+		price = price_;
+		CoolDown = coolDown_;
+		offset = offset_;
+
+		shape.setTextureRect(IntRect(0, 0, AvailableTexture.getSize().x, AvailableTexture.getSize().y));
+		shape.setTexture(AvailavbleTex);
+
+		shape.setPosition(shape.getPosition().x + offset.x, shape.getPosition().y + offset.y);
+		isAdded = true;
 	}
 
-	void updateSeedPacket() {
+	void update(Vector2f mousepos, PlantSelection arr[4][3]);
 
+	void resetSeedPacket()
+	{
+		//isAvailable = false;
+		seedPacketClock = 0;
+		shape.setTexture(UnavailableTexture);
+		isHolding = false;
+		currentselection = Plants_Zombies::EmptyPlant;
+		currentSelectionIndex = -1;
 	}
-}seedpacketsArr[7];
+
+}selectedPlantsArr[6];
+
+struct PlantSelection {
+	Plants_Zombies::PlantType type;
+	Sprite shape;
+
+	Texture AvailableTexture;
+	Texture UnavailableTexture;
+
+	Vector2f SeedPacketOffset;
+
+	bool isAvailable = false;
+	bool isAvailableAtNight = false;
+	bool isAvailableAtDay = false;
+	Time CoolDown;
+
+	int price;
+
+	void start(Plants_Zombies::PlantType type_, Texture& availableTex, Texture unavailableTex, Vector2f offset, Time cooldown_, int price_, bool availableAtDay,bool availableAtNight) {
+		type = type_;
+		AvailableTexture = availableTex;
+		UnavailableTexture = unavailableTex;
+		price = price_;
+		CoolDown = cooldown_;
+
+		isAvailable = true;
+		isAvailableAtNight = availableAtNight;
+		isAvailableAtDay = availableAtDay;
+
+		shape.setPosition(shape.getPosition().x + offset.x, shape.getPosition().y + offset.y);
+		SeedPacketOffset = offset;
+	}
+
+	void update(Vector2f mousepos)
+	{
+		if (type != Plants_Zombies::Shovel && type != Plants_Zombies::EmptyPlant)
+		{
+			// check if available at day/night and determine availability
+			if (isNight)
+			{
+				if (!isAvailableAtNight)
+				{
+					isAvailable = false;
+				}
+			}
+			else
+			{
+				if (!isAvailableAtDay)
+				{
+					isAvailable = false;
+				}
+			}
+
+			if (isAvailable)
+			{
+				shape.setTexture(AvailableTexture);
+			}
+			else
+			{
+				shape.setTexture(UnavailableTexture);
+			}
+
+			if (shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left) && isAvailable && animationCenter.x == 500)
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					if (!selectedPlantsArr[i].isAdded)
+					{
+						//add plant
+						cout << "Add plant again" << endl;
+						PlaySoundEffect(SelectingPlant, true);
+						selectedPlantsArr[i].SetSeedPacket(type, AvailableTexture, UnavailableTexture, SeedPacketOffset, CoolDown, price, i);
+						isAvailable = false;
+						break;
+					}
+					else
+					{
+						continue;
+					}
+				}
+			}
+
+		}
+		else
+		{
+			shape.setTexture(emptySeedPacketTex);
+			isAvailable = false;
+		}
+	}
+}plantsToSelect[4][3];
+
+void SelectedSeedPacket::update(Vector2f mousepos, PlantSelection arr[4][3])
+{
+	seedPacketClock += deltaTime;
+
+	if (plantselectionMenu)
+	{
+		if (!(type == Plants_Zombies::EmptyPlant || type == Plants_Zombies::Shovel))
+		{
+			if (shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				isAdded = false;
+				shape.setPosition(shape.getPosition().x - offset.x, shape.getPosition().y - offset.y);
+				shape.setTextureRect(IntRect(0, 0, emptySeedPacketTex.getSize().x, emptySeedPacketTex.getSize().y));
+				shape.setTexture(emptySeedPacketTex);
+
+				for (int i = 0; i < 4; i++)
+				{
+					for (int j = 0; j < 3; j++)
+					{
+						if (arr[i][j].type == type)
+						{
+							arr[i][j].isAvailable = true;
+							break;
+						}
+					}
+				}
+
+				PlaySoundEffect(SelectingPlant, true);
+				type = Plants_Zombies::EmptyPlant; // reset the type to empty plant
+			}
+			else
+			{
+				isAdded = true;
+				shape.setTextureRect(IntRect(0, 0, AvailableTexture.getSize().x, AvailableTexture.getSize().y));
+				shape.setTexture(AvailableTexture);
+			}
+		}
+		else
+		{
+			isAdded = false;
+			shape.setTextureRect(IntRect(0, 0, emptySeedPacketTex.getSize().x, emptySeedPacketTex.getSize().y));
+			shape.setTexture(emptySeedPacketTex);
+		}
+	}
+	else
+	{
+		if (!(type == Plants_Zombies::EmptyPlant || type == Plants_Zombies::Shovel))
+		{
+			if (seedPacketClock >= CoolDown.asSeconds() && Plants_Zombies::score >= price)
+			{
+				shape.setTexture(AvailableTexture);
+
+				if (shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+				{
+					currentselection = type;
+					currentSelectionIndex = index;
+					isHolding = true;
+
+					if (!PlaySelectionSound)
+					{
+						PlaySelectionSound = true;
+						PlaySoundEffect(SelectingPlant, true);
+					}
+				}
+			}
+			else
+			{
+				shape.setTexture(UnavailableTexture);
+			}
+		}
+		else
+		{
+			isAdded = false;
+			shape.setTextureRect(IntRect(0, 0, emptySeedPacketTex.getSize().x, emptySeedPacketTex.getSize().y));
+			shape.setTexture(emptySeedPacketTex);
+		}
+	}
+}
+#pragma endregion
 
 void LoadSelectionTexture() {
 	PlantingSoundBuffer.loadFromFile("Audio/plant.ogg");
@@ -145,52 +365,55 @@ void LoadSelectionTexture() {
 	puffshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/puffshroom-unavailable.png");
 	scaredyshroomAvailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-available.png");
 	scaredyshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-unavailable.png");
+	//=============================
+	plantSelectionBlankTex.loadFromFile("Assets/Currency System and Planting/New/plantselection-blank.png");
+	LetsRockHoverTex.loadFromFile("Assets/Currency System and Planting/New/lets-rock-hover.png");
+	LetsRockTex.loadFromFile("Assets/Currency System and Planting/New/lets-rock.png");
 	//==============================
 	Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
+	//==============================
+	HoverButtonBuffer.loadFromFile("Audio/bleep.ogg");
+	ClickButtonBuffer.loadFromFile("Audio/buttonclick.ogg");
 }
 
 void SetupSelectionUI(Vector2f offset)
 {
-	if (isNight)
+#pragma region plant selection
+	plantSelectionBlank.setTexture(plantSelectionBlankTex);
+	plantSelectionBlank.setPosition(0 + offset.x, 0 + offset.y);
+
+	//setup the empty selections packets
+	for (int i = 0; i < 6; i++)
 	{
-		sunshroomSeedPacket.setTexture(sunshroomUnavailableTex);
-		sunshroomSeedPacket.setPosition(29 + offset.x, 15 + offset.y);
-
-		scaredyshroomSeedPacket.setTexture(scaredyshroomUnavailableTex);
-		scaredyshroomSeedPacket.setPosition(29 + offset.x, 119 + offset.y);
-
-		puffshroomSeedPacket.setTexture(puffshroomUnavailableTex);
-		puffshroomSeedPacket.setPosition(29 + offset.x, 243 + offset.y);
-
-		peashooterSeedPacket.setTexture(peashooterUnavailableTex);
-		peashooterSeedPacket.setPosition(29 + offset.x, 357 + offset.y);
-
-		snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
-		snowpeashooterSeedPacket.setPosition(29 + offset.x, 476 + offset.y);
-
-		wallnutSeedPacket.setTexture(wallnutUnavailableTex);
-		wallnutSeedPacket.setPosition(29 + offset.x, 580 + offset.y);
+		selectedPlantsArr[i].type = Plants_Zombies::EmptyPlant;
+		selectedPlantsArr[i].shape.setPosition(29 + offset.x, 25 + (i * (100 + 14)) + offset.y);
 	}
-	else
+
+	//for the seed bank
+	for (int i = 0; i < 4; i++)
 	{
-		sunflowerSeedPacket.setTexture(sunflowerUnavailableTex);
-		sunflowerSeedPacket.setPosition(24 + offset.x, 5 + offset.y);
-
-		peashooterSeedPacket.setTexture(peashooterUnavailableTex);
-		peashooterSeedPacket.setPosition(29 + offset.x, 129 + offset.y);
-
-		snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
-		snowpeashooterSeedPacket.setPosition(29 + offset.x, 248 + offset.y);
-
-		wallnutSeedPacket.setTexture(wallnutUnavailableTex);
-		wallnutSeedPacket.setPosition(29 + offset.x, 352 + offset.y);
-
-		emptySeedPacket1.setTexture(emptySeedPacketTex);
-		emptySeedPacket1.setPosition(29 + offset.x, 481 + offset.y);
-
-		emptySeedPacket2.setTexture(emptySeedPacketTex);
-		emptySeedPacket2.setPosition(29 + offset.x, 595 + offset.y);
+		for (int j = 0; j < 3; j++)
+		{
+			plantsToSelect[i][j].type = Plants_Zombies::EmptyPlant;
+			plantsToSelect[i][j].shape.setPosition(318 + offset.x + (j * (120 + 21)), 117 + offset.y + (i * (100 + 19)));
+		}
 	}
+
+	//setup plants on selection screen
+	plantsToSelect[0][0].start(Plants_Zombies::SunFlower, sunflowerAvailableTex, sunflowerUnavailableTex, Vector2f{-5, -20}, ShortCoolDown, 50, true, false);
+	plantsToSelect[0][1].start(Plants_Zombies::PeaShooter, peashooterAvailableTex, peashooterUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 100, true, true);
+	plantsToSelect[0][2].start(Plants_Zombies::SnowPeaShooter, snowpeaAvailableTex, snowpeaUnavailableTex, Vector2f{ 0, -5 }, ShortCoolDown, 175, true, true);
+
+	plantsToSelect[1][0].start(Plants_Zombies::WallNut, wallnutAvailableTex, wallnutUnavailableTex, Vector2f{ 0, -15 }, MediumCoolDown, 50, true, true);
+	plantsToSelect[1][1].start(Plants_Zombies::SunShroom, sunshroomAvailableTex, sunshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 25, false, true);
+	plantsToSelect[1][2].start(Plants_Zombies::ScaredyShroom, scaredyshroomAvailableTex, scaredyshroomUnavailableTex, Vector2f{ 0, -20 }, ShortCoolDown, 25, false, true);
+
+	plantsToSelect[2][0].start(Plants_Zombies::PuffShroom, puffshroomAvailableTex, puffshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 0, false, true);
+
+	//start game button
+	LetsRockButton.setTexture(LetsRockTex);
+	LetsRockButton.setPosition(796 + offset.x, 613 + offset.y);
+#pragma endregion
 
 	gradientopacity.setTexture(gradientopacitytex);
 	gradientopacity.setPosition(0 + offset.x, 0 + offset.y);
@@ -208,27 +431,56 @@ void SetupSelectionUI(Vector2f offset)
 	moneytext.setOutlineThickness(3);
 	moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
 	moneytext.setPosition(170 + 53 + offset.x, 145 + offset.y);
+
+#pragma region for animation
+	letsrockstartPos = LetsRockButton.getPosition();
+	shovelstartPos = shovelcontainer.getPosition();
+	sunContainerStartPos = sunContainer.getPosition();
+
+	for (int i = 0; i < 6; i++)
+	{
+		selectedPlantsStartPos[i] = selectedPlantsArr[i].shape.getPosition();
+	}
+
+	for (int i = 0; i < 4; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			plantsToSelectStartPos[i][j] = plantsToSelect[i][j].shape.getPosition();
+		}
+	}
+
+	moneytextStartPos = moneytext.getPosition();
+#pragma endregion
+
 }
 
 void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 {
 	isNight = isNight_;
+	Plants_Zombies::score = 50000;
+
 	SetupSelectionUI(offset);
 	Plants_Zombies::PlantProjectilesARR.clear();
 
-	SunFlowerClock = 0;
-	PeaShooterClock = 0;
-	SnowPeaClock = 0;
-	WallNutClock = 0;
-	SunShroomClock = 0;
-	PuffShroomClock = 0;
-	ScaredyShroomClock = 0;
+	sunSpawnTimeClock = 0;
 
-	Plants_Zombies::score = 50000;
-	curruntselection = none;
+	currentselection = Plants_Zombies::EmptyPlant;
+	currentSelectionIndex = -1;
 
-	bool PlaySelectionSound = false;
-	bool isHolding = false;
+	opacityAnimation = 0;
+	animationCenter = { 0, 0 };
+
+	isHolding = false;
+	plantselectionMenu = true;
+	animatePlantSelection = false;
+	resetClocksAtStart = true;
+
+	PlaySelectionSound = false;
+	playHoverSound = false;
+	//from start animation
+	moveright = false;
+	moveleft = false;
 
 	//setup the grid
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
@@ -259,6 +511,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 		mygrid[i].gravePlanted = false;
 	}
 
+	// adding graves randomly when it is a night level
 	if (isNight)
 	{
 		int plantgraveson[20] = { 6, 7, 8, 9, 15, 16, 17, 18, 24, 25, 26, 27, 33, 34, 35, 36, 42, 43, 44, 45 };
@@ -287,16 +540,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 {
 	//Update Time
 	sunSpawnTimeClock += deltaTime;
-	SunFlowerClock += deltaTime;
-	PeaShooterClock += deltaTime;
-	SnowPeaClock += deltaTime;
-	WallNutClock += deltaTime;
-	SunShroomClock += deltaTime;
-	PuffShroomClock += deltaTime;
-	ScaredyShroomClock += deltaTime;
 
 	//sun spawn system
-	if (!isNight && sunSpawnTimeClock >= SunSpawnTime.asSeconds())
+	if (!isNight && sunSpawnTimeClock >= SunSpawnTime.asSeconds() && moveleft)
 	{
 		int sunValue = 25;
 		Vector2f spawnposition = { (float)(0 + rand() % 780), (float)(-100 + offset.y) };
@@ -307,462 +553,320 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 		sunSpawnTimeClock = 0;
 	}
 
-	//score text updater
-	moneytext.setString(to_string(Plants_Zombies::score));
-	moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
-	moneytext.setPosition(170 + 53 + offset.x, 145 + offset.y);
-
-	float randPitch[3] = { 0.85, 1, 1.15 };
-
-	//plant select UI logic
-	if (isNight)
+#pragma region animation
+	//moves ui from left to right
+	if (animationCenter.x < 500 && moveright && plantselectionMenu)
 	{
-		if (SunShroomClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 25)
+		float start = -300, end = 500;
+		Time Duration = seconds(2.5);
+		float startOpacity = 0, endOpacity = 255;
+		if (moveright && !animatePlantSelection)
 		{
-			sunshroomSeedPacket.setTexture(sunshroomAvailableTex);
+			PlantSelectionAnimationClock.restart();
+			animatePlantSelection = true;
+		}
 
-			if (sunshroomSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+		animationCenter = { easeInOut(ExpoEaseOut, start, end, PlantSelectionAnimationClock, Duration), 0 };
+		opacityAnimation = easeInOut(ExpoEaseOut, startOpacity, endOpacity, PlantSelectionAnimationClock, seconds(2.5));
+
+		gradientopacity.setPosition(offset.x + animationCenter.x, offset.y + animationCenter.y);
+		plantSelectionBlank.setPosition(animationCenter.x + offset.x, animationCenter.y + offset.y);
+		plantSelectionBlank.setColor(Color(255, 255, 255, opacityAnimation));
+		LetsRockButton.setPosition(letsrockstartPos.x + animationCenter.x, letsrockstartPos.y + animationCenter.y);
+		LetsRockButton.setColor(Color(255, 255, 255, opacityAnimation));
+		shovelcontainer.setPosition(shovelstartPos.x + animationCenter.x, shovelstartPos.y + animationCenter.y);
+		shovelcontainer.setColor(Color(255, 255, 255, opacityAnimation));
+		sunContainer.setPosition(sunContainerStartPos.x + animationCenter.x, sunContainerStartPos.y + animationCenter.y);
+		sunContainer.setColor(Color(255, 255, 255, opacityAnimation));
+
+		for (int i = 0; i < 6; i++)
+		{
+			selectedPlantsArr[i].shape.setPosition(selectedPlantsStartPos[i].x + animationCenter.x, selectedPlantsStartPos[i].y + animationCenter.y);
+			selectedPlantsArr[i].shape.setColor(Color(255, 255, 255, opacityAnimation));
+		}
+
+		//for the seed bank
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 3; j++)
 			{
-				if (!PlaySelectionSound)
+				plantsToSelect[i][j].shape.setPosition(plantsToSelectStartPos[i][j].x + animationCenter.x, plantsToSelectStartPos[i][j].y + animationCenter.y);
+				plantsToSelect[i][j].shape.setColor(Color(255, 255, 255, opacityAnimation));
+			}
+		}
+
+		moneytext.setPosition(moneytextStartPos.x + animationCenter.x, moneytextStartPos.y + animationCenter.y);
+		moneytext.setFillColor(Color(255, 255, 255, opacityAnimation));
+	}
+	else if (animationCenter.x < 500 && !moveright && plantselectionMenu)
+	{
+		//start all user interfaces with opacity 0 then fades in
+		plantSelectionBlank.setColor(Color(255, 255, 255, opacityAnimation));
+		LetsRockButton.setColor(Color(255, 255, 255, opacityAnimation));
+		shovelcontainer.setColor(Color(255, 255, 255, opacityAnimation));
+		sunContainer.setColor(Color(255, 255, 255, opacityAnimation));
+
+		for (int i = 0; i < 6; i++)
+		{
+			selectedPlantsArr[i].shape.setColor(Color(255, 255, 255, opacityAnimation));
+		}
+
+		//for the seed bank
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				plantsToSelect[i][j].shape.setColor(Color(255, 255, 255, opacityAnimation));
+			}
+		}
+
+		moneytext.setFillColor(Color(255, 255, 255, opacityAnimation));
+	}
+
+	//moves ui from right to left
+	if (animationCenter.x > 0 && !plantselectionMenu)
+	{
+		float start = 500, end = 0;
+		Time Duration = seconds(2);
+		if (animatePlantSelection)
+		{
+			PlantSelectionAnimationClock.restart();
+			animatePlantSelection = false;
+		}
+
+		animationCenter = { easeInOut(ExpoEaseOut, start, end, PlantSelectionAnimationClock, Duration), 0 };
+
+		gradientopacity.setPosition(offset.x + animationCenter.x, offset.y + animationCenter.y);
+		plantSelectionBlank.setPosition(animationCenter.x + offset.x, animationCenter.y + offset.y);
+		LetsRockButton.setPosition(letsrockstartPos.x + animationCenter.x, letsrockstartPos.y + animationCenter.y);
+		shovelcontainer.setPosition(shovelstartPos.x + animationCenter.x, shovelstartPos.y + animationCenter.y);
+		sunContainer.setPosition(sunContainerStartPos.x + animationCenter.x, sunContainerStartPos.y + animationCenter.y);
+
+		for (int i = 0; i < 6; i++)
+		{
+			selectedPlantsArr[i].shape.setPosition(selectedPlantsStartPos[i].x + animationCenter.x, selectedPlantsStartPos[i].y + animationCenter.y);
+		}
+
+		//for the seed bank
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				plantsToSelect[i][j].shape.setPosition(plantsToSelectStartPos[i][j].x + animationCenter.x, plantsToSelectStartPos[i][j].y + animationCenter.y);
+			}
+		}
+
+		moneytext.setPosition(moneytextStartPos.x + animationCenter.x, moneytextStartPos.y + animationCenter.y);
+
+		//reset all clocks after clicking the lets rock button
+		if (resetClocksAtStart)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				//cout << selectedPlantsArr[i].seedPacketClock << " - " << i << endl;
+				selectedPlantsArr[i].seedPacketClock = 0;
+			}
+			resetClocksAtStart = false;
+		}
+	}
+#pragma endregion
+
+	//update score text
+	if (moveleft && !plantselectionMenu)
+	{
+		moneytext.setString(to_string(Plants_Zombies::score));
+		moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
+		moneytext.setPosition(170 + 53 + offset.x, 145 + offset.y);
+	}
+	
+	if (plantselectionMenu)
+	{
+		//update the seed packets to select
+		for (int i = 0; i < 4; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				plantsToSelect[i][j].update(mousepos);
+			}
+		}
+
+		//update selected plants
+		for (int i = 0; i < 6; i++)
+		{
+			selectedPlantsArr[i].update(mousepos, plantsToSelect);
+		}
+
+		//lets rock button logic
+		if (LetsRockButton.getGlobalBounds().contains(mousepos))
+		{
+			LetsRockButton.setTexture(LetsRockHoverTex);
+
+			if (Mouse::isButtonPressed(Mouse::Left))
+			{
+				plantselectionMenu = false;
+
+				for (int i = 0; i < 6; i++)
 				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
+					selectedPlantsStartPos[i] = { selectedPlantsStartPos[i].x + selectedPlantsArr[i].offset.x,
+												  selectedPlantsStartPos[i].y + selectedPlantsArr[i].offset.y };
 				}
-				isHolding = true;
-				curruntselection = sunshroom;
+
+				PlaySoundEffect(ClickButtonBuffer, true);
+			}
+
+			if (!playHoverSound)
+			{
+				PlaySoundEffect(HoverButtonBuffer, true);
+				playHoverSound = true;
 			}
 		}
 		else
 		{
-			sunshroomSeedPacket.setTexture(sunshroomUnavailableTex);
-		}
-
-		if (PuffShroomClock > ShortCoolDown.asSeconds())
-		{
-			puffshroomSeedPacket.setTexture(puffshroomAvailableTex);
-
-			if (puffshroomSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = puffshroom;
-			}
-		}
-		else
-		{
-			puffshroomSeedPacket.setTexture(puffshroomUnavailableTex);
-		}
-
-		if (ScaredyShroomClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 25)
-		{
-			scaredyshroomSeedPacket.setTexture(scaredyshroomAvailableTex);
-
-			if (scaredyshroomSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = scaredyshroom;
-			}
-		}
-		else
-		{
-			scaredyshroomSeedPacket.setTexture(scaredyshroomUnavailableTex);
-		}
-
-		if (PeaShooterClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 100)
-		{
-			peashooterSeedPacket.setTexture(peashooterAvailableTex);
-
-			if (peashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = peashooter;
-			}
-		}
-		else
-		{
-			peashooterSeedPacket.setTexture(peashooterUnavailableTex);
-		}
-
-		if (SnowPeaClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 175)
-		{
-			snowpeashooterSeedPacket.setTexture(snowpeaAvailableTex);
-
-			if (snowpeashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = snowpeashooter;
-			}
-		}
-		else
-		{
-			snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
-		}
-
-		if (WallNutClock > MediumCoolDown.asSeconds() && Plants_Zombies::score >= 50)
-		{
-			wallnutSeedPacket.setTexture(wallnutAvailableTex);
-
-			if (wallnutSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = wallnut;
-			}
-		}
-		else
-		{
-			wallnutSeedPacket.setTexture(wallnutUnavailableTex);
+			LetsRockButton.setTexture(LetsRockTex);
+			playHoverSound = false;
 		}
 	}
 	else
 	{
-		if (SunFlowerClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 50)
+		//updated selected plants
+		for (int i = 0; i < 6; i++)
 		{
-			sunflowerSeedPacket.setTexture(sunflowerAvailableTex);
+			selectedPlantsArr[i].update(mousepos, plantsToSelect);
+		}
 
-			if (sunflowerSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+		//select shovel
+		if (shovelcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+		{
+			if (!PlaySelectionSound)
 			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = sunflower;
+				PlaySelectionSound = true;
+				PlaySoundEffect(ShovelSoundBuffer, true);
 			}
+			isHolding = true;
+			currentselection = Plants_Zombies::Shovel;
+			currentSelectionIndex = -1;
+		}
+
+		//deselects
+		if (Mouse::isButtonPressed(Mouse::Right)) {
+			isHolding = false;
+		}
+
+		//selection hologram logic
+		if (isHolding)
+		{
+			if (currentselection == Plants_Zombies::Shovel)
+			{
+				shovelcontainer.setTexture(ShovelContainerEmpty);
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
+				SelectionHolograph.setTexture(shoveltex);
+				SelectionHolograph.setScale(1, 1);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 255));
+			}
+			else if (currentselection == Plants_Zombies::SunFlower)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 32, 34));
+				SelectionHolograph.setTexture(Plants_Zombies::SunFlowerIdleTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+			else if (currentselection == Plants_Zombies::PeaShooter)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 30, 34));
+				SelectionHolograph.setTexture(Plants_Zombies::PeaShooterIdleTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+			else if (currentselection == Plants_Zombies::SnowPeaShooter)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 32, 34));
+				SelectionHolograph.setTexture(Plants_Zombies::IcePeaShooterIdleTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+			else if (currentselection == Plants_Zombies::WallNut)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
+				SelectionHolograph.setTexture(Plants_Zombies::WallNutIdleTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+			else if (currentselection == Plants_Zombies::SunShroom)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
+				SelectionHolograph.setTexture(Plants_Zombies::SunShroomIdleTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+			else if (currentselection == Plants_Zombies::PuffShroom)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
+				SelectionHolograph.setTexture(Plants_Zombies::PuffShroomTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+			else if (currentselection == Plants_Zombies::ScaredyShroom)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
+				SelectionHolograph.setTexture(Plants_Zombies::ScaredyShroomIdleTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+
+			if (currentselection != Plants_Zombies::Shovel)
+			{
+				shovelcontainer.setTexture(ShovelContainerAvailable);
+			}
+
+			SelectionHolograph.setPosition(mousepos);
 		}
 		else
-		{
-			sunflowerSeedPacket.setTexture(sunflowerUnavailableTex);
-		}
-
-		if (PeaShooterClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 100)
-		{
-			peashooterSeedPacket.setTexture(peashooterAvailableTex);
-
-			if (peashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = peashooter;
-			}
-		}
-		else
-		{
-			peashooterSeedPacket.setTexture(peashooterUnavailableTex);
-		}
-
-		if (SnowPeaClock > ShortCoolDown.asSeconds() && Plants_Zombies::score >= 175)
-		{
-			snowpeashooterSeedPacket.setTexture(snowpeaAvailableTex);
-
-			if (snowpeashooterSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = snowpeashooter;
-			}
-		}
-		else
-		{
-			snowpeashooterSeedPacket.setTexture(snowpeaUnavailableTex);
-		}
-
-		if (WallNutClock > MediumCoolDown.asSeconds() && Plants_Zombies::score >= 50)
-		{
-			wallnutSeedPacket.setTexture(wallnutAvailableTex);
-
-			if (wallnutSeedPacket.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-			{
-				if (!PlaySelectionSound)
-				{
-					PlaySelectionSound = true;
-					PlaySoundEffect(SelectingPlant, true);
-				}
-				isHolding = true;
-				curruntselection = wallnut;
-			}
-		}
-		else
-		{
-			wallnutSeedPacket.setTexture(wallnutUnavailableTex);
-		}
-	}
-
-	if (shovelcontainer.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
-	{
-		if (!PlaySelectionSound)
-		{
-			PlaySelectionSound = true;
-			PlaySoundEffect(ShovelSoundBuffer, true);
-		}
-		isHolding = true;
-		curruntselection = shovel;
-	}
-
-	//deselects
-	if (Mouse::isButtonPressed(Mouse::Right)) {
-		isHolding = false;
-	}
-
-	//selection hologram logic
-	if (isHolding)
-	{
-		if (curruntselection == shovel)
-		{
-			shovelcontainer.setTexture(ShovelContainerEmpty);
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 100, 100));
-			SelectionHolograph.setTexture(shoveltex);
-			SelectionHolograph.setScale(1, 1);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 255));
-		}
-		else if (curruntselection == sunflower)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 32, 34));
-			SelectionHolograph.setTexture(Plants_Zombies::SunFlowerIdleTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
-		else if (curruntselection == peashooter)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 30, 34));
-			SelectionHolograph.setTexture(Plants_Zombies::PeaShooterIdleTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
-		else if (curruntselection == snowpeashooter)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 32, 34));
-			SelectionHolograph.setTexture(Plants_Zombies::IcePeaShooterIdleTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
-		else if (curruntselection == wallnut)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
-			SelectionHolograph.setTexture(Plants_Zombies::WallNutIdleTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
-		else if (curruntselection == sunshroom)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
-			SelectionHolograph.setTexture(Plants_Zombies::SunShroomIdleTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
-		else if (curruntselection == puffshroom)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
-			SelectionHolograph.setTexture(Plants_Zombies::PuffShroomTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
-		else if (curruntselection == scaredyshroom)
-		{
-			SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
-			SelectionHolograph.setTexture(Plants_Zombies::ScaredyShroomIdleTex);
-			SelectionHolograph.setScale(3.5, 3.5);
-			SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
-			SelectionHolograph.setColor(Color(255, 255, 255, 175));
-		}
-
-		if (curruntselection != shovel)
 		{
 			shovelcontainer.setTexture(ShovelContainerAvailable);
+			PlaySelectionSound = false;
+			currentSelectionIndex = -1;
+			currentselection = Plants_Zombies::EmptyPlant;
 		}
 
-		SelectionHolograph.setPosition(mousepos);
-	}
-	else
-	{
-		shovelcontainer.setTexture(ShovelContainerAvailable);
-		PlaySelectionSound = false;
-		curruntselection = none;
-	}
-
-	//planting system
-	if (curruntselection != none && isHolding)
-	{
-		for (int i = 1; i <= 45; i++)
+		//planting on the grid
+		if (currentselection != Plants_Zombies::EmptyPlant && isHolding)
 		{
-			if (mygrid[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			for (int i = 1; i < 45; i++)
 			{
-				if (curruntselection == shovel)
+				if (mygrid[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 				{
-					if (mygrid[i].isplanted && !mygrid[i].gravePlanted)
+					if (currentselection == Plants_Zombies::Shovel)
 					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "shovel " << i << endl;
-						mygrid[i].isplanted = false;
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
-						Plants_Zombies::PlantsArray[i - 1].start();
+						if (mygrid[i].isplanted && !mygrid[i].gravePlanted)
+						{
+							PlaySoundEffect(PlantingSoundBuffer, true);
+							//cout << "shovel " << i << endl;
+							mygrid[i].isplanted = false;
+							Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+							Plants_Zombies::PlantsArray[i - 1].start();
 
-						isHolding = false;
+							isHolding = false;
+						}
 					}
-				}
-				else if (curruntselection == peashooter)
-				{
-					if (!mygrid[i].isplanted)
+					else
 					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "peashooter " << i << endl;
-
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PeaShooter;
-						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 100;
-						PeaShooterClock = 0;
-
-						isHolding = false;
-						curruntselection = none;
-					}
-				}
-				else if (curruntselection == snowpeashooter)
-				{
-					if (!mygrid[i].isplanted)
-					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "SnowPeaShooter " << i << endl;
-
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SnowPeaShooter;
-						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 175;
-						SnowPeaClock = 0;
-
-						isHolding = false;
-						curruntselection = none;
-					}
-				}
-				else if (curruntselection == sunflower)
-				{
-					if (!mygrid[i].isplanted)
-					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "SunFlower " << i << endl;
-
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunFlower;
-						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 50;
-						SunFlowerClock = 0;
-
-						isHolding = false;
-						curruntselection = none;
-					}
-				}
-				else if (curruntselection == wallnut)
-				{
-					if (!mygrid[i].isplanted)
-					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "WallNut " << i << endl;
-
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::WallNut;
-						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 50;
-						WallNutClock = 0;
-
-						isHolding = false;
-						curruntselection = none;
-					}
-				}
-				else if (curruntselection == sunshroom)
-				{
-					if (!mygrid[i].isplanted)
-					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "SunShroom " << i << endl;
-
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::SunShroom;
-						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 25;
-						SunShroomClock = 0;
-
-						isHolding = false;
-						curruntselection = none;
-					}
-				}
-				else if (curruntselection == puffshroom)
-				{
-					if (!mygrid[i].isplanted)
-					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "PuffShroom " << i << endl;
-
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::PuffShroom;
-						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 0;
-						PuffShroomClock = 0;
-
-						isHolding = false;
-						curruntselection = none;
-					}
-				}
-				else if (curruntselection == scaredyshroom)
-				{
-					if (!mygrid[i].isplanted)
-					{
-						PlaySoundEffect(PlantingSoundBuffer, true);
-						//cout << "ScaredyShroom " << i << endl;
-
-						Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::ScaredyShroom;
-						Plants_Zombies::PlantsArray[i - 1].start();
-						mygrid[i].isplanted = true;
-
-						Plants_Zombies::score -= 25;
-						ScaredyShroomClock = 0;
-
-						isHolding = false;
-						curruntselection = none;
+						if (!mygrid[i].isplanted)
+						{
+							PlaySoundEffect(PlantingSoundBuffer, true);
+							mygrid[i].isplanted = true;
+							Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
+							Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+							Plants_Zombies::PlantsArray[i - 1].start();
+							selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
+						}
 					}
 				}
 			}
@@ -772,40 +876,47 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 
 void DrawPlantingAndCurrencySystem(RenderWindow& window)
 {
-	//for (int i = 1; i <= 45; i++) {
-	//	window.draw(mygrid[i].shape);
-	//}
-
 	window.draw(gradientopacity);
 	
+	//draw graves
 	if (isNight)
 	{
-		window.draw(scaredyshroomSeedPacket);
-		window.draw(sunshroomSeedPacket);
-		window.draw(puffshroomSeedPacket);
-		window.draw(peashooterSeedPacket);
-		window.draw(snowpeashooterSeedPacket);
-		window.draw(wallnutSeedPacket);
-
-		for (int i = 0; i < numGraves; i++) 
+		for (int i = 0; i < numGraves; i++)
 		{
 			window.draw(graves[i]);
 		}
 	}
-	else
+
+	if (moveright)
 	{
-		window.draw(sunflowerSeedPacket);
-		window.draw(peashooterSeedPacket);
-		window.draw(snowpeashooterSeedPacket);
-		window.draw(wallnutSeedPacket);
-		window.draw(emptySeedPacket1);
-		window.draw(emptySeedPacket2);
+		// draw plant selection menu
+		if (plantselectionMenu)
+		{
+			window.draw(plantSelectionBlank);
+
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					window.draw(plantsToSelect[i][j].shape);
+				}
+			}
+
+			window.draw(LetsRockButton);
+		}
+
+		//draw selected plants
+		for (int i = 5; i >= 0; i--)
+		{
+			window.draw(selectedPlantsArr[i].shape);
+		}
+
+		window.draw(sunContainer);
+		window.draw(moneytext);
+		window.draw(shovelcontainer);
 	}
-
-	window.draw(sunContainer);
-	window.draw(moneytext);
-	window.draw(shovelcontainer);
-
+	
+	// draw selection hologram
 	if (isHolding)
 	{
 		window.draw(SelectionHolograph);

@@ -1,12 +1,13 @@
 #pragma once
-#include"Tools.h"
 #include<algorithm>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <SFML/Audio.hpp>
-#include"Wave System.h"
+#include "Tools.h"
+#include "Wave System.h"
+#include "planting system.h"
 using namespace std;
 using namespace sf;
 
@@ -42,8 +43,6 @@ namespace  StartAnimationNS {
     bool startdrawRSP = true;
     bool EntertostartdrawRSP = false;
     // variable check Camera move Right And Left
-    bool moveright = false;
-    bool moveleft = false;
     bool startAnimcamera = false;
 
     bool RSPSonudon = true;
@@ -172,7 +171,7 @@ namespace  StartAnimationNS {
         window.setView(GardenCamera);
         if (!moveright) 
         {
-            if (GardenCamera.getCenter().x <= 849) 
+            if (GardenCamera.getCenter().x < 850) 
             {
                 float startValue = 340, endValue = 850;
                 if (startAnimcamera == false) 
@@ -189,9 +188,9 @@ namespace  StartAnimationNS {
         }
 
         // Start Move Camera From Right To Left.....
-        if (!moveleft && moveright) 
+        if (!moveleft && moveright && !plantselectionMenu) 
         {
-            if (GardenCamera.getCenter().x > 341) 
+            if (GardenCamera.getCenter().x > 340) 
             {
                 float startValue = 850, endValue = 340;
                 if (startAnimcamera == true) 

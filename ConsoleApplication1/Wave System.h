@@ -203,41 +203,6 @@ void startZombiePositions(int numZombies, int numberwave)
             }
         }
     }
-    //for (int i = 0; i < 100; i++) {
-    //    Plants_Zombies::zombie_array[i].moved = false;
-    //}
-    //int row[5] = { -40, 100, 235, 360, 490 };
-    //if ((numlevel == 2 || numlevel == 3)&&(numberwave ==1||numberwave==2)) {
-    //    x = 4;
-    //    for (int i = 0; i < 4; i++) {
-    //        Plants_Zombies::zombie_array[i].started = false;
-    //        Plants_Zombies::zombie_array[i].isDead = false;
-    //        Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y-30);
-    //        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
-    //            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
-    //            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
-    //        {
-    //            Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y - 55);
-    //        }
-    //    }
-    //}
-    //else if (numlevel==1){
-    //    x = 0;
-    //}
-    //for (int i = x; i < 100; i++)
-    //{
-    //    Plants_Zombies::zombie_array[i].started = false;
-    //    Plants_Zombies::zombie_array[i].isDead = false;
-    //    Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
-    //    if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
-    //        || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
-    //        || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
-    //    {
-    //        Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
-    //    }
-    //    Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
-    //    //cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
-    //}
 }
 
 void startallwave(int numberwave, int numberzombie, float delaybetween) {
