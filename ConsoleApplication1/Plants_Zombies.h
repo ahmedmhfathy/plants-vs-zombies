@@ -20,7 +20,7 @@ namespace Plants_Zombies
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, EmptyPlant, SunCoin, Shovel };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, Dead };
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, poleVault, Dead };
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -813,6 +813,10 @@ namespace Plants_Zombies
 	Texture ScreenDoorDeathText;
 	Texture ScreenDoorDamagedWalkText;
 	Texture ScreenDoorDamagedEatText;
+	//PoleVault
+	Texture PoleWalkingText;
+	Texture PoleJumpingText;
+	Texture PoleWalking2Text;
 #pragma endregion
 
 	void LoadZombieTextures() {
@@ -850,6 +854,11 @@ namespace Plants_Zombies
 		ScreenDoorDeathText.loadFromFile("Assets/Zombies/screendoor/screendoor-death-ST.png");
 		ScreenDoorDamagedWalkText.loadFromFile("Assets/Zombies/screendoor/screendoor-walk-damaged2-ST.png");
 		ScreenDoorDamagedEatText.loadFromFile("Assets/Zombies/screendoor/screendoor-eat-damaged2-ST.png");
+		//poleVault
+		PoleWalkingText.loadFromFile("Assets/Zombies/polewalking.png");
+		PoleWalking2Text.loadFromFile("Assets/Zombies/polewalking2.png");
+		PoleJumpingText.loadFromFile("Assets/Zombies/polejumping.png");
+
 	}
 
 	struct Zombie {
@@ -1011,6 +1020,15 @@ namespace Plants_Zombies
 				zombieCont.setTexture(ScreenDoorWalkText);
 				health = 1400;
 				speed = 9.4;
+				damage = 20;
+				zombieCollider.setSize({ 50, 40 });
+				zombieCollider.setScale(1.4, 1);
+				zombieCont.setScale(3, 3);
+				break;
+			case poleVault:
+				zombieCont.setTexture(PoleWalkingText);
+				health = 1400;
+				speed = 12.4;
 				damage = 20;
 				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
@@ -1706,6 +1724,19 @@ namespace Plants_Zombies
 					}
 				}
 			}
+
+			//Pole Vault
+			if (type == poleVault && !isSquished) {
+				if (isMoving)
+				{
+					zombieCont.setTexture(PoleWalkingText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 73.125, 0, 73.125, 59));
+						CollIndex = (CollIndex + 1) % 7;
+						Zclock.restart();
+					}
+				}
+			}
 		}
 
 		void Movement(float deltaTime)
@@ -1723,7 +1754,7 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = poleVault;
 				zombie_array[i].start();
 			}
 		}
