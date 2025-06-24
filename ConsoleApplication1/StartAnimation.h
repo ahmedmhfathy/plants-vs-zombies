@@ -1,12 +1,13 @@
 #pragma once
-#include"Tools.h"
 #include<algorithm>
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <vector>
 #include <string>
 #include <SFML/Audio.hpp>
-#include"Wave System.h"
+#include "Tools.h"
+#include "Wave System.h"
+#include "planting system.h"
 using namespace std;
 using namespace sf;
 
@@ -42,8 +43,6 @@ namespace  StartAnimationNS {
     bool startdrawRSP = true;
     bool EntertostartdrawRSP = false;
     // variable check Camera move Right And Left
-    bool moveright = false;
-    bool moveleft = false;
     bool startAnimcamera = false;
 
     bool RSPSonudon = true;
@@ -156,59 +155,59 @@ namespace  StartAnimationNS {
         srand(time(0));
     }
 
-    void updateAnimation(RenderWindow& window) 
+    void updateAnimation(RenderWindow& window)
     {
         movecamera(window);
 
-        if (moveleft) 
+        if (moveleft)
         {
             movecars(); // When Move Camera is end .... Start move car
         }
     }
 
-    void movecamera(RenderWindow& window) 
+    void movecamera(RenderWindow& window)
     {
         // Start Move Camera From Left To Right.....
         window.setView(GardenCamera);
-        if (!moveright) 
+        if (!moveright)
         {
-            if (GardenCamera.getCenter().x <= 849) 
+            if (GardenCamera.getCenter().x < 850)
             {
                 float startValue = 340, endValue = 850;
-                if (startAnimcamera == false) 
+                if (startAnimcamera == false)
                 {
                     animcameraClock.restart();
                     startAnimcamera = true;
                 }
                 GardenCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animcameraClock, seconds(3)), 310);
             }
-            else 
+            else
             {
                 moveright = true;
             }
         }
 
         // Start Move Camera From Right To Left.....
-        if (!moveleft && moveright) 
+        if (!moveleft && moveright && !plantselectionMenu)
         {
-            if (GardenCamera.getCenter().x > 341) 
+            if (GardenCamera.getCenter().x > 340)
             {
                 float startValue = 850, endValue = 340;
-                if (startAnimcamera == true) 
+                if (startAnimcamera == true)
                 {
                     animcameraClock.restart();
                     startAnimcamera = false;
                 }
                 GardenCamera.setCenter(easeInOut(CubicEaseInOut, startValue, endValue, animcameraClock, seconds(4)), 310);
             }
-            else 
+            else
             {
                 moveleft = true;
             }
         }
     }
 
-    void RSP(RenderWindow& window) 
+    void RSP(RenderWindow& window)
     {
         Time time;
         if (startdrawRSP)
@@ -246,34 +245,34 @@ namespace  StartAnimationNS {
         }
     }
 
-    void movecars() 
+    void movecars()
     {
         int stoppedCars = 0;
 
-        for (int i = 0; i < 5; i++) 
+        for (int i = 0; i < 5; i++)
         {
             car[i].update();
-            if (car[i].lawnsprite.getPosition().x > -70) 
+            if (car[i].lawnsprite.getPosition().x > -70)
             {
                 stoppedCars++;
             }
         }
 
-        if (stoppedCars == 5) 
+        if (stoppedCars == 5)
         {
             EntertostartdrawRSP = true;
         }
     }
 
-    void Renderstartanimation(RenderWindow& window) 
+    void Renderstartanimation(RenderWindow& window)
     {
         window.draw(gardensprite);
 
-        if (EntertostartdrawRSP) 
+        if (EntertostartdrawRSP)
         {
             RSP(window);
         }
-        for (int i = 0; i < 5; i++) 
+        for (int i = 0; i < 5; i++)
         {
             window.draw(car[i].lawnsprite);
         }

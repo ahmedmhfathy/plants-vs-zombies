@@ -29,9 +29,6 @@
     <ClInclude Include="Tools.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Zombies.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="planting system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
