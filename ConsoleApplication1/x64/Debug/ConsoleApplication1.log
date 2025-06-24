@@ -84,23 +84,35 @@ C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(1124,39): warnin
 C:\Users\khali\repositries\ConsoleApplication1\Plants_Zombies.h(1215,31): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(488,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(507,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(488,35): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(507,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(530,26): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(512,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(551,81): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(551,81): warning C4244:         with
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(551,81): warning C4244:         [
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(551,81): warning C4244:             T=float
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(551,81): warning C4244:         ]
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(512,37): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\planting system.h(570,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(518,45): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(518,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(561,26): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(582,81): warning C4244: 'argument': conversion from 'T' to 'int', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(582,81): warning C4244:         with
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(582,81): warning C4244:         [
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(582,81): warning C4244:             T=float
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(582,81): warning C4244:         ]
+  (compiling source file 'Main.cpp')
+  
+C:\Users\khali\repositries\ConsoleApplication1\planting system.h(601,31): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(81,34): warning C4305: 'argument': truncation from 'double' to 'float'

@@ -127,7 +127,7 @@ namespace  StartAnimationNS {
             if (onRoof)
             {
 				gardensprite.setTexture(roofTextureNight);
-				gardensprite.setPosition(-325, -265 + -50); // Adjust position for roof
+				gardensprite.setPosition(-325, -256-25); // Adjust position for roof
             }
             else
             {
@@ -140,7 +140,7 @@ namespace  StartAnimationNS {
 			if (onRoof)
 			{
 				gardensprite.setTexture(roofTextureDay);
-				gardensprite.setPosition(-325, -265 - 50); // Adjust position for roof
+				gardensprite.setPosition(-325, -256-25); // Adjust position for roof
 			}
             else 
             {

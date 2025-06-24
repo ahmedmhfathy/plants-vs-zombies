@@ -95,6 +95,7 @@ Vector2f plantsToSelectStartPos[4][3];
 
 #pragma region booleans
 bool isNight;
+bool onRoof;
 bool isHolding = false;
 bool plantselectionMenu = true;
 bool animatePlantSelection = false;
@@ -455,9 +456,10 @@ void SetupSelectionUI(Vector2f offset)
 
 }
 
-void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
+void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_)
 {
 	isNight = isNight_;
+	onRoof = onRoof_;
 	Plants_Zombies::score = 50000;
 
 	SetupSelectionUI(offset);
@@ -483,10 +485,39 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 	moveleft = false;
 
 	//setup the grid
+	int indexes[30] = {4, 5 ,6 ,7 ,8, 9
+		, 13, 14 ,15 ,16, 17, 18
+		, 22, 23, 24, 25, 26, 27
+		, 31, 32, 33, 34 ,35, 36
+		, 40, 41, 42 ,43, 44 ,45};
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
-		mygrid[i].shape.setSize({ 107,130 });
-		mygrid[i].shape.setPosition(107 * c, 130 * r);
+		if (onRoof)
+		{
+			bool smaller = false;
+			for (int j = 0; j < 30; j++)
+			{
+				if (i == indexes[j]) {
+					smaller = true;
+					break;
+				}
+			}
 
+			if (smaller) {
+				mygrid[i].shape.setSize({ 100,110 });
+				mygrid[i].shape.setPosition(45 + 100 * c, 110 * r);
+			}
+			else
+			{
+				mygrid[i].shape.setSize({ 115,110 });
+				mygrid[i].shape.setPosition(115 * c, 110 * r);
+			}
+		}
+		else
+		{
+			mygrid[i].shape.setSize({ 107,130 });
+			mygrid[i].shape.setPosition(107 * c, 130 * r);
+		}
+		
 		c++;
 		if (i % 9 == 0)
 		{
@@ -496,10 +527,10 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_)
 
 		//colours the grid
 		if (i % 2 == 0) {
-			mygrid[i].shape.setFillColor(Color(255, 255, 255, 64));
+			mygrid[i].shape.setFillColor(Color(255, 255, 0, 64));
 		}
 		else {
-			mygrid[i].shape.setFillColor(Color(255, 255, 255, 32));
+			mygrid[i].shape.setFillColor(Color(255, 255, 0, 48));
 		}
 
 		//sets up the plants and sets them all to empty gameobjects
@@ -558,7 +589,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 	if (animationCenter.x < 500 && moveright && plantselectionMenu)
 	{
 		float start = -300, end = 500;
-		Time Duration = seconds(2.5);
+		Time Duration = seconds(2);
 		float startOpacity = 0, endOpacity = 255;
 		if (moveright && !animatePlantSelection)
 		{
@@ -567,7 +598,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 		}
 
 		animationCenter = { easeInOut(ExpoEaseOut, start, end, PlantSelectionAnimationClock, Duration), 0 };
-		opacityAnimation = easeInOut(ExpoEaseOut, startOpacity, endOpacity, PlantSelectionAnimationClock, seconds(2.5));
+		opacityAnimation = easeInOut(ExpoEaseOut, startOpacity, endOpacity, PlantSelectionAnimationClock, seconds(2));
 
 		gradientopacity.setPosition(offset.x + animationCenter.x, offset.y + animationCenter.y);
 		plantSelectionBlank.setPosition(animationCenter.x + offset.x, animationCenter.y + offset.y);
@@ -877,6 +908,12 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 void DrawPlantingAndCurrencySystem(RenderWindow& window)
 {
 	window.draw(gradientopacity);
+
+	//for (int i = 1; i <= 45; i++)
+	//{
+	//	window.draw(mygrid[i].shape);
+	//}
+	
 
 	//draw graves
 	if (isNight)
