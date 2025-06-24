@@ -118,11 +118,16 @@ namespace  StartAnimationNS {
 
     void SetupStartAndWaveAnimationPhotos(bool isNight, bool onRoof) {
         //garden
+        gardensprite.setPosition(-325, -265);
+        gardensprite.setScale(0.65, 0.65);
+        GardenCamera.setCenter({ 340, 310 });
+
         if (isNight)
         {
             if (onRoof)
             {
 				gardensprite.setTexture(roofTextureNight);
+				gardensprite.setPosition(-325, -265 + -50); // Adjust position for roof
             }
             else
             {
@@ -135,15 +140,13 @@ namespace  StartAnimationNS {
 			if (onRoof)
 			{
 				gardensprite.setTexture(roofTextureDay);
+				gardensprite.setPosition(-325, -265 - 50); // Adjust position for roof
 			}
             else 
             {
                 gardensprite.setTexture(gardenTextureDay);
             }
         }
-        gardensprite.setPosition(-325, -265);
-        gardensprite.setScale(0.65, 0.65);
-        GardenCamera.setCenter({ 340, 310 });
 
         //zombies in street
         zombieinStreet.setTexture(zombieinStreettex);
