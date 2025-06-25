@@ -71,27 +71,34 @@ float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
 #pragma endregion
 
 #pragma region Structs
-struct cars {
+struct cars 
+{
     bool startsoundcar = true;
     bool intersection = false;
     float speed = 40;
     Sprite lawnsprite;
-    void start(int i) {
+
+    void start(int i) 
+    {
         if (onRoof) {
             lawntexture.loadFromFile("Assets/Environment/Roof_Cleaner.png");
             lawnsprite.setTexture(lawntexture);
+			lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
             lawnsprite.setScale(0.8, 0.8);
             lawnsprite.setPosition(-70, 50 + (i * 110));
         }
         else {
             lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
             lawnsprite.setTexture(lawntexture);
+            lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
             lawnsprite.setScale(0.8, 0.8);
             lawnsprite.setPosition(-90, 60 + (i * 130));
         }
 
     }
-    void update() {
+
+    void update() 
+    {
         if (!intersection)
         {
             if (lawnsprite.getPosition().x < -50&&onRoof) 
@@ -115,18 +122,21 @@ struct cars {
             else
             {
                
-                lawnsprite.setPosition(1000, 1000);
+                lawnsprite.setPosition(2000, 2000);
             }
         }
     }
 }car[5];
-struct waves {
+
+struct waves 
+{
     float delaybetween;
     int numberzombie;
     bool checkexit_wave = false;
     bool check_startwave = true;
 }wave[3];
 #pragma endregion
+
 int numofstartnormalzombie;
 //resets all data so you can retry the level
 void setupWaveData(bool isNight_) {
@@ -172,23 +182,28 @@ void setupWaveData(bool isNight_) {
     timeSinceStart = 0;
 }
 
-void startZombiePositions(int numZombies, int numberwave,int numlevel) 
+void startZombiePositions(int numZombies, int numberwave, int numlevel) 
 {
     if (isNight&&!onRoof) {
-        numofstartnormalzombie = 4;
+        numofstartnormalzombie = numGraves;
     }
     else {
         numofstartnormalzombie = 0;
     }
+
     Plants_Zombies::StartZombies(numZombies, numlevel);
+
     int row[5] = { -40, 100, 235, 360, 490 };
     int rowroof[5] = { -50, 70, 175, 280, 400 };
+
 	//normal zombies
     for (int i = numofstartnormalzombie; i < 100; i++)
     {
         Plants_Zombies::zombie_array[i].started = false;
         Plants_Zombies::zombie_array[i].isDead = false;
-        if (!onRoof) {
+
+        if (!onRoof) 
+        {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
 
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
@@ -197,10 +212,11 @@ void startZombiePositions(int numZombies, int numberwave,int numlevel)
             {
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
             }
-
         }
-        else {
+        else 
+        {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand()%5]);
+
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
@@ -213,7 +229,7 @@ void startZombiePositions(int numZombies, int numberwave,int numlevel)
     }
     
     //grave zombies
-    if (isNightLevel && numberwave >= 1&&!onRoof)
+    if (isNightLevel && numberwave >= 1 && !onRoof)
     {
         for (int i = 0; i < numGraves; i++)
         {
@@ -230,41 +246,6 @@ void startZombiePositions(int numZombies, int numberwave,int numlevel)
             }
         }
     }
-    //for (int i = 0; i < 100; i++) {
-    //    Plants_Zombies::zombie_array[i].moved = false;
-    //}
-    //int row[5] = { -40, 100, 235, 360, 490 };
-    //if ((numlevel == 2 || numlevel == 3)&&(numberwave ==1||numberwave==2)) {
-    //    x = 4;
-    //    for (int i = 0; i < 4; i++) {
-    //        Plants_Zombies::zombie_array[i].started = false;
-    //        Plants_Zombies::zombie_array[i].isDead = false;
-    //        Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y-30);
-    //        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
-    //            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
-    //            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
-    //        {
-    //            Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y - 55);
-    //        }
-    //    }
-    //}
-    //else if (numlevel==1){
-    //    x = 0;
-    //}
-    //for (int i = x; i < 100; i++)
-    //{
-    //    Plants_Zombies::zombie_array[i].started = false;
-    //    Plants_Zombies::zombie_array[i].isDead = false;
-    //    Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
-    //    if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
-    //        || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
-    //        || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
-    //    {
-    //        Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
-    //    }
-    //    Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
-    //    //cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
-    //}
 }
 
 void startallwave(int numberwave, int numberzombie, float delaybetween, int numlevel) {
@@ -287,7 +268,7 @@ void allwave(int numberwave, int numberzombie)
     {
         timeSinceStart;
         // swarm of zombies
-        if (numberwave >= 1&&i >= 0 && i <= 8)
+        if (numberwave >= 1 && i >= 0 && i <= 8)
         {
             //cout << timeSinceStart << endl;
             if (timeSinceStart >= (float)(i * 0.5))
