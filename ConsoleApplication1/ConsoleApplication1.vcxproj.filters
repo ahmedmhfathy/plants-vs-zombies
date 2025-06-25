@@ -44,5 +44,8 @@
     <ClInclude Include="Game Settings And Audio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Boss Logic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

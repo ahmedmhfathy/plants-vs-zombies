@@ -27,6 +27,8 @@ Texture puffshroomAvailableTex;
 Texture puffshroomUnavailableTex;
 Texture scaredyshroomAvailableTex;
 Texture scaredyshroomUnavailableTex;
+Texture plantingpotAvailableTex;
+Texture plantingpotUnavailableTex;
 ///=============================
 Texture emptySeedPacketTex;
 Texture shoveltex;
@@ -96,6 +98,9 @@ Vector2f plantsToSelectStartPos[4][3];
 #pragma region booleans
 bool isNight;
 bool onRoof;
+
+bool isbossFight;
+
 bool isHolding = false;
 bool plantselectionMenu = true;
 bool animatePlantSelection = false;
@@ -180,11 +185,12 @@ struct PlantSelection {
 	bool isAvailable = false;
 	bool isAvailableAtNight = false;
 	bool isAvailableAtDay = false;
+	bool isAvailableAtRoof = false;
 	Time CoolDown;
 
 	int price;
 
-	void start(Plants_Zombies::PlantType type_, Texture& availableTex, Texture unavailableTex, Vector2f offset, Time cooldown_, int price_, bool availableAtDay, bool availableAtNight) {
+	void start(Plants_Zombies::PlantType type_, Texture& availableTex, Texture unavailableTex, Vector2f offset, Time cooldown_, int price_, bool availableAtDay, bool availableAtNight, bool availableOnRoof) {
 		type = type_;
 		AvailableTexture = availableTex;
 		UnavailableTexture = unavailableTex;
@@ -194,6 +200,7 @@ struct PlantSelection {
 		isAvailable = true;
 		isAvailableAtNight = availableAtNight;
 		isAvailableAtDay = availableAtDay;
+		isAvailableAtRoof = availableOnRoof;
 
 		shape.setPosition(shape.getPosition().x + offset.x, shape.getPosition().y + offset.y);
 		SeedPacketOffset = offset;
@@ -206,17 +213,42 @@ struct PlantSelection {
 			// check if available at day/night and determine availability
 			if (isNight)
 			{
-				if (!isAvailableAtNight)
+				if (onRoof)
 				{
-					isAvailable = false;
+					if (!isAvailableAtRoof || !isAvailableAtNight)
+					{
+						isAvailable = false;
+					}
+				}
+				else
+				{
+					if (!isAvailableAtNight)
+					{
+						isAvailable = false;
+					}
 				}
 			}
 			else
 			{
-				if (!isAvailableAtDay)
+				if (onRoof)
 				{
-					isAvailable = false;
+					if (!isAvailableAtRoof || !isAvailableAtDay)
+					{
+						isAvailable = false;
+					}
 				}
+				else
+				{
+					if (!isAvailableAtDay)
+					{
+						isAvailable = false;
+					}
+				}
+			}
+
+			if (!onRoof && type == Plants_Zombies::PlantingPot)
+			{
+				isAvailable = false;
 			}
 
 			if (isAvailable)
@@ -305,7 +337,7 @@ void SelectedSeedPacket::update(Vector2f mousepos, PlantSelection arr[4][3])
 	{
 		if (!(type == Plants_Zombies::EmptyPlant || type == Plants_Zombies::Shovel))
 		{
-			if (seedPacketClock >= CoolDown.asSeconds() && Plants_Zombies::score >= price)
+			if ((seedPacketClock >= CoolDown.asSeconds() && Plants_Zombies::score >= price) || isbossFight)
 			{
 				shape.setTexture(AvailableTexture);
 
@@ -366,6 +398,8 @@ void LoadSelectionTexture() {
 	puffshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/puffshroom-unavailable.png");
 	scaredyshroomAvailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-available.png");
 	scaredyshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-unavailable.png");
+	plantingpotAvailableTex.loadFromFile("Assets/Currency System and planting/New/planting-pot-available.png");	
+	plantingpotUnavailableTex.loadFromFile("Assets/Currency System and planting/New/planting-pot-unavailable.png");
 	//=============================
 	plantSelectionBlankTex.loadFromFile("Assets/Currency System and Planting/New/plantselection-blank.png");
 	LetsRockHoverTex.loadFromFile("Assets/Currency System and Planting/New/lets-rock-hover.png");
@@ -401,15 +435,16 @@ void SetupSelectionUI(Vector2f offset)
 	}
 
 	//setup plants on selection screen
-	plantsToSelect[0][0].start(Plants_Zombies::SunFlower, sunflowerAvailableTex, sunflowerUnavailableTex, Vector2f{ -5, -20 }, ShortCoolDown, 50, true, false);
-	plantsToSelect[0][1].start(Plants_Zombies::PeaShooter, peashooterAvailableTex, peashooterUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 100, true, true);
-	plantsToSelect[0][2].start(Plants_Zombies::SnowPeaShooter, snowpeaAvailableTex, snowpeaUnavailableTex, Vector2f{ 0, -5 }, ShortCoolDown, 175, true, true);
+	plantsToSelect[0][0].start(Plants_Zombies::SunFlower, sunflowerAvailableTex, sunflowerUnavailableTex, Vector2f{ -5, -20 }, ShortCoolDown, 50, true, false,true);
+	plantsToSelect[0][1].start(Plants_Zombies::PeaShooter, peashooterAvailableTex, peashooterUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 100, true, true, true);
+	plantsToSelect[0][2].start(Plants_Zombies::SnowPeaShooter, snowpeaAvailableTex, snowpeaUnavailableTex, Vector2f{ 0, -5 }, ShortCoolDown, 175, true, true, true);
 
-	plantsToSelect[1][0].start(Plants_Zombies::WallNut, wallnutAvailableTex, wallnutUnavailableTex, Vector2f{ 0, -15 }, MediumCoolDown, 50, true, true);
-	plantsToSelect[1][1].start(Plants_Zombies::SunShroom, sunshroomAvailableTex, sunshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 25, false, true);
-	plantsToSelect[1][2].start(Plants_Zombies::ScaredyShroom, scaredyshroomAvailableTex, scaredyshroomUnavailableTex, Vector2f{ 0, -20 }, ShortCoolDown, 25, false, true);
+	plantsToSelect[1][0].start(Plants_Zombies::WallNut, wallnutAvailableTex, wallnutUnavailableTex, Vector2f{ 0, -15 }, MediumCoolDown, 50, true, true, true);
+	plantsToSelect[1][1].start(Plants_Zombies::SunShroom, sunshroomAvailableTex, sunshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 25, false, true, true);
+	plantsToSelect[1][2].start(Plants_Zombies::ScaredyShroom, scaredyshroomAvailableTex, scaredyshroomUnavailableTex, Vector2f{ 0, -20 }, ShortCoolDown, 25, false, true, true);
 
-	plantsToSelect[2][0].start(Plants_Zombies::PuffShroom, puffshroomAvailableTex, puffshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 0, false, true);
+	plantsToSelect[2][0].start(Plants_Zombies::PuffShroom, puffshroomAvailableTex, puffshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 0, false, true, true);
+	plantsToSelect[2][1].start(Plants_Zombies::PlantingPot, plantingpotAvailableTex, plantingpotUnavailableTex, Vector2f{ 0, -25 }, ShortCoolDown, 25, true, true, true);
 
 	//start game button
 	LetsRockButton.setTexture(LetsRockTex);
@@ -456,10 +491,12 @@ void SetupSelectionUI(Vector2f offset)
 
 }
 
-void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_)
+void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_, bool isBossFight_)
 {
 	isNight = isNight_;
 	onRoof = onRoof_;
+	isbossFight = isBossFight_;
+
 	Plants_Zombies::score = 50000;
 
 	SetupSelectionUI(offset);
@@ -490,6 +527,11 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 		, 22, 23, 24, 25, 26, 27
 		, 31, 32, 33, 34 ,35, 36
 		, 40, 41, 42 ,43, 44 ,45};
+	int potIndexes[15] = { 1, 2, 3,
+						10, 11, 12,
+						19, 20, 21,
+						28, 29, 30,
+						37, 38, 39 };
 	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
 		if (onRoof)
 		{
@@ -538,6 +580,30 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
 		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
 		Plants_Zombies::PlantsArray[i - 1].start();
+		Plants_Zombies::PlantsArray[i - 1].deadPlantingPot = false;
+
+		if (onRoof)
+		{
+			Plants_Zombies::PlantingPotArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 20, 47 });
+			Plants_Zombies::PlantingPotArray[i - 1].type = Plants_Zombies::EmptyPlant;
+			Plants_Zombies::PlantingPotArray[i - 1].gridIndex = i;
+			Plants_Zombies::PlantingPotArray[i - 1].start();
+			Plants_Zombies::PlantingPotArray[i - 1].deadPlantingPot = true;
+
+			for (int j = 0; j < 15; j++)
+			{
+				if (i == potIndexes[j])
+				{
+					Plants_Zombies::PlantingPotArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 20, 47 });
+					Plants_Zombies::PlantingPotArray[i - 1].type = Plants_Zombies::PlantingPot;
+					Plants_Zombies::PlantingPotArray[i - 1].gridIndex = i;
+					Plants_Zombies::PlantingPotArray[i - 1].start();
+					Plants_Zombies::PlantingPotArray[i - 1].deadPlantingPot = false;
+				}
+			}
+		}
+		
+
 		mygrid[i].isplanted = false;
 		mygrid[i].gravePlanted = false;
 	}
@@ -585,132 +651,135 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 	}
 
 #pragma region animation
-	//moves ui from left to right
-	if (animationCenter.x < 500 && moveright && plantselectionMenu)
+	if (!isbossFight)
 	{
-		float start = -300, end = 500;
-		Time Duration = seconds(2);
-		float startOpacity = 0, endOpacity = 255;
-		if (moveright && !animatePlantSelection)
+		//moves ui from left to right
+		if (animationCenter.x < 500 && moveright && plantselectionMenu)
 		{
-			PlantSelectionAnimationClock.restart();
-			animatePlantSelection = true;
-		}
-
-		animationCenter = { easeInOut(ExpoEaseOut, start, end, PlantSelectionAnimationClock, Duration), 0 };
-		opacityAnimation = easeInOut(ExpoEaseOut, startOpacity, endOpacity, PlantSelectionAnimationClock, seconds(2));
-
-		gradientopacity.setPosition(offset.x + animationCenter.x, offset.y + animationCenter.y);
-		plantSelectionBlank.setPosition(animationCenter.x + offset.x, animationCenter.y + offset.y);
-		plantSelectionBlank.setColor(Color(255, 255, 255, opacityAnimation));
-		LetsRockButton.setPosition(letsrockstartPos.x + animationCenter.x, letsrockstartPos.y + animationCenter.y);
-		LetsRockButton.setColor(Color(255, 255, 255, opacityAnimation));
-		shovelcontainer.setPosition(shovelstartPos.x + animationCenter.x, shovelstartPos.y + animationCenter.y);
-		shovelcontainer.setColor(Color(255, 255, 255, opacityAnimation));
-		sunContainer.setPosition(sunContainerStartPos.x + animationCenter.x, sunContainerStartPos.y + animationCenter.y);
-		sunContainer.setColor(Color(255, 255, 255, opacityAnimation));
-
-		for (int i = 0; i < 6; i++)
-		{
-			selectedPlantsArr[i].shape.setPosition(selectedPlantsStartPos[i].x + animationCenter.x, selectedPlantsStartPos[i].y + animationCenter.y);
-			selectedPlantsArr[i].shape.setColor(Color(255, 255, 255, opacityAnimation));
-		}
-
-		//for the seed bank
-		for (int i = 0; i < 4; i++)
-		{
-			for (int j = 0; j < 3; j++)
+			float start = -300, end = 500;
+			Time Duration = seconds(2);
+			float startOpacity = 0, endOpacity = 255;
+			if (moveright && !animatePlantSelection)
 			{
-				plantsToSelect[i][j].shape.setPosition(plantsToSelectStartPos[i][j].x + animationCenter.x, plantsToSelectStartPos[i][j].y + animationCenter.y);
-				plantsToSelect[i][j].shape.setColor(Color(255, 255, 255, opacityAnimation));
+				PlantSelectionAnimationClock.restart();
+				animatePlantSelection = true;
 			}
-		}
 
-		moneytext.setPosition(moneytextStartPos.x + animationCenter.x, moneytextStartPos.y + animationCenter.y);
-		moneytext.setFillColor(Color(255, 255, 255, opacityAnimation));
-	}
-	else if (animationCenter.x < 500 && !moveright && plantselectionMenu)
-	{
-		//start all user interfaces with opacity 0 then fades in
-		plantSelectionBlank.setColor(Color(255, 255, 255, opacityAnimation));
-		LetsRockButton.setColor(Color(255, 255, 255, opacityAnimation));
-		shovelcontainer.setColor(Color(255, 255, 255, opacityAnimation));
-		sunContainer.setColor(Color(255, 255, 255, opacityAnimation));
+			animationCenter = { easeInOut(ExpoEaseOut, start, end, PlantSelectionAnimationClock, Duration), 0 };
+			opacityAnimation = easeInOut(ExpoEaseOut, startOpacity, endOpacity, PlantSelectionAnimationClock, seconds(2));
 
-		for (int i = 0; i < 6; i++)
-		{
-			selectedPlantsArr[i].shape.setColor(Color(255, 255, 255, opacityAnimation));
-		}
+			gradientopacity.setPosition(offset.x + animationCenter.x, offset.y + animationCenter.y);
+			plantSelectionBlank.setPosition(animationCenter.x + offset.x, animationCenter.y + offset.y);
+			plantSelectionBlank.setColor(Color(255, 255, 255, opacityAnimation));
+			LetsRockButton.setPosition(letsrockstartPos.x + animationCenter.x, letsrockstartPos.y + animationCenter.y);
+			LetsRockButton.setColor(Color(255, 255, 255, opacityAnimation));
+			shovelcontainer.setPosition(shovelstartPos.x + animationCenter.x, shovelstartPos.y + animationCenter.y);
+			shovelcontainer.setColor(Color(255, 255, 255, opacityAnimation));
+			sunContainer.setPosition(sunContainerStartPos.x + animationCenter.x, sunContainerStartPos.y + animationCenter.y);
+			sunContainer.setColor(Color(255, 255, 255, opacityAnimation));
 
-		//for the seed bank
-		for (int i = 0; i < 4; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				plantsToSelect[i][j].shape.setColor(Color(255, 255, 255, opacityAnimation));
-			}
-		}
-
-		moneytext.setFillColor(Color(255, 255, 255, opacityAnimation));
-	}
-
-	//moves ui from right to left
-	if (animationCenter.x > 0 && !plantselectionMenu)
-	{
-		float start = 500, end = 0;
-		Time Duration = seconds(2);
-		if (animatePlantSelection)
-		{
-			PlantSelectionAnimationClock.restart();
-			animatePlantSelection = false;
-		}
-
-		animationCenter = { easeInOut(ExpoEaseOut, start, end, PlantSelectionAnimationClock, Duration), 0 };
-
-		gradientopacity.setPosition(offset.x + animationCenter.x, offset.y + animationCenter.y);
-		plantSelectionBlank.setPosition(animationCenter.x + offset.x, animationCenter.y + offset.y);
-		LetsRockButton.setPosition(letsrockstartPos.x + animationCenter.x, letsrockstartPos.y + animationCenter.y);
-		shovelcontainer.setPosition(shovelstartPos.x + animationCenter.x, shovelstartPos.y + animationCenter.y);
-		sunContainer.setPosition(sunContainerStartPos.x + animationCenter.x, sunContainerStartPos.y + animationCenter.y);
-
-		for (int i = 0; i < 6; i++)
-		{
-			selectedPlantsArr[i].shape.setPosition(selectedPlantsStartPos[i].x + animationCenter.x, selectedPlantsStartPos[i].y + animationCenter.y);
-		}
-
-		//for the seed bank
-		for (int i = 0; i < 4; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				plantsToSelect[i][j].shape.setPosition(plantsToSelectStartPos[i][j].x + animationCenter.x, plantsToSelectStartPos[i][j].y + animationCenter.y);
-			}
-		}
-
-		moneytext.setPosition(moneytextStartPos.x + animationCenter.x, moneytextStartPos.y + animationCenter.y);
-
-		//reset all clocks after clicking the lets rock button
-		if (resetClocksAtStart)
-		{
 			for (int i = 0; i < 6; i++)
 			{
-				//cout << selectedPlantsArr[i].seedPacketClock << " - " << i << endl;
-				selectedPlantsArr[i].seedPacketClock = 0;
+				selectedPlantsArr[i].shape.setPosition(selectedPlantsStartPos[i].x + animationCenter.x, selectedPlantsStartPos[i].y + animationCenter.y);
+				selectedPlantsArr[i].shape.setColor(Color(255, 255, 255, opacityAnimation));
 			}
-			resetClocksAtStart = false;
+
+			//for the seed bank
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					plantsToSelect[i][j].shape.setPosition(plantsToSelectStartPos[i][j].x + animationCenter.x, plantsToSelectStartPos[i][j].y + animationCenter.y);
+					plantsToSelect[i][j].shape.setColor(Color(255, 255, 255, opacityAnimation));
+				}
+			}
+
+			moneytext.setPosition(moneytextStartPos.x + animationCenter.x, moneytextStartPos.y + animationCenter.y);
+			moneytext.setFillColor(Color(255, 255, 255, opacityAnimation));
+		}
+		else if (animationCenter.x < 500 && !moveright && plantselectionMenu)
+		{
+			//start all user interfaces with opacity 0 then fades in
+			plantSelectionBlank.setColor(Color(255, 255, 255, opacityAnimation));
+			LetsRockButton.setColor(Color(255, 255, 255, opacityAnimation));
+			shovelcontainer.setColor(Color(255, 255, 255, opacityAnimation));
+			sunContainer.setColor(Color(255, 255, 255, opacityAnimation));
+
+			for (int i = 0; i < 6; i++)
+			{
+				selectedPlantsArr[i].shape.setColor(Color(255, 255, 255, opacityAnimation));
+			}
+
+			//for the seed bank
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					plantsToSelect[i][j].shape.setColor(Color(255, 255, 255, opacityAnimation));
+				}
+			}
+
+			moneytext.setFillColor(Color(255, 255, 255, opacityAnimation));
+		}
+
+		//moves ui from right to left
+		if (animationCenter.x > 0 && !plantselectionMenu)
+		{
+			float start = 500, end = 0;
+			Time Duration = seconds(2);
+			if (animatePlantSelection)
+			{
+				PlantSelectionAnimationClock.restart();
+				animatePlantSelection = false;
+			}
+
+			animationCenter = { easeInOut(ExpoEaseOut, start, end, PlantSelectionAnimationClock, Duration), 0 };
+
+			gradientopacity.setPosition(offset.x + animationCenter.x, offset.y + animationCenter.y);
+			plantSelectionBlank.setPosition(animationCenter.x + offset.x, animationCenter.y + offset.y);
+			LetsRockButton.setPosition(letsrockstartPos.x + animationCenter.x, letsrockstartPos.y + animationCenter.y);
+			shovelcontainer.setPosition(shovelstartPos.x + animationCenter.x, shovelstartPos.y + animationCenter.y);
+			sunContainer.setPosition(sunContainerStartPos.x + animationCenter.x, sunContainerStartPos.y + animationCenter.y);
+
+			for (int i = 0; i < 6; i++)
+			{
+				selectedPlantsArr[i].shape.setPosition(selectedPlantsStartPos[i].x + animationCenter.x, selectedPlantsStartPos[i].y + animationCenter.y);
+			}
+
+			//for the seed bank
+			for (int i = 0; i < 4; i++)
+			{
+				for (int j = 0; j < 3; j++)
+				{
+					plantsToSelect[i][j].shape.setPosition(plantsToSelectStartPos[i][j].x + animationCenter.x, plantsToSelectStartPos[i][j].y + animationCenter.y);
+				}
+			}
+
+			moneytext.setPosition(moneytextStartPos.x + animationCenter.x, moneytextStartPos.y + animationCenter.y);
+
+			//reset all clocks after clicking the lets rock button
+			if (resetClocksAtStart)
+			{
+				for (int i = 0; i < 6; i++)
+				{
+					//cout << selectedPlantsArr[i].seedPacketClock << " - " << i << endl;
+					selectedPlantsArr[i].seedPacketClock = 0;
+				}
+				resetClocksAtStart = false;
+			}
 		}
 	}
 #pragma endregion
 
 	//update score text
-	if (moveleft && !plantselectionMenu)
+	if (moveleft && !plantselectionMenu && !isbossFight)
 	{
 		moneytext.setString(to_string(Plants_Zombies::score));
 		moneytext.setOrigin(moneytext.getGlobalBounds().width / 2, moneytext.getGlobalBounds().height / 2);
 		moneytext.setPosition(170 + 53 + offset.x, 145 + offset.y);
 	}
 
-	if (plantselectionMenu)
+	if (plantselectionMenu && !isbossFight)
 	{
 		//update the seed packets to select
 		for (int i = 0; i < 4; i++)
@@ -851,6 +920,14 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
 				SelectionHolograph.setColor(Color(255, 255, 255, 175));
 			}
+			else if (currentselection == Plants_Zombies::PlantingPot)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 27, 30));
+				SelectionHolograph.setTexture(Plants_Zombies::PlantingPotIdleTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
 
 			if (currentselection != Plants_Zombies::Shovel)
 			{
@@ -874,22 +951,84 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 			{
 				if (mygrid[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 				{
-					if (currentselection == Plants_Zombies::Shovel)
+					if (onRoof)
 					{
-						if (mygrid[i].isplanted && !mygrid[i].gravePlanted)
+						if (currentselection == Plants_Zombies::Shovel)
 						{
-							PlaySoundEffect(PlantingSoundBuffer, true);
-							//cout << "shovel " << i << endl;
-							mygrid[i].isplanted = false;
-							Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
-							Plants_Zombies::PlantsArray[i - 1].start();
+							//delete normal plants
+							if (mygrid[i].isplanted && !mygrid[i].gravePlanted)
+							{
+								PlaySoundEffect(PlantingSoundBuffer, true);
+								//cout << "shovel " << i << endl;
+								mygrid[i].isplanted = false;
+								Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+								Plants_Zombies::PlantsArray[i - 1].start();
 
-							isHolding = false;
+								isHolding = false;
+								break;
+							}
+							//delete planting pots
+							else if (Plants_Zombies::PlantingPotArray[i - 1].type != Plants_Zombies::EmptyPlant)
+							{
+								PlaySoundEffect(PlantingSoundBuffer, true);
+								//cout << "shovel " << i << endl;
+								mygrid[i].isplanted = false;
+								Plants_Zombies::PlantingPotArray[i - 1].type = Plants_Zombies::EmptyPlant;
+								Plants_Zombies::PlantingPotArray[i - 1].start();
+
+								isHolding = false;
+								break;
+							}
+						}
+						else if(!mygrid[i].isplanted)
+						{
+							//plant the pot
+							if (currentselection == Plants_Zombies::PlantingPot
+								&& Plants_Zombies::PlantingPotArray[i - 1].type == Plants_Zombies::EmptyPlant)
+							{
+								PlaySoundEffect(PlantingSoundBuffer, true);
+								//mygrid[i].isplanted = true;
+								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
+								Plants_Zombies::PlantingPotArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+								Plants_Zombies::PlantingPotArray[i - 1].start();
+								selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
+								Plants_Zombies::PlantingPotArray[i - 1].deadPlantingPot = false;
+								break;
+							}
+							//if not planting pot and pot is already present plant normally
+							else if (Plants_Zombies::PlantingPotArray[i - 1].type == Plants_Zombies::PlantingPot
+								&& currentselection != Plants_Zombies::PlantingPot)
+							{
+								PlaySoundEffect(PlantingSoundBuffer, true);
+								mygrid[i].isplanted = true;
+								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
+								Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+								Plants_Zombies::PlantsArray[i - 1].start();
+								selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
+								break;
+							}
 						}
 					}
 					else
 					{
-						if (!mygrid[i].isplanted)
+						if (currentselection == Plants_Zombies::Shovel)
+						{
+							cout << "deleteeee 1" << endl;
+							cout << Plants_Zombies::PlantsArray[i - 1].deadPlantingPot << " --- " << Plants_Zombies::PlantingPotArray[i-1].deadPlantingPot <<endl;
+							if (mygrid[i].isplanted && !mygrid[i].gravePlanted)
+							{
+								cout << "deleteeee 2" << endl;
+								PlaySoundEffect(PlantingSoundBuffer, true);
+								//cout << "shovel " << i << endl;
+								mygrid[i].isplanted = false;
+								Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+								Plants_Zombies::PlantsArray[i - 1].start();
+
+								isHolding = false;
+								break;
+							}
+						}
+						else if(!mygrid[i].isplanted)
 						{
 							PlaySoundEffect(PlantingSoundBuffer, true);
 							mygrid[i].isplanted = true;
@@ -897,6 +1036,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 							Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
 							Plants_Zombies::PlantsArray[i - 1].start();
 							selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
+							break;
 						}
 					}
 				}
@@ -916,7 +1056,7 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	
 
 	//draw graves
-	if (isNight)
+	if (isNight && !onRoof)
 	{
 		for (int i = 0; i < numGraves; i++)
 		{
@@ -927,7 +1067,7 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	if (moveright)
 	{
 		// draw plant selection menu
-		if (plantselectionMenu)
+		if (plantselectionMenu && !isbossFight)
 		{
 			window.draw(plantSelectionBlank);
 
@@ -948,8 +1088,13 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 			window.draw(selectedPlantsArr[i].shape);
 		}
 
-		window.draw(sunContainer);
-		window.draw(moneytext);
+
+		if (!isbossFight)
+		{
+			window.draw(sunContainer);
+			window.draw(moneytext);
+		}
+
 		window.draw(shovelcontainer);
 	}
 
@@ -1034,8 +1179,13 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 
 		plantCollider.setPosition(shape.getPosition());
 	}
-	else if (!mygrid[gridIndex].gravePlanted)// else if there is not a grave planted there will turn the plant into an empty gameobject  
+	else if (!mygrid[gridIndex].gravePlanted && !deadPlantingPot)// else if there is not a grave planted there will turn the plant into an empty gameobject  
 	{
+		if (type == PlantingPot)
+		{
+			deadPlantingPot = true;
+		}
+
 		type = EmptyPlant;
 		mygrid[gridIndex].isplanted = false;
 		zombieProximityAction = false;

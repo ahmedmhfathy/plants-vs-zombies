@@ -19,7 +19,7 @@ namespace Plants_Zombies
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, EmptyPlant, SunCoin, Shovel };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, EmptyPlant, SunCoin, Shovel };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, Dead };
 #pragma endregion
 
@@ -48,6 +48,8 @@ namespace Plants_Zombies
 	Texture ScaredyShroomIdleTex;
 	Texture ScaredyShroomHideTex;
 	Texture ScaredyShroomAttackTex;
+	//planting pot
+	Texture PlantingPotIdleTex;
 #pragma endregion
 
 #pragma region Sounds
@@ -110,6 +112,8 @@ namespace Plants_Zombies
 		ScaredyShroomIdleTex.loadFromFile("Assets/Plants/ScaredyShroom/ScaredyShroom-idle-ST.png");
 		ScaredyShroomHideTex.loadFromFile("Assets/Plants/ScaredyShroom/ScaredyShroom-hide-ST.png");
 		ScaredyShroomAttackTex.loadFromFile("Assets/Plants/ScaredyShroom/ScaredyShroom-attack-ST.png");
+		//planting pot
+		PlantingPotIdleTex.loadFromFile("Assets/Plants/PlantingPot/plantingpot-idle-ST.png");
 	}
 
 	struct PlantProjectile
@@ -216,9 +220,11 @@ namespace Plants_Zombies
 		PlantType type;
 
 		int gridIndex; //<<<<<<<<---------------<<< for the grid system
+		bool deadPlantingPot;
 
 		float health;
 		float damage;
+
 	private:
 		bool zombieInFront = false;
 		bool zombieProximityAction = false;
@@ -231,12 +237,11 @@ namespace Plants_Zombies
 		bool idle = true;
 		bool isDead = false;
 
+		bool playActionSound = true;
+
 		Clock animationClock;
 		Time timeForAction, animationSpeed = seconds(0.2); // time for each frame
 		float actionTimeClock, plantLifeTimeClock = 0;
-
-		bool playActionSound = true;
-		//Sound ActionSound;
 
 	public:
 		// calls function when you spawn the plant
@@ -257,7 +262,6 @@ namespace Plants_Zombies
 		void updatePlantStruct(Zombie* zombie_array); // Defined at the planting system
 
 	private:
-		float randPitch[3] = { 0.75, 1, 1.25 };
 		void animationHandler() {
 			if (animationSpeed <= animationClock.getElapsedTime() && type != EmptyPlant)
 			{
@@ -597,6 +601,7 @@ namespace Plants_Zombies
 			playActionSound = true;
 			zombieProximityAction = false;
 			isHiding = false;
+			//isPlantingPotArray = false;
 
 			if (type == EmptyPlant) {
 				doAction = false;
@@ -695,11 +700,23 @@ namespace Plants_Zombies
 				shape.setTexture(ScaredyShroomIdleTex);
 				shape.setScale(3.5, 3.5);
 			}
+			else if (type == PlantingPot)
+			{
+				health = 100;
+				damage = 0;
+
+				deadPlantingPot = true; // this is a planting pot, not a plant
+
+				plantCollider.setSize({ 34, 34 });
+				shape.setTextureRect(IntRect(0, 0, 27, 30));
+				shape.setTexture(PlantingPotIdleTex);
+				shape.setScale(3, 2.85);
+			}
 
 			plantCollider.setScale(2.9, 2);
 			plantCollider.setFillColor(Color(252, 186, 3, 180));
 		}
-	}PlantsArray[45];
+	}PlantsArray[45], PlantingPotArray[45];
 
 	void UpdatePlants(Zombie* zombie_array, Vector2f mousepos)
 	{
@@ -724,15 +741,12 @@ namespace Plants_Zombies
 
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
-			float randPitch[3] = { 0.75, 1, 1.25 };
 			PlantProjectilesARR[i].update();
 			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
 				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
 				&& Mouse::isButtonPressed(Mouse::Left))
 			{
 				PlaySoundEffect(SunCoinSoundBuffer, true);
-				//SunCoinSound.setPitch(randPitch[rand() % 3]);
-				//SunCoinSound.play();
 				score += PlantProjectilesARR[i].sunValue;
 				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
 				i--;
@@ -742,6 +756,7 @@ namespace Plants_Zombies
 		for (int i = 0; i < 45; i++)
 		{
 			PlantsArray[i].updatePlantStruct(zombie_array);
+			PlantingPotArray[i].updatePlantStruct(zombie_array);
 		}
 	}
 
@@ -754,14 +769,22 @@ namespace Plants_Zombies
 				window.draw(PlantProjectilesARR[i].shape);
 			}
 		}
+
 		for (int i = 0; i < 45; i++)
 		{
+			if (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0))
+			{
+				window.draw(PlantingPotArray[i].plantCollider);
+				window.draw(PlantingPotArray[i].shape);
+			}
+
 			if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0))
 			{
 				window.draw(PlantsArray[i].plantCollider);
 				window.draw(PlantsArray[i].shape);
 			}
 		}
+
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
 			if (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
@@ -897,8 +920,7 @@ namespace Plants_Zombies
 
 		int CurrentPlantIndex;
 		bool PlantInfront = false;
-
-
+		bool bothPlantAndPot = false;
 
 	public:
 		void start() {
@@ -928,6 +950,7 @@ namespace Plants_Zombies
 			PlantInfront = false;
 			jackBomb = false;
 			startJackClock = true;
+			bothPlantAndPot = false;
 			#pragma endregion
 
 			switch (type)
@@ -1113,10 +1136,13 @@ namespace Plants_Zombies
 
 		}
 
-		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) {
+		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) 
+		{
 			// Projectiles // remove collision with sun coins
-			for (int j = 0; j < PlantProjectilesARR.size(); j++) {
-				if (!PlantProjectilesARR.empty()) {
+			for (int j = 0; j < PlantProjectilesARR.size(); j++) 
+			{
+				if (!PlantProjectilesARR.empty()) 
+				{
 					if (!(PlantProjectilesARR[j].type == SunCoin || PlantProjectilesARR[j].type == SunFlower || PlantProjectilesARR[j].type == SunShroom)
 						&& (PlantProjectilesARR[j].shape.getGlobalBounds().intersects(zombieCollider.getGlobalBounds()))) {
 
@@ -1147,15 +1173,78 @@ namespace Plants_Zombies
 			if (!PlantInfront)
 			{
 				//if not a plant infront the zombie will loop on all 45 plants and check if he collides with anyone
+				//for (int i = 0; i < 45; i++)
+				//{
+				//	if (!isDead || type == Dead)
+				//	{
+				//		if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+				//			&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
+				//		{
+				//			CurrentPlantIndex = i;
+				//			PlantInfront = true;
+				//			break;
+				//		}
+				//		else
+				//		{
+				//			isMoving = true;
+				//			isAttacking = false;
+				//		}
+				//	}
+				//}
+
+				//for (int i = 0; i < 45; i++)
+				//{
+				//	if (!isDead || type == Dead)
+				//	{
+				//		if (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
+				//			&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds()))
+				//		{
+				//			CurrentPlantIndex = i;
+				//			PlantInfront = true;
+				//			break;
+				//		}
+				//		else
+				//		{
+				//			isMoving = true;
+				//			isAttacking = false;
+				//		}
+				//	}
+				//}
+
 				for (int i = 0; i < 45; i++)
 				{
 					if (!isDead || type == Dead)
 					{
-						if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+						//both plant and pot
+						if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
 							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
+							&&(!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
+								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
 						{
+							cout << "Both plant and pot \n";
 							CurrentPlantIndex = i;
 							PlantInfront = true;
+							bothPlantAndPot = true;
+							break;
+						}
+						//only plant
+						else if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds())))
+						{
+							cout << "plant \n";
+							CurrentPlantIndex = i;
+							PlantInfront = true;
+							bothPlantAndPot = false;
+							break;
+						}
+						//only pot
+						else if ((!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
+							&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
+						{
+							cout << "pot \n";
+							CurrentPlantIndex = i;
+							PlantInfront = true;
+							bothPlantAndPot = true;
 							break;
 						}
 						else
@@ -1168,15 +1257,49 @@ namespace Plants_Zombies
 			}
 			else
 			{
-				if (!(health <= 0))
+				if (health > 0)
 				{
 					isMoving = false;
 					isAttacking = true;
+
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
+						if (bothPlantAndPot)
+						{
+							//if plant is not dead already eat the plant
+							if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
+							{								
+								PlantsArray[CurrentPlantIndex].takeDmg(damage);	
+							}
+							// if plant died and pot is still alive eat the pot
+							else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
+							{
+								PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
+							}
+							else
+							{
+								PlantInfront = false;
+								isMoving = true;
+								isAttacking = false;
+								bothPlantAndPot = false;
+							}
+						}
+						//if only plant is there eat the plant
+						else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
+						{
+							PlantsArray[CurrentPlantIndex].takeDmg(damage);
+							bothPlantAndPot = false;
+						}
+						else
+						{
+							PlantInfront = false;
+							isMoving = true;
+							isAttacking = false;
+							bothPlantAndPot = false;
+						}
+
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
-						PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						EatClock = 0;
 					}
 				}
@@ -1185,23 +1308,30 @@ namespace Plants_Zombies
 					PlantInfront = false;
 					isMoving = true;
 					isAttacking = false;
+					bothPlantAndPot = false;
 				}
 			}
 
 			// if the plant the zombie is eating died or is removed reset the zombie state
-			if (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
+			if (bothPlantAndPot)
 			{
-				if (!(isDead || type == Dead || health <= 0))
+				if ((PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
+					&& (PlantingPotArray[CurrentPlantIndex].type == EmptyPlant || PlantingPotArray[CurrentPlantIndex].health <= 0))
 				{
 					PlantInfront = false;
 					isMoving = true;
 					isAttacking = false;
+					bothPlantAndPot = false;
 				}
-				else
+			}
+			else
+			{
+				if (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
 				{
 					PlantInfront = false;
-					isMoving = false;
+					isMoving = true;
 					isAttacking = false;
+					bothPlantAndPot = false;
 				}
 			}
 
@@ -1246,6 +1376,12 @@ namespace Plants_Zombies
 							&& jackCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
 						{
 							PlantsArray[i].takeDmg(Extra_damage);
+						}
+
+						if (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
+							&& jackCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds()))
+						{
+							PlantingPotArray[i].takeDmg(Extra_damage);
 						}
 					}
 				}

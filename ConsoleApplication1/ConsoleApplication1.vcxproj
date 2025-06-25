@@ -137,6 +137,7 @@
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Boss Logic.h" />
     <ClInclude Include="Game Manager.h" />
     <ClInclude Include="Game Settings And Audio.h" />
     <ClInclude Include="Main Menu.h" />

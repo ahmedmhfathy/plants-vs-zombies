@@ -211,7 +211,7 @@ namespace  StartAnimationNS {
         }
 
         // Start Move Camera From Right To Left.....
-        if (!moveleft && moveright && !plantselectionMenu)
+        if (!moveleft && moveright && (!plantselectionMenu || isbossFight))
         {
             if (GardenCamera.getCenter().x > 340)
             {
