@@ -20,7 +20,7 @@ namespace Plants_Zombies
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, EmptyPlant, SunCoin, Shovel };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, poleVault, Dead };
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, poleVault, gargantous,  Dead };
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -817,6 +817,11 @@ namespace Plants_Zombies
 	Texture PoleWalkingText;
 	Texture PoleJumpingText;
 	Texture PoleWalking2Text;
+	Texture PoleEatingText;
+	// gargantous
+	Texture GargantousWalkText;
+	Texture GargantousEatText;
+	Texture GargantousDeathText;
 #pragma endregion
 
 	void LoadZombieTextures() {
@@ -858,6 +863,12 @@ namespace Plants_Zombies
 		PoleWalkingText.loadFromFile("Assets/Zombies/polewalking.png");
 		PoleWalking2Text.loadFromFile("Assets/Zombies/polewalking2.png");
 		PoleJumpingText.loadFromFile("Assets/Zombies/polejumping.png");
+		PoleEatingText.loadFromFile("Assets/Zombies/poleeating.png");
+		//gargantous
+		GargantousWalkText.loadFromFile("Assets/Zombies/gargantous/gargantouswalking.png");
+		GargantousEatText.loadFromFile("Assets/Zombies/gargantous/gargantouseating.png");
+		GargantousDeathText.loadFromFile("Assets/Zombies/gargantous/gargantousdeath.png");
+
 
 	}
 
@@ -889,11 +900,14 @@ namespace Plants_Zombies
 		bool SquishEffect = false;
 		bool wassoundplayed = false;
 		bool startJackClock = true;
+		bool isPoleJumped = false;
+		bool poleJumped = false;
+		bool gargantousCrush = false;
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
-		float EatClock, CrushedZombieClock,  jackClock;
-		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22);
+		float EatClock, CrushedZombieClock,  jackClock, gargantousEatClock;
+		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22), gargantousEatTimer = seconds(1);
 
 	private:
 		int CollIndex = 0;
@@ -916,6 +930,7 @@ namespace Plants_Zombies
 			EatClock = 0;
 			CrushedZombieClock = 0;
 			jackClock = 0;
+			gargantousEatClock = 0;
 
 			#pragma region Booleans
 			started = false;
@@ -937,6 +952,9 @@ namespace Plants_Zombies
 			PlantInfront = false;
 			jackBomb = false;
 			startJackClock = true;
+			isPoleJumped = false;
+			poleJumped = false;
+			gargantousCrush = false;
 			#pragma endregion
 
 			switch (type)
@@ -1028,11 +1046,21 @@ namespace Plants_Zombies
 			case poleVault:
 				zombieCont.setTexture(PoleWalkingText);
 				health = 1400;
-				speed = 12.4;
+				speed = 14.4;
 				damage = 20;
 				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
+				break;
+			case gargantous:
+				zombieCont.setTexture(GargantousWalkText);
+				health = 1400;
+				speed = 7.4;
+				damage = 2000;
+				zombieCollider.setSize({ 50, 40 });
+				zombieCollider.setScale(1.4, 1);
+				zombieCont.setScale(3, 3);
+				zombieCollider.setPosition(0, 10);
 				break;
 			default:
 				break;
@@ -1048,6 +1076,7 @@ namespace Plants_Zombies
 			EatClock +=deltaTime;
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
+			gargantousEatClock += deltaTime;
 
 			//setup death animation data
 			if (health <= 0)
@@ -1127,8 +1156,14 @@ namespace Plants_Zombies
 			}
 
 			jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
-			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
+			if (type == gargantous)
+			{
+				zombieCollider.setPosition(zombieCont.getPosition().x + 90, zombieCont.getPosition().y + 150);
 
+			}
+			else {
+				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
+			}
 		}
 
 		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) {
@@ -1141,11 +1176,11 @@ namespace Plants_Zombies
 						//cout << "Zombie Health = " << health << endl;
 						health -= PlantProjectilesARR[j].damage;
 
-						if (PlantProjectilesARR[j].type == SnowPeaShooter && !isSlowed)
-						{
+						//if (PlantProjectilesARR[j].type == SnowPeaShooter && !isSlowed)
+						//{
 							speed = (speed * PlantProjectilesARR[j].slowMultiplier);
 							isSlowed = true;
-						}
+						//}
 
 						if (type == bucketHat)
 						{
@@ -1190,11 +1225,30 @@ namespace Plants_Zombies
 				{
 					isMoving = false;
 					isAttacking = true;
+					if (poleJumped)
+					{
+						isPoleJumped = true;
+					}
+
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
-						PlantsArray[CurrentPlantIndex].takeDmg(damage);
+						if (type == gargantous)
+						{
+							if (gargantousCrush )
+							{
+								if (gargantousEatTimer.asSeconds() <= gargantousEatClock)
+								{
+								PlantsArray[CurrentPlantIndex].takeDmg(damage);
+								gargantousCrush = false;
+								}
+								
+							}
+						}
+						else {
+							PlantsArray[CurrentPlantIndex].takeDmg(damage);
+						}
 						EatClock = 0;
 					}
 				}
@@ -1729,12 +1783,76 @@ namespace Plants_Zombies
 			if (type == poleVault && !isSquished) {
 				if (isMoving)
 				{
-					zombieCont.setTexture(PoleWalkingText);
-					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 73.125, 0, 73.125, 59));
-						CollIndex = (CollIndex + 1) % 7;
-						Zclock.restart();
+					if (!isPoleJumped)
+					{
+						if (Zclock.getElapsedTime().asMilliseconds() > 350) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 75, 0, 75, 71));
+							zombieCont.setTexture(PoleJumpingText);
+							CollIndex = (CollIndex + 1) % 5;
+							Zclock.restart();
+							//zombieCont.move(-1, 0);
+
+						}
+						
 					}
+					else if (isPoleJumped) {
+						zombieCont.setTexture(PoleWalking2Text);
+						if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 35, 0, 35, 57));
+							CollIndex = (CollIndex + 1) % 6;
+							Zclock.restart();
+						}
+					}
+				}
+				else if (isAttacking)
+				{
+					if (!isPoleJumped)
+					{
+						if (Zclock.getElapsedTime().asMilliseconds() > 350) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 75, 0, 75, 71));
+							zombieCont.setTexture(PoleJumpingText);
+							CollIndex = (CollIndex + 1) % 5;
+							Zclock.restart();
+							//zombieCont.move(-1, 0);
+							
+						}
+
+					}
+					else if (isPoleJumped) {
+						if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 35, 0, 35, 55));
+							zombieCont.setTexture(PoleEatingText);
+							CollIndex = (CollIndex + 1) % 6;
+							Zclock.restart();
+						}
+					}
+
+				}
+			}
+
+			//Gargantous
+			if (type == gargantous && !isSquished) {
+				if (isMoving)
+				{
+						if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 85, 0, 85, 95));
+							zombieCont.setTexture(GargantousWalkText);
+							CollIndex = (CollIndex + 1) % 7;
+							Zclock.restart();
+						
+						}
+				}
+				else if (isAttacking)
+				{
+						if (Zclock.getElapsedTime().asMilliseconds() > 350) {
+							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 95));
+							zombieCont.setTexture(GargantousEatText);
+							CollIndex = (CollIndex + 1) % 5;
+							Zclock.restart();
+							gargantousCrush = true;
+
+						}
+
 				}
 			}
 		}
@@ -1754,7 +1872,7 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = poleVault;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}
