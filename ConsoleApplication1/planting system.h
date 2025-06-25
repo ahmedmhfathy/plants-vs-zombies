@@ -543,7 +543,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 	}
 
 	// adding graves randomly when it is a night level
-	if (isNight)
+	if (isNight&&!onRoof)
 	{
 		int plantgraveson[20] = { 6, 7, 8, 9, 15, 16, 17, 18, 24, 25, 26, 27, 33, 34, 35, 36, 42, 43, 44, 45 };
 

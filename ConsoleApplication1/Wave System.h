@@ -25,6 +25,7 @@ Texture rectangletexture;
 Texture Textstartwave2texture;
 Texture Textstartfinalwavetexture;
 Texture Textlosegametexture;
+Texture lawnrooftexture;
 Sprite Textstartwave2sprite;
 Sprite Textstartfinalwavesprite;
 Sprite Textlosegamesprite;
@@ -76,16 +77,28 @@ struct cars {
     float speed = 40;
     Sprite lawnsprite;
     void start(int i) {
-        lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
-        lawnsprite.setTexture(lawntexture);
-        lawnsprite.setScale(0.8, 0.8);
-        lawnsprite.setPosition(-90, 60 + (i * 130));
+        if (onRoof) {
+            lawntexture.loadFromFile("Assets/Environment/Roof_Cleaner.png");
+            lawnsprite.setTexture(lawntexture);
+            lawnsprite.setScale(0.8, 0.8);
+            lawnsprite.setPosition(-70, 50 + (i * 110));
+        }
+        else {
+            lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
+            lawnsprite.setTexture(lawntexture);
+            lawnsprite.setScale(0.8, 0.8);
+            lawnsprite.setPosition(-90, 60 + (i * 130));
+        }
+
     }
     void update() {
         if (!intersection)
         {
-            if (lawnsprite.getPosition().x < -65) 
+            if (lawnsprite.getPosition().x < -50&&onRoof) 
             {
+                lawnsprite.move(speed * 1.8f * deltaTime, 0);
+            }
+            else if (lawnsprite.getPosition().x < -65 && !onRoof) {
                 lawnsprite.move(speed * 1.8f * deltaTime, 0);
             }
         }
@@ -114,7 +127,7 @@ struct waves {
     bool check_startwave = true;
 }wave[3];
 #pragma endregion
-int x;
+int numofstartnormalzombie;
 //resets all data so you can retry the level
 void setupWaveData(bool isNight_) {
     isNightLevel = isNight_;
@@ -161,31 +174,46 @@ void setupWaveData(bool isNight_) {
 
 void startZombiePositions(int numZombies, int numberwave,int numlevel) 
 {
+    if (isNight&&!onRoof) {
+        numofstartnormalzombie = 4;
+    }
+    else {
+        numofstartnormalzombie = 0;
+    }
     Plants_Zombies::StartZombies(numZombies, numlevel);
-
     int row[5] = { -40, 100, 235, 360, 490 };
-
+    int rowroof[5] = { -50, 70, 175, 280, 400 };
 	//normal zombies
-    for (int i = x; i < 100; i++) 
+    for (int i = numofstartnormalzombie; i < 100; i++)
     {
         Plants_Zombies::zombie_array[i].started = false;
         Plants_Zombies::zombie_array[i].isDead = false;
+        if (!onRoof) {
+            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
 
-        Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
+            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
+            }
 
-        if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
-            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
-            || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
-        {
-            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
         }
-
-        Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 60);
+        else {
+            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand()%5]);
+            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]-25);
+            }
+        }
+        Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 70); //60
         //cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
     }
     
     //grave zombies
-    if (isNightLevel && numberwave >= 1)
+    if (isNightLevel && numberwave >= 1&&!onRoof)
     {
         for (int i = 0; i < numGraves; i++)
         {
@@ -257,8 +285,9 @@ void allwave(int numberwave, int numberzombie)
     //spawn zombies
     for (int i = 0; i < wave[numberwave].numberzombie; ++i)
     {
+        timeSinceStart;
         // swarm of zombies
-        if (i >= 0 && i <= 8 && (numberwave == 1 || numberwave == 2))
+        if (numberwave >= 1&&i >= 0 && i <= 8)
         {
             //cout << timeSinceStart << endl;
             if (timeSinceStart >= (float)(i * 0.5))
@@ -371,7 +400,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                 {
                     if (wave[1].check_startwave) 
                     {
-                        startallwave(1, num += 20, delaybetweenw1 -= 5.0f,numlevel);
+                        startallwave(1, num += 10, delaybetweenw1 -= 5.0f,numlevel);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }

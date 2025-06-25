@@ -992,7 +992,7 @@ namespace Plants_Zombies
 				Extra_damage = 9999999;
 
 				zombieCollider.setSize({ 50, 40 });
-				zombieCollider.setScale(1.4, 1);
+				zombieCollider.setScale(1.4, 1.4);
 				jackCollider.setSize({ 280,330 });
 				jackCollider.setScale(1, 1);
 				zombieCont.setScale(3, 3);
