@@ -17,42 +17,11 @@ namespace  StartAnimationNS {
     void startAnimation();
     void updateAnimation(RenderWindow&);
     void movecamera(RenderWindow&);
-    void RSP(RenderWindow&); // Ready...Set....Plant....
     void loadphoto();
     void movecars();
 #pragma endregion
 
-#pragma region Textures and sprites declaration
-    Texture gardenTextureDay;
-    Texture gardenTextureNight;
-	Texture roofTextureDay;
-	Texture roofTextureNight;
-    Sprite gardensprite;
-    Texture Readytexttexture;
-    Sprite  Readytextsprite;
-    Texture Settexttexture;
-    Sprite Settextsprite;
-    Texture Planttexttexture;
-    Sprite Planttextsprite;
-    Texture zombieinStreettex;
-    Sprite zombieinStreet;
-
-    SoundBuffer RSPSoundBuffer;
-    SoundBuffer ZombiesAreComingBuffer;
-#pragma endregion
-
-#pragma region boolean
-    bool startdrawRSP = true;
-    bool EntertostartdrawRSP = false;
-    // variable check Camera move Right And Left
-    bool startAnimcamera = false;
-
-    bool RSPSonudon = true;
-    bool ZombiesAreComingSoundOn = true;
-#pragma endregion
-
     Clock animcameraClock;
-    Clock clockRSP;
 
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
@@ -230,44 +199,6 @@ namespace  StartAnimationNS {
         }
     }
 
-    void RSP(RenderWindow& window)
-    {
-        Time time;
-        if (startdrawRSP)
-        {
-            clockRSP.restart();
-            startdrawRSP = false;
-        }
-        time = clockRSP.getElapsedTime();
-
-        if (time < seconds(0.5))
-        {
-            if (RSPSonudon)
-            {
-                PlaySoundEffect(RSPSoundBuffer, false);
-                RSPSonudon = false;
-            }
-            window.draw(Readytextsprite);
-        }
-        else if (time < seconds(1.2))
-        {
-            window.draw(Settextsprite);
-        }
-        else if (time < seconds(2.05))
-        {
-            window.draw(Planttextsprite);
-        }
-        else if (time >= seconds(1))// start delay, affects the pause menu though, needs to be fixed
-        {
-            if (ZombiesAreComingSoundOn)
-            {
-                PlaySoundEffect(ZombiesAreComingBuffer, false);
-                ZombiesAreComingSoundOn = false;
-            }
-            endRSP = true;
-        }
-    }
-
     void movecars()
     {
         int stoppedCars = 0;
@@ -294,10 +225,11 @@ namespace  StartAnimationNS {
     {
         window.draw(gardensprite);
 
-        if (EntertostartdrawRSP)
+        /*if (EntertostartdrawRSP)
         {
             RSP(window);
-        }
+        }*/
+
         for (int i = 0; i < 5; i++)
         {
             window.draw(car[i].lawnsprite);

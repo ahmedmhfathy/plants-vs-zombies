@@ -65,11 +65,6 @@ void Update()
     Mousepostion = Mouse::getPosition(window);
     MouseWorldPostion = window.mapPixelToCoords(Mousepostion);
 
-    //if (Mouse::isButtonPressed(Mouse::Left))
-    //{
-    //    cout << int(MouseWorldPostion.x) << "    " << int(MouseWorldPostion.y) << endl;
-    //}
-
     //calls the update function depending on current state and pause state
     if (CurrentState == MainMenu)
     {   

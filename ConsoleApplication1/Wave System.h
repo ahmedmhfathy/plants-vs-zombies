@@ -17,6 +17,39 @@ void intersectioncarsandzombies(int);
 void DrawWavesAndZombies(RenderWindow&, string);
 void startallwave(int, int, float);
 void level(int, int, float);
+
+void RSP(RenderWindow&); // Ready...Set....Plant....
+#pragma endregion
+
+#pragma region start animation stuff
+#pragma region Textures and sprites declaration
+Texture gardenTextureDay;
+Texture gardenTextureNight;
+Texture roofTextureDay;
+Texture roofTextureNight;
+Sprite gardensprite;
+Texture Readytexttexture;
+Sprite  Readytextsprite;
+Texture Settexttexture;
+Sprite Settextsprite;
+Texture Planttexttexture;
+Sprite Planttextsprite;
+Texture zombieinStreettex;
+Sprite zombieinStreet;
+
+SoundBuffer RSPSoundBuffer;
+SoundBuffer ZombiesAreComingBuffer;
+#pragma endregion
+
+#pragma region boolean
+bool startdrawRSP = true;
+bool startAnimcamera = false;
+
+bool RSPSonudon = true;
+bool ZombiesAreComingSoundOn = true;
+#pragma endregion
+
+Clock clockRSP;
 #pragma endregion
 
 #pragma region Textures and Sprites declaration
@@ -42,10 +75,14 @@ SoundBuffer carsSoundBuffer;
 bool nowave = true;
 bool checkstart_wave2 = true;
 bool checkstart_wave3 = true;
-bool endRSP = false;
 bool movefromwavetoanother = true;
+
+bool endRSP = false;
+bool EntertostartdrawRSP = false;
+
 bool LevelIsOver = false;
 bool WinLevel = false;
+
 bool playLoseGameAnim = false;
 bool playWaveSounds = false;
 bool isNightLevel = false;
@@ -184,20 +221,20 @@ void setupWaveData(bool isNight_) {
 
 void startZombiePositions(int numZombies, int numberwave, int numlevel) 
 {
-    if (isNight&&!onRoof) {
-        numofstartnormalzombie = numGraves;
-    }
-    else {
-        numofstartnormalzombie = 0;
-    }
+    //if (isNight && !onRoof) {
+    //    numofstartnormalzombie = numGraves;
+    //}
+    //else {
+    //    numofstartnormalzombie = 0;
+    //}
 
-    Plants_Zombies::StartZombies(numZombies, numlevel);
+    Plants_Zombies::StartZombies(numZombies, numlevel, onRoof);
 
     int row[5] = { -40, 100, 235, 360, 490 };
     int rowroof[5] = { -50, 70, 175, 280, 400 };
 
 	//normal zombies
-    for (int i = numofstartnormalzombie; i < 100; i++)
+    for (int i = 0; i < 100; i++)
     {
         Plants_Zombies::zombie_array[i].started = false;
         Plants_Zombies::zombie_array[i].isDead = false;
@@ -497,8 +534,51 @@ void intersectioncarsandzombies(int numberwave) {
     }
 }
 
-void DrawWavesAndZombies(RenderWindow& window) {
-   
+void RSP(RenderWindow& window)
+{
+    Time time;
+    if (startdrawRSP)
+    {
+        clockRSP.restart();
+        startdrawRSP = false;
+    }
+    time = clockRSP.getElapsedTime();
+
+    if (time < seconds(0.5))
+    {
+        if (RSPSonudon)
+        {
+            PlaySoundEffect(RSPSoundBuffer, false);
+            RSPSonudon = false;
+        }
+        window.draw(Readytextsprite);
+    }
+    else if (time < seconds(1.2))
+    {
+        window.draw(Settextsprite);
+    }
+    else if (time < seconds(2.05))
+    {
+        window.draw(Planttextsprite);
+    }
+    else if (time >= seconds(1))// start delay, affects the pause menu though, needs to be fixed
+    {
+        if (ZombiesAreComingSoundOn)
+        {
+            PlaySoundEffect(ZombiesAreComingBuffer, false);
+            ZombiesAreComingSoundOn = false;
+        }
+        endRSP = true;
+    }
+}
+
+void DrawWavesAndZombies(RenderWindow& window) 
+{
+    if (EntertostartdrawRSP)
+    {
+        RSP(window);
+    }
+
     if (endRSP)
     {
         if (nowave) {

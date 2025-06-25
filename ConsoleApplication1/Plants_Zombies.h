@@ -10,6 +10,7 @@ using namespace sf;
 namespace Plants_Zombies
 {
 	int score;
+	bool onRoof;
 
 #pragma region Forward Declaration for Structs
 	struct Zombie;
@@ -707,7 +708,7 @@ namespace Plants_Zombies
 
 				deadPlantingPot = true; // this is a planting pot, not a plant
 
-				plantCollider.setSize({ 34, 34 });
+				plantCollider.setSize({ 25, 30 });
 				shape.setTextureRect(IntRect(0, 0, 27, 30));
 				shape.setTexture(PlantingPotIdleTex);
 				shape.setScale(3, 2.85);
@@ -920,7 +921,6 @@ namespace Plants_Zombies
 
 		int CurrentPlantIndex;
 		bool PlantInfront = false;
-		bool bothPlantAndPot = false;
 
 	public:
 		void start() {
@@ -950,7 +950,6 @@ namespace Plants_Zombies
 			PlantInfront = false;
 			jackBomb = false;
 			startJackClock = true;
-			bothPlantAndPot = false;
 			#pragma endregion
 
 			switch (type)
@@ -1049,7 +1048,8 @@ namespace Plants_Zombies
 
 		}
 
-		void update(float deltaTime) {
+		void update(float deltaTime) 
+		{
 			EatClock +=deltaTime;
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
@@ -1070,9 +1070,9 @@ namespace Plants_Zombies
 					resetColIndex
 						= true;
 				}
+
 				zombieCollider.setScale(0, 0);
 				jackCollider.setScale(0, 0);
-				//zombieCont.setPosition(2000, 2000);
 			}
 
 			//normal update
@@ -1091,9 +1091,6 @@ namespace Plants_Zombies
 					if (!wassoundplayed) {
 						PlaySoundEffect(newsManPaperRipSoundBuffer, true);
 						PlaySoundEffect(newsmanyellbuffer, false, 2, 25);
-						//newsManPaperRipSound.play();
-						//newsmanyell.setBuffer(newsmanyellbuffer[rand() % 2]);
-						//newsmanyell.play();
 						wassoundplayed = true;
 					}
 					speed = 120;
@@ -1112,18 +1109,12 @@ namespace Plants_Zombies
 				{
 					zombieCont.setColor(Color(255, 105, 180, 255)); // pink
 				}
-				//else if (type == screenDoor)
-				//{
-				//	if (!isDamaged)
-				//		zombieCont.setColor(Color(212, 15, 10, 255)); // red 
-				//	else if (isDamaged)
-				//		zombieCont.setColor(Color(19, 255, 5, 255)); // green 
-				//}
 				else
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
 				}
 			}
+
 			if (type == jackInTheBox && jackBomb && !isDead) {
 				isDead = true;
 				isMoving = false;
@@ -1133,7 +1124,6 @@ namespace Plants_Zombies
 
 			jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
 			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
-
 		}
 
 		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) 
@@ -1169,6 +1159,7 @@ namespace Plants_Zombies
 				}
 			}
 
+/*#pragma region idk
 			// Plants
 			if (!PlantInfront)
 			{
@@ -1192,25 +1183,6 @@ namespace Plants_Zombies
 				//	}
 				//}
 
-				//for (int i = 0; i < 45; i++)
-				//{
-				//	if (!isDead || type == Dead)
-				//	{
-				//		if (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
-				//			&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds()))
-				//		{
-				//			CurrentPlantIndex = i;
-				//			PlantInfront = true;
-				//			break;
-				//		}
-				//		else
-				//		{
-				//			isMoving = true;
-				//			isAttacking = false;
-				//		}
-				//	}
-				//}
-
 				for (int i = 0; i < 45; i++)
 				{
 					if (!isDead || type == Dead)
@@ -1218,33 +1190,94 @@ namespace Plants_Zombies
 						//both plant and pot
 						if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
 							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
-							&&(!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
+							|| (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
 								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
 						{
 							cout << "Both plant and pot \n";
 							CurrentPlantIndex = i;
 							PlantInfront = true;
-							bothPlantAndPot = true;
 							break;
 						}
-						//only plant
-						else if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
-							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds())))
+						else
 						{
-							cout << "plant \n";
-							CurrentPlantIndex = i;
-							PlantInfront = true;
-							bothPlantAndPot = false;
-							break;
+							isMoving = true;
+							isAttacking = false;
 						}
-						//only pot
-						else if ((!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
-							&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
+					}
+				}
+			}
+			else
+			{
+				if (health > 0 || isDead == false)
+				{
+					isMoving = false;
+					isAttacking = true;
+
+					//attack clock
+					if (EatTimer.asSeconds() <= EatClock)
+					{
+						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
 						{
-							cout << "pot \n";
+							PlantsArray[CurrentPlantIndex].takeDmg(damage);
+						}
+						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
+						{
+							cout << "ana bakol asreya \n";
+							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
+						}
+						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && PlantsArray[CurrentPlantIndex].type != EmptyPlant)
+						{
+							cout << "ana kalt kolo \n";
+							PlantInfront = false;
+							isMoving = true;
+							isAttacking = false;
+						}
+
+						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
+						EatClock = 0;
+					}
+				}
+				else
+				{
+					PlantInfront = false;
+					isMoving = false;
+					isAttacking = false;
+					isDead = true;
+				}
+			}
+
+			// if the plant the zombie is eating died or is removed reset the zombie state
+			if (onRoof && (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
+				&& (PlantingPotArray[CurrentPlantIndex].type == EmptyPlant || PlantingPotArray[CurrentPlantIndex].health <= 0))
+			{
+				PlantInfront = false;
+				isMoving = true;
+				isAttacking = false;
+			}
+
+			if (!onRoof && (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0))
+			{
+				PlantInfront = false;
+				isMoving = true;
+				isAttacking = false;
+			}
+#pragma endregion
+*/
+			// Plants
+			if (!PlantInfront)
+			{
+				//if not a plant infront the zombie will loop on all 45 plants and check if he collides with anyone
+				for (int i = 0; i < 45; i++)
+				{
+					if (!isDead || type == Dead)
+					{
+						if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
+							|| (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <=0)
+							&&	zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
+						{
 							CurrentPlantIndex = i;
 							PlantInfront = true;
-							bothPlantAndPot = true;
 							break;
 						}
 						else
@@ -1261,44 +1294,18 @@ namespace Plants_Zombies
 				{
 					isMoving = false;
 					isAttacking = true;
-
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
-						if (bothPlantAndPot)
-						{
-							//if plant is not dead already eat the plant
-							if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
-							{								
-								PlantsArray[CurrentPlantIndex].takeDmg(damage);	
-							}
-							// if plant died and pot is still alive eat the pot
-							else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
-							{
-								PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
-							}
-							else
-							{
-								PlantInfront = false;
-								isMoving = true;
-								isAttacking = false;
-								bothPlantAndPot = false;
-							}
-						}
-						//if only plant is there eat the plant
-						else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
+						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
 						{
 							PlantsArray[CurrentPlantIndex].takeDmg(damage);
-							bothPlantAndPot = false;
 						}
-						else
+						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
 						{
-							PlantInfront = false;
-							isMoving = true;
-							isAttacking = false;
-							bothPlantAndPot = false;
+							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
 						}
-
+						
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
 						EatClock = 0;
 					}
@@ -1308,30 +1315,24 @@ namespace Plants_Zombies
 					PlantInfront = false;
 					isMoving = true;
 					isAttacking = false;
-					bothPlantAndPot = false;
 				}
 			}
 
 			// if the plant the zombie is eating died or is removed reset the zombie state
-			if (bothPlantAndPot)
+			if ((PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
+				&& (PlantingPotArray[CurrentPlantIndex].type == EmptyPlant || PlantingPotArray[CurrentPlantIndex].health <= 0))
 			{
-				if ((PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
-					&& (PlantingPotArray[CurrentPlantIndex].type == EmptyPlant || PlantingPotArray[CurrentPlantIndex].health <= 0))
+				if (!(isDead || type == Dead || health <= 0))
 				{
 					PlantInfront = false;
 					isMoving = true;
 					isAttacking = false;
-					bothPlantAndPot = false;
 				}
-			}
-			else
-			{
-				if (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
+				else
 				{
 					PlantInfront = false;
-					isMoving = true;
+					isMoving = false;
 					isAttacking = false;
-					bothPlantAndPot = false;
 				}
 			}
 
@@ -1855,7 +1856,10 @@ namespace Plants_Zombies
 
 	//gives zombies random types
 	// 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, Dead };
-	void StartZombies(int numerzombieinwave, int numberlevel) {
+	void StartZombies(int numerzombieinwave, int numberlevel, bool onRoof_) 
+	{
+		onRoof = onRoof_;
+
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
@@ -1879,7 +1883,5 @@ namespace Plants_Zombies
 		}
 
 	}
-
-
 #pragma endregion
 }

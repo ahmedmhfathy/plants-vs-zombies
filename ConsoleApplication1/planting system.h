@@ -532,7 +532,8 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 						19, 20, 21,
 						28, 29, 30,
 						37, 38, 39 };
-	for (int i = 1, r = 0, c = 0; i <= 45; i++) {
+	for (int i = 1, r = 0, c = 0; i <= 45; i++) 
+	{
 		if (onRoof)
 		{
 			bool smaller = false;
@@ -576,25 +577,25 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 		}
 
 		//sets up the plants and sets them all to empty gameobjects
-		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
+		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{0, -15});
 		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
 		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
 		Plants_Zombies::PlantsArray[i - 1].start();
 		Plants_Zombies::PlantsArray[i - 1].deadPlantingPot = false;
 
+		Plants_Zombies::PlantingPotArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 17, 25 });
+		Plants_Zombies::PlantingPotArray[i - 1].type = Plants_Zombies::EmptyPlant;
+		Plants_Zombies::PlantingPotArray[i - 1].gridIndex = i;
+		Plants_Zombies::PlantingPotArray[i - 1].start();
+		Plants_Zombies::PlantingPotArray[i - 1].deadPlantingPot = true;
+
 		if (onRoof)
 		{
-			Plants_Zombies::PlantingPotArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 20, 47 });
-			Plants_Zombies::PlantingPotArray[i - 1].type = Plants_Zombies::EmptyPlant;
-			Plants_Zombies::PlantingPotArray[i - 1].gridIndex = i;
-			Plants_Zombies::PlantingPotArray[i - 1].start();
-			Plants_Zombies::PlantingPotArray[i - 1].deadPlantingPot = true;
-
 			for (int j = 0; j < 15; j++)
 			{
 				if (i == potIndexes[j])
 				{
-					Plants_Zombies::PlantingPotArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 20, 47 });
+					Plants_Zombies::PlantingPotArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 17, 25 });
 					Plants_Zombies::PlantingPotArray[i - 1].type = Plants_Zombies::PlantingPot;
 					Plants_Zombies::PlantingPotArray[i - 1].gridIndex = i;
 					Plants_Zombies::PlantingPotArray[i - 1].start();
@@ -603,7 +604,6 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 			}
 		}
 		
-
 		mygrid[i].isplanted = false;
 		mygrid[i].gravePlanted = false;
 	}
