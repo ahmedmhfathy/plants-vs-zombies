@@ -1317,11 +1317,11 @@ namespace Plants_Zombies
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
-						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
+						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
 						{
 							PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						}
-						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
+						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
 						{
 							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
 						}
