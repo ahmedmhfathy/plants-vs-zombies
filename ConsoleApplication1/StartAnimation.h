@@ -206,7 +206,8 @@ namespace  StartAnimationNS {
         for (int i = 0; i < 5; i++)
         {
             car[i].update();
-            if (car[i].lawnsprite.getPosition().x > -55&&onRoof)
+
+            if (car[i].lawnsprite.getPosition().x > -55 && onRoof)
             {
                 stoppedCars++;
             }

@@ -1054,7 +1054,6 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	//	window.draw(mygrid[i].shape);
 	//}
 	
-
 	//draw graves
 	if (isNight && !onRoof)
 	{

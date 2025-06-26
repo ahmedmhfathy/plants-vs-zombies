@@ -112,7 +112,7 @@ struct cars
 {
     bool startsoundcar = true;
     bool intersection = false;
-    float speed = 40;
+    float speed = 500;
     Sprite lawnsprite;
 
     void start(int i) 
@@ -138,12 +138,13 @@ struct cars
     {
         if (!intersection)
         {
-            if (lawnsprite.getPosition().x < -50&&onRoof) 
+            if (lawnsprite.getPosition().x < -50 && onRoof) 
             {
-                lawnsprite.move(speed * 1.8f * deltaTime, 0);
+                lawnsprite.move(speed * 0.144f * deltaTime, 0);
             }
-            else if (lawnsprite.getPosition().x < -65 && !onRoof) {
-                lawnsprite.move(speed * 1.8f * deltaTime, 0);
+            else if (lawnsprite.getPosition().x < -65 && !onRoof) 
+            {
+                lawnsprite.move(speed * 0.144f * deltaTime, 0);
             }
         }
         else
@@ -151,14 +152,15 @@ struct cars
             if (lawnsprite.getPosition().x < 960)
             {
                 lawnsprite.move(speed * deltaTime, 0);
-                if (startsoundcar) {
+
+                if (startsoundcar) 
+                {
                     PlaySoundEffect(carsSoundBuffer,false);
                     startsoundcar = false;
                 }
             }
             else
             {
-               
                 lawnsprite.setPosition(2000, 2000);
             }
         }
@@ -520,17 +522,19 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
 void intersectioncarsandzombies(int numberwave) {
     for (int i = 0; i < 5; i++)
     {
+        FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
+        
         for (int j = 0; j < wave[numberwave].numberzombie; j++)
         {
-            FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
             FloatRect rect2 = Plants_Zombies::zombie_array[j].zombieCollider.getGlobalBounds();
 
             if (rect1.intersects(rect2)) {
                 car[i].intersection = true;
                 Plants_Zombies::zombie_array[j].isSquished = true;
             }
-            car[i].update();
         }
+
+        //car[i].update();
     }
 }
 
