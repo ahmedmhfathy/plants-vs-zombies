@@ -168,14 +168,14 @@ void SetupBossData()
 	doingAction = false;
 
 	startBossfight = true;
-	CurrentState = FireAttack;
+	CurrentState = IceAttack;
 
 	Head.setTexture(HeadIdleTex);
 	Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 	Head.setScale(3.5, 3.5);
 	Head.setPosition({ 445, -75 });
 
-	ElementalAttackOBJ.start(FireAttack, { 600, 550 });
+	ElementalAttackOBJ.start(IceAttack, { 600, 550 });
 }
 
 void BossStateManager()

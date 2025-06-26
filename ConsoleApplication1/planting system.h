@@ -29,6 +29,8 @@ Texture scaredyshroomAvailableTex;
 Texture scaredyshroomUnavailableTex;
 Texture plantingpotAvailableTex;
 Texture plantingpotUnavailableTex;
+Texture potatomineAvaliableTex;
+Texture potatomineUnavaliableTex;
 ///=============================
 Texture emptySeedPacketTex;
 Texture shoveltex;
@@ -400,6 +402,8 @@ void LoadSelectionTexture() {
 	scaredyshroomUnavailableTex.loadFromFile("Assets/Currency System and planting/New/scaredy-unavailable.png");
 	plantingpotAvailableTex.loadFromFile("Assets/Currency System and planting/New/planting-pot-available.png");	
 	plantingpotUnavailableTex.loadFromFile("Assets/Currency System and planting/New/planting-pot-unavailable.png");
+	potatomineAvaliableTex.loadFromFile("Assets/Currency System and planting/New/potatomine-available.png");
+	potatomineUnavaliableTex.loadFromFile("Assets/Currency System and planting/New/potatomine-unavailable.png");
 	//=============================
 	plantSelectionBlankTex.loadFromFile("Assets/Currency System and Planting/New/plantselection-blank.png");
 	LetsRockHoverTex.loadFromFile("Assets/Currency System and Planting/New/lets-rock-hover.png");
@@ -445,7 +449,7 @@ void SetupSelectionUI(Vector2f offset)
 
 	plantsToSelect[2][0].start(Plants_Zombies::PuffShroom, puffshroomAvailableTex, puffshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 0, false, true, true);
 	plantsToSelect[2][1].start(Plants_Zombies::PlantingPot, plantingpotAvailableTex, plantingpotUnavailableTex, Vector2f{ 0, -25 }, ShortCoolDown, 25, true, true, true);
-
+	plantsToSelect[2][2].start(Plants_Zombies::PotatoMine, potatomineAvaliableTex, potatomineUnavaliableTex, Vector2f{ 0, -15 }, ShortCoolDown, 25, true, true,true);
 	//start game button
 	LetsRockButton.setTexture(LetsRockTex);
 	LetsRockButton.setPosition(796 + offset.x, 613 + offset.y);
@@ -896,6 +900,14 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
 				SelectionHolograph.setColor(Color(255, 255, 255, 175));
 			}
+			else if (currentselection == Plants_Zombies::PotatoMine)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 29, 26));
+				SelectionHolograph.setTexture(Plants_Zombies::PotatoMineIdelTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
 			else if (currentselection == Plants_Zombies::SunShroom)
 			{
 				SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
@@ -1001,6 +1013,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 							{
 								PlaySoundEffect(PlantingSoundBuffer, true);
 								mygrid[i].isplanted = true;
+								Plants_Zombies::PlantsArray[i-1]
 								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
 								Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
 								Plants_Zombies::PlantsArray[i - 1].start();
@@ -1170,6 +1183,32 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 				{
 					zombieProximityAction = false;
 				}
+			}
+		}
+		else if (type == PotatoMine && !zombieProximityAction && GettingUp)
+		{
+			for (int j = 0; j < 100; j++)
+			{
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107))
+						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
+
+					{
+						//cout << "true \n";
+						zombieProximityAction = true;
+						animationCol = 0;
+						zombie_array[j].health -= damage;
+
+					}
+				}
+				/*else if (lastZombieProximity == j)
+				{
+					zombieProximityAction = false;
+				}*/
 			}
 		}
 

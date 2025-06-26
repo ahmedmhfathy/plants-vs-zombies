@@ -20,7 +20,7 @@ namespace Plants_Zombies
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, EmptyPlant, SunCoin, Shovel };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, PotatoMine, EmptyPlant, SunCoin, Shovel };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, PoleVault, Dead };
 #pragma endregion
 
@@ -35,6 +35,10 @@ namespace Plants_Zombies
 	Texture SunFlowerSunTex;
 	//WallNut
 	Texture WallNutIdleTex;
+	//Potato Mine
+	Texture PotatoMineTransitionTex;
+	Texture PotatoMineIdelTex;
+	Texture PotatoExplosionTex;
 	//IcePeaShooter
 	Texture IcePeaShooterIdleTex;
 	Texture IcePeaShooterShootTex;
@@ -103,6 +107,11 @@ namespace Plants_Zombies
 		IcePeaShooterProjectileTex.loadFromFile("Assets/Plants/IcePeaShooter/icepeashooter-bullet.png");
 		//wallnut
 		WallNutIdleTex.loadFromFile("Assets/Plants/WallNut/wallnut-ST.png");
+		//Potato Mine
+		PotatoMineTransitionTex.loadFromFile("Assets/Plants/Potato Mine/Potato Transition.png");
+		PotatoMineIdelTex.loadFromFile("Assets/Plants/Potato Mine/Potato Idel.png");
+		PotatoExplosionTex.loadFromFile("Assets/Plants/Potato Mine/Explosion.png");
+
 		//SunShroom
 		SunShroomIdleTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-idle-ST.png");
 		SunShroomProducingSunTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-producing-ST.png");
@@ -230,6 +239,9 @@ namespace Plants_Zombies
 		bool zombieInFront = false;
 		bool zombieProximityAction = false;
 		bool isHiding = false;
+		bool GettingUp = false;
+		bool checkdeathpos = false;
+
 
 		int animationCol = 0;
 		int animationRow = 0;
@@ -365,6 +377,52 @@ namespace Plants_Zombies
 						shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 						animationCol = (animationCol + 1) % 5;
 					}
+				}
+				else if (type == PotatoMine)
+				{
+					if (!GettingUp)
+					{
+						if (timeForAction.asSeconds() <= plantLifeTimeClock)
+						{
+
+							shape.setTextureRect(IntRect(animationCol * 30, 0, 30, 26));
+							animationCol++;
+							if (animationCol == 3)
+							{
+								GettingUp = true;
+								animationCol = 0;
+							}
+						}
+						else
+						{
+							shape.setTextureRect(IntRect(0, 0, 30, 26));
+							shape.setTexture(PotatoMineTransitionTex);
+						}
+					}
+					else if (GettingUp)
+					{
+						if (!zombieProximityAction)
+						{
+							shape.setTexture(PotatoMineIdelTex);
+							shape.setTextureRect(IntRect(29 * animationCol, 0, 29, 26));
+							animationCol = (animationCol + 1) % 5;
+						}
+						else if (zombieProximityAction)
+						{
+							if (checkdeathpos == false) {
+								shape.setPosition(shape.getPosition().x - 90, shape.getPosition().y - 130);
+								checkdeathpos = true;
+							}
+							shape.setTextureRect(IntRect(animationCol * 80, 0, 80, 70));
+							shape.setTexture(PotatoExplosionTex);
+							animationCol++;
+							if (animationCol == 8)
+							{
+								isDead = true;
+							}
+						}
+					}
+
 				}
 				else if (type == SunShroom)
 				{
@@ -602,6 +660,8 @@ namespace Plants_Zombies
 			playActionSound = true;
 			zombieProximityAction = false;
 			isHiding = false;
+			GettingUp = false;
+			checkdeathpos = false;
 			//isPlantingPotArray = false;
 
 			if (type == EmptyPlant) {
@@ -660,6 +720,20 @@ namespace Plants_Zombies
 				plantCollider.setSize({ 28, 31 });
 				shape.setTextureRect(IntRect(animationCol * 28, animationRow * 31, 28, 31));
 				shape.setTexture(WallNutIdleTex);
+				shape.setScale(3.5, 3.5);
+			}
+			else if (type == PotatoMine)
+			{
+				health = 100;
+				damage = 9999;
+
+				timeForAction = seconds(14); // time to transition
+
+				plantCollider.setSize({ 32,34 });
+
+
+				shape.setTextureRect(IntRect(0, 0, 30, 26));
+				shape.setTexture(PotatoMineTransitionTex);
 				shape.setScale(3.5, 3.5);
 			}
 			else if (type == SunShroom)
