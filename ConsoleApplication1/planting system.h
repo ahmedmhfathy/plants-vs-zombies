@@ -947,7 +947,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 		//planting on the grid
 		if (currentselection != Plants_Zombies::EmptyPlant && isHolding)
 		{
-			for (int i = 1; i < 45; i++)
+			for (int i = 1; i <= 45; i++)
 			{
 				if (mygrid[i].shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
 				{
