@@ -8,6 +8,7 @@
 #include "Tools.h"
 #include "Wave System.h"
 #include "planting system.h"
+#include "Boss Logic.h"
 using namespace std;
 using namespace sf;
 

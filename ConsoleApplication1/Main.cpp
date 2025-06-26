@@ -9,6 +9,7 @@
 #include "planting system.h"
 #include "Tools.h"
 #include "Game Settings And Audio.h"
+#include "Boss Logic.h"
 using namespace std;
 using namespace sf;
 
@@ -46,6 +47,7 @@ void Start()
     Plants_Zombies::LoadZombieTextures();
     StartAnimationNS::LoadStartAndWaveAnimationTextures();
     LoadSelectionTexture();
+	boss::LoadBossTexturesAndAudio(); //textures loaded here once
 
     CurrentState = MainMenu;
 

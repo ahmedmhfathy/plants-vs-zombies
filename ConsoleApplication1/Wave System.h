@@ -10,6 +10,7 @@
 #include "Game Settings And Audio.h"
 #include "StartAnimation.h"
 #include "Plants_Zombies.h"
+#include "Boss Logic.h"
 
 #pragma region Functiondelaration
 void allwave(int, int);
@@ -572,6 +573,12 @@ void RSP(RenderWindow& window)
             PlaySoundEffect(ZombiesAreComingBuffer, false);
             ZombiesAreComingSoundOn = false;
         }
+
+        if (isbossFight)
+        {
+            boss::startBossfight = true;
+        }
+
         endRSP = true;
     }
 }

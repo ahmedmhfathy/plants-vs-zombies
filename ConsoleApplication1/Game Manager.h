@@ -675,14 +675,15 @@ void StartLevel5()
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
     startZombiePositions(100, 3, 3);
     StartAnimationNS::startAnimation(isNight, onRoof);
+    boss::SetupBossData();
 
 }
 void UpdateLevel5(RenderWindow& window)
 {
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
-
-    level(3, 35, 10.0f, 3); // 3 , 35 , 7
+    boss::UpdateBossLogic();
+    //level(3, 35, 10.0f, 3); // 3 , 35 , 7
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
@@ -690,8 +691,9 @@ void DrawLevel5(RenderWindow& window)
 {
     StartAnimationNS::Renderstartanimation(window);
     Plants_Zombies::DrawPlantsAndProjectiles(window);
-    DrawPlantingAndCurrencySystem(window);
     DrawWavesAndZombies(window);
+	boss::DrawBoss(window);
+    DrawPlantingAndCurrencySystem(window);
 }
 #pragma endregion
 #pragma endregion
