@@ -450,6 +450,7 @@ void SetupSelectionUI(Vector2f offset)
 	plantsToSelect[2][0].start(Plants_Zombies::PuffShroom, puffshroomAvailableTex, puffshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 0, false, true, true);
 	plantsToSelect[2][1].start(Plants_Zombies::PlantingPot, plantingpotAvailableTex, plantingpotUnavailableTex, Vector2f{ 0, -25 }, ShortCoolDown, 25, true, true, true);
 	plantsToSelect[2][2].start(Plants_Zombies::PotatoMine, potatomineAvaliableTex, potatomineUnavaliableTex, Vector2f{ 0, -15 }, ShortCoolDown, 25, true, true,true);
+	
 	//start game button
 	LetsRockButton.setTexture(LetsRockTex);
 	LetsRockButton.setPosition(796 + offset.x, 613 + offset.y);
@@ -580,13 +581,6 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 			mygrid[i].shape.setFillColor(Color(255, 255, 0, 48));
 		}
 
-		//sets up the plants and sets them all to empty gameobjects
-		Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{0, -15});
-		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
-		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
-		Plants_Zombies::PlantsArray[i - 1].start();
-		Plants_Zombies::PlantsArray[i - 1].deadPlantingPot = false;
-
 		Plants_Zombies::PlantingPotArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 17, 25 });
 		Plants_Zombies::PlantingPotArray[i - 1].type = Plants_Zombies::EmptyPlant;
 		Plants_Zombies::PlantingPotArray[i - 1].gridIndex = i;
@@ -606,8 +600,20 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 					Plants_Zombies::PlantingPotArray[i - 1].deadPlantingPot = false;
 				}
 			}
+
+			Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 0, -15 });
+		}
+		else
+		{
+			Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
 		}
 		
+		//sets up the plants and sets them all to empty gameobjects
+		Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::EmptyPlant;
+		Plants_Zombies::PlantsArray[i - 1].gridIndex = i;
+		Plants_Zombies::PlantsArray[i - 1].start();
+		Plants_Zombies::PlantsArray[i - 1].deadPlantingPot = false;
+
 		mygrid[i].isplanted = false;
 		mygrid[i].gravePlanted = false;
 	}
@@ -1013,10 +1019,10 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 							{
 								PlaySoundEffect(PlantingSoundBuffer, true);
 								mygrid[i].isplanted = true;
-								Plants_Zombies::PlantsArray[i-1]
 								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
 								Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
 								Plants_Zombies::PlantsArray[i - 1].start();
+								Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 0, -15 });
 								selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
 								break;
 							}
@@ -1048,6 +1054,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 							Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
 							Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
 							Plants_Zombies::PlantsArray[i - 1].start();
+							Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
 							selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
 							break;
 						}
@@ -1126,7 +1133,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 
 		for (int j = 0; j < 100; j++)
 		{
-			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)) // checks if zombie is dead or not to avoid shooting dead zombies
+			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 			{
 				// checks if a zombie is in front of the plant  
 				if ((type == PeaShooter || type == SnowPeaShooter || type == ScaredyShroom)
@@ -1163,7 +1170,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 		{
 			for (int j = 0; j < 100; j++)
 			{
-				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)) // checks if zombie is dead or not to avoid shooting dead zombies
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 				{
 					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
 						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top))
@@ -1189,7 +1196,8 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 		{
 			for (int j = 0; j < 100; j++)
 			{
-				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)) // checks if zombie is dead or not to avoid shooting dead zombies
+				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 				{
 					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
 						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
@@ -1198,17 +1206,11 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
 
 					{
-						//cout << "true \n";
 						zombieProximityAction = true;
 						animationCol = 0;
 						zombie_array[j].health -= damage;
-
 					}
 				}
-				/*else if (lastZombieProximity == j)
-				{
-					zombieProximityAction = false;
-				}*/
 			}
 		}
 
