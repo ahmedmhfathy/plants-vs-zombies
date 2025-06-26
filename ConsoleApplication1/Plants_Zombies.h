@@ -21,7 +21,7 @@ namespace Plants_Zombies
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, EmptyPlant, SunCoin, Shovel };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, Dead };
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, PoleVault, Dead };
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -904,11 +904,12 @@ namespace Plants_Zombies
 		bool SquishEffect = false;
 		bool wassoundplayed = false;
 		bool startJackClock = true;
+		bool isGargantousCrush = false;
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
-		float EatClock, CrushedZombieClock,  jackClock;
-		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22);
+		float EatClock, CrushedZombieClock,  jackClock, gargantousCrushClock;
+		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22), gargantousCrushTimer = seconds(10);
 
 	private:
 		int CollIndex = 0;
@@ -929,6 +930,7 @@ namespace Plants_Zombies
 			EatClock = 0;
 			CrushedZombieClock = 0;
 			jackClock = 0;
+			gargantousCrushClock = 0;
 
 			#pragma region Booleans
 			started = false;
@@ -950,6 +952,7 @@ namespace Plants_Zombies
 			PlantInfront = false;
 			jackBomb = false;
 			startJackClock = true;
+			isGargantousCrush = false;
 			#pragma endregion
 
 			switch (type)
@@ -1038,6 +1041,15 @@ namespace Plants_Zombies
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
 				break;
+			case gargantous: // zombie zengy
+				zombieCont.setTexture(RegularWalkText);
+				health = 3000;
+				speed = 7.4;
+				damage = 20000;
+				zombieCollider.setSize({ 50, 40 });
+				zombieCollider.setScale(1.4, 1);
+				zombieCont.setScale(3, 3);
+				break;
 			default:
 				break;
 			}
@@ -1053,6 +1065,7 @@ namespace Plants_Zombies
 			EatClock +=deltaTime;
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
+			gargantousCrushClock += deltaTime;
 
 			//setup death animation data
 			if (health <= 0)
@@ -1098,7 +1111,10 @@ namespace Plants_Zombies
 				}
 				else if (type == screenDoor && health < 800 && !isDamaged && !isDead)
 					isDamaged = true;
-
+				else if (type == gargantous && health < 2500 && !isDamaged && !isDead )
+				{
+					isDamaged = true;
+				}
 
 				//set slow color 
 				if (isSlowed)
@@ -1108,6 +1124,10 @@ namespace Plants_Zombies
 				else if (type == soccerGuy)
 				{
 					zombieCont.setColor(Color(255, 105, 180, 255)); // pink
+				}
+				else if (type == gargantous)
+				{
+					zombieCont.setColor(Color(44, 44, 44, 255)); // black
 				}
 				else
 				{
@@ -1297,14 +1317,32 @@ namespace Plants_Zombies
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
-						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
+						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
 						{
 							PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						}
-						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
+						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
 						{
 							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
 						}
+						/*else if (type == gargantous && (PlantsArray[CurrentPlantIndex].type != EmptyPlant && PlantingPotArray[CurrentPlantIndex].type != EmptyPlant))
+						{
+							
+							
+							PlantsArray[CurrentPlantIndex].shape.setScale(3.5, 0.7);
+							PlantingPotArray[CurrentPlantIndex].shape.setScale(3.5, 0.7);
+							isGargantousCrush = true;
+							
+							if (isGargantousCrush && gargantousCrushTimer.asSeconds() <= gargantousCrushClock)
+							{
+								PlantsArray[CurrentPlantIndex].takeDmg(damage);
+								PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
+								cout << "fa3as\n";
+								isGargantousCrush = false;
+								gargantousCrushClock = 0;
+							}
+
+						}*/
 						
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
 						EatClock = 0;
@@ -1842,6 +1880,53 @@ namespace Plants_Zombies
 						}
 					}
 				}
+			}
+
+			//Gargatnous
+			if (type == gargantous && !isSquished) {
+				if (isMoving)
+				{
+					zombieCont.setTexture(RegularWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 47));
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
+						zombieCont.setTexture(RegularAttackText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
+						zombieCont.setTexture(RegularDeathText);
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 8) {
+
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
+						}
+					}
+				}
+
 			}
 		}
 
