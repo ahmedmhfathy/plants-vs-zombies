@@ -26,7 +26,7 @@ namespace boss
 	Sprite Head;
 #pragma endregion
 
-	enum BossState{ StandingIdle, HeadIdle, PlacingZombies, IceAttack, FireAttack, ThrowVan} CurrentState;
+	enum BossState{ StandingIdle, HeadIdle, PlacingZombies, IceAttack, FireAttack, ThrowVan, enteringLevel} CurrentState;
 
 	int health = 10000;
 	float StateClock = 0, animationClock = 0;
@@ -40,6 +40,9 @@ namespace boss
 	bool plantedIceAttack = false;
 	bool plantedFireAttack = false;
 	bool doingAction = false;
+	bool resetAction = false;
+
+	pair<Vector2f, Vector2f> ElementalAttacksSpawnPoints[10];
 
 	struct ElementalAttack 
 	{
@@ -57,15 +60,16 @@ namespace boss
 		bool active = true;
 		bool ready = false;
 		bool explode = false; 
-		bool resetOrigin = false;
 
 		void start(BossState state, Vector2f spawnPos) 
 		{
+			doingAction = true;
+			resetAction = false;
+
 			type = state;
 			ready = false;
 			explode = false;
 			active = true;
-			resetOrigin = false;
 
 			collider.setSize({ 15, 40 });
 			collider.setFillColor(Color(255, 0, 0, 100));
@@ -117,10 +121,20 @@ namespace boss
 					scale = finalScale;
 					ready = true;
 				}
+
+				doingAction = true;
 			}
 			else
 			{
 				pos += Vector2f(-50, 0) * deltaTime;
+
+				if (!resetAction)
+				{
+					CurrentState = HeadIdle;
+					animationCol = 0;
+					doingAction = false;
+					resetAction = true;
+				}
 			}
 
 			collider.setPosition(pos + Vector2f{ 80,20 });
@@ -151,6 +165,8 @@ namespace boss
 			if (pos.x <= -200)
 			{
 				active = false;
+				ready = false;
+				explode = false;
 			}
 
 			//intersects plants and ball
@@ -193,6 +209,7 @@ void SetupBossData()
 	plantedIceAttack = false;
 	plantedFireAttack = false;
 	doingAction = false;
+	resetAction = false;
 
 	startBossfight = true;
 	CurrentState = FireAttack;
@@ -211,8 +228,6 @@ void BossStateManager()
 		{
 			ElementalAttackOBJ.start(CurrentState, { 600, 550 });
 		}
-
-		doingAction = true;
 	}
 }
 
@@ -240,13 +255,6 @@ void AnimatateBoss()
 			Head.setTexture(HeadIceAttackTex);
 
 			animationCol++;
-
-			if (ElementalAttackOBJ.ready)
-			{
-				CurrentState = HeadIdle;
-				doingAction = false;
-				animationCol = 0;
-			}
 		}
 		else if (CurrentState == FireAttack)
 		{
@@ -259,18 +267,12 @@ void AnimatateBoss()
 			Head.setTexture(HeadFireAttackTex);
 
 			animationCol++;
-
-			if (ElementalAttackOBJ.ready)
-			{
-				CurrentState = HeadIdle;
-				doingAction = false;
-				animationCol = 0;
-			}
 		}
 		else if (CurrentState == PlacingZombies)
 		{
 
 		}
+
 		animationClock = 0;
 	}
 }
@@ -284,18 +286,43 @@ void UpdateBossLogic()
 	{
 		ElementalAttackOBJ.update();
 	}
+
+	if (Keyboard::isKeyPressed(Keyboard::F) && !doingAction)
+	{
+		CurrentState = FireAttack;
+		animationCol = 0;
+	}
+
+	if (Keyboard::isKeyPressed(Keyboard::G) && !doingAction)
+	{
+		CurrentState = IceAttack;
+		animationCol = 0;
+	}
+
+	if (CurrentState == HeadIdle)
+	{
+		cout << "Head Idle" << " - " << doingAction << endl;
+	}
+	else if (CurrentState == IceAttack)
+	{
+		cout << "Head ice" << " - " << doingAction << endl;
+	}
+	else if (CurrentState == FireAttack)
+	{
+		cout << "Head fire" << " - " << doingAction << endl;
+	}
 }
 
 void DrawBoss(RenderWindow& window)
 {
-	if (ElementalAttackOBJ.active)
+	/*if (ElementalAttackOBJ.active)
 	{
 		window.draw(ElementalAttackOBJ.spriteBottom);
 		window.draw(ElementalAttackOBJ.spriteTop);
 		window.draw(ElementalAttackOBJ.collider);
 	}
 
-	window.draw(Head);
+	window.draw(Head);*/
 }
 
 }
