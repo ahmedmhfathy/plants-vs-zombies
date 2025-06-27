@@ -101,7 +101,7 @@ namespace boss
 			LegBack.setTexture(LegEnterTex);
 			LegBack.setScale(3, 3);
 			LegBack.setPosition({ 1000, -400 });
-			//LegBack.setPosition({ 710, -250 });
+			//LegBack.setPosition({ 675, -250 });
 		}
 
 		void AnimationHandler()
@@ -198,7 +198,7 @@ namespace boss
 			{
 				Time animspeed = seconds(2);
 				Vector2f startFront = {1100, -300}, endFront = { 750, -50 };
-				Vector2f startBack = {1000, -400}, endBack = { 710, -250 };
+				Vector2f startBack = {1000, -400}, endBack = { 675, -250 };
 
 				if (moveleft)
 				{

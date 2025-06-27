@@ -585,10 +585,22 @@ void RSP(RenderWindow& window)
 
 void DrawWavesAndZombies(RenderWindow& window) 
 {
-    if (EntertostartdrawRSP && boss::startBossfight)
+    if (isbossFight)
+    {
+        if (boss::startBossfight)
+        {
+            RSP(window);
+        }
+    }
+    else if (EntertostartdrawRSP)
     {
         RSP(window);
     }
+
+    //if (EntertostartdrawRSP && boss::startBossfight)
+    //{
+    //    RSP(window);
+    //}
 
     if (endRSP)
     {

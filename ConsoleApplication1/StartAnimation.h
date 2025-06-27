@@ -125,7 +125,6 @@ namespace  StartAnimationNS {
     }
 
     void startAnimation(bool isNight, bool onRoof) {
-
         startdrawRSP = true;
         EntertostartdrawRSP = false;
         moveright = false;
