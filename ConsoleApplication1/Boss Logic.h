@@ -48,6 +48,8 @@ namespace boss
 		Sprite spriteBottom;
 		Sprite spriteExplosion;
 
+		RectangleShape collider;
+
 		Vector2f pos;
 		Vector2f scale;
 		Vector2f finalScale = { 3.5f, 3.5f };
@@ -64,6 +66,9 @@ namespace boss
 			explode = false;
 			active = true;
 			resetOrigin = false;
+
+			collider.setSize({ 15, 40 });
+			collider.setFillColor(Color(255, 0, 0, 100));
 
 			pos = spawnPos;
 			scale = { 0, 0 };
@@ -88,6 +93,10 @@ namespace boss
 
 			spriteTop.setOrigin(topBounds.width / 2, topBounds.height);
 			spriteBottom.setOrigin(bottomBounds.width / 2, bottomBounds.height);
+			collider.setOrigin(bottomBounds.width / 2, bottomBounds.height);
+
+			collider.setPosition(pos + Vector2f{80,20});
+			collider.setScale(scale);
 
 			spriteTop.setPosition(pos);
 			spriteBottom.setPosition(pos);
@@ -113,6 +122,9 @@ namespace boss
 			{
 				pos += Vector2f(-50, 0) * deltaTime;
 			}
+
+			collider.setPosition(pos + Vector2f{ 80,20 });
+			collider.setScale(scale);
 
 			spriteTop.setPosition(pos);
 			spriteBottom.setPosition(pos);
@@ -140,6 +152,23 @@ namespace boss
 			{
 				active = false;
 			}
+
+			//intersects plants and ball
+			if (active)
+			{
+				for (int i = 0; i < 45; i++)
+				{
+					if (collider.getGlobalBounds().intersects(Plants_Zombies::PlantsArray[i].plantCollider.getGlobalBounds()))
+					{
+						Plants_Zombies::PlantsArray[i].takeDmg(9999999);
+					}
+
+					if (collider.getGlobalBounds().intersects(Plants_Zombies::PlantingPotArray[i].plantCollider.getGlobalBounds()))
+					{
+						Plants_Zombies::PlantingPotArray[i].takeDmg(9999999);
+					}
+				}
+			}
 		}
 	}ElementalAttackOBJ;
 
@@ -157,8 +186,6 @@ void LoadBossTexturesAndAudio()
 
 void SetupBossData()
 {
-	//ElementalAttackOBJ.setup();
-
 	StateClock = 0;
 	animationClock = 0;
 	animationCol = 0;
@@ -168,19 +195,25 @@ void SetupBossData()
 	doingAction = false;
 
 	startBossfight = true;
-	CurrentState = IceAttack;
+	CurrentState = FireAttack;
 
 	Head.setTexture(HeadIdleTex);
 	Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 	Head.setScale(3.5, 3.5);
 	Head.setPosition({ 445, -75 });
-
-	ElementalAttackOBJ.start(IceAttack, { 600, 550 });
 }
 
 void BossStateManager()
 {
+	if (!doingAction)
+	{
+		if (CurrentState == IceAttack || CurrentState == FireAttack)
+		{
+			ElementalAttackOBJ.start(CurrentState, { 600, 550 });
+		}
 
+		doingAction = true;
+	}
 }
 
 void AnimatateBoss() 
@@ -245,6 +278,7 @@ void AnimatateBoss()
 void UpdateBossLogic()
 {
 	AnimatateBoss();
+	BossStateManager();
 
 	if (ElementalAttackOBJ.active)
 	{
@@ -258,6 +292,7 @@ void DrawBoss(RenderWindow& window)
 	{
 		window.draw(ElementalAttackOBJ.spriteBottom);
 		window.draw(ElementalAttackOBJ.spriteTop);
+		window.draw(ElementalAttackOBJ.collider);
 	}
 
 	window.draw(Head);
