@@ -96,10 +96,12 @@ namespace boss
 			LegFront.setTexture(LegEnterTex);
 			LegFront.setScale(3, 3);
 			LegFront.setPosition({ 900, -175 });
+			//LegFront.setPosition({ 750, -50 });
 			LegBack.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
 			LegBack.setTexture(LegEnterTex);
 			LegBack.setScale(3, 3);
-			LegBack.setPosition({ 710, -250 });
+			LegBack.setPosition({ 1000, -400 });
+			//LegBack.setPosition({ 710, -250 });
 		}
 
 		void AnimationHandler()
@@ -196,26 +198,18 @@ namespace boss
 			{
 				Time animspeed = seconds(2);
 				Vector2f startFront = {1100, -300}, endFront = { 750, -50 };
-				Vector2f startBack = {1100, -300}, endBack = { 750, -50 };
+				Vector2f startBack = {1000, -400}, endBack = { 710, -250 };
 
 				if (moveleft)
 				{
-					if (LegFront.getPosition() != endFront)
+					if (!resetClock)
 					{
-						if (!resetClock)
-						{
-							moveBossAnimClock.restart();
-							resetClock = true;
-						}
-
-						cout << "MOVING LEG " << endl;
-						LegFront.setPosition(easeInOut(ExpoEaseIn, startFront.x, endFront.x, moveBossAnimClock, animspeed),
-											 easeInOut(ExpoEaseIn, startFront.y, endFront.y, moveBossAnimClock, animspeed));
+						moveBossAnimClock.restart();
+						resetClock = true;
 					}
-					else if (animationClock >= AnimationTime.asSeconds())
-					{
-						resetClock = false;
 
+					if (animationClock >= AnimationTime.asSeconds())
+					{
 						cout << "animate leg \n";
 						LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
 						LegFront.setTexture(LegEnterTex);
@@ -223,13 +217,35 @@ namespace boss
 						LegBack.setTextureRect(IntRect(animationCol2 * 140, 0, 140, 183));
 						LegBack.setTexture(LegEnterTex);
 
-						animationCol++;
-
-						if (animationCol >= 4)
+						if (LegFront.getPosition() != endFront)
 						{
-							animationCol2++;
-							LegFront.setTextureRect(IntRect(animationCol2 * 140, 0, 140, 183));
-							LegFront.setTexture(LegBentEnterTex);
+							cout << "MOVING FRONT LEG " << endl;
+							LegFront.setPosition(easeInOut(ExpoEaseIn, startFront.x, endFront.x, moveBossAnimClock, animspeed),
+												 easeInOut(ExpoEaseIn, startFront.y, endFront.y, moveBossAnimClock, animspeed));
+						}
+						else
+						{
+							if (animationCol < 6)
+							{
+								animationCol++;
+							}
+						}
+						
+						if (animationCol >= 2)
+						{
+							if (LegBack.getPosition() != endBack)
+							{
+								cout << "MOVING BACK LEG " << endl;
+								LegBack.setPosition(easeInOut(ExpoEaseIn, startBack.x, endBack.x, moveBossAnimClock, seconds(3.4)),
+													easeInOut(ExpoEaseIn, startBack.y, endBack.y, moveBossAnimClock, seconds(3.4)));
+							}
+							else
+							{
+								animationCol2++;
+
+								LegFront.setTextureRect(IntRect(animationCol2 * 140, 0, 140, 183));
+								LegFront.setTexture(LegBentEnterTex);
+							}
 						}
 
 						if (animationCol2 == 6 || animationCol == 6)
@@ -237,6 +253,7 @@ namespace boss
 							animationCol = 0;
 							animationCol2 = 0;
 
+							resetClock = false;
 							currentState = StandingIdle;
 						}
 
