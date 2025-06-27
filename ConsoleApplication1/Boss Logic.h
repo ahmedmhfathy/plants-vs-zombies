@@ -16,20 +16,19 @@ namespace boss
 	Texture HeadIdleTex;
 	Texture HeadIceAttackTex;
 	Texture HeadFireAttackTex;
-	//===============leg=============================//
-	Texture leg;
-
+	//======================legs=====================//
+	Texture LegEnterTex;
+	Texture LegBentEnterTex;
+	Texture LegsIdleTex;
 	//===============elemental attacks===============//
 	Texture IceBallTopTex;
 	Texture IceBallBottomTex;
 	Texture FireBallTopTex;
 	Texture FireBallBottomTex;
+	//=====================Arms======================//
 #pragma endregion
 
 	enum BossState{ StandingIdle, EnteringLevel, PlacingZombies, HeadIdle, IceAttack, FireAttack, ThrowVan, None};
-
-	struct Boss;
-	struct ElementalAttack;
 
 	bool startBossfight = false;
 
@@ -60,20 +59,31 @@ namespace boss
 		bool attackOnce = false;
 
 		int animationCol = 0;
+		int animationCol2 = 0;
+
 	private:
-		Time AnimationTime = seconds(0.35f);
+		Time AnimationTime = seconds(0.2f);
 		Clock moveBossAnimClock;
 
+		bool resetClock = false;
+
 		float animationClock = 0;
+
+		Vector2f StartPos, EndPos;
+		Vector2f HeadOutOfScreenPos = { 800, -400 };
+		Vector2f LegFrontOutOfScreenPos = {900, -50};
+		Vector2f LegBackOutOfScreenPos = {860, -250};
 
 	public:
 		void Start()
 		{
-			currentState = HeadIdle;
+			currentState = EnteringLevel;
 
 			isAttacking = false;
 			isSwitchingState = false;
 			attackOnce = false;
+			resetClock = false;
+
 			animationCol = 0;
 			Health = 10000;
 
@@ -82,12 +92,12 @@ namespace boss
 			Head.setScale(3.5, 3.5);
 			Head.setPosition({ 495, -165 });
 
-			LegFront.setTexture(leg);
 			LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+			LegFront.setTexture(LegEnterTex);
 			LegFront.setScale(3, 3);
-			LegFront.setPosition({ 750, -50 });
-			LegBack.setTexture(leg);
+			LegFront.setPosition({ 900, -175 });
 			LegBack.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+			LegBack.setTexture(LegEnterTex);
 			LegBack.setScale(3, 3);
 			LegBack.setPosition({ 710, -250 });
 		}
@@ -111,20 +121,19 @@ namespace boss
 			}
 			else if (currentState == IceAttack || currentState == FireAttack)
 			{
-				Vector2f startHeadPos, endHeadPos;
 				Time animTime = seconds(3);
 
 				if (!isAttacking)
 				{
-					startHeadPos = Head.getPosition();
-					endHeadPos = randElementalAttackPos.first;
+					StartPos = Head.getPosition();
+					EndPos = randElementalAttackPos.first;
 					moveBossAnimClock.restart();
 
 					isAttacking = true;
 				}
 
 				//move head to rand position
-				if (Head.getPosition().y != endHeadPos.y)
+				if (Head.getPosition().y != EndPos.y)
 				{
 					//animate idle till reaches target position
 					if (animationClock >= AnimationTime.asSeconds())
@@ -137,7 +146,7 @@ namespace boss
 						animationClock = 0;
 					}
 
-					Head.setPosition(495, easeInOut(CubicEaseInOut, startHeadPos.y, endHeadPos.y, moveBossAnimClock, animTime));
+					Head.setPosition(495, easeInOut(CubicEaseInOut, StartPos.y, EndPos.y, moveBossAnimClock, animTime));
 				}
 				//animate elemental attack
 				else
@@ -185,36 +194,79 @@ namespace boss
 			}
 			else if (currentState == EnteringLevel)
 			{
-				if (animationClock >= AnimationTime.asSeconds())
+				Time animspeed = seconds(2);
+				Vector2f startFront = {1100, -300}, endFront = { 750, -50 };
+				Vector2f startBack = {1100, -300}, endBack = { 750, -50 };
+
+				if (moveleft)
 				{
-					cout << "animate leg \n";
-					LegFront.setTexture(leg);
-					LegBack.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+					if (LegFront.getPosition() != endFront)
+					{
+						if (!resetClock)
+						{
+							moveBossAnimClock.restart();
+							resetClock = true;
+						}
 
-					LegBack.setTexture(leg);
-					LegBack.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+						cout << "MOVING LEG " << endl;
+						LegFront.setPosition(easeInOut(ExpoEaseIn, startFront.x, endFront.x, moveBossAnimClock, animspeed),
+											 easeInOut(ExpoEaseIn, startFront.y, endFront.y, moveBossAnimClock, animspeed));
+					}
+					else if (animationClock >= AnimationTime.asSeconds())
+					{
+						resetClock = false;
 
-					animationCol = (animationCol + 1) % 7;
+						cout << "animate leg \n";
+						LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+						LegFront.setTexture(LegEnterTex);
 
-					animationClock = 0;
+						LegBack.setTextureRect(IntRect(animationCol2 * 140, 0, 140, 183));
+						LegBack.setTexture(LegEnterTex);
+
+						animationCol++;
+
+						if (animationCol >= 4)
+						{
+							animationCol2++;
+							LegFront.setTextureRect(IntRect(animationCol2 * 140, 0, 140, 183));
+							LegFront.setTexture(LegBentEnterTex);
+						}
+
+						if (animationCol2 == 6 || animationCol == 6)
+						{
+							animationCol = 0;
+							animationCol2 = 0;
+
+							currentState = StandingIdle;
+						}
+
+						animationClock = 0;
+					}
 				}
 
 				isAttacking = false;
 			}
 			else if (currentState == StandingIdle)
 			{
-				if (animationClock >= AnimationTime.asSeconds())
+				if (animationClock >= seconds(0.45f).asSeconds())
 				{
-					cout << "animate leg \n";
-					LegFront.setTexture(leg);
-					LegBack.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+					cout << "animate idle leg \n";
 
-					LegBack.setTexture(leg);
-					LegBack.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+					LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+					LegFront.setTexture(LegsIdleTex);
 
-					animationCol = (animationCol + 1) % 7;
+					LegBack.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+					LegBack.setTexture(LegsIdleTex);
+
+					animationCol = (animationCol + 1) % 3;
 
 					animationClock = 0;
+
+					if (animationCol + 1 == 3)
+					{
+						startBossfight = true;
+						//cout << endl << endl << endl << "start boss fight" << endl;
+					}
 				}
 
 				isAttacking = false;
@@ -238,6 +290,8 @@ namespace boss
 				BossOBJ.currentState = FireAttack;
 
 				isSwitchingState = true;
+
+				cout << endl << endl << endl << "+==============================+" << endl;
 			}
 
 			if (Keyboard::isKeyPressed(Keyboard::G) && !isAttacking && !isSwitchingState)
@@ -246,6 +300,8 @@ namespace boss
 				BossOBJ.currentState = IceAttack;
 
 				isSwitchingState = true;
+
+				cout << endl << endl << endl << "+==============================+" << endl;
 			}
 
 			if (Keyboard::isKeyPressed(Keyboard::L) && !isAttacking)
@@ -253,21 +309,32 @@ namespace boss
 				currentState = StandingIdle;
 			}
 
-			if (currentState == HeadIdle)
+			//if (currentState == HeadIdle)
+			//{
+			//	cout << "Head Idle" << " -isattacking: " << isAttacking << " Attack1: " << attackOnce << " switch: " << isSwitchingState << endl;
+			//}
+			//else if (currentState == IceAttack)
+			//{
+			//	cout << "Head ice" << " -isattacking: " << isAttacking << " Attack1: " << attackOnce << " switch: " << isSwitchingState << endl;
+			//}
+			//else if (currentState == FireAttack)
+			//{
+			//	cout << "Head fire" << " -isattacking: " << isAttacking << " Attack1: " << attackOnce << " switch: " << isSwitchingState << endl;
+			//}
+			//else if (currentState == StandingIdle)
+			//{
+			//	cout << "leg" << " - " << isAttacking << endl;
+			//}
+		}
+
+		void drawBoss(RenderWindow& window)
+		{
+			if (moveleft)
 			{
-				cout << "Head Idle" << " -isattacking: " << isAttacking << " Attack1: " << attackOnce << " switch: " << isSwitchingState << endl;
-			}
-			else if (currentState == IceAttack)
-			{
-				cout << "Head ice" << " -isattacking: " << isAttacking << " Attack1: " << attackOnce << " switch: " << isSwitchingState << endl;
-			}
-			else if (currentState == FireAttack)
-			{
-				cout << "Head fire" << " -isattacking: " << isAttacking << " Attack1: " << attackOnce << " switch: " << isSwitchingState << endl;
-			}
-			else if (currentState == StandingIdle)
-			{
-				cout << "leg" << " - " << isAttacking << endl;
+				window.draw(Head);
+				window.draw(LegBack);
+				window.draw(LegFront);
+				window.draw(Arm);
 			}
 		}
 	}BossOBJ;
@@ -454,7 +521,9 @@ void LoadBossTexturesAndAudio()
 	HeadIceAttackTex.loadFromFile("Assets/Boss Fight/boss-iceattack-1.png");
 	HeadFireAttackTex.loadFromFile("Assets/Boss Fight/boss-fireattack-1.png");
 	
-	leg.loadFromFile("Assets/Boss Fight/leg1.png");
+	LegEnterTex.loadFromFile("Assets/Boss Fight/leg-entering.png");
+	LegBentEnterTex.loadFromFile("Assets/Boss Fight/leg-bent-entering.png");
+	LegsIdleTex.loadFromFile("Assets/Boss Fight/leg-idle.png");
 
 	IceBallTopTex.loadFromFile("Assets/Boss Fight/iceball-top.png");
 	IceBallBottomTex.loadFromFile("Assets/Boss Fight/iceball-bottom.png");
@@ -470,7 +539,7 @@ void SetupBossData()
 	plantedIceAttack = false;
 	plantedFireAttack = false;
 
-	startBossfight = true;
+	startBossfight = false;
 
 	BossOBJ.Start();
 }
@@ -484,11 +553,16 @@ void UpdateBossLogic()
 {
 	BossStateManager();
 
+	//update elemental attacks
 	for (int i = 0; i < elementalAttackArr.size(); i++)
 	{
-		elementalAttackArr[i].update();
+		if (elementalAttackArr[i].active)
+		{
+			elementalAttackArr[i].update();
+		}
 	}
 
+	//delete elemental attacks
 	if (!elementalAttackArr.empty())
 	{
 		for (int i = 0; i < elementalAttackArr.size(); i++)
@@ -512,17 +586,14 @@ void DrawBoss(RenderWindow& window)
 {
 	for (int i = 0; i < elementalAttackArr.size(); i++)
 	{
-		window.draw(elementalAttackArr[i].spriteBottom);
-		window.draw(elementalAttackArr[i].spriteTop);
+		if (elementalAttackArr[i].active)
+		{
+			window.draw(elementalAttackArr[i].spriteBottom);
+			window.draw(elementalAttackArr[i].spriteTop);
+		}
 	}
 
-	if (moveleft)
-	{
-		window.draw(BossOBJ.Head);
-		//window.draw(BossOBJ.LegBack);
-		//window.draw(BossOBJ.LegFront);
-		//window.draw(BossOBJ.Arm);
-	}
+	BossOBJ.drawBoss(window);
 }
 
 }

@@ -10,14 +10,14 @@
 using namespace std;
 using namespace sf;
 
-enum EaseType { CubicEaseInOut, ExpoEaseOut, linear };
+enum EaseType { CubicEaseInOut, ExpoEaseOut, ExpoEaseIn, linear };
 
 #pragma region Function Declaration
 float CubicEase(float t);
 float EaseOutExpo(float t);
 float linearEase(float t);
+float easeInExpo(float t);
 float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock, Time Duration);
-void DeltaTimeManager(bool IsPaused);
 #pragma endregion
 
 float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock, Time Duration) {
@@ -40,6 +40,10 @@ float easeInOut(EaseType type, float startValue, float endValue, Clock EaseClock
         easedTime = linearEase(NormalizedTime);
         break;
     }
+    case ExpoEaseIn: {
+        easedTime = easeInExpo(NormalizedTime);
+        break;
+    }
     }
 
     float currentValue = startValue + (endValue - startValue) * easedTime;
@@ -58,4 +62,8 @@ float EaseOutExpo(float t) {
 
 float linearEase(float t) {
     return t;
+}
+
+float easeInExpo(float t) {
+return t == 0 ? 0 : pow(2, 10 * t - 10);
 }
