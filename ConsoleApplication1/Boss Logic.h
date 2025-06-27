@@ -5,6 +5,7 @@
 #include "Tools.h"
 #include "Game Settings And Audio.h"
 #include "Plants_Zombies.h"
+#include "StartAnimation.h"
 using namespace std;
 using namespace sf;
 
@@ -14,6 +15,8 @@ namespace boss
 	Texture HeadIdleTex;
 	Texture HeadIceAttackTex;
 	Texture HeadFireAttackTex;
+	//===============leg=============================//
+	Texture leg;
 
 	//===============elemental attacks===============//
 	Texture IceBallTopTex;
@@ -24,6 +27,8 @@ namespace boss
 
 #pragma region sprites
 	Sprite Head;
+	Sprite Leg;
+	Sprite Leg2;
 #pragma endregion
 
 	enum BossState{ StandingIdle, HeadIdle, PlacingZombies, IceAttack, FireAttack, ThrowVan, enteringLevel} CurrentState;
@@ -31,7 +36,7 @@ namespace boss
 	int health = 10000;
 	float StateClock = 0, animationClock = 0;
 	Time IdleTime = seconds(10), PlacingZombiesTime = seconds(20), ElementalAttackTime = seconds(30);
-	Time AnimationTime = seconds(0.35f);
+	Time AnimationTime = seconds(0.5f);
 
 	int animationCol = 0;
 
@@ -193,6 +198,8 @@ void LoadBossTexturesAndAudio()
 	HeadIdleTex.loadFromFile("Assets/Boss Fight/boss-idle-1.png");
 	HeadIceAttackTex.loadFromFile("Assets/Boss Fight/boss-iceattack-1.png");
 	HeadFireAttackTex.loadFromFile("Assets/Boss Fight/boss-fireattack-1.png");
+	
+	leg.loadFromFile("Assets/Boss Fight/leg1.png");
 
 	IceBallTopTex.loadFromFile("Assets/Boss Fight/iceball-top.png");
 	IceBallBottomTex.loadFromFile("Assets/Boss Fight/iceball-bottom.png");
@@ -212,24 +219,33 @@ void SetupBossData()
 	resetAction = false;
 
 	startBossfight = true;
-	CurrentState = FireAttack;
+	CurrentState = StandingIdle;
 
 	Head.setTexture(HeadIdleTex);
 	Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 	Head.setScale(3.5, 3.5);
 	Head.setPosition({ 445, -75 });
+
+	Leg.setTexture(leg);
+	Leg.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+	Leg.setScale(3, 3);
+	Leg.setPosition({ 750, -50 });
+	Leg2.setTexture(leg);
+	Leg2.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+	Leg2.setScale(3, 3);
+	Leg2.setPosition({ 710, -250 });
 }
 
-void BossStateManager()
-{
-	if (!doingAction)
-	{
-		if (CurrentState == IceAttack || CurrentState == FireAttack)
-		{
-			ElementalAttackOBJ.start(CurrentState, { 600, 550 });
-		}
-	}
-}
+//void BossStateManager()
+//{
+//	if (!doingAction)
+//	{
+//		if (CurrentState == IceAttack || CurrentState == FireAttack)
+//		{
+//			ElementalAttackOBJ.start(CurrentState, { 600, 550 });
+//		}
+//	}
+//}
 
 void AnimatateBoss() 
 {
@@ -272,6 +288,17 @@ void AnimatateBoss()
 		{
 
 		}
+		else if (CurrentState == StandingIdle)
+		{
+			cout << "animate leg \n";
+			Leg.setTexture(leg);
+			Leg.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+
+			Leg2.setTexture(leg);
+			Leg2.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
+
+			animationCol = (animationCol + 1) % 7;
+		}
 
 		animationClock = 0;
 	}
@@ -280,9 +307,9 @@ void AnimatateBoss()
 void UpdateBossLogic()
 {
 	AnimatateBoss();
-	BossStateManager();
+	//BossStateManager();
 
-	if (ElementalAttackOBJ.active)
+	/*if (ElementalAttackOBJ.active)
 	{
 		ElementalAttackOBJ.update();
 	}
@@ -297,7 +324,7 @@ void UpdateBossLogic()
 	{
 		CurrentState = IceAttack;
 		animationCol = 0;
-	}
+	}*/
 
 	if (CurrentState == HeadIdle)
 	{
@@ -311,6 +338,10 @@ void UpdateBossLogic()
 	{
 		cout << "Head fire" << " - " << doingAction << endl;
 	}
+	else if(CurrentState == StandingIdle)
+	{
+		cout << "leg" << " - " << doingAction << endl;
+	}
 }
 
 void DrawBoss(RenderWindow& window)
@@ -323,6 +354,12 @@ void DrawBoss(RenderWindow& window)
 	}
 
 	window.draw(Head);*/
+	if (moveleft)
+	{
+		window.draw(Leg2);
+		window.draw(Leg);
+	}
+	
 }
 
 }

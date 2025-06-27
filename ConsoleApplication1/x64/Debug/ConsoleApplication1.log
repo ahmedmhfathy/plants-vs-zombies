@@ -130,34 +130,34 @@ C:\Users\khali\repositries\ConsoleApplication1\planting system.h(679,32): warnin
 C:\Users\khali\repositries\ConsoleApplication1\planting system.h(1211,33): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(96,54): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(96,54): warning C4244:         with
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(96,54): warning C4244:         [
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(96,54): warning C4244:             T=int
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(96,54): warning C4244:         ]
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(103,54): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(103,54): warning C4244:         with
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(103,54): warning C4244:         [
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(103,54): warning C4244:             T=int
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(103,54): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(96,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(103,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(97,63): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(97,63): warning C4244:         with
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(97,63): warning C4244:         [
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(97,63): warning C4244:             T=int
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(97,63): warning C4244:         ]
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(104,63): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(104,63): warning C4244:         with
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(104,63): warning C4244:         [
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(104,63): warning C4244:             T=int
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(104,63): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(97,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(104,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(98,59): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(98,59): warning C4244:         with
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(98,59): warning C4244:         [
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(98,59): warning C4244:             T=int
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(98,59): warning C4244:         ]
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(105,59): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(105,59): warning C4244:         with
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(105,59): warning C4244:         [
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(105,59): warning C4244:             T=int
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(105,59): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(98,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\khali\repositries\ConsoleApplication1\Boss Logic.h(105,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\khali\repositries\ConsoleApplication1\Wave System.h(125,38): warning C4305: 'argument': truncation from 'double' to 'float'
