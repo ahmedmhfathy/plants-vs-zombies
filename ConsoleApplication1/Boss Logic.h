@@ -28,8 +28,68 @@ namespace boss
 	Texture FireBallBottomTex;
 	//=====================Arms======================//
 	Texture armtext;
+	//==================lawn=========================//
+	Texture lawntexture;
+	SoundBuffer carsSoundBuffer;
 #pragma endregion
+	struct cars
+	{
+		bool startsoundcar = true;
+		bool intersection = false;
+		float speed = 500;
+		Sprite lawnsprite;
 
+		void start(int i)
+		{
+			if (onRoof) {
+				lawntexture.loadFromFile("Assets/Environment/Roof_Cleaner.png");
+				lawnsprite.setTexture(lawntexture);
+				lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
+				lawnsprite.setScale(0.8, 0.8);
+				lawnsprite.setPosition(-70, 50 + (i * 110));
+			}
+			else {
+				lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
+				lawnsprite.setTexture(lawntexture);
+				lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
+				lawnsprite.setScale(0.8, 0.8);
+				lawnsprite.setPosition(-90, 60 + (i * 130));
+			}
+
+		}
+
+		void update()
+		{
+			if (!intersection)
+			{
+				if (lawnsprite.getPosition().x < -50 && onRoof)
+				{
+					lawnsprite.move(speed * 0.144f * deltaTime, 0);
+				}
+				else if (lawnsprite.getPosition().x < -65 && !onRoof)
+				{
+					lawnsprite.move(speed * 0.144f * deltaTime, 0);
+				}
+			}
+			else
+			{
+				if (lawnsprite.getPosition().x < 960)
+				{
+					lawnsprite.move(speed * deltaTime, 0);
+
+					if (startsoundcar)
+					{
+						PlaySoundEffect(carsSoundBuffer, false);
+						startsoundcar = false;
+					}
+				}
+				else
+				{
+					lawnsprite.setPosition(2000, 2000);
+				}
+			}
+		}
+	}car[5];
 	vector<Plants_Zombies::Zombie>bosszombies;
 
 	enum BossState{ StandingIdle, EnteringLevel, PlacingZombies, HeadIdle, IceAttack, FireAttack, ThrowVan, None};
@@ -703,6 +763,23 @@ void UpdateBossLogic()
 			}
 		}
 	}
+	for (int i = 0; i < 5; i++)
+	{
+		FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
+
+		for (int j = 0;j < bosszombies.size(); j++)
+		{
+			FloatRect rect2 = bosszombies[j].zombieCollider.getGlobalBounds();
+
+			if (rect1.intersects(rect2)) {
+				car[i].intersection = true;
+				bosszombies[j].isSquished = true;
+			}
+		}
+	}
+		for (int i = 0; i < 5; i++) {
+			car[i].update();
+		}
 
 	for (int i = 0; i < bosszombies.size(); i++) {
 
