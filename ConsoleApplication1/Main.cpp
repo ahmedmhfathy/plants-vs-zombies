@@ -132,11 +132,11 @@ void RenderScreen()
 			DrawLevel5(window);
         }
 
-        if (IsPaused && !LevelIsOver)
+        if (IsPaused && !boss::LevelIsOver)
         {
             DrawPauseMenu(window);
         }
-        if (LevelIsOver)
+        if (boss::LevelIsOver)
         {
             DrawLevelEnd(window);
         }
