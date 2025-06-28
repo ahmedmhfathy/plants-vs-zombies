@@ -27,7 +27,10 @@ namespace boss
 	Texture FireBallTopTex;
 	Texture FireBallBottomTex;
 	//=====================Arms======================//
+	Texture armtext;
 #pragma endregion
+
+	vector<Plants_Zombies::Zombie>bosszombies;
 
 	enum BossState{ StandingIdle, EnteringLevel, PlacingZombies, HeadIdle, IceAttack, FireAttack, ThrowVan, None};
 
@@ -43,6 +46,11 @@ namespace boss
 															   ,{{495,-385},{710,220}} };
 
 	pair<Vector2f, Vector2f> randElementalAttackPos = ElementalAttacksSpawnPoints[rand() % 4];
+
+	float x_axisplacingzombie[3] = { 830, 770, 620 };
+	float y_axisplacingzombie[5] = { -50, 70, 175, 280, 400 };
+	float y_axisrandomplace = y_axisplacingzombie[rand() % 5];
+	float x_axisrandomplace = x_axisplacingzombie[rand() % 3];
 
 #pragma region Structs
 	struct Boss {
@@ -67,6 +75,7 @@ namespace boss
 		Clock moveBossAnimClock;
 
 		bool resetClock = false;
+		bool resetClock2 = false;
 
 		float animationClock = 0;
 
@@ -79,6 +88,7 @@ namespace boss
 		void Start()
 		{
 			currentState = EnteringLevel;
+			currentState = PlacingZombies;
 
 			isAttacking = false;
 			isSwitchingState = false;
@@ -103,6 +113,12 @@ namespace boss
 			LegBack.setScale(3, 3);
 			LegBack.setPosition({ 1000, -400 });
 			//LegBack.setPosition({ 675, -250 });
+
+			Arm.setTexture(armtext);
+			Arm.setTextureRect(IntRect(animationCol * 266, 0, 266, 264));
+			Arm.setScale(2.6, 2.6);
+			Arm.setOrigin(40, 180);
+			Arm.setPosition(710, -100);
 		}
 
 		void AnimationHandler()
@@ -194,6 +210,55 @@ namespace boss
 			else if (currentState == PlacingZombies)
 			{
 				isAttacking = true;
+
+				Time animspeed = seconds(4);
+				Vector2f startFront = { 1100, -300 };
+
+				if (Arm.getPosition().x != x_axisrandomplace && Arm.getPosition().y != y_axisrandomplace)
+				{
+					if (!resetClock2)
+					{
+						moveBossAnimClock.restart();
+						resetClock2 = true;
+					}
+
+					Arm.setTextureRect(IntRect(0 * 266, 0, 266, 264));
+					Arm.setTexture(armtext);
+
+					Arm.setPosition(easeInOut(ExpoEaseIn, startFront.x, x_axisrandomplace, moveBossAnimClock, animspeed),
+						easeInOut(ExpoEaseIn, startFront.y, y_axisrandomplace, moveBossAnimClock, animspeed));
+				}
+				else if (animationClock >= seconds(0.5f).asSeconds()) 
+				{
+					bosszombies.back().started = true;
+
+					/*if (attackOnce)
+					{
+						bosszombies.back().started = true;
+						bosszombies.back().isAttacking = false;
+						bosszombies.back().isMoving = true;
+						attackOnce = false;
+					}*/
+
+					resetClock2 = false;
+
+					Arm.setTextureRect(IntRect(animationCol * 266, 0, 266, 264));
+					Arm.setTexture(armtext);
+
+					if (animationCol < 2) 
+					{
+						animationCol++;
+					}
+					else 
+					{
+						animationCol = 2;
+						attackOnce = false;
+						isAttacking = false;
+						currentState = StandingIdle;
+					}
+
+					animationClock = 0;
+				}
 			}
 			else if (currentState == EnteringLevel)
 			{
@@ -327,6 +392,11 @@ namespace boss
 				currentState = StandingIdle;
 			}
 
+			if (Keyboard::isKeyPressed(Keyboard::A) && !isAttacking)
+			{
+				currentState = PlacingZombies;
+			}
+
 			//if (currentState == HeadIdle)
 			//{
 			//	cout << "Head Idle" << " -isattacking: " << isAttacking << " Attack1: " << attackOnce << " switch: " << isSwitchingState << endl;
@@ -347,7 +417,7 @@ namespace boss
 
 		void drawBoss(RenderWindow& window)
 		{
-			if (moveleft)
+			//if (moveleft)
 			{
 				if (currentState == EnteringLevel)
 				{
@@ -361,10 +431,13 @@ namespace boss
 				}
 				else if (currentState == HeadIdle || currentState == FireAttack || currentState == IceAttack) 
 				{
+					//cout << "HEAD" << endl;
 					window.draw(Head);
 				}
 				else if (currentState == PlacingZombies) 
 				{
+					window.draw(LegBack);
+					window.draw(LegFront);
 					window.draw(Arm);
 				}
 			}
@@ -535,9 +608,26 @@ namespace boss
 
 				attackOnce = true;
 			}
-			else if (currentState == PlacingZombies)
+			else if (currentState == PlacingZombies && !attackOnce)
 			{
+				y_axisrandomplace = y_axisplacingzombie[rand() % 5];
+				x_axisrandomplace = x_axisplacingzombie[rand() % 3];
 
+				Plants_Zombies::Zombie zombieprefab;
+				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::jackInTheBox);
+
+				zombieprefab.type = randomzombietype;
+				zombieprefab.zombieCont.setPosition(x_axisrandomplace, y_axisrandomplace);
+
+				zombieprefab.start();
+				zombieprefab.isAttacking = false;
+				zombieprefab.isDead = false;
+				zombieprefab.started = false;
+				zombieprefab.isMoving = true;
+				zombieprefab.PlantInfront = false;
+				bosszombies.push_back(zombieprefab);
+
+				attackOnce = true;
 			}
 			else if (currentselection == ThrowVan)
 			{
@@ -556,6 +646,8 @@ void LoadBossTexturesAndAudio()
 	LegEnterTex.loadFromFile("Assets/Boss Fight/leg-entering.png");
 	LegBentEnterTex.loadFromFile("Assets/Boss Fight/leg-bent-entering.png");
 	LegsIdleTex.loadFromFile("Assets/Boss Fight/leg-idle.png");
+
+	armtext.loadFromFile("Assets/Boss Fight/final arms.png");
 
 	IceBallTopTex.loadFromFile("Assets/Boss Fight/iceball-top.png");
 	IceBallBottomTex.loadFromFile("Assets/Boss Fight/iceball-bottom.png");
@@ -597,6 +689,25 @@ void UpdateBossLogic()
 		elementalAttackArr.pop_front();
 	}
 
+	for (int i = 0; i < bosszombies.size(); i++) {
+
+		if (bosszombies[i].started && bosszombies[i].type != Plants_Zombies::Dead) 
+		{
+			if (!IsPaused)
+			{
+				bosszombies[i].update(deltaTime);
+			}
+		}
+	}
+
+	for (int i = 0; i < bosszombies.size(); i++) {
+
+		if (bosszombies[i].type == Plants_Zombies::Dead)
+		{
+			bosszombies.erase(bosszombies.begin(), bosszombies.begin() + i);
+		}
+	}
+
 	BossOBJ.Update();
 }
 
@@ -606,6 +717,13 @@ void DrawBoss(RenderWindow& window)
 	{
 		window.draw(elementalAttackArr[i].spriteBottom);
 		window.draw(elementalAttackArr[i].spriteTop);
+	}
+
+	for (int i = 0; i < bosszombies.size(); i++) {
+		if (bosszombies[i].started) {
+			window.draw(bosszombies[i].zombieCont);
+			window.draw(bosszombies[i].zombieCollider);
+		}
 	}
 
 	BossOBJ.drawBoss(window);

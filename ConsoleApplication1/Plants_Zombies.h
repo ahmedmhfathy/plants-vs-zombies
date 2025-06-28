@@ -999,7 +999,6 @@ namespace Plants_Zombies
 		#pragma region booleans
 		bool hasJumped = false;
 		bool started = false;
-		bool stoped;
 		bool isSlowed = false;
 		//bool moved = false;
 		int health;
@@ -1035,10 +1034,12 @@ namespace Plants_Zombies
 		bool jackBomb = false;
 		bool checkdeathpos = false;
 
-		int CurrentPlantIndex;
-		bool PlantInfront = false;
+		int CurrentPlantIndex = 45;
 
 	public:
+
+		bool PlantInfront = false;
+
 		void start() {
 			Deathclock.restart();
 			Zclock.restart();
@@ -1047,9 +1048,10 @@ namespace Plants_Zombies
 			jackClock = 0;
 			gargantousCrushClock = 0;
 
+			CurrentPlantIndex = 45;
+
 			#pragma region Booleans
 			started = false;
-			stoped;
 			isSlowed = false;
 			isDead = false;
 			deathstart = false;
@@ -1328,8 +1330,8 @@ namespace Plants_Zombies
 					{
 						if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
 							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
-							|| (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <=0)
-							&&	zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
+							|| (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
+								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
 						{
 							CurrentPlantIndex = i;
 							PlantInfront = true;
