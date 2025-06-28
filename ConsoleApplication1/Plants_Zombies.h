@@ -1034,10 +1034,10 @@ namespace Plants_Zombies
 		bool jackBomb = false;
 		bool checkdeathpos = false;
 
-		int CurrentPlantIndex = 45;
 
 	public:
 
+		int CurrentPlantIndex;
 		bool PlantInfront = false;
 
 		void start() {
@@ -1047,8 +1047,6 @@ namespace Plants_Zombies
 			CrushedZombieClock = 0;
 			jackClock = 0;
 			gargantousCrushClock = 0;
-
-			CurrentPlantIndex = 45;
 
 			#pragma region Booleans
 			started = false;

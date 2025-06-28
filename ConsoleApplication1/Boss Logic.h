@@ -88,7 +88,7 @@ namespace boss
 		void Start()
 		{
 			currentState = EnteringLevel;
-			currentState = PlacingZombies;
+			//currentState = PlacingZombies;
 
 			isAttacking = false;
 			isSwitchingState = false;
@@ -219,10 +219,11 @@ namespace boss
 					if (!resetClock2)
 					{
 						moveBossAnimClock.restart();
+						animationCol = 0;
 						resetClock2 = true;
 					}
 
-					Arm.setTextureRect(IntRect(0 * 266, 0, 266, 264));
+					Arm.setTextureRect(IntRect(0 * 266, 0, 266, 264));\
 					Arm.setTexture(armtext);
 
 					Arm.setPosition(easeInOut(ExpoEaseIn, startFront.x, x_axisrandomplace, moveBossAnimClock, animspeed),
@@ -231,7 +232,7 @@ namespace boss
 				else if (animationClock >= seconds(0.5f).asSeconds()) 
 				{
 					bosszombies.back().started = true;
-
+					bosszombies.back().CurrentPlantIndex = 45;
 					/*if (attackOnce)
 					{
 						bosszombies.back().started = true;
@@ -254,6 +255,8 @@ namespace boss
 						animationCol = 2;
 						attackOnce = false;
 						isAttacking = false;
+
+						Arm.setPosition(710, -100);
 						currentState = StandingIdle;
 					}
 
@@ -618,7 +621,7 @@ namespace boss
 
 				zombieprefab.type = randomzombietype;
 				zombieprefab.zombieCont.setPosition(x_axisrandomplace, y_axisrandomplace);
-
+				zombieprefab.CurrentPlantIndex = 45;
 				zombieprefab.start();
 				zombieprefab.isAttacking = false;
 				zombieprefab.isDead = false;
@@ -659,6 +662,7 @@ void SetupBossData()
 {
 	srand(time(0));
 	elementalAttackArr.clear();
+	bosszombies.clear();
 
 	plantedIceAttack = false;
 	plantedFireAttack = false;
