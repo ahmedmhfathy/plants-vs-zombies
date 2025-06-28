@@ -6,6 +6,7 @@
 #include "Game Settings And Audio.h"
 #include "Plants_Zombies.h"
 #include "StartAnimation.h"
+#include "Game Manager.h"
 #include<deque>
 #include<vector>
 using namespace std;
@@ -30,92 +31,44 @@ namespace boss
 	Texture armtext;
 	//==================lawn=========================//
 	Texture lawntexture;
-	SoundBuffer carsSoundBuffer;
+
 #pragma endregion
-
-	deque<Plants_Zombies::Zombie>bosszombies;
-
-	enum BossState{ StandingIdle, EnteringLevel, PlacingZombies, HeadIdle, IceAttack, FireAttack, ThrowVan, None};
-
+	vector<Plants_Zombies::Zombie>bosszombies;
+	enum BossState { StandingIdle, EnteringLevel, PlacingZombies, HeadIdle, IceAttack, FireAttack, ThrowVan, None };
+	//============================================================================================//
+#pragma region boolean
 	bool startBossfight = false;
-
 	bool plantedIceAttack = false;
 	bool plantedFireAttack = false;
+	bool playLoseGameAnim = false;
+	bool LevelIsOver = false;
+	bool WinLevel = false;
+#pragma endregion
+#pragma region Sound
+	SoundBuffer carsSoundBuffer;
+	SoundBuffer LoseSoundBuffer;
+#pragma endregion
 
-	//first is head position second is ball spawn position
+	Sprite Textlosegamesprite;
+	Clock LoseGameClock;
+
+	//=============================================================//
+		//first is head position second is ball spawn position
 	pair<Vector2f, Vector2f> ElementalAttacksSpawnPoints[4] = { {{495,-55},{710, 550}}
 															   ,{{495,-165},{710,440}}
 															   ,{{495,-275},{710,330}}
 															   ,{{495,-385},{710,220}} };
-
 	pair<Vector2f, Vector2f> randElementalAttackPos = ElementalAttacksSpawnPoints[rand() % 4];
-
-	//random zombiepositions + hand positions
-	float x_axisplacingzombie[3] = { 830, 770, 620 };
+#pragma region values
+	float x_axisplacingzombie[3] = { 770, 620,570 };
 	float y_axisplacingzombie[5] = { -50, 70, 175, 280, 400 };
 	float y_axisrandomplace = y_axisplacingzombie[rand() % 5];
 	float x_axisrandomplace = x_axisplacingzombie[rand() % 3];
-
+	float minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
+	float scalefactortextlosegame = 4.2f;      // First scale For Lose Game
+#pragma endregion
 #pragma region Structs
-	struct cars
-	{
-		bool startsoundcar = true;
-		bool intersection = false;
-		float speed = 500;
-		Sprite lawnsprite;
-
-		void start(int i)
-		{
-			if (onRoof) {
-				lawntexture.loadFromFile("Assets/Environment/Roof_Cleaner.png");
-				lawnsprite.setTexture(lawntexture);
-				lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
-				lawnsprite.setScale(0.8, 0.8);
-				lawnsprite.setPosition(-70, 50 + (i * 110));
-			}
-			else {
-				lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
-				lawnsprite.setTexture(lawntexture);
-				lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
-				lawnsprite.setScale(0.8, 0.8);
-				lawnsprite.setPosition(-90, 60 + (i * 130));
-			}
-
-		}
-
-		void update()
-		{
-			if (!intersection)
-			{
-				if (lawnsprite.getPosition().x < -50 && onRoof)
-				{
-					lawnsprite.move(speed * 0.144f * deltaTime, 0);
-				}
-				else if (lawnsprite.getPosition().x < -65 && !onRoof)
-				{
-					lawnsprite.move(speed * 0.144f * deltaTime, 0);
-				}
-			}
-			else
-			{
-				if (lawnsprite.getPosition().x < 960)
-				{
-					lawnsprite.move(speed * deltaTime, 0);
-
-					if (startsoundcar)
-					{
-						PlaySoundEffect(carsSoundBuffer, false);
-						startsoundcar = false;
-					}
-				}
-				else
-				{
-					lawnsprite.setPosition(2000, 2000);
-				}
-			}
-		}
-	}car[5];
-
+	
 	struct Boss {
 		Sprite Head;
 		Sprite LegFront;
@@ -144,8 +97,8 @@ namespace boss
 
 		Vector2f StartPos, EndPos;
 		Vector2f HeadOutOfScreenPos = { 800, -400 };
-		Vector2f LegFrontOutOfScreenPos = {900, -50};
-		Vector2f LegBackOutOfScreenPos = {860, -250};
+		Vector2f LegFrontOutOfScreenPos = { 900, -50 };
+		Vector2f LegBackOutOfScreenPos = { 860, -250 };
 
 	public:
 		void Start()
@@ -292,7 +245,7 @@ namespace boss
 					Arm.setPosition(easeInOut(ExpoEaseIn, startFront.x, x_axisrandomplace, moveBossAnimClock, animspeed),
 						easeInOut(ExpoEaseIn, startFront.y, y_axisrandomplace, moveBossAnimClock, animspeed));
 				}
-				else if (animationClock >= seconds(0.5f).asSeconds()) 
+				else if (animationClock >= seconds(0.5f).asSeconds())
 				{
 					if (!bosszombies.empty())
 					{
@@ -322,11 +275,11 @@ namespace boss
 					Arm.setTextureRect(IntRect(animationCol * 266, 0, 266, 264));
 					Arm.setTexture(armtext);
 
-					if (animationCol < 2) 
+					if (animationCol < 2)
 					{
 						animationCol++;
 					}
-					else 
+					else
 					{
 						animationCol = 2;
 						attackOnce = false;
@@ -341,8 +294,8 @@ namespace boss
 			else if (currentState == EnteringLevel)
 			{
 				Time animspeed = seconds(2);
-				Vector2f startFront = {1100, -300}, endFront = { 750, -50 };
-				Vector2f startBack = {1000, -400}, endBack = { 675, -250 };
+				Vector2f startFront = { 1100, -300 }, endFront = { 750, -50 };
+				Vector2f startBack = { 1000, -400 }, endBack = { 675, -250 };
 
 				if (moveleft)
 				{
@@ -510,12 +463,12 @@ namespace boss
 					window.draw(LegBack);
 					window.draw(LegFront);
 				}
-				else if (currentState == HeadIdle || currentState == FireAttack || currentState == IceAttack) 
+				else if (currentState == HeadIdle || currentState == FireAttack || currentState == IceAttack)
 				{
 					//cout << "HEAD" << endl;
 					window.draw(Head);
 				}
-				else if (currentState == PlacingZombies) 
+				else if (currentState == PlacingZombies)
 				{
 					window.draw(LegBack);
 					window.draw(LegFront);
@@ -524,7 +477,64 @@ namespace boss
 			}
 		}
 	}BossOBJ;
+	struct cars
+	{
+		bool startsoundcar = true;
+		bool intersection = false;
+		float speed = 500;
+		Sprite lawnsprite;
 
+		void start(int i)
+		{
+			if (onRoof) {
+				lawntexture.loadFromFile("Assets/Environment/Roof_Cleaner.png");
+				lawnsprite.setTexture(lawntexture);
+				lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
+				lawnsprite.setScale(0.8, 0.8);
+				lawnsprite.setPosition(-70, 50 + (i * 110));
+			}
+			else {
+				lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
+				lawnsprite.setTexture(lawntexture);
+				lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
+				lawnsprite.setScale(0.8, 0.8);
+				lawnsprite.setPosition(-90, 60 + (i * 130));
+			}
+
+		}
+
+		void update()
+		{
+			if (!intersection)
+			{
+				if (lawnsprite.getPosition().x < -50 && onRoof)
+				{
+					lawnsprite.move(speed * 0.144f * deltaTime, 0);
+				}
+				else if (lawnsprite.getPosition().x < -65 && !onRoof)
+				{
+					lawnsprite.move(speed * 0.144f * deltaTime, 0);
+				}
+			}
+			else
+			{
+				if (lawnsprite.getPosition().x < 960)
+				{
+					lawnsprite.move(speed * deltaTime, 0);
+
+					if (startsoundcar)
+					{
+						PlaySoundEffect(carsSoundBuffer, false);
+						startsoundcar = false;
+					}
+				}
+				else
+				{
+					lawnsprite.setPosition(2000, 2000);
+				}
+			}
+		}
+	}car[5];
 	struct ElementalAttack
 	{
 		BossState type;
@@ -675,7 +685,6 @@ namespace boss
 	};
 
 	deque<ElementalAttack> elementalAttackArr;
-
 	void Boss::Attack()
 	{
 		if (!isSwitchingState && isAttacking)
@@ -712,6 +721,7 @@ namespace boss
 				zombieprefab.isMoving = true;
 
 				bosszombies.push_back(zombieprefab);
+				
 
 				attackOnce = true;
 			}
@@ -721,6 +731,7 @@ namespace boss
 			}
 		}
 	}
+
 #pragma endregion
 
 void LoadBossTexturesAndAudio() 
@@ -760,87 +771,109 @@ void BossStateManager()
 
 }
 
-void UpdateBossLogic()
-{
-	BossStateManager();
-
-	//update elemental attacks
-	for (int i = 0; i < elementalAttackArr.size(); i++)
+	void UpdateBossLogic()
 	{
-		elementalAttackArr[i].update();
-	}
+		BossStateManager();
 
-	//delete elemental attacks
-	if (!elementalAttackArr.empty() && !elementalAttackArr.front().active)
-	{
-		elementalAttackArr.pop_front();
-	}
-
-	//collision with cars
-	for (int i = 0; i < 5; i++)
-	{
-		FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
-
-		for (int j = 0;j < bosszombies.size(); j++)
+		//update elemental attacks
+		for (int i = 0; i < elementalAttackArr.size(); i++)
 		{
-			FloatRect rect2 = bosszombies[j].zombieCollider.getGlobalBounds();
+			elementalAttackArr[i].update();
+		}
 
-			if (rect1.intersects(rect2) && bosszombies[j].started) 
+		//delete elemental attacks
+		if (!elementalAttackArr.empty() && !elementalAttackArr.front().active)
+		{
+			elementalAttackArr.pop_front();
+		}
+
+		for (int i = 0; i < bosszombies.size(); i++) {
+
+			if (bosszombies[i].started && bosszombies[i].type != Plants_Zombies::Dead)
 			{
-				car[i].intersection = true;
-				bosszombies[j].isSquished = true;
+				if (!IsPaused)
+				{
+					bosszombies[i].update(deltaTime);
+				}
+			}
+		}
+		for (int i = 0; i < 5; i++)
+		{
+			FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
+
+			for (int j = 0;j < bosszombies.size(); j++)
+			{
+				FloatRect rect2 = bosszombies[j].zombieCollider.getGlobalBounds();
+
+				if (rect1.intersects(rect2)) {
+					car[i].intersection = true;
+					bosszombies[j].isSquished = true;
+				}
+			}
+		}
+		for (int i = 0; i < 5; i++) {
+			car[i].update();
+		}
+
+		for (int i = 0; i < bosszombies.size(); i++) {
+
+			if (bosszombies[i].type == Plants_Zombies::Dead)
+			{
+				bosszombies.erase(bosszombies.begin(), bosszombies.begin() + i);
+			}
+		}
+
+
+		BossOBJ.Update();
+	}
+
+	void DrawBoss(RenderWindow& window)
+	{
+
+		for (int i = 0; i < elementalAttackArr.size(); i++)
+		{
+			window.draw(elementalAttackArr[i].spriteBottom);
+			window.draw(elementalAttackArr[i].spriteTop);
+		}
+
+		for (int i = 0; i < bosszombies.size(); i++) {
+			if (bosszombies[i].started) {
+				window.draw(bosszombies[i].zombieCont);
+				window.draw(bosszombies[i].zombieCollider);
+			}
+		}
+
+		BossOBJ.drawBoss(window);
+
+	}
+	void endlevel() {
+		for (int i = 0; i < bosszombies.size(); i++) {
+			if (bosszombies[i].zombieCollider.getPosition().x < -50 && bosszombies[i].started)
+			{
+				if (!playLoseGameAnim)
+				{
+					PlaySoundEffect(LoseSoundBuffer, false);
+					LoseGameClock.restart();
+					playLoseGameAnim = true;
+				}
+				else
+				{
+					Time animDuration_ = seconds(6);
+					if (scalefactortextlosegame > minscaletextlosegame)
+					{
+						scalefactortextlosegame = easeInOut(linear, scalefactortextlosegame, minscaletextlosegame, LoseGameClock, animDuration_);
+						Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
+					}
+					else
+					{
+						IsPaused = true;
+						LevelIsOver = true;
+						WinLevel = false;
+					}
+				}
+				window.draw(Textlosegamesprite);
+
 			}
 		}
 	}
-
-	//update lawnmowers
-	for (int i = 0; i < 5; i++) {
-		car[i].update();
-	}
-
-	//update zombies
-	for (int i = 0; i < bosszombies.size(); i++) {
-
-		if (bosszombies[i].started && bosszombies[i].type != Plants_Zombies::Dead)
-		{
-			if (!IsPaused)
-			{
-				bosszombies[i].update(deltaTime);
-			}
-		}
-	}
-
-	//erase zombies
-	for (int i = 0; i < bosszombies.size(); i++) {
-
-		if (bosszombies[i].type == Plants_Zombies::Dead)
-		{
-			bosszombies.erase(bosszombies.begin(), bosszombies.begin() + i);
-		}
-	}
-
-	BossOBJ.Update();
 }
-
-void DrawBoss(RenderWindow& window)
-{
-	for (int i = 0; i < elementalAttackArr.size(); i++)
-	{
-		window.draw(elementalAttackArr[i].spriteBottom);
-		window.draw(elementalAttackArr[i].spriteTop);
-	}
-
-	for (int i = 0; i < bosszombies.size(); i++) 
-	{
-		if (bosszombies[i].started) 
-		{
-			window.draw(bosszombies[i].zombieCont);
-			window.draw(bosszombies[i].zombieCollider);
-		}
-	}
-
-	BossOBJ.drawBoss(window);
-}
-
-}
-

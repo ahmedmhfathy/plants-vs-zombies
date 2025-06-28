@@ -65,17 +65,17 @@ Texture Textlosegametexture;
 Texture lawnrooftexture;
 Sprite Textstartwave2sprite;
 Sprite Textstartfinalwavesprite;
-Sprite Textlosegamesprite;
+
 #pragma endregion
 
 #pragma region Sounds
 SoundBuffer HugeWaveOfZombiesSoundBuffer;
 SoundBuffer FinalWaveSoundBuffer;
-SoundBuffer LoseSoundBuffer;
-SoundBuffer carsSoundBuffer;
 #pragma endregion
 
 #pragma region booleans
+
+
 bool nowave = true;
 bool checkstart_wave2 = true;
 bool checkstart_wave3 = true;
@@ -84,10 +84,6 @@ bool movefromwavetoanother = true;
 bool endRSP = false;
 bool EntertostartdrawRSP = false;
 
-bool LevelIsOver = false;
-bool WinLevel = false;
-
-bool playLoseGameAnim = false;
 bool playWaveSounds = false;
 bool isNightLevel = false;
 #pragma endregion
@@ -95,7 +91,7 @@ bool isNightLevel = false;
 #pragma region hours and timer
 Clock clockwave2;
 Clock clockfinalwave;
-Clock LoseGameClock;
+
 //Clock GlobalClock;
 
 Time timertostartwave2;
@@ -107,20 +103,19 @@ float timeSinceStart;
 #pragma region Scale 
 float minscale = 1.7f;                      // Min Scale For Text Start Wave Two And Text Final Wave
 float scaleFactor = 6.0f;                   // First scale For  Text Start Wave Two And Text Final Wave
-float minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
-float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
+
 #pragma endregion
 
 #pragma region Structs
-
-
-struct waves 
+struct waves
 {
     float delaybetween;
     int numberzombie;
     bool checkexit_wave = false;
     bool check_startwave = true;
 }wave[3];
+
+
 #pragma endregion
 
 int numofstartnormalzombie;
@@ -142,10 +137,10 @@ void setupWaveData(bool isNight_) {
 
     clockwave2.restart();
     clockfinalwave.restart();
-    LoseGameClock.restart();
+    boss::LoseGameClock.restart();
     DeltaTimeClock.restart();
 
-	jackMusic.stop();
+    jackMusic.stop();
 
     nowave = true;
     checkstart_wave2 = true;
@@ -154,21 +149,20 @@ void setupWaveData(bool isNight_) {
     movefromwavetoanother = true;
 
     IsPaused = false;
-    LevelIsOver = false;
-    WinLevel = false;
-    playLoseGameAnim = false;
+    boss::LevelIsOver = false;
+    boss::WinLevel = false;
+    boss::playLoseGameAnim = false;
     playWaveSounds = false;
     jackMusicOn = false;
 
     minscale = 1.7f;
     scaleFactor = 6.0f;
-    minscaletextlosegame = 1.17f;
-    scalefactortextlosegame = 4.2f;
+
 
     timeSinceStart = 0;
 }
 
-void startZombiePositions(int numZombies, int numberwave, int numlevel) 
+void startZombiePositions(int numZombies, int numberwave, int numlevel)
 {
     //if (isNight && !onRoof) {
     //    numofstartnormalzombie = numGraves;
@@ -182,13 +176,13 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
     int row[5] = { -40, 100, 235, 360, 490 };
     int rowroof[5] = { -50, 70, 175, 280, 400 };
 
-	//normal zombies
+    //normal zombies
     for (int i = 0; i < 100; i++)
     {
         Plants_Zombies::zombie_array[i].started = false;
         Plants_Zombies::zombie_array[i].isDead = false;
 
-        if (!onRoof) 
+        if (!onRoof)
         {
             Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
 
@@ -199,11 +193,11 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
             }
         }
-        else 
+        else
         {
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::gargantous)
             {
-                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand()%5] - 60);
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5] - 60);
             }
             else {
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]);
@@ -219,7 +213,7 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
         Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 70); //60
         //cout << Plants_Zombies::zombie_array[i].zombieCont.getPosition().x << " - " << Plants_Zombies::zombie_array[i].zombieCont.getPosition().y << endl;
     }
-    
+
     //grave zombies
     if (isNightLevel && numberwave >= 1 && !onRoof)
     {
@@ -228,7 +222,7 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
             Plants_Zombies::zombie_array[i].started = false;
             Plants_Zombies::zombie_array[i].isDead = false;
 
-            Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y-30);
+            Plants_Zombies::zombie_array[i].zombieCont.setPosition(graves[i].getPosition().x, graves[i].getPosition().y - 30);
 
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
@@ -248,10 +242,10 @@ void startallwave(int numberwave, int numberzombie, float delaybetween, int numl
 
     timeSinceStart = 0;
 
-    startZombiePositions(numberzombie,numberwave, numlevel);
+    startZombiePositions(numberzombie, numberwave, numlevel);
 }
 
-void allwave(int numberwave, int numberzombie) 
+void allwave(int numberwave, int numberzombie)
 {
     intersectioncarsandzombies(numberwave);
 
@@ -275,10 +269,10 @@ void allwave(int numberwave, int numberzombie)
         }
 
         // normal behaviour
-        else  
+        else
         {
             //cout << timeSinceStart << endl;
-            if (timeSinceStart >= i * wave[numberwave].delaybetween) 
+            if (timeSinceStart >= i * wave[numberwave].delaybetween)
             {
                 if (Plants_Zombies::zombie_array[i].startJackClock)
                 {
@@ -290,7 +284,7 @@ void allwave(int numberwave, int numberzombie)
         }
     }
 
-	// update zombies
+    // update zombies
     for (int i = 0; i < wave[numberwave].numberzombie; i++)
     {
         if (Plants_Zombies::zombie_array[i].started && Plants_Zombies::zombie_array[i].type != Plants_Zombies::Dead)
@@ -302,7 +296,7 @@ void allwave(int numberwave, int numberzombie)
         }
     }
 
-	// check if jack in the box music should play
+    // check if jack in the box music should play
     for (int i = 0; i < wave[numberwave].numberzombie; i++)
     {
         if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
@@ -323,7 +317,7 @@ void allwave(int numberwave, int numberzombie)
         }
     }
 
-	// check if all zombies are dead
+    // check if all zombies are dead
     for (int i = 0; i < wave[numberwave].numberzombie; i++)
     {
         if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::Dead)
@@ -344,36 +338,36 @@ void allwave(int numberwave, int numberzombie)
     }
 }
 
-void level(int numberwave, int num, float delaybetweenw1, int numlevel) 
+void level(int numberwave, int num, float delaybetweenw1, int numlevel)
 {
     timeSinceStart += deltaTime;
 
     if (endRSP)
     {
         if (numberwave == 2) {
-            if (wave[0].check_startwave) 
+            if (wave[0].check_startwave)
             {
                 wave[0].check_startwave = false;
-                startallwave(0, num, delaybetweenw1,numlevel);
+                startallwave(0, num, delaybetweenw1, numlevel);
             }
-            if (nowave && endRSP) 
+            if (nowave && endRSP)
             {
-                allwave(0, num); 
+                allwave(0, num);
             }
-            if (wave[0].checkexit_wave) 
+            if (wave[0].checkexit_wave)
             {
-                if (movefromwavetoanother) 
+                if (movefromwavetoanother)
                 {
                     clockwave2.restart();
                     movefromwavetoanother = false;
                     nowave = false;
                 }
                 timertostartwave2 = clockwave2.getElapsedTime();
-                if (timertostartwave2 > seconds(6)) 
+                if (timertostartwave2 > seconds(6))
                 {
-                    if (wave[1].check_startwave) 
+                    if (wave[1].check_startwave)
                     {
-                        startallwave(1, num += 10, delaybetweenw1 -= 5.0f,numlevel);
+                        startallwave(1, num += 10, delaybetweenw1 -= 5.0f, numlevel);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
@@ -382,35 +376,35 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                     //check win status
                     if (wave[1].checkexit_wave)
                     {
-                        LevelIsOver = true;
-                        WinLevel = true;
+                        boss::LevelIsOver = true;
+                        boss::WinLevel = true;
                         IsPaused = true;
                     }
                     else
                     {
-                        LevelIsOver = false;
-                        WinLevel = false;
+                        boss::LevelIsOver = false;
+                        boss::WinLevel = false;
                         IsPaused = false;
                     }
                 }
             }
         }
-        else if (numberwave == 3) 
+        else if (numberwave == 3)
         {
-            if (wave[0].check_startwave) 
+            if (wave[0].check_startwave)
             {
                 wave[0].check_startwave = false;
-                startallwave(0, num, delaybetweenw1,numlevel);
+                startallwave(0, num, delaybetweenw1, numlevel);
             }
 
             if (nowave && endRSP)
             {
-                allwave(0, num); 
+                allwave(0, num);
             }
 
-            if (wave[0].checkexit_wave) 
+            if (wave[0].checkexit_wave)
             {
-                if (movefromwavetoanother) 
+                if (movefromwavetoanother)
                 {
                     clockwave2.restart();
                     movefromwavetoanother = false;
@@ -419,9 +413,9 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
 
                 timertostartwave2 = clockwave2.getElapsedTime();
 
-                if (timertostartwave2 > seconds(6)) 
+                if (timertostartwave2 > seconds(6))
                 {
-                    if (wave[1].check_startwave) 
+                    if (wave[1].check_startwave)
                     {
                         startallwave(1, num += 20, delaybetweenw1 -= 4.0f, numlevel);
                         wave[1].check_startwave = false;
@@ -432,9 +426,9 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                 }
             }
 
-            if (wave[1].checkexit_wave) 
+            if (wave[1].checkexit_wave)
             {
-                if (!movefromwavetoanother) 
+                if (!movefromwavetoanother)
                 {
                     clockfinalwave.restart();
                     movefromwavetoanother = true;
@@ -443,11 +437,11 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
 
                 timertostartwave3 = clockfinalwave.getElapsedTime();
 
-                if (timertostartwave3 > seconds(6)) 
+                if (timertostartwave3 > seconds(6))
                 {
                     if (wave[2].check_startwave)
                     {
-                        startallwave(2, num += 20, delaybetweenw1 -= 6.0f,numlevel);
+                        startallwave(2, num += 20, delaybetweenw1 -= 6.0f, numlevel);
                         wave[2].check_startwave = false;
                     }
 
@@ -456,14 +450,14 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                     //check win status
                     if (wave[2].checkexit_wave)
                     {
-                        LevelIsOver = true;
-                        WinLevel = true;
+                        boss::LevelIsOver = true;
+                        boss::WinLevel = true;
                         IsPaused = true;
                     }
                     else
                     {
-                        LevelIsOver = false;
-                        WinLevel = false;
+                        boss::LevelIsOver = false;
+                        boss::WinLevel = false;
                         IsPaused = false;
                     }
                 }
@@ -476,7 +470,7 @@ void intersectioncarsandzombies(int numberwave) {
     for (int i = 0; i < 5; i++)
     {
         FloatRect rect1 = boss::car[i].lawnsprite.getGlobalBounds();
-        
+
         for (int j = 0; j < wave[numberwave].numberzombie; j++)
         {
             FloatRect rect2 = Plants_Zombies::zombie_array[j].zombieCollider.getGlobalBounds();
@@ -535,7 +529,7 @@ void RSP(RenderWindow& window)
     }
 }
 
-void DrawWavesAndZombies(RenderWindow& window) 
+void DrawWavesAndZombies(RenderWindow& window)
 {
     if (endRSP)
     {
@@ -629,29 +623,29 @@ void DrawWavesAndZombies(RenderWindow& window)
     for (int i = 0; i < 100; i++) {
         if (Plants_Zombies::zombie_array[i].zombieCollider.getPosition().x < -50 && Plants_Zombies::zombie_array[i].started)
         {
-            if (!playLoseGameAnim)
+            if (!boss::playLoseGameAnim)
             {
-                PlaySoundEffect(LoseSoundBuffer, false);
-                LoseGameClock.restart();
-                playLoseGameAnim = true;
+                PlaySoundEffect(boss::LoseSoundBuffer, false);
+                boss::LoseGameClock.restart();
+                boss::playLoseGameAnim = true;
             }
             else
             {
                 Time animDuration_ = seconds(6);
-                if (scalefactortextlosegame > minscaletextlosegame)
+                if (boss::scalefactortextlosegame > boss::minscaletextlosegame)
                 {
-                    scalefactortextlosegame = easeInOut(linear, scalefactortextlosegame, minscaletextlosegame, LoseGameClock, animDuration_);
-                    Textlosegamesprite.setScale(scalefactortextlosegame, scalefactortextlosegame);
+                    boss::scalefactortextlosegame = easeInOut(linear, boss::scalefactortextlosegame, boss::minscaletextlosegame, boss::LoseGameClock, animDuration_);
+                    boss::Textlosegamesprite.setScale(boss::scalefactortextlosegame, boss::scalefactortextlosegame);
                 }
                 else
                 {
                     IsPaused = true;
-                    LevelIsOver = true;
-                    WinLevel = false;
+                    boss::LevelIsOver = true;
+                    boss::WinLevel = false;
                 }
             }
 
-            window.draw(Textlosegamesprite);
+            window.draw(boss::Textlosegamesprite);
 
             for (int i = 0; i < 3; i++)
             {
@@ -659,6 +653,4 @@ void DrawWavesAndZombies(RenderWindow& window)
             }
         }
     }
-
-
 }

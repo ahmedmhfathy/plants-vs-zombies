@@ -22,7 +22,7 @@ bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
 
-Time TickBoxDelay=seconds(.25);
+Time TickBoxDelay = seconds(.25);
 Clock DelayClock;
 
 Texture ThankYouForPlayingTex;
@@ -161,13 +161,13 @@ void PauseMenuUpdate()
             SoundOnPauseMenu = false;
         }
     }
-    if (IsPaused && !LevelIsOver)
+    if (IsPaused && !boss::LevelIsOver)
     {
         if (BackToGame.getGlobalBounds().contains(MouseWorldPostion))
         {
             if (ButtonTapSoundBackToTheGame)
             {
-                PlaySoundEffect(LoseAndWinAndPauseBuffer,false);
+                PlaySoundEffect(LoseAndWinAndPauseBuffer, false);
                 ButtonTapSoundBackToTheGame = false;
             }
             BackToGame.setTexture(BackToTheGameButtonHoverTex);
@@ -206,12 +206,12 @@ void PauseMenuUpdate()
             BackToMainMenu.setTexture(MainMenuButtonTex);
         }
 
-    #pragma region Update Tick Boxes
+#pragma region Update Tick Boxes
         if (IsFullScreen)
             FullScreenTickBox.setTexture(TickBoxSelectedTex);
         else
             FullScreenTickBox.setTexture(TickBoxBlankTex);
-        
+
         if (IsSoundEffects)
             SoundEffectTickBox.setTexture(TickBoxSelectedTex);
         else
@@ -221,18 +221,18 @@ void PauseMenuUpdate()
             MusicTickBox.setTexture(TickBoxSelectedTex);
         else
             MusicTickBox.setTexture(TickBoxBlankTex);
-    #pragma endregion
+#pragma endregion
 
-    #pragma region Pause menu options logic
+#pragma region Pause menu options logic
         if (FullScreenTickBox.getGlobalBounds().contains(MouseWorldPostion) && Mouse::isButtonPressed(Mouse::Left))
         {
-            if (IsFullScreen && DelayClock.getElapsedTime() >=TickBoxDelay)
+            if (IsFullScreen && DelayClock.getElapsedTime() >= TickBoxDelay)
             {
                 DelayClock.restart();
                 IsFullScreen = false;
                 changeFullScreenState = true;
             }
-            else if(DelayClock.getElapsedTime() >= TickBoxDelay)
+            else if (DelayClock.getElapsedTime() >= TickBoxDelay)
             {
                 DelayClock.restart();
                 IsFullScreen = true;
@@ -253,7 +253,7 @@ void PauseMenuUpdate()
                 IsSoundEffects = false;
             }
         }
-        
+
         if (MusicTickBox.getGlobalBounds().contains(MouseWorldPostion) && Mouse::isButtonPressed(Mouse::Left))
         {
             if (!IsMusic && DelayClock.getElapsedTime() >= TickBoxDelay)
@@ -267,14 +267,14 @@ void PauseMenuUpdate()
                 IsMusic = false;
             }
         }
-    #pragma endregion
+#pragma endregion
 
     }
 }
 
 void DrawPauseMenu(RenderWindow& window)
 {
-    if (!LevelIsOver)
+    if (!boss::LevelIsOver)
     {
         window.draw(Opacity);
         window.draw(BlankPauseMenu);
@@ -294,7 +294,7 @@ void LoadLevelEndTextures() {
 
     //lose case
     LoseAndWinAndPauseBuffer.loadFromFile("Audio/bleep.ogg");
-    
+
     LostMenuBlankTex.loadFromFile("Assets/Lost Menu/lost-menu-blank.png");
     RetryButtonTex.loadFromFile("Assets/Lost Menu/retry-button.png");
     RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
@@ -346,21 +346,21 @@ void LevelEndUpdate()
     if (Keyboard::isKeyPressed(Keyboard::PageUp))
     {
         IsPaused = true;
-        LevelIsOver = true;
-        WinLevel = true;
+        boss::LevelIsOver = true;
+        boss::WinLevel = true;
     }
     if (Keyboard::isKeyPressed(Keyboard::PageDown))
     {
         IsPaused = true;
-        LevelIsOver = true;
-        WinLevel = false;
+        boss::LevelIsOver = true;
+        boss::WinLevel = false;
     }
 
-    if (LevelIsOver)
+    if (boss::LevelIsOver)
     {
-        if (WinLevel)
+        if (boss::WinLevel)
         {
-            if (CurrentState == Level3 && LevelIsOver && WinLevel)
+            if (CurrentState == Level3 && boss::LevelIsOver && boss::WinLevel)
             {
                 if (ThankYouForPlaying.getPosition().y > 310)
                 {
@@ -384,18 +384,18 @@ void LevelEndUpdate()
                 {
                     MaxLevelWon = Level2;
                 }
-                else if(CurrentState == Level3)
+                else if (CurrentState == Level3)
                 {
-					MaxLevelWon = Level3;
+                    MaxLevelWon = Level3;
                 }
-				else if (CurrentState == Level4)
+                else if (CurrentState == Level4)
                 {
                     MaxLevelWon == Level4;
-				}
-				else if (CurrentState == Level5)
-				{
-					MaxLevelWon = Level5;
-				}
+                }
+                else if (CurrentState == Level5)
+                {
+                    MaxLevelWon = Level5;
+                }
 
                 //go to next level button logic
                 if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
@@ -426,7 +426,7 @@ void LevelEndUpdate()
                     NextlevelButton.setTexture(NextlevelButtonTex);
                 }
 
-				//back to main menu button logic
+                //back to main menu button logic
                 if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
                 {
                     if (ButtonTapSoundWinMainMenu)
@@ -448,7 +448,7 @@ void LevelEndUpdate()
                 }
             }
         }
-        if (!WinLevel)
+        if (!boss::WinLevel)
         {
             //back to main menu button logic
             if (BackToMainMenuLevelEnd.getGlobalBounds().contains(MouseWorldPostion))
@@ -461,7 +461,7 @@ void LevelEndUpdate()
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndHoverTex);
                 if (Mouse::isButtonPressed(Mouse::Left))
                 {
-                    PlaySoundEffect(PauseMenuClickBuffer,false);
+                    PlaySoundEffect(PauseMenuClickBuffer, false);
                     CurrentState = MainMenu;
                 }
             }
@@ -471,7 +471,7 @@ void LevelEndUpdate()
                 BackToMainMenuLevelEnd.setTexture(BackToMainMenuLevelEndTex);
             }
 
-			//retry button logic
+            //retry button logic
             if (RetryButton.getGlobalBounds().contains(MouseWorldPostion))
             {
                 RetryButton.setTexture(RetryButtonHoverTex);
@@ -498,13 +498,13 @@ void LevelEndUpdate()
                     {
                         SwitchState(Level3);
                     }
-                    else if(CurrentState == Level4)
+                    else if (CurrentState == Level4)
                     {
-						SwitchState(Level4);
+                        SwitchState(Level4);
                     }
-                    else if (CurrentState == Level5) 
+                    else if (CurrentState == Level5)
                     {
-						SwitchState(Level5);
+                        SwitchState(Level5);
                     }
                 }
             }
@@ -519,7 +519,7 @@ void LevelEndUpdate()
 
 void DrawLevelEnd(RenderWindow& window)
 {
-    if (WinLevel)
+    if (boss::WinLevel)
     {
         if (CurrentState == Level3)
         {
@@ -553,10 +553,10 @@ void StartLevel1()
     bool isNight = false;
     bool isfog = false;
     bool onRoof = false;
-	bool isBossFight = false;
+    bool isBossFight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
-    startZombiePositions(100,1,1);
+    startZombiePositions(100, 1, 1);
     StartAnimationNS::startAnimation(isNight, onRoof, isfog);
 }
 void UpdateLevel1(RenderWindow& window)
@@ -564,8 +564,8 @@ void UpdateLevel1(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(2, 2, 8.0f,1); // 2, 10 , 10;
-    
+    level(2, 2, 8.0f, 1); // 2, 10 , 10;
+
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
 void DrawLevel1(RenderWindow& window)
@@ -586,7 +586,7 @@ void StartLevel2()
     bool isBossFight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
-    startZombiePositions(100,2,2);
+    startZombiePositions(100, 2, 2);
     StartAnimationNS::startAnimation(isNight, onRoof, isfog);
 }
 void UpdateLevel2(RenderWindow& window)
@@ -594,7 +594,7 @@ void UpdateLevel2(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(2, 4, 8.0f,2); // 2, 15 , 10
+    level(2, 4, 8.0f, 2); // 2, 15 , 10
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
@@ -611,12 +611,12 @@ void DrawLevel2(RenderWindow& window)
 void StartLevel3()
 {
     bool isNight = true;
-	bool onRoof = false;
+    bool onRoof = false;
     bool isfog = true;
     bool isBossFight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
-    startZombiePositions(100,3,3);
+    startZombiePositions(100, 3, 3);
     StartAnimationNS::startAnimation(isNight, onRoof, isfog);
 }
 void UpdateLevel3(RenderWindow& window)
@@ -696,8 +696,9 @@ void DrawLevel5(RenderWindow& window)
     StartAnimationNS::Renderstartanimation(window);
     Plants_Zombies::DrawPlantsAndProjectiles(window);
     DrawWavesAndZombies(window);
-	boss::DrawBoss(window);
+    boss::DrawBoss(window);
     DrawPlantingAndCurrencySystem(window);
+    boss::endlevel();
 }
 #pragma endregion
 #pragma endregion
@@ -705,10 +706,10 @@ void DrawLevel5(RenderWindow& window)
 // switches the state of the game and calls the start function of the new state
 void SwitchState(State NewState)
 {
-    LevelIsOver = false;
-    WinLevel = false;
+    boss::LevelIsOver = false;
+    boss::WinLevel = false;
     IsPaused = false;
-	jackMusicOn = false;
+    jackMusicOn = false;
     CurrentState = NewState;
 
     if (CurrentState == Level1)
@@ -722,13 +723,13 @@ void SwitchState(State NewState)
     else if (CurrentState == Level3)
     {
         StartLevel3();
-	}
-	else if (CurrentState == Level4)
-	{
-		StartLevel4();
-	}
-	else if (CurrentState == Level5)
-	{
-		StartLevel5();
-	}
+    }
+    else if (CurrentState == Level4)
+    {
+        StartLevel4();
+    }
+    else if (CurrentState == Level5)
+    {
+        StartLevel5();
+    }
 }

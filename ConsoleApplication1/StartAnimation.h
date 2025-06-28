@@ -29,8 +29,8 @@ namespace  StartAnimationNS {
     void LoadStartAndWaveAnimationTextures() {
         gardenTextureDay.loadFromFile("Assets/Environment/Game-Environment.png");
         gardenTextureNight.loadFromFile("Assets/Environment/Game-Environment-Night.png");
-		roofTextureDay.loadFromFile("Assets/Environment/Roof-Day.png");
-		roofTextureNight.loadFromFile("Assets/Environment/Roof-Night.png");
+        roofTextureDay.loadFromFile("Assets/Environment/Roof-Day.png");
+        roofTextureNight.loadFromFile("Assets/Environment/Roof-Night.png");
         fogTex.loadFromFile("Assets/Environment/fog.png");
 
         zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
@@ -46,8 +46,8 @@ namespace  StartAnimationNS {
         ZombiesAreComingBuffer.loadFromFile("Audio/awooga.ogg");
         HugeWaveOfZombiesSoundBuffer.loadFromFile("Audio/hugewave.ogg");
         FinalWaveSoundBuffer.loadFromFile("Audio/finalwave.ogg");
-        LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
-        carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
+        boss::LoseSoundBuffer.loadFromFile("Audio/scream.ogg");
+        boss::carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
         Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
 
 #pragma region set positions/scale
@@ -82,14 +82,14 @@ namespace  StartAnimationNS {
         Textstartfinalwavesprite.setPosition(340, 310);
 
         // the zombies ate your brains text
-        Textlosegamesprite.setTexture(Textlosegametexture);
-        Textlosegamesprite.setPosition(-20, 10);
-        Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
-        Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
+        boss::Textlosegamesprite.setTexture(Textlosegametexture);
+        boss::Textlosegamesprite.setPosition(-20, 10);
+        boss::Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
+        boss::Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
 #pragma endregion
     }
 
-    void SetupStartAndWaveAnimationPhotos(bool isNight, bool onRoof) 
+    void SetupStartAndWaveAnimationPhotos(bool isNight, bool onRoof)
     {
         //garden
         gardensprite.setPosition(-325, -265);
@@ -102,8 +102,8 @@ namespace  StartAnimationNS {
         {
             if (onRoof)
             {
-				gardensprite.setTexture(roofTextureNight);
-				gardensprite.setPosition(-325, -256-25); // Adjust position for roof
+                gardensprite.setTexture(roofTextureNight);
+                gardensprite.setPosition(-325, -256 - 25); // Adjust position for roof
             }
             else
             {
@@ -112,12 +112,12 @@ namespace  StartAnimationNS {
         }
         else
         {
-			if (onRoof)
-			{
-				gardensprite.setTexture(roofTextureDay);
-				gardensprite.setPosition(-325, -256-25); // Adjust position for roof
-			}
-            else 
+            if (onRoof)
+            {
+                gardensprite.setTexture(roofTextureDay);
+                gardensprite.setPosition(-325, -256 - 25); // Adjust position for roof
+            }
+            else
             {
                 gardensprite.setTexture(gardenTextureDay);
             }
@@ -132,7 +132,7 @@ namespace  StartAnimationNS {
         }
     }
 
-    void startAnimation(bool isNight, bool onRoof, bool isFog_) 
+    void startAnimation(bool isNight, bool onRoof, bool isFog_)
     {
         isFog = isFog_;
 
@@ -143,7 +143,8 @@ namespace  StartAnimationNS {
         startAnimcamera = false;
         RSPSonudon = true;
         ZombiesAreComingSoundOn = true;
-
+        boss::minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
+        boss::scalefactortextlosegame = 4.2f;      // First scale For Lose Game
         animcameraClock.restart();
         clockRSP.restart();
 
@@ -211,7 +212,7 @@ namespace  StartAnimationNS {
 
         if (moveleft)
         {
-            if(fog.getPosition().x > -300)
+            if (fog.getPosition().x > -300)
             {
                 float startValue = 1500, endValue = -300;
                 if (startAnimcamera == false)
@@ -236,7 +237,7 @@ namespace  StartAnimationNS {
             {
                 stoppedCars++;
             }
-            else if(boss::car[i].lawnsprite.getPosition().x > -70&&!onRoof) {
+            else if (boss::car[i].lawnsprite.getPosition().x > -70 && !onRoof) {
                 stoppedCars++;
             }
         }
@@ -267,3 +268,20 @@ namespace  StartAnimationNS {
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

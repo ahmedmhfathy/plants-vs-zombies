@@ -520,7 +520,7 @@ namespace Plants_Zombies
 						}
 					}
 					else if (ExplosionIce)
-					{	
+					{
 						shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
 						shape.setTexture(IceShroomIceTex);
 						animationCol++;
@@ -1519,7 +1519,7 @@ namespace Plants_Zombies
 							break;
 						}
 						else
-						{
+						{			
 							isMoving = true;
 							isAttacking = false;
 						}
@@ -1530,8 +1530,8 @@ namespace Plants_Zombies
 			{
 				if (health > 0)
 				{
-					isMoving = false;
 					isAttacking = true;
+					isMoving = false;
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
