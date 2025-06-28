@@ -1771,14 +1771,14 @@ namespace Plants_Zombies
 					}
 					else
 					{
-						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7) 
+						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7)
 						{
-							if (checkdeathpos == false) 
+							if (checkdeathpos == false)
 							{
 								zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
 								checkdeathpos = true;
 							}
-							
+
 							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
 							zombieCont.setTexture(JackDeathText);
 
@@ -1801,7 +1801,7 @@ namespace Plants_Zombies
 							}
 						}
 					}
-					
+
 				}
 			}
 			//Football
@@ -1919,7 +1919,7 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) 
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8)
 					{
 						if (checkdeathpos == false)
 						{
@@ -1946,6 +1946,52 @@ namespace Plants_Zombies
 						}
 					}
 				}
+			}
+			// polevault
+			if (type == poleVault && !isSquished) {
+				if (isMoving)
+				{
+					zombieCont.setTexture(PVWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 73, 0, 73, 58));
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 33, 0, 33, 55));
+						zombieCont.setTexture(PVEatText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
+						zombieCont.setTexture(RegularDeathText);
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 8) {
+
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
+						}
+					}
+				}
+
 			}
 
 			//Gargatnous
@@ -2008,7 +2054,7 @@ namespace Plants_Zombies
 				else if (isAttacking)
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 40));
+						zombieCont.setTextureRect(IntRect(CollIndex * 25, 0, 25, 40));
 						zombieCont.setTexture(ImpEatText);
 						CollIndex = (CollIndex + 1) % 8;
 						Zclock.restart();
@@ -2017,15 +2063,15 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 5) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 60, 0, 60, 40));
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 6) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 40));
 						zombieCont.setTexture(ImpDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 5) {
+					if (CollIndex == 6) {
 
-						zombieCont.setTextureRect(IntRect(8 * 60, 0, 60, 40));
+						zombieCont.setTextureRect(IntRect(6 * 50, 0, 50, 40));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
