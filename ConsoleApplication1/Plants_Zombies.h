@@ -1,3 +1,5 @@
+// eshta8al ya3am
+
 #pragma once
 #include<SFML/Graphics.hpp>
 #include<SFML/Audio.hpp>
@@ -1293,8 +1295,8 @@ namespace Plants_Zombies
 				speed = 7.4;
 				damage = 20000;
 				zombieCollider.setSize({ 50, 40 });
-				zombieCollider.setScale(1.4, 1);
-				zombieCont.setScale(3, 3);
+				zombieCollider.setScale(1., 1);
+				zombieCont.setScale(2.7, 2.7);
 				break;
 			case poleVault: 
 				zombieCont.setTexture(PVWalkText);
@@ -1303,7 +1305,7 @@ namespace Plants_Zombies
 				damage = 20;
 				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
-				zombieCont.setScale(3, 3);
+				zombieCont.setScale(0.5, 0.5);
 				break;
 			case imp:
 				zombieCont.setTexture(PVWalkText);
@@ -1431,6 +1433,8 @@ namespace Plants_Zombies
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
 				}
+
+				
 			}
 
 			if (type == jackInTheBox && jackBomb && !isDead) {
@@ -1441,7 +1445,16 @@ namespace Plants_Zombies
 			}
 
 			jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
-			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
+			if (type == gargantous)
+			{
+				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 135);
+			}
+			else if (type == imp) {
+				zombieCollider.setPosition(zombieCont.getPosition().x + 25, zombieCont.getPosition().y + 75);
+			}
+			else {
+				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
+			}
 		}
 
 		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) 
@@ -1918,14 +1931,14 @@ namespace Plants_Zombies
 					}
 					else
 					{
-						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7) 
+						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7)
 						{
-							if (checkdeathpos == false) 
+							if (checkdeathpos == false)
 							{
 								zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
 								checkdeathpos = true;
 							}
-							
+
 							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
 							zombieCont.setTexture(JackDeathText);
 
@@ -1948,7 +1961,7 @@ namespace Plants_Zombies
 							}
 						}
 					}
-					
+
 				}
 			}
 			//Football
@@ -2066,7 +2079,7 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) 
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8)
 					{
 						if (checkdeathpos == false)
 						{
@@ -2093,6 +2106,52 @@ namespace Plants_Zombies
 						}
 					}
 				}
+			}
+			// polevault
+			if (type == poleVault && !isSquished) {
+				if (isMoving)
+				{
+					zombieCont.setTexture(PVWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 73, 0, 73, 58));
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 33, 0, 33, 55));
+						zombieCont.setTexture(PVEatText);
+						CollIndex = (CollIndex + 1) % 6;
+						Zclock.restart();
+					}
+
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
+						zombieCont.setTexture(RegularDeathText);
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 8) {
+
+						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
+						}
+					}
+				}
+
 			}
 
 			//Gargatnous
@@ -2155,7 +2214,7 @@ namespace Plants_Zombies
 				else if (isAttacking)
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 40));
+						zombieCont.setTextureRect(IntRect(CollIndex * 25, 0, 25, 40));
 						zombieCont.setTexture(ImpEatText);
 						CollIndex = (CollIndex + 1) % 8;
 						Zclock.restart();
@@ -2164,15 +2223,15 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 5) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 60, 0, 60, 40));
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 6) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 40));
 						zombieCont.setTexture(ImpDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 5) {
+					if (CollIndex == 6) {
 
-						zombieCont.setTextureRect(IntRect(8 * 60, 0, 60, 40));
+						zombieCont.setTextureRect(IntRect(6 * 50, 0, 50, 40));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
@@ -2208,21 +2267,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = imp;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = imp;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = imp;
 				zombie_array[i].start();
 			}
 		}
@@ -2230,3 +2289,4 @@ namespace Plants_Zombies
 	}
 #pragma endregion
 }
+//zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz

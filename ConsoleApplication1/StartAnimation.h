@@ -151,7 +151,7 @@ namespace  StartAnimationNS {
 
         for (int i = 0; i < 5; i++)
         {
-            car[i].start(i);
+            boss::car[i].start(i);
         }
 
         SetupStartAndWaveAnimationPhotos(isNight, onRoof);
@@ -230,13 +230,13 @@ namespace  StartAnimationNS {
 
         for (int i = 0; i < 5; i++)
         {
-            car[i].update();
+            boss::car[i].update();
 
-            if (car[i].lawnsprite.getPosition().x > -55 && onRoof)
+            if (boss::car[i].lawnsprite.getPosition().x > -55 && onRoof)
             {
                 stoppedCars++;
             }
-            else if(car[i].lawnsprite.getPosition().x > -70&&!onRoof) {
+            else if(boss::car[i].lawnsprite.getPosition().x > -70&&!onRoof) {
                 stoppedCars++;
             }
         }
@@ -258,7 +258,7 @@ namespace  StartAnimationNS {
 
         for (int i = 0; i < 5; i++)
         {
-            window.draw(car[i].lawnsprite);
+            window.draw(boss::car[i].lawnsprite);
         }
 
         if (!isbossFight)

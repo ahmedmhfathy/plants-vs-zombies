@@ -59,8 +59,6 @@ Clock clockRSP;
 #pragma endregion
 
 #pragma region Textures and Sprites declaration
-Texture lawntexture;
-Texture rectangletexture;
 Texture Textstartwave2texture;
 Texture Textstartfinalwavetexture;
 Texture Textlosegametexture;
@@ -114,64 +112,7 @@ float scalefactortextlosegame = 4.2f;       // First scale For Lose Game
 #pragma endregion
 
 #pragma region Structs
-struct cars 
-{
-    bool startsoundcar = true;
-    bool intersection = false;
-    float speed = 500;
-    Sprite lawnsprite;
 
-    void start(int i) 
-    {
-        if (onRoof) {
-            lawntexture.loadFromFile("Assets/Environment/Roof_Cleaner.png");
-            lawnsprite.setTexture(lawntexture);
-			lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
-            lawnsprite.setScale(0.8, 0.8);
-            lawnsprite.setPosition(-70, 50 + (i * 110));
-        }
-        else {
-            lawntexture.loadFromFile("Assets/Environment/lawnmower.png");
-            lawnsprite.setTexture(lawntexture);
-            lawnsprite.setTextureRect(IntRect(0, 0, lawntexture.getSize().x, lawntexture.getSize().y));
-            lawnsprite.setScale(0.8, 0.8);
-            lawnsprite.setPosition(-90, 60 + (i * 130));
-        }
-
-    }
-
-    void update() 
-    {
-        if (!intersection)
-        {
-            if (lawnsprite.getPosition().x < -50 && onRoof) 
-            {
-                lawnsprite.move(speed * 0.144f * deltaTime, 0);
-            }
-            else if (lawnsprite.getPosition().x < -65 && !onRoof) 
-            {
-                lawnsprite.move(speed * 0.144f * deltaTime, 0);
-            }
-        }
-        else
-        {
-            if (lawnsprite.getPosition().x < 960)
-            {
-                lawnsprite.move(speed * deltaTime, 0);
-
-                if (startsoundcar) 
-                {
-                    PlaySoundEffect(carsSoundBuffer,false);
-                    startsoundcar = false;
-                }
-            }
-            else
-            {
-                lawnsprite.setPosition(2000, 2000);
-            }
-        }
-    }
-}car[5];
 
 struct waves 
 {
@@ -189,8 +130,8 @@ void setupWaveData(bool isNight_) {
 
     for (int i = 0; i < 5; i++)
     {
-        car[i].intersection = false;
-        car[i].startsoundcar = true;
+        boss::car[i].intersection = false;
+        boss::car[i].startsoundcar = true;
     }
 
     for (int i = 0; i < 3; i++)
@@ -255,18 +196,24 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
             {
-                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 25);
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
             }
         }
         else 
         {
-            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand()%5]);
+            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::gargantous)
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand()%5] - 60);
+            }
+            else {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]);
+            }
 
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
             {
-                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]-25);
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]);
             }
         }
         Plants_Zombies::zombie_array[i].zombieCollider.setPosition(Plants_Zombies::zombie_array[i].zombieCont.getPosition().x + 50, Plants_Zombies::zombie_array[i].zombieCont.getPosition().y + 70); //60
@@ -528,14 +475,14 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
 void intersectioncarsandzombies(int numberwave) {
     for (int i = 0; i < 5; i++)
     {
-        FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
+        FloatRect rect1 = boss::car[i].lawnsprite.getGlobalBounds();
         
         for (int j = 0; j < wave[numberwave].numberzombie; j++)
         {
             FloatRect rect2 = Plants_Zombies::zombie_array[j].zombieCollider.getGlobalBounds();
 
             if (rect1.intersects(rect2)) {
-                car[i].intersection = true;
+                boss::car[i].intersection = true;
                 Plants_Zombies::zombie_array[j].isSquished = true;
             }
         }
