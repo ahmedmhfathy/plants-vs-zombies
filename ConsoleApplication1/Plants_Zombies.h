@@ -1124,6 +1124,8 @@ namespace Plants_Zombies
 		RectangleShape zombieCollider;
 		RectangleShape jackCollider;
 
+		Vector2f GargantousPos;
+
 		zombieType type;
 		#pragma region booleans
 		bool hasJumped = false;
@@ -1150,6 +1152,7 @@ namespace Plants_Zombies
 		bool wassoundplayed = false;
 		bool startJackClock = true;
 		bool isGargantousCrush = false;
+		bool isGargantousDead = false;
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
@@ -1201,6 +1204,7 @@ namespace Plants_Zombies
 			startJackClock = true;
 			isGargantousCrush = false;
 			IsFrozen = false;
+			isGargantousDead = false;
 			#pragma endregion
 
 			switch (type)
@@ -1432,6 +1436,12 @@ namespace Plants_Zombies
 				else if(speed != 0)
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
+				}
+
+				if (type == gargantous)
+				{
+					GargantousPos = zombieCont.getPosition();
+					cout << GargantousPos.x << " " << GargantousPos.y << endl;
 				}
 
 				
