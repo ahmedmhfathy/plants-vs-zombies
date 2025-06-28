@@ -21,7 +21,7 @@ namespace Plants_Zombies
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, PotatoMine, EmptyPlant, SunCoin, Shovel };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, Dead};
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, Dead, imp , poleVault};
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -911,6 +911,26 @@ namespace Plants_Zombies
 	Texture ScreenDoorDeathText;
 	Texture ScreenDoorDamagedWalkText;
 	Texture ScreenDoorDamagedEatText;
+	//Football
+	Texture FBWalkText;
+	Texture FBEatText;
+	Texture DamagedFBWalkText;
+	Texture DamegedFBEatText;
+	Texture FBDeathText;
+	//Gargantuar
+	Texture GiantWalkText;
+	Texture GiantEatText;
+	Texture GiantDeathText;
+	//PoleVault 
+	Texture PVRunWithPoleText;
+	Texture PVWalkText;
+	Texture PVJumpText;
+	Texture PVEatText;
+	Texture PvDeathText;
+	// Imp AKA Ali Omar when he was 5
+	Texture ImpWalkText;
+	Texture ImpEatText;
+	Texture ImpDeathText;
 #pragma endregion
 
 	void LoadZombieTextures() {
@@ -948,6 +968,26 @@ namespace Plants_Zombies
 		ScreenDoorDeathText.loadFromFile("Assets/Zombies/screendoor/screendoor-death-ST.png");
 		ScreenDoorDamagedWalkText.loadFromFile("Assets/Zombies/screendoor/screendoor-walk-damaged2-ST.png");
 		ScreenDoorDamagedEatText.loadFromFile("Assets/Zombies/screendoor/screendoor-eat-damaged2-ST.png");
+		// FootBall siuuuuuuu
+		FBWalkText.loadFromFile("Assets/Zombies/FootBall/walkfb.png");
+		FBEatText.loadFromFile("Assets/Zombies/FootBall/eatfb.png");
+		DamagedFBWalkText.loadFromFile("Assets/Zombies/FootBall/dmgwalkfb.png");
+		DamegedFBEatText.loadFromFile("Assets/Zombies/FootBall/dmgeatfb.png");
+		FBDeathText.loadFromFile("Assets/Zombies/FootBall/deathfb.png");
+		//Gargantuar AKA giant AKA Elkebeer awy gedan 5ales fash5 very much  
+		GiantWalkText.loadFromFile("Assets/Zombies/giant/giantwalk.png");
+		GiantEatText.loadFromFile("Assets/Zombies/giant/gianteat.png");
+		GiantDeathText.loadFromFile("Assets/Zombies/giant/deathgiant.png");
+		//polevault
+		PVRunWithPoleText.loadFromFile("Assets/Zombies/pole vaulting/runwithpolePV.png");
+		PVJumpText.loadFromFile("Assets/Zombies/pole vaulting/jumpPV.png");
+		PVWalkText.loadFromFile("Assets/Zombies/pole vaulting/walkPV.png");
+		PVEatText.loadFromFile("Assets/Zombies/pole vaulting/eatPV.png");
+		PvDeathText.loadFromFile("Assets/Zombies/pole vaulting/deathPV.png");
+		//Imp (Little Ali Omar)
+		ImpWalkText.loadFromFile("Assets/Zombies/imp/walkimp.png");
+		ImpEatText.loadFromFile("Assets/Zombies/imp/eatimp.png");
+		ImpDeathText.loadFromFile("Assets/Zombies/imp/deathimp.png");
 	}
 
 	struct Zombie {
@@ -957,6 +997,7 @@ namespace Plants_Zombies
 
 		zombieType type;
 		#pragma region booleans
+		bool hasJumped = false;
 		bool started = false;
 		bool stoped;
 		bool isSlowed = false;
@@ -1097,7 +1138,7 @@ namespace Plants_Zombies
 				zombieCont.setScale(3, 3);
 				break;
 			case soccerGuy:
-				zombieCont.setTexture(RegularWalkText);
+				zombieCont.setTexture(FBWalkText);
 				health = 1400;
 				speed = 17.4;
 				damage = 20;
@@ -1116,7 +1157,7 @@ namespace Plants_Zombies
 				zombieCont.setScale(3, 3);
 				break;
 			case gargantous: // zombie zengy
-				zombieCont.setTexture(RegularWalkText);
+				zombieCont.setTexture(GiantWalkText);
 				health = 3000;
 				speed = 7.4;
 				damage = 20000;
@@ -1124,6 +1165,24 @@ namespace Plants_Zombies
 				zombieCollider.setScale(1.4, 1);
 				zombieCont.setScale(3, 3);
 				break;
+			case poleVault: 
+				zombieCont.setTexture(PVWalkText);
+				health = 1000;
+				speed = 15;
+				damage = 20;
+				zombieCollider.setSize({ 50, 40 });
+				zombieCollider.setScale(1.4, 1);
+				zombieCont.setScale(3, 3);
+				break;
+			case imp:
+				zombieCont.setTexture(PVWalkText);
+				health = 800;
+				speed = 40;
+				damage = 10;
+				zombieCollider.setSize({ 50, 40 });
+				zombieCollider.setScale(1.4, 1);
+				zombieCont.setScale(3, 3);
+
 			default:
 				break;
 			}
@@ -1189,6 +1248,12 @@ namespace Plants_Zombies
 				{
 					isDamaged = true;
 				}
+				else if (type == soccerGuy && health < 800 && !isDamaged && !isDead) {
+					{
+						isDamaged = true;
+						speed = 10;
+					}
+				}
 
 				//set slow color 
 				if (isSlowed)
@@ -1197,11 +1262,11 @@ namespace Plants_Zombies
 				}
 				else if (type == soccerGuy)
 				{
-					zombieCont.setColor(Color(255, 105, 180, 255)); // pink
+					//zombieCont.setColor(Color(255, 105, 180, 255)); // pink
 				}
 				else if (type == gargantous)
 				{
-					zombieCont.setColor(Color(44, 44, 44, 255)); // black
+					//zombieCont.setColor(Color(44, 44, 44, 255)); // black
 				}
 				else
 				{
@@ -1829,40 +1894,57 @@ namespace Plants_Zombies
 					
 				}
 			}
+			//Football
 
-			//soccer guy --> pink regular zombie 
 			if (type == soccerGuy && !isSquished)
 			{
-				if (isMoving)
+				if (isMoving && !isDamaged)
 				{
-					zombieCont.setTexture(RegularWalkText);
+					zombieCont.setTexture(FBWalkText);
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 47));
+						zombieCont.setTextureRect(IntRect(CollIndex * 64, 0, 64, 59));
+						CollIndex = (CollIndex + 1) % 8;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking && !isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 63, 0, 63, 59));
+						zombieCont.setTexture(FBEatText);
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
 					}
 				}
-				else if (isAttacking)
+				else if (isMoving && isDamaged)
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
-						zombieCont.setTexture(RegularAttackText);
+						zombieCont.setTextureRect(IntRect(CollIndex * 64, 0, 64, 59));
+						zombieCont.setTexture(DamagedFBWalkText);
+						CollIndex = (CollIndex + 1) % 8;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking && isDamaged)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 62, 0, 62, 59));
+						zombieCont.setTexture(DamegedFBEatText);
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
 					}
-
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
-						zombieCont.setTexture(RegularDeathText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 6) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 200, 0, 200, 58));
+						zombieCont.setTexture(FBDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 8) {
+					if (CollIndex == 6) {
 
-						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						zombieCont.setTextureRect(IntRect(6 * 200, 0, 200, 58));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
@@ -1877,7 +1959,7 @@ namespace Plants_Zombies
 				}
 			}
 
-			// Screen Door --> red regular zombie
+			// Screen Door 
 			if (type == screenDoor && !isSquished)
 			{
 				if (isMoving)
@@ -1960,18 +2042,18 @@ namespace Plants_Zombies
 			if (type == gargantous && !isSquished) {
 				if (isMoving)
 				{
-					zombieCont.setTexture(RegularWalkText);
-					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 47));
-						CollIndex = (CollIndex + 1) % 6;
+					zombieCont.setTexture(GiantWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 300) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 72, 0, 72, 79));
+						CollIndex = (CollIndex + 1) % 4;
 						Zclock.restart();
 					}
 				}
 				else if (isAttacking)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 50));
-						zombieCont.setTexture(RegularAttackText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 300) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 86, 0, 86, 92));
+						zombieCont.setTexture(GiantEatText);
 						CollIndex = (CollIndex + 1) % 6;
 						Zclock.restart();
 					}
@@ -1979,15 +2061,15 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
-						zombieCont.setTexture(RegularDeathText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 7) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 115, 0, 115, 80));
+						zombieCont.setTexture(GiantDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 8) {
+					if (CollIndex == 7) {
 
-						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						zombieCont.setTextureRect(IntRect(7 * 115, 0, 115, 80));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
@@ -2002,6 +2084,53 @@ namespace Plants_Zombies
 				}
 
 			}
+			//imp >:)
+			if (type == imp && !isSquished) {
+				if (isMoving)
+				{
+					zombieCont.setTexture(ImpWalkText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 29, 0, 29, 35));
+						CollIndex = (CollIndex + 1) % 8;
+						Zclock.restart();
+					}
+				}
+				else if (isAttacking)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 40));
+						zombieCont.setTexture(ImpEatText);
+						CollIndex = (CollIndex + 1) % 8;
+						Zclock.restart();
+					}
+
+				}
+				else if (isDead)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 5) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 60, 0, 60, 40));
+						zombieCont.setTexture(ImpDeathText);
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 5) {
+
+						zombieCont.setTextureRect(IntRect(8 * 60, 0, 60, 40));
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+
+						}
+					}
+				}
+
+			}
+
 		}
 
 		void Movement(float deltaTime)
