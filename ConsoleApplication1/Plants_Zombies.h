@@ -20,7 +20,7 @@ namespace Plants_Zombies
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, PotatoMine, EmptyPlant, SunCoin, Shovel };
+	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, PotatoMine, Jalapeno, IceShroom, EmptyPlant, SunCoin, Shovel };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, Dead, imp , poleVault};
 #pragma endregion
 
@@ -39,6 +39,12 @@ namespace Plants_Zombies
 	Texture PotatoMineTransitionTex;
 	Texture PotatoMineIdelTex;
 	Texture PotatoExplosionTex;
+	//Jalapeno
+	Texture JalapenoExplosionTex;
+	Texture JalapenoFireTex;
+	//Ice Shroom
+	Texture IceShroomIdelTex;
+	Texture IceShroomIceTex;
 	//IcePeaShooter
 	Texture IcePeaShooterIdleTex;
 	Texture IcePeaShooterShootTex;
@@ -111,6 +117,12 @@ namespace Plants_Zombies
 		PotatoMineTransitionTex.loadFromFile("Assets/Plants/Potato Mine/Potato Transition.png");
 		PotatoMineIdelTex.loadFromFile("Assets/Plants/Potato Mine/Potato Idel.png");
 		PotatoExplosionTex.loadFromFile("Assets/Plants/Potato Mine/Explosion.png");
+		//Jalapeno
+		JalapenoExplosionTex.loadFromFile("Assets/Plants/Jalapeno/Explosion.png");
+		JalapenoFireTex.loadFromFile("Assets/Plants/Jalapeno/Fire2.png");
+		//Ice Shroom
+		IceShroomIdelTex.loadFromFile("Assets/Plants/Ice shroom/Ice shroom idel.png");
+		IceShroomIceTex.loadFromFile("Assets/Plants/Ice shroom/Ice boom.png");
 
 		//SunShroom
 		SunShroomIdleTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-idle-ST.png");
@@ -241,6 +253,8 @@ namespace Plants_Zombies
 		bool isHiding = false;
 		bool GettingUp = false;
 		bool checkdeathpos = false;
+		bool Explosion = false;
+		bool ExplosionIce = false;
 
 
 		int animationCol = 0;
@@ -422,6 +436,89 @@ namespace Plants_Zombies
 							}
 						}
 					}
+
+				}
+				else if (type == Jalapeno)
+				{
+					if (!Explosion)
+					{
+						shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 36));
+						shape.setTexture(JalapenoExplosionTex);
+						animationCol++;
+						if (animationCol == 6)
+						{
+							Explosion = true;
+							plantCollider.setSize({ 1460,39 });
+							plantLifeTimeClock = 0;
+							animationCol = 1;
+						}
+					}
+					else if (Explosion)
+					{
+						shape.setTextureRect(IntRect(0, animationRow * 54, 2920, 54));
+						shape.setScale(1, 1);
+						plantCollider.setOrigin(plantCollider.getGlobalBounds().width / 2, plantCollider.getGlobalBounds().height / 2);
+						shape.setOrigin(shape.getGlobalBounds().width / 2, shape.getGlobalBounds().height / 2);
+						shape.setTexture(JalapenoFireTex);
+						if (animationRow == 3)
+						{
+							shape.setPosition(shape.getPosition().x, shape.getPosition().y + 50);
+							cout << "done";
+							plantCollider.setSize({ 0,0 });
+						}
+						if (animationRow == 2)
+						{
+							shape.setPosition(shape.getPosition().x, shape.getPosition().y);
+						}
+						if (animationRow == 1)
+						{
+							shape.setPosition(shape.getPosition().x, shape.getPosition().y - 25);
+							plantCollider.setSize({ 0,0 });
+						}
+						if (animationRow == 0)
+						{
+							shape.setPosition(shape.getPosition().x, shape.getPosition().y - 10);
+							
+						}
+						else if (animationRow < 0)
+						{
+							Explosion = false;
+							isDead = true;
+						}
+							animationRow--;
+					}
+					}
+				else if (type == IceShroom)
+				{
+					if (!ExplosionIce)
+					{
+						shape.setTextureRect(IntRect(animationCol * 39, 0, 39, 34));
+						shape.setTexture(IceShroomIdelTex);
+						animationCol++;
+						if (animationCol == 4)
+						{
+							ExplosionIce = true;
+							shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
+							shape.setTexture(IceShroomIceTex);
+							shape.setScale(3.5, 3.5);
+							shape.setPosition(shape.getPosition().x - 170, shape.getPosition().y - 130);
+							plantCollider.setSize({0,0});
+							animationCol = 0;
+						}
+					}
+					else if (ExplosionIce)
+					{	
+						shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
+						shape.setTexture(IceShroomIceTex);
+						animationCol++;
+						if (animationCol == 6)
+						{
+							cout << "Nigaaaa";
+							isDead = true;
+							ExplosionIce = false;
+						}
+					}
+
 
 				}
 				else if (type == SunShroom)
@@ -662,6 +759,8 @@ namespace Plants_Zombies
 			isHiding = false;
 			GettingUp = false;
 			checkdeathpos = false;
+			Explosion = false;
+			ExplosionIce = false;
 			//isPlantingPotArray = false;
 
 			if (type == EmptyPlant) {
@@ -734,6 +833,34 @@ namespace Plants_Zombies
 
 				shape.setTextureRect(IntRect(0, 0, 30, 26));
 				shape.setTexture(PotatoMineTransitionTex);
+				shape.setScale(3.5, 3.5);
+			}
+			else if (type == Jalapeno)
+			{
+				health = 1000;
+				damage = 99999;
+
+				timeForAction = seconds(0.5);
+
+				plantCollider.setSize({ 25,25 });
+
+				shape.setTextureRect(IntRect(0, 0, 32, 36));
+				shape.setTexture(JalapenoExplosionTex);
+				shape.setScale(3.5, 3.5);
+				animationRow = 3;
+
+			}
+			else if (type == IceShroom)
+			{
+				health = 1000;
+				damage = 20;
+
+				timeForAction = seconds(0.5);
+
+				plantCollider.setSize({ 25,25 });
+
+				shape.setTextureRect(IntRect(0,0,39,34));
+				shape.setTexture(IceShroomIdelTex);
 				shape.setScale(3.5, 3.5);
 			}
 			else if (type == SunShroom)
@@ -1000,11 +1127,13 @@ namespace Plants_Zombies
 		bool hasJumped = false;
 		bool started = false;
 		bool isSlowed = false;
+		bool IsFrozen = false;
 		//bool moved = false;
 		int health;
 		float speed;
 		float damage;
 		float Extra_damage;
+		float PreSpeed = speed;
 
 		bool isDead = false;
 		bool deathstart = false;
@@ -1022,7 +1151,7 @@ namespace Plants_Zombies
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
-		float EatClock, CrushedZombieClock,  jackClock, gargantousCrushClock;
+		float EatClock, CrushedZombieClock,  jackClock, gargantousCrushClock,FrozenClock;
 		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22), gargantousCrushTimer = seconds(10);
 
 	private:
@@ -1047,6 +1176,7 @@ namespace Plants_Zombies
 			CrushedZombieClock = 0;
 			jackClock = 0;
 			gargantousCrushClock = 0;
+			FrozenClock = 0;
 
 			#pragma region Booleans
 			started = false;
@@ -1068,6 +1198,7 @@ namespace Plants_Zombies
 			jackBomb = false;
 			startJackClock = true;
 			isGargantousCrush = false;
+			IsFrozen = false;
 			#pragma endregion
 
 			switch (type)
@@ -1190,6 +1321,7 @@ namespace Plants_Zombies
 			zombieCollider.setFillColor(Color(255, 0, 0, 180));
 			jackCollider.setFillColor(Color(150, 150, 150, 120));
 			zombieCont.setColor(Color(255, 255, 255, 255));
+			PreSpeed = speed;
 
 		}
 
@@ -1199,6 +1331,7 @@ namespace Plants_Zombies
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
 			gargantousCrushClock += deltaTime;
+			FrozenClock += deltaTime;
 
 			//setup death animation data
 			if (health <= 0)
@@ -1232,7 +1365,7 @@ namespace Plants_Zombies
 					isDamaged = true;
 				else if (type == bucketHat && health < 650 && !isDamaged)
 					isDamaged = true;
-				else if (type == newsMan && health < 800 && !isDamaged && !isDead) {
+				else if (type == newsMan && health < 800 && !isDamaged && !isDead && !IsFrozen) {
 					isDamaged = true;
 					if (!wassoundplayed) {
 						PlaySoundEffect(newsManPaperRipSoundBuffer, true);
@@ -1240,19 +1373,45 @@ namespace Plants_Zombies
 						wassoundplayed = true;
 					}
 					speed = 120;
+					PreSpeed = speed;
 					damage = 30;
 				}
 				else if (type == screenDoor && health < 800 && !isDamaged && !isDead)
 					isDamaged = true;
-				else if (type == gargantous && health < 2500 && !isDamaged && !isDead )
+				else if (type == gargantous && health < 2500 && !isDamaged && !isDead)
 				{
 					isDamaged = true;
 				}
-				else if (type == soccerGuy && health < 800 && !isDamaged && !isDead) {
+				else if (type == soccerGuy && health < 800 && !isDamaged && !isDead&&!IsFrozen) {
 					{
 						isDamaged = true;
 						speed = 10;
+						PreSpeed = speed;
 					}
+				}
+
+				if (IsFrozen)
+				{
+					FrozenClock = 0;
+					IsFrozen = false;
+					speed = 0;
+				}
+				else if (speed == 0 )
+				{
+					Zclock.restart();
+					zombieCont.setColor(Color(120, 120, 255, 255));
+					cout << " blue NIgga";
+
+					if (FrozenClock >= 2)
+					{
+						speed = PreSpeed;
+
+						if (!isSlowed)
+						{
+							zombieCont.setColor(Color(255, 255, 255, 255));
+						}
+					}
+					
 				}
 
 				//set slow color 
@@ -1268,7 +1427,7 @@ namespace Plants_Zombies
 				{
 					//zombieCont.setColor(Color(44, 44, 44, 255)); // black
 				}
-				else
+				else if(speed != 0)
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
 				}
@@ -1301,6 +1460,7 @@ namespace Plants_Zombies
 						if (PlantProjectilesARR[j].type == SnowPeaShooter && !isSlowed)
 						{
 							speed = (speed * PlantProjectilesARR[j].slowMultiplier);
+							PreSpeed = speed;
 							isSlowed = true;
 						}
 

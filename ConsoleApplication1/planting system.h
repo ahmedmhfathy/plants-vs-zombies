@@ -31,6 +31,10 @@ Texture plantingpotAvailableTex;
 Texture plantingpotUnavailableTex;
 Texture potatomineAvaliableTex;
 Texture potatomineUnavaliableTex;
+Texture JalapenoAvaliableTex;
+Texture JalapenoUnavaliableTex;
+Texture iceshroomAvaliableTex;
+Texture iceshroomUnavaliableTex;
 ///=============================
 Texture emptySeedPacketTex;
 Texture shoveltex;
@@ -404,6 +408,10 @@ void LoadSelectionTexture() {
 	plantingpotUnavailableTex.loadFromFile("Assets/Currency System and planting/New/planting-pot-unavailable.png");
 	potatomineAvaliableTex.loadFromFile("Assets/Currency System and planting/New/potatomine-available.png");
 	potatomineUnavaliableTex.loadFromFile("Assets/Currency System and planting/New/potatomine-unavailable.png");
+	JalapenoAvaliableTex.loadFromFile("Assets/Currency System and planting/New/jalapeno-avaliable.png");
+	JalapenoUnavaliableTex.loadFromFile("Assets/Currency System and planting/New/jalapeno-unavaliable.png");
+	iceshroomAvaliableTex.loadFromFile("Assets/Currency System and planting/New/ice shroom-avalialbe.png");
+	iceshroomUnavaliableTex.loadFromFile("Assets/Currency System and planting/New/ice shroom-unavalialbe.png");
 	//=============================
 	plantSelectionBlankTex.loadFromFile("Assets/Currency System and Planting/New/plantselection-blank.png");
 	LetsRockHoverTex.loadFromFile("Assets/Currency System and Planting/New/lets-rock-hover.png");
@@ -450,6 +458,8 @@ void SetupSelectionUI(Vector2f offset)
 	plantsToSelect[2][0].start(Plants_Zombies::PuffShroom, puffshroomAvailableTex, puffshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 0, false, true, true);
 	plantsToSelect[2][1].start(Plants_Zombies::PlantingPot, plantingpotAvailableTex, plantingpotUnavailableTex, Vector2f{ 0, -25 }, ShortCoolDown, 25, true, true, true);
 	plantsToSelect[2][2].start(Plants_Zombies::PotatoMine, potatomineAvaliableTex, potatomineUnavaliableTex, Vector2f{ 0, -15 }, ShortCoolDown, 25, true, true,true);
+	plantsToSelect[3][0].start(Plants_Zombies::Jalapeno, JalapenoAvaliableTex, JalapenoUnavaliableTex, Vector2f{ 0, -10 }, ShortCoolDown, 125, true, true, true);
+	plantsToSelect[3][1].start(Plants_Zombies::IceShroom, iceshroomAvaliableTex, iceshroomUnavaliableTex, Vector2f{ 0, -20 }, ShortCoolDown, 75, true, true, true);
 	
 	//start game button
 	LetsRockButton.setTexture(LetsRockTex);
@@ -914,6 +924,22 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
 				SelectionHolograph.setColor(Color(255, 255, 255, 175));
 			}
+			else if (currentselection == Plants_Zombies::Jalapeno)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 32, 36));
+				SelectionHolograph.setTexture(Plants_Zombies::JalapenoExplosionTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
+			else if (currentselection == Plants_Zombies::IceShroom)
+			{
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 39, 32));
+				SelectionHolograph.setTexture(Plants_Zombies::IceShroomIdelTex);
+				SelectionHolograph.setScale(3.5, 3.5);
+				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
+				SelectionHolograph.setColor(Color(255, 255, 255, 175));
+			}
 			else if (currentselection == Plants_Zombies::SunShroom)
 			{
 				SelectionHolograph.setTextureRect(IntRect(0, 0, 28, 31));
@@ -1213,7 +1239,52 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 				}
 			}
 		}
+		else if (type == PotatoMine && !zombieProximityAction && GettingUp)
+		{
+			for (int j = 0; j < 100; j++)
+			{
+				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107))
+						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
 
+					{
+						zombieProximityAction = true;
+						animationCol = 0;
+						zombie_array[j].health -= damage;
+					}
+				}
+			}
+		}
+		else if (type == Jalapeno && Explosion)
+		{
+			for (int j = 0; j < 100; j++)
+			{
+				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					if (plantCollider.getGlobalBounds().intersects(zombie_array[j].zombieCollider.getGlobalBounds()))
+					{
+						zombie_array[j].health -= damage;
+					}
+				}
+			}
+		}
+		else if (type == IceShroom && ExplosionIce)
+		{
+			for (int j = 0; j < 100; j++)
+			{
+				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					zombie_array[j].IsFrozen = true;
+				}
+			}
+		}
 		animationHandler();
 		action();
 
