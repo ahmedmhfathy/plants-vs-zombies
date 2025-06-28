@@ -1286,7 +1286,13 @@ namespace Plants_Zombies
 			}
 
 			jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
-			zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
+			if (type == gargantous)
+			{
+				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 135);
+			}
+			else {
+				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
+			}
 		}
 
 		void CollisionZombies(vector<PlantProjectile>& PlantProjectilesARR, Plants PlantsArray[]) 
@@ -2052,21 +2058,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
