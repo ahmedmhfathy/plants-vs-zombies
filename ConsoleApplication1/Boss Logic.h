@@ -292,7 +292,7 @@ namespace boss
 			{
 				isAttacking = true;
 
-				Time animspeed = seconds(2);
+				Time animspeed = seconds(4);
 				Vector2f startFront = { 1100, -300 };
 
 				if (Arm.getPosition().x != x_axisrandomplace && Arm.getPosition().y != y_axisrandomplace)
@@ -730,7 +730,7 @@ namespace boss
 				zombieprefab.isMoving = true;
 
 				bosszombies.push_back(zombieprefab);
-				
+
 				attackOnce = true;
 			}
 			else if (currentselection == ThrowVan)
@@ -803,7 +803,7 @@ void UpdateBossLogic()
 		{
 			FloatRect rect2 = bosszombies[j].zombieCollider.getGlobalBounds();
 
-			if (rect1.intersects(rect2)) {
+			if (rect1.intersects(rect2) && bosszombies[j].started) {
 				car[i].intersection = true;
 				bosszombies[j].isSquished = true;
 			}
