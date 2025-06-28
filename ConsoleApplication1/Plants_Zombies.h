@@ -258,7 +258,6 @@ namespace Plants_Zombies
 		bool Explosion = false;
 		bool ExplosionIce = false;
 
-
 		int animationCol = 0;
 		int animationRow = 0;
 
@@ -447,64 +446,76 @@ namespace Plants_Zombies
 						shape.setTextureRect(IntRect(animationCol * 32, 0, 32, 36));
 						shape.setTexture(JalapenoExplosionTex);
 						animationCol++;
+
 						if (animationCol == 6)
 						{
+							plantCollider.setSize({ 2920, 39 });
+
+							plantCollider.setPosition(shape.getPosition().x - 1100, shape.getPosition().y);
+
+							animationCol = 0;
 							Explosion = true;
-							plantCollider.setSize({ 1460,39 });
-							plantLifeTimeClock = 0;
-							animationCol = 1;
 						}
 					}
 					else if (Explosion)
-					{
+					{ 
 						shape.setTextureRect(IntRect(0, animationRow * 54, 2920, 54));
+						shape.setTexture(JalapenoFireTex);
+
 						shape.setScale(1, 1);
 						plantCollider.setOrigin(plantCollider.getGlobalBounds().width / 2, plantCollider.getGlobalBounds().height / 2);
 						shape.setOrigin(shape.getGlobalBounds().width / 2, shape.getGlobalBounds().height / 2);
-						shape.setTexture(JalapenoFireTex);
+
 						if (animationRow == 3)
 						{
 							shape.setPosition(shape.getPosition().x, shape.getPosition().y + 50);
-							cout << "done";
 							plantCollider.setSize({ 0,0 });
 						}
-						if (animationRow == 2)
+						else if (animationRow == 2)
 						{
 							shape.setPosition(shape.getPosition().x, shape.getPosition().y);
 						}
-						if (animationRow == 1)
+						else if (animationRow == 1)
 						{
 							shape.setPosition(shape.getPosition().x, shape.getPosition().y - 25);
 							plantCollider.setSize({ 0,0 });
 						}
-						if (animationRow == 0)
+						else if (animationRow == 0)
 						{
 							shape.setPosition(shape.getPosition().x, shape.getPosition().y - 10);
-							
+							plantCollider.setSize({ 0,0 });
 						}
 						else if (animationRow < 0)
 						{
+							plantCollider.setOrigin(0, 0);
+							shape.setOrigin(0, 0);
+							
 							Explosion = false;
 							isDead = true;
 						}
-							animationRow--;
+
+						animationRow--;
 					}
-					}
+				}
 				else if (type == IceShroom)
 				{
 					if (!ExplosionIce)
 					{
 						shape.setTextureRect(IntRect(animationCol * 39, 0, 39, 34));
 						shape.setTexture(IceShroomIdelTex);
+
 						animationCol++;
+
 						if (animationCol == 4)
 						{
-							ExplosionIce = true;
 							shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
 							shape.setTexture(IceShroomIceTex);
 							shape.setScale(3.5, 3.5);
 							shape.setPosition(shape.getPosition().x - 170, shape.getPosition().y - 130);
+
 							plantCollider.setSize({0,0});
+
+							ExplosionIce = true;
 							animationCol = 0;
 						}
 					}
@@ -513,6 +524,7 @@ namespace Plants_Zombies
 						shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
 						shape.setTexture(IceShroomIceTex);
 						animationCol++;
+
 						if (animationCol == 6)
 						{
 							cout << "Nigaaaa";
@@ -520,8 +532,6 @@ namespace Plants_Zombies
 							ExplosionIce = false;
 						}
 					}
-
-
 				}
 				else if (type == SunShroom)
 				{
@@ -646,6 +656,7 @@ namespace Plants_Zombies
 						}
 					}
 				}
+
 				animationClock.restart();
 			}
 		}
@@ -964,7 +975,8 @@ namespace Plants_Zombies
 		}
 	}
 
-	void DrawPlantsAndProjectiles(RenderWindow& window) {
+	void DrawPlantsAndProjectiles(RenderWindow& window) 
+	{
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
 		{
 			if (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter ||
@@ -1127,6 +1139,7 @@ namespace Plants_Zombies
 		Vector2f GargantousPos;
 
 		zombieType type;
+
 		#pragma region booleans
 		bool hasJumped = false;
 		bool started = false;
@@ -1168,10 +1181,9 @@ namespace Plants_Zombies
 		bool jackBomb = false;
 		bool checkdeathpos = false;
 
-
 	public:
 
-		int CurrentPlantIndex;
+		int CurrentPlantIndex = 45;
 		bool PlantInfront = false;
 
 		void start() {
@@ -1328,7 +1340,6 @@ namespace Plants_Zombies
 			jackCollider.setFillColor(Color(150, 150, 150, 120));
 			zombieCont.setColor(Color(255, 255, 255, 255));
 			PreSpeed = speed;
-
 		}
 
 		void update(float deltaTime) 
@@ -1388,12 +1399,10 @@ namespace Plants_Zombies
 				{
 					isDamaged = true;
 				}
-				else if (type == soccerGuy && health < 800 && !isDamaged && !isDead&&!IsFrozen) {
-					{
-						isDamaged = true;
-						speed = 10;
-						PreSpeed = speed;
-					}
+				else if (type == soccerGuy && health < 800 && !isDamaged && !isDead && !IsFrozen) {
+					isDamaged = true;
+					speed = 10;
+					PreSpeed = speed;
 				}
 
 				if (IsFrozen)
@@ -1425,14 +1434,6 @@ namespace Plants_Zombies
 				{
 					zombieCont.setColor(Color(120, 120, 255, 255));
 				}
-				else if (type == soccerGuy)
-				{
-					//zombieCont.setColor(Color(255, 105, 180, 255)); // pink
-				}
-				else if (type == gargantous)
-				{
-					//zombieCont.setColor(Color(44, 44, 44, 255)); // black
-				}
 				else if(speed != 0)
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
@@ -1443,8 +1444,6 @@ namespace Plants_Zombies
 					GargantousPos = zombieCont.getPosition();
 					cout << GargantousPos.x << " " << GargantousPos.y << endl;
 				}
-
-				
 			}
 
 			if (type == jackInTheBox && jackBomb && !isDead) {
@@ -1455,6 +1454,7 @@ namespace Plants_Zombies
 			}
 
 			jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
+
 			if (type == gargantous)
 			{
 				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 135);
@@ -1507,7 +1507,7 @@ namespace Plants_Zombies
 				//if not a plant infront the zombie will loop on all 45 plants and check if he collides with anyone
 				for (int i = 0; i < 45; i++)
 				{
-					if (!isDead || type == Dead)
+					if ((!isDead || type == Dead) && started)
 					{
 						if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
 							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
@@ -2257,7 +2257,6 @@ namespace Plants_Zombies
 				}
 
 			}
-
 		}
 
 		void Movement(float deltaTime)
@@ -2300,4 +2299,3 @@ namespace Plants_Zombies
 	}
 #pragma endregion
 }
-//zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz

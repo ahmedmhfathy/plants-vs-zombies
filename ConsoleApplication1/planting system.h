@@ -1150,13 +1150,15 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 	}
 }
 
-void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
+void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) 
+{
 	int lastZombieProximity = 0;
 	if (!isDead) // if not dead will animate and execute action  
 	{
 		actionTimeClock += deltaTime;
 		plantLifeTimeClock += deltaTime;
 
+		//zombie in front checker
 		for (int j = 0; j < 100; j++)
 		{
 			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
@@ -1192,6 +1194,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 			}
 		}
 
+		//zombie proximity checker
 		if (type == ScaredyShroom)
 		{
 			for (int j = 0; j < 100; j++)
@@ -1215,27 +1218,6 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 				else if (lastZombieProximity == j)
 				{
 					zombieProximityAction = false;
-				}
-			}
-		}
-		else if (type == PotatoMine && !zombieProximityAction && GettingUp)
-		{
-			for (int j = 0; j < 100; j++)
-			{
-				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
-				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
-				{
-					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
-						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107))
-						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
-
-					{
-						zombieProximityAction = true;
-						animationCol = 0;
-						zombie_array[j].health -= damage;
-					}
 				}
 			}
 		}
@@ -1285,10 +1267,14 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) {
 				}
 			}
 		}
+
 		animationHandler();
 		action();
 
-		plantCollider.setPosition(shape.getPosition());
+		if (!Explosion)
+		{
+			plantCollider.setPosition(shape.getPosition());
+		}
 	}
 	else if (!mygrid[gridIndex].gravePlanted && !deadPlantingPot)// else if there is not a grave planted there will turn the plant into an empty gameobject  
 	{

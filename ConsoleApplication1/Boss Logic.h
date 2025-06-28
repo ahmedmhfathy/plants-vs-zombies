@@ -32,6 +32,31 @@ namespace boss
 	Texture lawntexture;
 	SoundBuffer carsSoundBuffer;
 #pragma endregion
+
+	deque<Plants_Zombies::Zombie>bosszombies;
+
+	enum BossState{ StandingIdle, EnteringLevel, PlacingZombies, HeadIdle, IceAttack, FireAttack, ThrowVan, None};
+
+	bool startBossfight = false;
+
+	bool plantedIceAttack = false;
+	bool plantedFireAttack = false;
+
+	//first is head position second is ball spawn position
+	pair<Vector2f, Vector2f> ElementalAttacksSpawnPoints[4] = { {{495,-55},{710, 550}}
+															   ,{{495,-165},{710,440}}
+															   ,{{495,-275},{710,330}}
+															   ,{{495,-385},{710,220}} };
+
+	pair<Vector2f, Vector2f> randElementalAttackPos = ElementalAttacksSpawnPoints[rand() % 4];
+
+	//random zombiepositions + hand positions
+	float x_axisplacingzombie[3] = { 830, 770, 620 };
+	float y_axisplacingzombie[5] = { -50, 70, 175, 280, 400 };
+	float y_axisrandomplace = y_axisplacingzombie[rand() % 5];
+	float x_axisrandomplace = x_axisplacingzombie[rand() % 3];
+
+#pragma region Structs
 	struct cars
 	{
 		bool startsoundcar = true;
@@ -90,29 +115,7 @@ namespace boss
 			}
 		}
 	}car[5];
-	vector<Plants_Zombies::Zombie>bosszombies;
 
-	enum BossState{ StandingIdle, EnteringLevel, PlacingZombies, HeadIdle, IceAttack, FireAttack, ThrowVan, None};
-
-	bool startBossfight = false;
-
-	bool plantedIceAttack = false;
-	bool plantedFireAttack = false;
-
-	//first is head position second is ball spawn position
-	pair<Vector2f, Vector2f> ElementalAttacksSpawnPoints[4] = { {{495,-55},{710, 550}}
-															   ,{{495,-165},{710,440}}
-															   ,{{495,-275},{710,330}}
-															   ,{{495,-385},{710,220}} };
-
-	pair<Vector2f, Vector2f> randElementalAttackPos = ElementalAttacksSpawnPoints[rand() % 4];
-
-	float x_axisplacingzombie[3] = { 830, 770, 620 };
-	float y_axisplacingzombie[5] = { -50, 70, 175, 280, 400 };
-	float y_axisrandomplace = y_axisplacingzombie[rand() % 5];
-	float x_axisrandomplace = x_axisplacingzombie[rand() % 3];
-
-#pragma region Structs
 	struct Boss {
 		Sprite Head;
 		Sprite LegFront;
@@ -178,7 +181,7 @@ namespace boss
 			Arm.setTextureRect(IntRect(animationCol * 266, 0, 266, 264));
 			Arm.setScale(2.6, 2.6);
 			Arm.setOrigin(40, 180);
-			Arm.setPosition(710, -100);
+			Arm.setPosition(1400, -500);
 		}
 
 		void AnimationHandler()
@@ -271,7 +274,7 @@ namespace boss
 			{
 				isAttacking = true;
 
-				Time animspeed = seconds(4);
+				Time animspeed = seconds(2);
 				Vector2f startFront = { 1100, -300 };
 
 				if (Arm.getPosition().x != x_axisrandomplace && Arm.getPosition().y != y_axisrandomplace)
@@ -291,8 +294,21 @@ namespace boss
 				}
 				else if (animationClock >= seconds(0.5f).asSeconds()) 
 				{
-					bosszombies.back().started = true;
-					bosszombies.back().CurrentPlantIndex = 45;
+					if (!bosszombies.empty())
+					{
+						if (bosszombies.back().zombieCollider.getPosition() == Vector2f{0,0})
+						{
+							bosszombies.back().zombieCollider.setScale(0, 0);
+						}
+						else
+						{
+							bosszombies.back().zombieCollider.setScale(1, 1);
+						}
+
+						bosszombies.back().CurrentPlantIndex = 45;
+						bosszombies.back().started = true;
+					}
+
 					/*if (attackOnce)
 					{
 						bosszombies.back().started = true;
@@ -315,7 +331,6 @@ namespace boss
 						animationCol = 2;
 						attackOnce = false;
 						isAttacking = false;
-
 						Arm.setPosition(710, -100);
 						currentState = StandingIdle;
 					}
@@ -346,6 +361,7 @@ namespace boss
 						LegBack.setTextureRect(IntRect(animationCol2 * 140, 0, 140, 183));
 						LegBack.setTexture(LegEnterTex);
 
+						//move front leg and when moved animate the sprite
 						if (LegFront.getPosition() != endFront)
 						{
 							//cout << "MOVING FRONT LEG " << endl;
@@ -360,6 +376,7 @@ namespace boss
 							}
 						}
 						
+						//if front leg is moved and on 2nd frame of animation move back leg
 						if (animationCol >= 2)
 						{
 							if (LegBack.getPosition() != endBack)
@@ -377,6 +394,7 @@ namespace boss
 							}
 						}
 
+						//if both animations are finished transition to idle animation
 						if (animationCol2 == 6 || animationCol == 6)
 						{
 							animationCol = 0;
@@ -677,17 +695,22 @@ namespace boss
 				x_axisrandomplace = x_axisplacingzombie[rand() % 3];
 
 				Plants_Zombies::Zombie zombieprefab;
-				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::jackInTheBox);
+				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::Dead);
 
 				zombieprefab.type = randomzombietype;
 				zombieprefab.zombieCont.setPosition(x_axisrandomplace, y_axisrandomplace);
 				zombieprefab.CurrentPlantIndex = 45;
+				zombieprefab.zombieCollider.setScale(0, 0);
+
 				zombieprefab.start();
+
 				zombieprefab.isAttacking = false;
 				zombieprefab.isDead = false;
 				zombieprefab.started = false;
-				zombieprefab.isMoving = true;
 				zombieprefab.PlantInfront = false;
+
+				zombieprefab.isMoving = true;
+
 				bosszombies.push_back(zombieprefab);
 
 				attackOnce = true;
@@ -753,16 +776,7 @@ void UpdateBossLogic()
 		elementalAttackArr.pop_front();
 	}
 
-	for (int i = 0; i < bosszombies.size(); i++) {
-
-		if (bosszombies[i].started && bosszombies[i].type != Plants_Zombies::Dead) 
-		{
-			if (!IsPaused)
-			{
-				bosszombies[i].update(deltaTime);
-			}
-		}
-	}
+	//collision with cars
 	for (int i = 0; i < 5; i++)
 	{
 		FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
@@ -771,16 +785,32 @@ void UpdateBossLogic()
 		{
 			FloatRect rect2 = bosszombies[j].zombieCollider.getGlobalBounds();
 
-			if (rect1.intersects(rect2)) {
+			if (rect1.intersects(rect2) && bosszombies[j].started) 
+			{
 				car[i].intersection = true;
 				bosszombies[j].isSquished = true;
 			}
 		}
 	}
-		for (int i = 0; i < 5; i++) {
-			car[i].update();
-		}
 
+	//update lawnmowers
+	for (int i = 0; i < 5; i++) {
+		car[i].update();
+	}
+
+	//update zombies
+	for (int i = 0; i < bosszombies.size(); i++) {
+
+		if (bosszombies[i].started && bosszombies[i].type != Plants_Zombies::Dead)
+		{
+			if (!IsPaused)
+			{
+				bosszombies[i].update(deltaTime);
+			}
+		}
+	}
+
+	//erase zombies
 	for (int i = 0; i < bosszombies.size(); i++) {
 
 		if (bosszombies[i].type == Plants_Zombies::Dead)
@@ -800,8 +830,10 @@ void DrawBoss(RenderWindow& window)
 		window.draw(elementalAttackArr[i].spriteTop);
 	}
 
-	for (int i = 0; i < bosszombies.size(); i++) {
-		if (bosszombies[i].started) {
+	for (int i = 0; i < bosszombies.size(); i++) 
+	{
+		if (bosszombies[i].started) 
+		{
 			window.draw(bosszombies[i].zombieCont);
 			window.draw(bosszombies[i].zombieCollider);
 		}
