@@ -1164,8 +1164,8 @@ namespace Plants_Zombies
 				speed = 7.4;
 				damage = 20000;
 				zombieCollider.setSize({ 50, 40 });
-				zombieCollider.setScale(1.4, 1);
-				zombieCont.setScale(3, 3);
+				zombieCollider.setScale(1., 1);
+				zombieCont.setScale(2.7, 2.7);
 				break;
 			case poleVault: 
 				zombieCont.setTexture(PVWalkText);
@@ -1174,7 +1174,7 @@ namespace Plants_Zombies
 				damage = 20;
 				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
-				zombieCont.setScale(3, 3);
+				zombieCont.setScale(0.5, 0.5);
 				break;
 			case imp:
 				zombieCont.setTexture(PVWalkText);
@@ -1274,6 +1274,8 @@ namespace Plants_Zombies
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
 				}
+
+				
 			}
 
 			if (type == jackInTheBox && jackBomb && !isDead) {
@@ -2050,21 +2052,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}

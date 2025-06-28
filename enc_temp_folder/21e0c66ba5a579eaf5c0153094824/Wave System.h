@@ -262,7 +262,7 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
         {
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::gargantous)
             {
-                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand()%5] - 60);
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[3]- 60);
             }
             else {
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]);
