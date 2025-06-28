@@ -2203,7 +2203,8 @@ namespace Plants_Zombies
 						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
 						{
 							zombieCont.setPosition(2000, 2000);
-							type = Dead;
+							isGargantousDead = true;
+							//type = Dead;
 
 						}
 					}
@@ -2261,7 +2262,7 @@ namespace Plants_Zombies
 
 		void Movement(float deltaTime)
 		{
-			if (isMoving)
+			if (isMoving && !isSquished)
 			{
 				zombieCont.move(-1 * speed * 2 * deltaTime, 0);
 			}
