@@ -31,6 +31,7 @@ namespace  StartAnimationNS {
         gardenTextureNight.loadFromFile("Assets/Environment/Game-Environment-Night.png");
 		roofTextureDay.loadFromFile("Assets/Environment/Roof-Day.png");
 		roofTextureNight.loadFromFile("Assets/Environment/Roof-Night.png");
+        fogTex.loadFromFile("Assets/Environment/fog.png");
 
         zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
@@ -49,6 +50,7 @@ namespace  StartAnimationNS {
         carsSoundBuffer.loadFromFile("Audio/lawnmower.ogg");
         Textgraves.loadFromFile("Assets/Environment/Graves-ST.png");
 
+#pragma region set positions/scale
         //ready text
         Readytextsprite.setTexture(Readytexttexture);
         Readytextsprite.setOrigin(Readytextsprite.getGlobalBounds().width / 2.0f, Readytextsprite.getGlobalBounds().height / 2.0f);
@@ -84,12 +86,16 @@ namespace  StartAnimationNS {
         Textlosegamesprite.setPosition(-20, 10);
         Textlosegamesprite.setOrigin(Textlosegametexture.getSize().x / 2.f, Textlosegametexture.getSize().y / 2.f);
         Textlosegamesprite.setPosition(1280 / 3.5f, 720 / 2.27f);
+#pragma endregion
     }
 
-    void SetupStartAndWaveAnimationPhotos(bool isNight, bool onRoof) {
+    void SetupStartAndWaveAnimationPhotos(bool isNight, bool onRoof) 
+    {
         //garden
         gardensprite.setPosition(-325, -265);
         gardensprite.setScale(0.65, 0.65);
+        fog.setTexture(fogTex);
+        fog.setPosition(1500, -50);
         GardenCamera.setCenter({ 340, 310 });
 
         if (isNight)
@@ -103,7 +109,6 @@ namespace  StartAnimationNS {
             {
                 gardensprite.setTexture(gardenTextureNight);
             }
-            
         }
         else
         {
@@ -119,12 +124,18 @@ namespace  StartAnimationNS {
         }
 
         //zombies in street
-        zombieinStreet.setTexture(zombieinStreettex);
-        zombieinStreet.setPosition(980, -250);
-        zombieinStreet.setScale(1.4, 1.4);
+        if (!isbossFight)
+        {
+            zombieinStreet.setTexture(zombieinStreettex);
+            zombieinStreet.setPosition(980, -250);
+            zombieinStreet.setScale(1.4, 1.4);
+        }
     }
 
-    void startAnimation(bool isNight, bool onRoof) {
+    void startAnimation(bool isNight, bool onRoof, bool isFog_) 
+    {
+        isFog = isFog_;
+
         startdrawRSP = true;
         EntertostartdrawRSP = false;
         moveright = false;
@@ -161,7 +172,7 @@ namespace  StartAnimationNS {
     {
         // Start Move Camera From Left To Right.....
         window.setView(GardenCamera);
-        if (!moveright)
+        if (!moveright && !moveleft)
         {
             if (GardenCamera.getCenter().x < 850)
             {
@@ -195,6 +206,20 @@ namespace  StartAnimationNS {
             else
             {
                 moveleft = true;
+            }
+        }
+
+        if (moveleft)
+        {
+            if(fog.getPosition().x > -300)
+            {
+                float startValue = 1500, endValue = -300;
+                if (startAnimcamera == false)
+                {
+                    animcameraClock.restart();
+                    startAnimcamera = true;
+                }
+                fog.setPosition(easeInOut(ExpoEaseOut, startValue, endValue, animcameraClock, seconds(4)), -50);
             }
         }
     }
@@ -236,6 +261,9 @@ namespace  StartAnimationNS {
             window.draw(car[i].lawnsprite);
         }
 
-        window.draw(zombieinStreet);
+        if (!isbossFight)
+        {
+            window.draw(zombieinStreet);
+        }
     }
 }

@@ -50,6 +50,11 @@ bool RSPSonudon = true;
 bool ZombiesAreComingSoundOn = true;
 #pragma endregion
 
+Texture fogTex;
+Sprite fog;
+
+bool isFog = false;
+
 Clock clockRSP;
 #pragma endregion
 
@@ -585,23 +590,6 @@ void RSP(RenderWindow& window)
 
 void DrawWavesAndZombies(RenderWindow& window) 
 {
-    if (isbossFight)
-    {
-        if (boss::startBossfight)
-        {
-            RSP(window);
-        }
-    }
-    else if (EntertostartdrawRSP)
-    {
-        RSP(window);
-    }
-
-    //if (EntertostartdrawRSP && boss::startBossfight)
-    //{
-    //    RSP(window);
-    //}
-
     if (endRSP)
     {
         if (nowave) {
@@ -647,6 +635,11 @@ void DrawWavesAndZombies(RenderWindow& window)
         }
     }
 
+    if (isFog)
+    {
+        window.draw(fog);
+    }
+
     if (timertostartwave2 > seconds(2) && timertostartwave2 < seconds(6) && wave[0].checkexit_wave)
     {
         if (scaleFactor > minscale) {
@@ -672,6 +665,18 @@ void DrawWavesAndZombies(RenderWindow& window)
         }
         Textstartfinalwavesprite.setScale(scaleFactor, scaleFactor);
         window.draw(Textstartfinalwavesprite);
+    }
+
+    if (isbossFight)
+    {
+        if (boss::startBossfight)
+        {
+            RSP(window);
+        }
+    }
+    else if (EntertostartdrawRSP)
+    {
+        RSP(window);
     }
 
     for (int i = 0; i < 100; i++) {
@@ -707,4 +712,6 @@ void DrawWavesAndZombies(RenderWindow& window)
             }
         }
     }
+
+
 }

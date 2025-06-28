@@ -551,12 +551,13 @@ void DrawLevelEnd(RenderWindow& window)
 void StartLevel1()
 {
     bool isNight = false;
+    bool isfog = false;
     bool onRoof = false;
 	bool isBossFight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
     startZombiePositions(100,1,1);
-    StartAnimationNS::startAnimation(isNight, onRoof);
+    StartAnimationNS::startAnimation(isNight, onRoof, isfog);
 }
 void UpdateLevel1(RenderWindow& window)
 {
@@ -581,11 +582,12 @@ void StartLevel2()
 {
     bool isNight = true;
     bool onRoof = false;
+    bool isfog = false;
     bool isBossFight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
     startZombiePositions(100,2,2);
-    StartAnimationNS::startAnimation(isNight, onRoof);
+    StartAnimationNS::startAnimation(isNight, onRoof, isfog);
 }
 void UpdateLevel2(RenderWindow& window)
 {
@@ -610,12 +612,12 @@ void StartLevel3()
 {
     bool isNight = true;
 	bool onRoof = false;
+    bool isfog = true;
     bool isBossFight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
     startZombiePositions(100,3,3);
-    StartAnimationNS::startAnimation(isNight, onRoof);
-
+    StartAnimationNS::startAnimation(isNight, onRoof, isfog);
 }
 void UpdateLevel3(RenderWindow& window)
 {
@@ -640,11 +642,12 @@ void StartLevel4()
 {
     bool isNight = false;
     bool onRoof = true;
+    bool isfog = false;
     bool isBossFight = false;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
     startZombiePositions(100, 3, 3);
-    StartAnimationNS::startAnimation(isNight, onRoof);
+    StartAnimationNS::startAnimation(isNight, onRoof, isfog);
 
 }
 void UpdateLevel4(RenderWindow& window)
@@ -670,11 +673,12 @@ void StartLevel5()
 {
     bool isNight = true;
     bool onRoof = true;
+    bool isfog = false;
     bool isBossFight = true;
     setupWaveData(isNight);
     StartPlantingAndCurrencySystem(offset, isNight, onRoof, isBossFight);
     startZombiePositions(100, 3, 3);
-    StartAnimationNS::startAnimation(isNight, onRoof);
+    StartAnimationNS::startAnimation(isNight, onRoof, isfog);
     boss::SetupBossData();
 
 }

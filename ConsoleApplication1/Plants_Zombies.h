@@ -1136,7 +1136,7 @@ namespace Plants_Zombies
 
 		void update(float deltaTime) 
 		{
-			EatClock +=deltaTime;
+			EatClock += deltaTime;
 			CrushedZombieClock += deltaTime;
 			jackClock += deltaTime;
 			gargantousCrushClock += deltaTime;
@@ -1191,7 +1191,7 @@ namespace Plants_Zombies
 				}
 
 				//set slow color 
-				if (isSlowed)
+				if (isSlowed && !jackBomb)
 				{
 					zombieCont.setColor(Color(120, 120, 255, 255));
 				}
@@ -1253,110 +1253,6 @@ namespace Plants_Zombies
 				}
 			}
 
-/*#pragma region idk
-			// Plants
-			if (!PlantInfront)
-			{
-				//if not a plant infront the zombie will loop on all 45 plants and check if he collides with anyone
-				//for (int i = 0; i < 45; i++)
-				//{
-				//	if (!isDead || type == Dead)
-				//	{
-				//		if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
-				//			&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
-				//		{
-				//			CurrentPlantIndex = i;
-				//			PlantInfront = true;
-				//			break;
-				//		}
-				//		else
-				//		{
-				//			isMoving = true;
-				//			isAttacking = false;
-				//		}
-				//	}
-				//}
-
-				for (int i = 0; i < 45; i++)
-				{
-					if (!isDead || type == Dead)
-					{
-						//both plant and pot
-						if ((!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
-							&& zombieCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
-							|| (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
-								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
-						{
-							cout << "Both plant and pot \n";
-							CurrentPlantIndex = i;
-							PlantInfront = true;
-							break;
-						}
-						else
-						{
-							isMoving = true;
-							isAttacking = false;
-						}
-					}
-				}
-			}
-			else
-			{
-				if (health > 0 || isDead == false)
-				{
-					isMoving = false;
-					isAttacking = true;
-
-					//attack clock
-					if (EatTimer.asSeconds() <= EatClock)
-					{
-						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
-						{
-							PlantsArray[CurrentPlantIndex].takeDmg(damage);
-						}
-						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
-						{
-							cout << "ana bakol asreya \n";
-							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
-						}
-						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && PlantsArray[CurrentPlantIndex].type != EmptyPlant)
-						{
-							cout << "ana kalt kolo \n";
-							PlantInfront = false;
-							isMoving = true;
-							isAttacking = false;
-						}
-
-						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
-						EatClock = 0;
-					}
-				}
-				else
-				{
-					PlantInfront = false;
-					isMoving = false;
-					isAttacking = false;
-					isDead = true;
-				}
-			}
-
-			// if the plant the zombie is eating died or is removed reset the zombie state
-			if (onRoof && (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0)
-				&& (PlantingPotArray[CurrentPlantIndex].type == EmptyPlant || PlantingPotArray[CurrentPlantIndex].health <= 0))
-			{
-				PlantInfront = false;
-				isMoving = true;
-				isAttacking = false;
-			}
-
-			if (!onRoof && (PlantsArray[CurrentPlantIndex].type == EmptyPlant || PlantsArray[CurrentPlantIndex].health <= 0))
-			{
-				PlantInfront = false;
-				isMoving = true;
-				isAttacking = false;
-			}
-#pragma endregion
-*/
 			// Plants
 			if (!PlantInfront)
 			{
@@ -1474,6 +1370,7 @@ namespace Plants_Zombies
 				if (started && !jackBomb && jackTimer.asSeconds() <= jackClock)
 				{
 					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
+					zombieCont.setColor(Color(255, 255, 255, 255));
 					jackBomb = true;
 					jackClock = 0;
 					PlaySoundEffect(jackBombSound, true);

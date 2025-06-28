@@ -6,6 +6,7 @@
 #include "Game Settings And Audio.h"
 #include "Plants_Zombies.h"
 #include "StartAnimation.h"
+#include<deque>
 #include<vector>
 using namespace std;
 using namespace sf;
@@ -210,7 +211,7 @@ namespace boss
 
 					if (animationClock >= AnimationTime.asSeconds())
 					{
-						cout << "animate leg \n";
+						//cout << "animate leg \n";
 						LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
 						LegFront.setTexture(LegEnterTex);
 
@@ -219,7 +220,7 @@ namespace boss
 
 						if (LegFront.getPosition() != endFront)
 						{
-							cout << "MOVING FRONT LEG " << endl;
+							//cout << "MOVING FRONT LEG " << endl;
 							LegFront.setPosition(easeInOut(ExpoEaseIn, startFront.x, endFront.x, moveBossAnimClock, animspeed),
 												 easeInOut(ExpoEaseIn, startFront.y, endFront.y, moveBossAnimClock, animspeed));
 						}
@@ -235,7 +236,7 @@ namespace boss
 						{
 							if (LegBack.getPosition() != endBack)
 							{
-								cout << "MOVING BACK LEG " << endl;
+								//cout << "MOVING BACK LEG " << endl;
 								LegBack.setPosition(easeInOut(ExpoEaseIn, startBack.x, endBack.x, moveBossAnimClock, seconds(3.4)),
 													easeInOut(ExpoEaseIn, startBack.y, endBack.y, moveBossAnimClock, seconds(3.4)));
 							}
@@ -267,7 +268,7 @@ namespace boss
 			{
 				if (animationClock >= seconds(0.45f).asSeconds())
 				{
-					cout << "animate idle leg \n";
+					//cout << "animate idle leg \n";
 
 					LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
 					LegFront.setTexture(LegsIdleTex);
@@ -308,7 +309,7 @@ namespace boss
 
 				isSwitchingState = true;
 
-				cout << endl << endl << endl << "+==============================+" << endl;
+				//cout << endl << endl << endl << "+==============================+" << endl;
 			}
 
 			if (Keyboard::isKeyPressed(Keyboard::G) && !isAttacking && !isSwitchingState)
@@ -318,7 +319,7 @@ namespace boss
 
 				isSwitchingState = true;
 
-				cout << endl << endl << endl << "+==============================+" << endl;
+				//cout << endl << endl << endl << "+==============================+" << endl;
 			}
 
 			if (Keyboard::isKeyPressed(Keyboard::L) && !isAttacking)
@@ -348,10 +349,24 @@ namespace boss
 		{
 			if (moveleft)
 			{
-				window.draw(Head);
-				window.draw(LegBack);
-				window.draw(LegFront);
-				window.draw(Arm);
+				if (currentState == EnteringLevel)
+				{
+					window.draw(LegBack);
+					window.draw(LegFront);
+				}
+				else if (currentState == StandingIdle)
+				{
+					window.draw(LegBack);
+					window.draw(LegFront);
+				}
+				else if (currentState == HeadIdle || currentState == FireAttack || currentState == IceAttack) 
+				{
+					window.draw(Head);
+				}
+				else if (currentState == PlacingZombies) 
+				{
+					window.draw(Arm);
+				}
 			}
 		}
 	}BossOBJ;
@@ -505,7 +520,7 @@ namespace boss
 		}
 	};
 
-	vector<ElementalAttack> elementalAttackArr;
+	deque<ElementalAttack> elementalAttackArr;
 
 	void Boss::Attack()
 	{
@@ -551,7 +566,7 @@ void LoadBossTexturesAndAudio()
 void SetupBossData()
 {
 	srand(time(0));
-	elementalAttackArr.empty();
+	elementalAttackArr.clear();
 
 	plantedIceAttack = false;
 	plantedFireAttack = false;
@@ -573,27 +588,13 @@ void UpdateBossLogic()
 	//update elemental attacks
 	for (int i = 0; i < elementalAttackArr.size(); i++)
 	{
-		if (elementalAttackArr[i].active)
-		{
-			elementalAttackArr[i].update();
-		}
+		elementalAttackArr[i].update();
 	}
 
 	//delete elemental attacks
-	if (!elementalAttackArr.empty())
+	if (!elementalAttackArr.empty() && !elementalAttackArr.front().active)
 	{
-		for (int i = 0; i < elementalAttackArr.size(); i++)
-		{
-			if (!elementalAttackArr.empty() && !elementalAttackArr[i].active)
-			{
-				elementalAttackArr.erase(elementalAttackArr.begin(), elementalAttackArr.begin() + i);
-
-				if (i<0)
-				{
-					i--;
-				}
-			}
-		}
+		elementalAttackArr.pop_front();
 	}
 
 	BossOBJ.Update();
@@ -603,11 +604,8 @@ void DrawBoss(RenderWindow& window)
 {
 	for (int i = 0; i < elementalAttackArr.size(); i++)
 	{
-		if (elementalAttackArr[i].active)
-		{
-			window.draw(elementalAttackArr[i].spriteBottom);
-			window.draw(elementalAttackArr[i].spriteTop);
-		}
+		window.draw(elementalAttackArr[i].spriteBottom);
+		window.draw(elementalAttackArr[i].spriteTop);
 	}
 
 	BossOBJ.drawBoss(window);
