@@ -20,6 +20,8 @@ Texture QuitButtonTex;
 Texture QuitButtonHoverTex;
 Texture LoadingScreenTex;
 Texture LoadingTextTex;
+Texture BackTOMainMenuCreditsTex;
+Texture BackTOMainMenuCreditsHoverTex;
 Texture BackTOMainMenuTex;
 Texture BackTOMainMenuHoverTex;
 Texture Level1Tex;
@@ -48,7 +50,7 @@ Sprite MainMenuBackGround;
 Sprite StartButton;
 Sprite CreditButton;
 Sprite QuitButton;
-Sprite BackTOMainMenuButton;
+Sprite BackTOMainMenuCreditsButton;
 Sprite Level1Button;
 Sprite Level2Button;
 Sprite Level3Button;
@@ -127,6 +129,8 @@ void LoadMainMenuTex()
     QuitButtonTex.setSmooth(true);
     QuitButtonHoverTex.loadFromFile("Assets/Main Menu/quitbutton-hover.png");
     QuitButtonHoverTex.setSmooth(true);
+    BackTOMainMenuCreditsTex.loadFromFile("Assets/Main Menu/back to main menu button-default.png");
+    BackTOMainMenuCreditsHoverTex.loadFromFile("Assets/Main Menu/back to main menu button-hover.png");
     BackTOMainMenuTex.loadFromFile("Assets/Main Menu/back-default.png");
     BackTOMainMenuHoverTex.loadFromFile("Assets/Main Menu/back-hover.png");
     OptionsButtonTex.loadFromFile("Assets/Main Menu/optionsbutton-default.png");
@@ -172,10 +176,10 @@ void MainMenuStart(RenderWindow& window)
     StartButton.setTexture(StartButtonTex);
     CreditButton.setTexture(CreditButtonTex);
     QuitButton.setTexture(QuitButtonTex);
-    BackTOMainMenuButton.setTexture(BackTOMainMenuTex);
+    BackTOMainMenuCreditsButton.setTexture(BackTOMainMenuCreditsTex);
     OptionsButton.setTexture(OptionsButtonTex);
     //set up the back to main menu button
-    BackTOMainMenuButton.setPosition(2185, 436);
+    BackTOMainMenuCreditsButton.setPosition(2185, 436);
     //set up the start button
     StartButton.setOrigin({ StartButton.getLocalBounds().width / 2, StartButton.getLocalBounds().height / 2 });
     StartButton.rotate(6.7);
@@ -423,7 +427,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         }
 
         //credits menu buttons
-        if (BackTOMainMenuButton.getGlobalBounds().contains(mouse_pos))
+        if (BackTOMainMenuCreditsButton.getGlobalBounds().contains(mouse_pos))
         {
             if (SoundButton)
             {
@@ -432,7 +436,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 //ButtonSound.play();
                 SoundButton = false;
             }
-            BackTOMainMenuButton.setTexture(BackTOMainMenuHoverTex);
+            BackTOMainMenuCreditsButton.setTexture(BackTOMainMenuCreditsHoverTex);
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left))
             {
                 PlaySoundEffect(ClickBuffer, true);
@@ -443,7 +447,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
         }
         else
         {
-            BackTOMainMenuButton.setTexture(BackTOMainMenuTex);
+            BackTOMainMenuCreditsButton.setTexture(BackTOMainMenuCreditsTex);
             SoundButton = true;
         }
     }
@@ -761,7 +765,7 @@ void DrawMainMenu(RenderWindow& window)
     window.draw(OptionsButton);
     window.draw(QuitButton);
     window.draw(CreditButton);
-    window.draw(BackTOMainMenuButton);
+    window.draw(BackTOMainMenuCreditsButton);
     window.draw(Level1Button);
     window.draw(Level2Button);
     window.draw(Level3Button);

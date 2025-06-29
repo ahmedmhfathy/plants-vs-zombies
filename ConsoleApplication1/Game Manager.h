@@ -360,7 +360,7 @@ void LevelEndUpdate()
     {
         if (boss::WinLevel)
         {
-            if (CurrentState == Level3 && boss::LevelIsOver && boss::WinLevel)
+            if (CurrentState == Level5 && boss::LevelIsOver && boss::WinLevel)
             {
                 if (ThankYouForPlaying.getPosition().y > 310)
                 {
@@ -372,7 +372,7 @@ void LevelEndUpdate()
                     CurrentState = MainMenu;
                 }
 
-                MaxLevelWon = Level3;
+                MaxLevelWon = Level5;
             }
             else
             {
@@ -417,6 +417,14 @@ void LevelEndUpdate()
                         else if (CurrentState == Level2)
                         {
                             SwitchState(Level3);
+                        }
+                        else if (CurrentState == Level3)
+                        {
+                            SwitchState(Level4);
+                        }
+                        else if (CurrentState == Level4)
+                        {
+                            SwitchState(Level5);
                         }
                     }
                 }
@@ -521,7 +529,7 @@ void DrawLevelEnd(RenderWindow& window)
 {
     if (boss::WinLevel)
     {
-        if (CurrentState == Level3)
+        if (CurrentState == Level5)
         {
             window.draw(ThankYouForPlaying);
         }
