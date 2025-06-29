@@ -1421,7 +1421,7 @@ namespace Plants_Zombies
 					cout << "egry ya imp ya gaaaammemeddddd\n";
 				}
 
-				if (IsFrozen)
+				if (IsFrozen && !(isDead || health <= 0))
 				{
 					FrozenClock = 0;
 					Zclock.restart();
@@ -1429,7 +1429,7 @@ namespace Plants_Zombies
 					speed = 0;
 					IsFrozen = false;
 				}
-				else if (speed == 0 )
+				else if (speed == 0 && !(isDead || health <= 0))
 				{
 					Zclock.restart();
 					zombieCont.setColor(Color(120, 120, 255, 255));
