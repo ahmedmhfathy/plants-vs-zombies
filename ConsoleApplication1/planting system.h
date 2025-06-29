@@ -124,6 +124,8 @@ int currentSelectionIndex = -1;
 Font font;
 Text moneytext;
 
+float randomPlantsClock = 0;
+
 #pragma region structs
 struct grid {
 	RectangleShape shape;
@@ -169,12 +171,58 @@ struct SelectedSeedPacket {
 
 	void resetSeedPacket()
 	{
-		//isAvailable = false;
-		seedPacketClock = 0;
-		shape.setTexture(UnavailableTexture);
-		isHolding = false;
-		currentselection = Plants_Zombies::EmptyPlant;
-		currentSelectionIndex = -1;
+		if (isbossFight)
+		{
+			isHolding = false;
+			currentselection = Plants_Zombies::EmptyPlant;
+			currentSelectionIndex = -1;
+	
+			isAdded = false;
+			shape.setPosition(shape.getPosition().x - offset.x, shape.getPosition().y - offset.y);
+			shape.setTextureRect(IntRect(0, 0, emptySeedPacketTex.getSize().x, emptySeedPacketTex.getSize().y));
+			shape.setTexture(emptySeedPacketTex);
+
+			PlaySoundEffect(SelectingPlant, true);
+			//type = Plants_Zombies::EmptyPlant; // reset the type to empty plant
+		}
+		else
+		{
+			//isAvailable = false;
+			seedPacketClock = 0;
+			shape.setTexture(UnavailableTexture);
+			isHolding = false;
+			currentselection = Plants_Zombies::EmptyPlant;
+			currentSelectionIndex = -1;
+		}
+	}
+
+	void updateBossSeedPackets(Vector2f mousepos)
+	{
+		if (!(type == Plants_Zombies::EmptyPlant || type == Plants_Zombies::Shovel) && isAdded)
+		{
+			shape.setTexture(AvailableTexture);
+			shape.setTextureRect(IntRect(0, 0, AvailableTexture.getSize().x, AvailableTexture.getSize().y));
+
+			if (shape.getGlobalBounds().contains(mousepos) && Mouse::isButtonPressed(Mouse::Left))
+			{
+				currentselection = type;
+				currentSelectionIndex = index;
+				isHolding = true;
+
+				if (!PlaySelectionSound)
+				{
+					PlaySelectionSound = true;
+					PlaySoundEffect(SelectingPlant, true);
+				}
+			}
+		}
+		else
+		{
+			isAdded = false;
+			shape.setTextureRect(IntRect(0, 0, emptySeedPacketTex.getSize().x, emptySeedPacketTex.getSize().y));
+			shape.setTexture(emptySeedPacketTex);
+			//shape.setPosition(shape.getPosition().x - offset.x, shape.getPosition().y - offset.y);
+		}
 	}
 
 }selectedPlantsArr[6];
@@ -458,8 +506,8 @@ void SetupSelectionUI(Vector2f offset)
 	plantsToSelect[2][0].start(Plants_Zombies::PuffShroom, puffshroomAvailableTex, puffshroomUnavailableTex, Vector2f{ 0, -10 }, ShortCoolDown, 0, false, true, true);
 	plantsToSelect[2][1].start(Plants_Zombies::PlantingPot, plantingpotAvailableTex, plantingpotUnavailableTex, Vector2f{ 0, -25 }, ShortCoolDown, 25, true, true, true);
 	plantsToSelect[2][2].start(Plants_Zombies::PotatoMine, potatomineAvaliableTex, potatomineUnavaliableTex, Vector2f{ 0, -15 }, ShortCoolDown, 25, true, true,true);
-	plantsToSelect[3][0].start(Plants_Zombies::Jalapeno, JalapenoAvaliableTex, JalapenoUnavaliableTex, Vector2f{ 0, -10 }, ShortCoolDown, 125, true, true, true);
-	plantsToSelect[3][1].start(Plants_Zombies::IceShroom, iceshroomAvaliableTex, iceshroomUnavaliableTex, Vector2f{ 0, -20 }, ShortCoolDown, 75, true, true, true);
+	plantsToSelect[3][0].start(Plants_Zombies::Jalapeno, JalapenoAvaliableTex, JalapenoUnavaliableTex, Vector2f{ 0, -10 }, MediumCoolDown, 125, true, true, true);
+	plantsToSelect[3][1].start(Plants_Zombies::IceShroom, iceshroomAvaliableTex, iceshroomUnavaliableTex, Vector2f{ 0, -20 }, ShortCoolDown, 75, false, true, true);
 	
 	//start game button
 	LetsRockButton.setTexture(LetsRockTex);
@@ -508,6 +556,8 @@ void SetupSelectionUI(Vector2f offset)
 
 void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_, bool isBossFight_)
 {
+	randomPlantsClock = 0;
+
 	isNight = isNight_;
 	onRoof = onRoof_;
 	isbossFight = isBossFight_;
@@ -653,10 +703,72 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 	}
 }
 
+Plants_Zombies::PlantType randPlantType = static_cast<Plants_Zombies::PlantType> (rand() % Plants_Zombies::SunFlower);
+
+void addRandomPlant() 
+{
+	cout << "Entered random plant" << endl;
+
+	Texture AvailableTexture, UnavailableTexture;
+	Vector2f SeedPacketOffset;
+
+	if (randomPlantsClock >= seconds(5).asSeconds())
+	{
+		randPlantType = static_cast<Plants_Zombies::PlantType> (rand() % Plants_Zombies::SunFlower);
+
+		switch (randPlantType)
+		{
+		case Plants_Zombies::PeaShooter:
+			AvailableTexture = peashooterAvailableTex;
+			SeedPacketOffset = Vector2f{ 0, -10 };
+			break;
+		case Plants_Zombies::SnowPeaShooter:
+			AvailableTexture = snowpeaAvailableTex;
+			SeedPacketOffset = Vector2f{ 0, -5 };
+			break;
+		case Plants_Zombies::PlantingPot:
+			AvailableTexture = plantingpotAvailableTex;
+			SeedPacketOffset = Vector2f{ 0, -25 };
+			break;
+		case Plants_Zombies::Jalapeno:
+			AvailableTexture = JalapenoAvaliableTex;
+			SeedPacketOffset = Vector2f{ 0, -10 };
+			break;
+		case Plants_Zombies::IceShroom:
+			AvailableTexture = iceshroomAvaliableTex;
+			SeedPacketOffset = Vector2f{ 0, -20 };
+			break;
+		default:
+			break;
+		}
+
+		UnavailableTexture = emptySeedPacketTex;
+
+		for (int i = 0; i < 6; i++)
+		{
+			if (!selectedPlantsArr[i].isAdded)
+			{
+				//add plant
+				cout << "Add plant" << endl;
+				//PlaySoundEffect(SelectingPlant, true);
+				selectedPlantsArr[i].SetSeedPacket(randPlantType, AvailableTexture, UnavailableTexture, SeedPacketOffset, seconds(0), 0, i);
+				break;
+			}
+			else
+			{
+				continue;
+			}
+		}
+
+		randomPlantsClock = 0;
+	}
+}
+
 void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 {
 	//Update Time
 	sunSpawnTimeClock += deltaTime;
+	randomPlantsClock += deltaTime;
 
 	//sun spawn system
 	if (!isNight && sunSpawnTimeClock >= SunSpawnTime.asSeconds() && moveleft)
@@ -848,12 +960,22 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 	}
 	else
 	{
-
+		if (isbossFight)
+		{
+			addRandomPlant();
+		}
 
 		//updated selected plants
 		for (int i = 0; i < 6; i++)
 		{
-			selectedPlantsArr[i].update(mousepos, plantsToSelect);
+			if (isbossFight) 
+			{
+				selectedPlantsArr[i].updateBossSeedPackets(mousepos);
+			}
+			else
+			{
+				selectedPlantsArr[i].update(mousepos, plantsToSelect);
+			}
 		}
 
 		//select shovel
@@ -874,8 +996,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 			isHolding = false;
 		}
 
-		isHolding = true;
-		currentselection = Plants_Zombies::Jalapeno;
+		/*isHolding = true;
+		currentselection = Plants_Zombies::Jalapeno;*/
 
 		//selection hologram logic
 		if (isHolding)
@@ -1038,7 +1160,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 								PlaySoundEffect(PlantingSoundBuffer, true);
 								//mygrid[i].isplanted = true;
 								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
-								Plants_Zombies::PlantingPotArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+								//Plants_Zombies::PlantingPotArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+								Plants_Zombies::PlantingPotArray[i - 1].type = currentselection;
 								Plants_Zombies::PlantingPotArray[i - 1].start();
 								selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
 								Plants_Zombies::PlantingPotArray[i - 1].deadPlantingPot = false;
@@ -1051,8 +1174,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 								PlaySoundEffect(PlantingSoundBuffer, true);
 								mygrid[i].isplanted = true;
 								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
-								Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::IceShroom;
+								//Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::IceShroom;
 								//Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+								Plants_Zombies::PlantsArray[i - 1].type = currentselection;
 								Plants_Zombies::PlantsArray[i - 1].start();
 								Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 0, -15 });
 								selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
@@ -1084,7 +1208,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 							PlaySoundEffect(PlantingSoundBuffer, true);
 							mygrid[i].isplanted = true;
 							Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
-							Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+							//Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+							Plants_Zombies::PlantsArray[i - 1].type = currentselection;
 							Plants_Zombies::PlantsArray[i - 1].start();
 							Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition());
 							selectedPlantsArr[currentSelectionIndex].resetSeedPacket();

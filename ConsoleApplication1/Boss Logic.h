@@ -232,13 +232,13 @@ namespace boss
 			}
 			else if (currentState == IceAttack || currentState == FireAttack)
 			{
-				cout << "entered elemental attack animation" << endl;
+				//cout << "entered elemental attack animation" << endl;
 
 				Time animTime = seconds(3);
 
 				if (!isAttacking)
 				{
-					cout << " attack boolean = true in elemental" << endl;
+					//cout << " attack boolean = true in elemental" << endl;
 					StartPos = Head.getPosition();
 					EndPos = randElementalAttackPos.first;
 					moveBossAnimClock.restart();
@@ -665,7 +665,7 @@ namespace boss
 				}
 				else
 				{
-					cout << endl << "ready is true " << endl;
+					//cout << endl << "ready is true " << endl;
 					scale = finalScale;
 					ready = true;
 				}
@@ -747,10 +747,10 @@ namespace boss
 	{
 		if (!isSwitchingState && isAttacking)
 		{
-			cout << "Main attack func" << endl;
+			//cout << "Main attack func" << endl;
 			if ((currentState == FireAttack || currentState == IceAttack) && !attackOnce)
 			{
-				cout << "entered ball attack func" << endl;
+				//cout << "entered ball attack func" << endl;
 				ElementalAttack projectile;
 				projectile.start(currentState, randElementalAttackPos.second);
 
@@ -760,7 +760,7 @@ namespace boss
 			}
 			else if (currentState == PlacingZombies && !attackOnce)
 			{
-				cout << "entered zomb attack func" << endl;
+				//cout << "entered zomb attack func" << endl;
 				y_axisrandomplace = y_axisplacingzombie[rand() % 5];
 				x_axisrandomplace = x_axisplacingzombie[rand() % 3];
 
@@ -855,7 +855,7 @@ void BossStateManager()
 			}
 			else
 			{
-				cout << "reset attack wave " << endl;
+				//cout << "reset attack wave " << endl;
 				randomAttackType = static_cast<BossState>(rand() % ThrowVan);
 			}
 
@@ -884,23 +884,23 @@ void BossStateManager()
 		{
 			if (ballAttackCounter == 3)
 			{
-				cout << " AAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOooo" << endl;
+				//cout << " AAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOooo" << endl;
 				endAttackWave = true;
 				return;
 			}
 
 			if (BossOBJ.attackClock < 4)
 			{
-				cout << "Head idle" << endl;
+				//cout << "Head idle" << endl;
 				BossOBJ.currentState = HeadIdle;
 			}
 			else if (!BossOBJ.isAttacking)
 			{
-				cout << "throw ball" << endl;
+				//cout << "throw ball" << endl;
 				BossOBJ.ThrowElementalAttack(randomAttackType);
 			}
 
-			cout << endl << endl << ballAttackCounter << endl << endl;
+			//cout << endl << endl << ballAttackCounter << endl << endl;
 		}
 	}
 }
