@@ -2231,15 +2231,15 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 7) {
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 6) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 115, 0, 115, 80));
 						zombieCont.setTexture(GiantDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 7) {
+					if (CollIndex == 6) {
 
-						zombieCont.setTextureRect(IntRect(7 * 115, 0, 115, 80));
+						zombieCont.setTextureRect(IntRect(6 * 115, 0, 115, 80));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
