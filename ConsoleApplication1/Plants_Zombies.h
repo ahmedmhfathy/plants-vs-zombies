@@ -1435,7 +1435,7 @@ namespace Plants_Zombies
 					zombieCont.setColor(Color(120, 120, 255, 255));
 					cout << " blue NIgga";
 
-					if (FrozenClock >= 2)
+					if (FrozenClock >= 5)
 					{
 						speed = PreSpeed;
 
@@ -1444,7 +1444,6 @@ namespace Plants_Zombies
 							zombieCont.setColor(Color(255, 255, 255, 255));
 						}
 					}
-					
 				}
 
 				//set slow color 
