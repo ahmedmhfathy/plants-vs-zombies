@@ -28,6 +28,10 @@ Texture Level2Tex;
 Texture Level2HoverTex;
 Texture Level3Tex;
 Texture Level3HoverTex;
+Texture Level4Tex;
+Texture Level4HoverTex;
+Texture Level5Tex;
+Texture Level5HoverTex;
 Texture LevelLockTex;
 Texture OptionsButtonTex;
 Texture OptionsButtonHoverTex;
@@ -48,8 +52,12 @@ Sprite BackTOMainMenuButton;
 Sprite Level1Button;
 Sprite Level2Button;
 Sprite Level3Button;
+Sprite Level4Button;
+Sprite Level5Button;
 Sprite Level2Lock;
 Sprite Level3Lock;
+Sprite Level4Lock;
+Sprite Level5Lock;
 Sprite BackTOMainMenuButtonLS;
 Sprite OptionsButton;
 Sprite OptionOpacityTex;
@@ -78,6 +86,8 @@ bool SoundButton = false;
 bool SoundLevel1Button = false;
 bool SoundLevel2Button = false;
 bool SoundLevel3Button = false;
+bool SoundLevel4Button = false;
+bool SoundLevel5Button = false;
 bool BackFromOptionsSound = false;
 
 // animation and logic
@@ -104,25 +114,25 @@ void LoadMainMenuTex()
     ClickBuffer.loadFromFile("Audio/buttonclick.ogg");
     Click.setBuffer(ClickBuffer);
 
-    MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/pvz main menu new.png");
+    MainMenuBackGroundTex.loadFromFile("Assets/Main Menu/pvs main menu (khalid version).png");
     StartButtonTex.loadFromFile("Assets/Main Menu/startbutton-default.png");
-	StartButtonTex.setSmooth(true);
+    StartButtonTex.setSmooth(true);
     StartButtonHoverTex.loadFromFile("Assets/Main Menu/startbutton-hover.png");
-	StartButtonHoverTex.setSmooth(true);
+    StartButtonHoverTex.setSmooth(true);
     CreditButtonTex.loadFromFile("Assets/Main Menu/creditsbutton-default-2.png");
-	CreditButtonTex.setSmooth(true);
+    CreditButtonTex.setSmooth(true);
     CreditButtonHoverTex.loadFromFile("Assets/Main Menu/creditsbutton-hover-2.png");
-	CreditButtonHoverTex.setSmooth(true);
+    CreditButtonHoverTex.setSmooth(true);
     QuitButtonTex.loadFromFile("Assets/Main Menu/quitbutton-default.png");
-	QuitButtonTex.setSmooth(true);
+    QuitButtonTex.setSmooth(true);
     QuitButtonHoverTex.loadFromFile("Assets/Main Menu/quitbutton-hover.png");
-	QuitButtonHoverTex.setSmooth(true);
-    BackTOMainMenuTex.loadFromFile("Assets/Main Menu/back to main menu button-default.png");
-    BackTOMainMenuHoverTex.loadFromFile("Assets/Main Menu/back to main menu button-hover.png");
+    QuitButtonHoverTex.setSmooth(true);
+    BackTOMainMenuTex.loadFromFile("Assets/Main Menu/back-default.png");
+    BackTOMainMenuHoverTex.loadFromFile("Assets/Main Menu/back-hover.png");
     OptionsButtonTex.loadFromFile("Assets/Main Menu/optionsbutton-default.png");
-	OptionsButtonTex.setSmooth(true);
+    OptionsButtonTex.setSmooth(true);
     OptionsButtonHoverTex.loadFromFile("Assets/Main Menu/optionsbutton-hover.png");
-	OptionsButtonHoverTex.setSmooth(true);
+    OptionsButtonHoverTex.setSmooth(true);
 
     //Level Selection 
     Level1Tex.loadFromFile("Assets/Main Menu/Level 1.png");
@@ -131,6 +141,10 @@ void LoadMainMenuTex()
     Level2HoverTex.loadFromFile("Assets/Main Menu/Level 2 hover.png");
     Level3Tex.loadFromFile("Assets/Main Menu/Level 3.png");
     Level3HoverTex.loadFromFile("Assets/Main Menu/Level 3 hover.png");
+    Level4Tex.loadFromFile("Assets/Main Menu/level 4-default.png");
+    Level4HoverTex.loadFromFile("Assets/Main Menu/level 4-hover.png");
+    Level5Tex.loadFromFile("Assets/Main Menu/level 5-default.png");
+    Level5HoverTex.loadFromFile("Assets/Main Menu/level 5-hover.png");
     LevelLockTex.loadFromFile("Assets/Main Menu/lock.png");
 
     //Options
@@ -146,13 +160,13 @@ void LoadMainMenuTex()
 void MainMenuStart(RenderWindow& window)
 {
     jackMusicOn = false;
-    MaxLevelWon = Level2;
+    MaxLevelWon = Level4;
 
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
     LoadMainMenuTex();
 
-    #pragma region setup elements
+#pragma region setup elements
     //sets the textures
     MainMenuBackGround.setTexture(MainMenuBackGroundTex);
     StartButton.setTexture(StartButtonTex);
@@ -190,17 +204,29 @@ void MainMenuStart(RenderWindow& window)
     Level3Button.setTexture(Level3Tex);
     Level3Button.setOrigin({ Level3Button.getLocalBounds().width / 2, Level3Button.getLocalBounds().height / 2 });
     Level3Button.setPosition(288, 1087);
+    //Level 4
+    Level4Button.setTexture(Level4Tex);
+    Level4Button.setOrigin({ Level4Button.getLocalBounds().width / 2, Level4Button.getLocalBounds().height / 2 });
+    Level4Button.setPosition(633, 840);
+    //Level 5
+    Level5Button.setTexture(Level5Tex);
+    Level5Button.setOrigin({ Level5Button.getLocalBounds().width / 2, Level5Button.getLocalBounds().height / 2 });
+    Level5Button.setPosition(633, 963);
     //Back to main menu 
     BackTOMainMenuButtonLS.setTexture(BackTOMainMenuTex);
     BackTOMainMenuButtonLS.setOrigin({ BackTOMainMenuButtonLS.getLocalBounds().width / 2, BackTOMainMenuButtonLS.getLocalBounds().height / 2 });
-    BackTOMainMenuButtonLS.setPosition(978, 1096);
+    BackTOMainMenuButtonLS.setPosition(633, 1083);
     //locks
     Level2Lock.setTexture(LevelLockTex);
     Level2Lock.setPosition(375, 965);
     Level3Lock.setTexture(LevelLockTex);
     Level3Lock.setPosition(375, 1087);
+    Level4Lock.setTexture(LevelLockTex);
+    Level4Lock.setPosition(725, 840);
+    Level5Lock.setTexture(LevelLockTex);
+    Level5Lock.setPosition(725, 965);
 
-    #pragma region Options menu setup
+#pragma region Options menu setup
     //blank menu
     OptionsBlank.setTexture(OptionsBlankTex);
     OptionsBlank.setOrigin(OptionsBlank.getGlobalBounds().width / 2, OptionsBlank.getGlobalBounds().height / 2);
@@ -231,8 +257,8 @@ void MainMenuStart(RenderWindow& window)
     MusicTickBoxO.setOrigin(MusicTickBoxO.getGlobalBounds().width / 2, MusicTickBoxO.getGlobalBounds().height / 2);
     MusicTickBoxO.setScale(2, 2);
     MusicTickBoxO.setPosition(750, 435);
-    #pragma endregion
-    #pragma endregion
+#pragma endregion
+#pragma endregion
 }
 
 void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
@@ -291,7 +317,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
             if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
             {
-				PlaySoundEffect(ClickBuffer, true);
+                PlaySoundEffect(ClickBuffer, true);
                 //Click.setPitch(randPitch[rand() % 3]);
                 //Click.play();
                 ShowLevelSelectionMenu = true;
@@ -439,7 +465,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             startAnimLevel = false;
         }
 
-        #pragma region Buttons
+#pragma region Buttons
         //Back to main menu
         if (BackTOMainMenuButtonLS.getGlobalBounds().contains(mouse_pos))
         {
@@ -482,7 +508,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 //Click.setPitch(randPitch[rand() % 3]);
                 //Click.play();
 
-                SwitchState(Level4);
+                SwitchState(Level1);
 
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
@@ -513,7 +539,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 //Click.setPitch(randPitch[rand() % 3]);
                 //Click.play();
 
-                SwitchState(Level5);
+                SwitchState(Level2);
 
                 ShowLevelSelectionMenu = false;
                 MainMenuCamera.setCenter(640, 360);
@@ -566,13 +592,79 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             SoundLevel3Button = true;
             Level3Lock.setScale(0, 0);
         }
-        #pragma endregion
+        //level 4 button
+        if (Level4Button.getGlobalBounds().contains(mouse_pos) && MaxLevelWon >= Level3)
+        {
+            if (SoundLevel4Button)
+            {
+                PlaySoundEffect(HoverMainMenu, true);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
+                SoundLevel4Button = false;
+            }
+            Level4Button.setTexture(Level4HoverTex);
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
+            {
+                PlaySoundEffect(ClickBuffer, true);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
+
+                SwitchState(Level4);
+
+                ShowLevelSelectionMenu = false;
+                MainMenuCamera.setCenter(640, 360);
+            }
+        }
+        else if (MaxLevelWon < Level3)
+        {
+            Level4Lock.setScale(1, 1);
+        }
+        else
+        {
+            Level4Lock.setScale(0, 0);
+            Level4Button.setTexture(Level4Tex);
+            SoundLevel4Button = true;
+        }
+        //level 5 button
+        if (Level5Button.getGlobalBounds().contains(mouse_pos) && MaxLevelWon >= Level4)
+        {
+            if (SoundLevel5Button)
+            {
+                PlaySoundEffect(HoverMainMenu, true);
+                //ButtonSound.setPitch(randPitch[rand() % 3]);
+                //ButtonSound.play();
+                SoundLevel5Button = false;
+            }
+            Level5Button.setTexture(Level5HoverTex);
+            if (!startAnim && Mouse::isButtonPressed(Mouse::Left) && !startAnimLevel)
+            {
+                PlaySoundEffect(ClickBuffer, true);
+                //Click.setPitch(randPitch[rand() % 3]);
+                //Click.play();
+
+                SwitchState(Level5);
+
+                ShowLevelSelectionMenu = false;
+                MainMenuCamera.setCenter(640, 360);
+            }
+        }
+        else if (MaxLevelWon < Level4)
+        {
+            Level5Lock.setScale(1, 1);
+        }
+        else
+        {
+            Level5Button.setTexture(Level5Tex);
+            Level5Lock.setScale(0, 0);
+            SoundLevel5Button = true;
+        }
+#pragma endregion
     }
 
-    #pragma region Options
+#pragma region Options
     if (ShowOptions)
     {
-        #pragma region update TickBoxes
+#pragma region update TickBoxes
         if (IsFullScreen)
             FullScreenTickBoxO.setTexture(TickBoxSelectedTexO);
         else
@@ -587,7 +679,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             MusicTickBoxO.setTexture(TickBoxSelectedTexO);
         else
             MusicTickBoxO.setTexture(TickBoxBlankTexO);
-        #pragma endregion
+#pragma endregion
 
         if (BackFromOptions.getGlobalBounds().contains(mouse_pos))
         {
@@ -658,7 +750,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
             }
         }
     }
-    #pragma endregion
+#pragma endregion
 }
 
 //draws the main menu
@@ -673,9 +765,13 @@ void DrawMainMenu(RenderWindow& window)
     window.draw(Level1Button);
     window.draw(Level2Button);
     window.draw(Level3Button);
+    window.draw(Level4Button);
+    window.draw(Level5Button);
     window.draw(BackTOMainMenuButtonLS);
     window.draw(Level2Lock);
     window.draw(Level3Lock);
+    window.draw(Level4Lock);
+    window.draw(Level5Lock);
 
     if (ShowOptions)
     {
