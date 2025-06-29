@@ -828,13 +828,21 @@ void UpdateBossLogic()
 	}
 
 	//delete zombies
-	for (int i = 0; i < bosszombies.size(); i++) 
+	/*for (int i = 0; i < bosszombies.size(); i++) 
 	{
 		if (bosszombies[i].type == Plants_Zombies::Dead)
 		{
 			bosszombies.erase(bosszombies.begin(), bosszombies.begin() + i);
 		}
-	}
+	}*/
+
+	//arrange zombies to be removed at the left then iterate through the dead zombies and removes them
+	//leaving the alive zombies unaffected by vector shifting elements
+	bosszombies.erase(remove_if(bosszombies.begin(), bosszombies.end(),
+		[](const Plants_Zombies::Zombie& z) 
+		{
+				return z.type == Plants_Zombies::Dead;
+		}) ,bosszombies.end());
 
 	BossOBJ.Update();
 }
