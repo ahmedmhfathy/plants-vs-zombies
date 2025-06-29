@@ -1477,7 +1477,7 @@ namespace Plants_Zombies
 				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 135);
 			}
 			else if (type == imp) {
-				zombieCollider.setPosition(zombieCont.getPosition().x + 25, zombieCont.getPosition().y + 75);
+				zombieCollider.setPosition(zombieCont.getPosition().x + 25, zombieCont.getPosition().y + 55);
 			}
 			else {
 				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
