@@ -1165,18 +1165,18 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[])
 			{
 				// checks if a zombie is in front of the plant  
 				if ((type == PeaShooter || type == SnowPeaShooter || type == ScaredyShroom)
-					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
 					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
 				{
 					zombieInFront = true;
 					break;
 				}
 				else if ((type == PuffShroom)
-					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
 					&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 4))
 					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
 				{
@@ -1201,8 +1201,8 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[])
 			{
 				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 				{
-					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top))
+					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top))
 						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 3.5)))
 					{
 						//cout << "true \n";
@@ -1228,9 +1228,9 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[])
 				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
 				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 				{
-					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCont.getGlobalBounds().top + zombie_array[j].zombieCont.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCont.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCont.getGlobalBounds().left))
+					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
 						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107))
 						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
 

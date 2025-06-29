@@ -124,7 +124,7 @@ namespace Plants_Zombies
 		JalapenoFireTex.loadFromFile("Assets/Plants/Jalapeno/Fire2.png");
 		//Ice Shroom
 		IceShroomIdelTex.loadFromFile("Assets/Plants/Ice shroom/Ice shroom idel.png");
-		IceShroomIceTex.loadFromFile("Assets/Plants/Ice shroom/Ice boom.png");
+		IceShroomIceTex.loadFromFile("Assets/Plants/Ice shroom/Ice boom2.png");
 
 		//SunShroom
 		SunShroomIdleTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-idle-ST.png");
@@ -508,20 +508,23 @@ namespace Plants_Zombies
 
 						if (animationCol == 4)
 						{
-							shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
+							animationCol = 0;
+
+							shape.setTextureRect(IntRect(animationCol * 200, 0, 200, 170));
 							shape.setTexture(IceShroomIceTex);
+	
 							shape.setScale(3.5, 3.5);
-							shape.setPosition(shape.getPosition().x - 170, shape.getPosition().y - 130);
+							shape.setPosition(shape.getPosition().x -300, shape.getPosition().y - 85*3);
 
 							plantCollider.setSize({0,0});
 
 							ExplosionIce = true;
-							animationCol = 0;
-						}
+						} 
 					}
 					else if (ExplosionIce)
 					{
-						shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
+						//shape.setTextureRect(IntRect(animationCol * 196, 0, 196, 164));
+						shape.setTextureRect(IntRect(animationCol * 200, 0, 200, 170));
 						shape.setTexture(IceShroomIceTex);
 						animationCol++;
 
@@ -1421,8 +1424,10 @@ namespace Plants_Zombies
 				if (IsFrozen)
 				{
 					FrozenClock = 0;
-					IsFrozen = false;
+					Zclock.restart();
+					zombieCont.setColor(Color(120, 120, 255, 255));
 					speed = 0;
+					IsFrozen = false;
 				}
 				else if (speed == 0 )
 				{
