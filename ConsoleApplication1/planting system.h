@@ -848,6 +848,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 	}
 	else
 	{
+
+
 		//updated selected plants
 		for (int i = 0; i < 6; i++)
 		{
@@ -871,6 +873,9 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 		if (Mouse::isButtonPressed(Mouse::Right)) {
 			isHolding = false;
 		}
+
+		isHolding = true;
+		currentselection = Plants_Zombies::Jalapeno;
 
 		//selection hologram logic
 		if (isHolding)
@@ -934,7 +939,7 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 			}
 			else if (currentselection == Plants_Zombies::IceShroom)
 			{
-				SelectionHolograph.setTextureRect(IntRect(0, 0, 39, 32));
+				SelectionHolograph.setTextureRect(IntRect(0, 0, 39, 34));
 				SelectionHolograph.setTexture(Plants_Zombies::IceShroomIdelTex);
 				SelectionHolograph.setScale(3.5, 3.5);
 				SelectionHolograph.setOrigin({ SelectionHolograph.getLocalBounds().width / 2,SelectionHolograph.getLocalBounds().height / 2 });
@@ -1046,7 +1051,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 								PlaySoundEffect(PlantingSoundBuffer, true);
 								mygrid[i].isplanted = true;
 								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
-								Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+								Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::IceShroom;
+								//Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
 								Plants_Zombies::PlantsArray[i - 1].start();
 								Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 0, -15 });
 								selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
@@ -1152,148 +1158,152 @@ void DrawPlantingAndCurrencySystem(RenderWindow& window)
 
 void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[]) 
 {
-	int lastZombieProximity = 0;
-	if (!isDead) // if not dead will animate and execute action  
+	if (!isbossFight)
 	{
-		actionTimeClock += deltaTime;
-		plantLifeTimeClock += deltaTime;
-
-		//zombie in front checker
-		for (int j = 0; j < 100; j++)
+		int lastZombieProximity = 0;
+		if (!isDead) // if not dead will animate and execute action  
 		{
-			if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+			actionTimeClock += deltaTime;
+			plantLifeTimeClock += deltaTime;
+
+			//zombie in front checker
+			for (int j = 0; j < 100; j++)
 			{
-				// checks if a zombie is in front of the plant  
-				if ((type == PeaShooter || type == SnowPeaShooter || type == ScaredyShroom)
-					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
-					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
+				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 				{
-					zombieInFront = true;
-					break;
-				}
-				else if ((type == PuffShroom)
-					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
-					&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 4))
-					&& (zombie_array[j].zombieCollider.getPosition().x < 960))
-				{
-					zombieInFront = true;
-					break;
+					// checks if a zombie is in front of the plant  
+					if ((type == PeaShooter || type == SnowPeaShooter || type == ScaredyShroom)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+							&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
+							&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
+						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
+					{
+						zombieInFront = true;
+						break;
+					}
+					else if ((type == PuffShroom)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+							&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
+							&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
+						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 4))
+						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
+					{
+						zombieInFront = true;
+						break;
+					}
+					else
+					{
+						zombieInFront = false;
+					}
 				}
 				else
 				{
 					zombieInFront = false;
 				}
 			}
-			else
-			{
-				zombieInFront = false;
-			}
-		}
 
-		//zombie proximity checker
-		if (type == ScaredyShroom)
-		{
-			for (int j = 0; j < 100; j++)
+			//zombie proximity checker
+			if (type == ScaredyShroom)
 			{
-				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				for (int j = 0; j < 100; j++)
 				{
-					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top))
-						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 3.5)))
+					if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 					{
-						//cout << "true \n";
-						zombieProximityAction = true;
-						lastZombieProximity = j;
-						break;
+						if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+							&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top))
+							&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 3.5)))
+						{
+							//cout << "true \n";
+							zombieProximityAction = true;
+							lastZombieProximity = j;
+							break;
+						}
+						else
+						{
+							zombieProximityAction = false;
+						}
 					}
-					else
+					else if (lastZombieProximity == j)
 					{
 						zombieProximityAction = false;
 					}
 				}
-				else if (lastZombieProximity == j)
-				{
-					zombieProximityAction = false;
-				}
 			}
-		}
-		else if (type == PotatoMine && !zombieProximityAction && GettingUp)
-		{
-			for (int j = 0; j < 100; j++)
+			else if (type == PotatoMine && !zombieProximityAction && GettingUp)
 			{
-				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
-				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				for (int j = 0; j < 100; j++)
 				{
-					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
-						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
-						&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
-						&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107))
-						&& (zombie_array[j].zombieCollider.getPosition().x < 960))
-
+					//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+					if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 					{
-						zombieProximityAction = true;
-						animationCol = 0;
-						zombie_array[j].health -= damage;
+						if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (zombie_array[j].zombieCollider.getGlobalBounds().top + zombie_array[j].zombieCollider.getGlobalBounds().height)
+							&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= zombie_array[j].zombieCollider.getGlobalBounds().top)
+							&& (shape.getGlobalBounds().left <= zombie_array[j].zombieCollider.getGlobalBounds().left))
+							&& (zombie_array[j].zombieCollider.getPosition().x < shape.getPosition().x + (107))
+							&& (zombie_array[j].zombieCollider.getPosition().x < 960))
+
+						{
+							zombieProximityAction = true;
+							animationCol = 0;
+							zombie_array[j].health -= damage;
+						}
 					}
 				}
 			}
-		}
-		else if (type == Jalapeno && Explosion)
-		{
-			for (int j = 0; j < 100; j++)
+			else if (type == Jalapeno && Explosion)
 			{
-				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
-				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				for (int j = 0; j < 100; j++)
 				{
-					if (plantCollider.getGlobalBounds().intersects(zombie_array[j].zombieCollider.getGlobalBounds()))
+					//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+					if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
 					{
-						zombie_array[j].health -= damage;
+						if (plantCollider.getGlobalBounds().intersects(zombie_array[j].zombieCollider.getGlobalBounds()))
+						{
+							zombie_array[j].health -= damage;
+						}
 					}
 				}
 			}
-		}
-		else if (type == IceShroom && ExplosionIce)
-		{
-			for (int j = 0; j < 100; j++)
+			else if (type == IceShroom && ExplosionIce)
 			{
-				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
-				if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				for (int j = 0; j < 100; j++)
 				{
-					zombie_array[j].IsFrozen = true;
+					//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+					if (!(zombie_array[j].isDead || zombie_array[j].type == Dead) && zombie_array[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+					{
+						zombie_array[j].IsFrozen = true;
+					}
 				}
 			}
+
+			animationHandler();
+			action();
+
+			if (!Explosion)
+			{
+				plantCollider.setPosition(shape.getPosition());
+			}
 		}
-
-		animationHandler();
-		action();
-
-		if (!Explosion)
+		else if (!mygrid[gridIndex].gravePlanted && !deadPlantingPot)// else if there is not a grave planted there will turn the plant into an empty gameobject  
 		{
-			plantCollider.setPosition(shape.getPosition());
+			if (type == PlantingPot)
+			{
+				deadPlantingPot = true;
+			}
+
+			type = EmptyPlant;
+			mygrid[gridIndex].isplanted = false;
+			zombieProximityAction = false;
+			setupPrefab();
 		}
-	}
-	else if (!mygrid[gridIndex].gravePlanted && !deadPlantingPot)// else if there is not a grave planted there will turn the plant into an empty gameobject  
-	{
-		if (type == PlantingPot)
+
+		if (health <= 0 || type == EmptyPlant)
 		{
-			deadPlantingPot = true;
+			isDead = true;
+			idle = false;
+			doAction = false;
+			zombieProximityAction = false;
 		}
-
-		type = EmptyPlant;
-		mygrid[gridIndex].isplanted = false;
-		zombieProximityAction = false;
-		setupPrefab();
 	}
-
-	if (health <= 0 || type == EmptyPlant)
-	{
-		isDead = true;
-		idle = false;
-		doAction = false;
-		zombieProximityAction = false;
-	}
+	
 }

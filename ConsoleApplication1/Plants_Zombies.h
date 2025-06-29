@@ -249,14 +249,15 @@ namespace Plants_Zombies
 		float health;
 		float damage;
 
+		bool ExplosionIce = false;
+		bool Explosion = false;
+
 	private:
 		bool zombieInFront = false;
 		bool zombieProximityAction = false;
 		bool isHiding = false;
 		bool GettingUp = false;
 		bool checkdeathpos = false;
-		bool Explosion = false;
-		bool ExplosionIce = false;
 
 		int animationCol = 0;
 		int animationRow = 0;
@@ -287,7 +288,9 @@ namespace Plants_Zombies
 				isDead = true;
 			}
 		}
+
 		void updatePlantStruct(Zombie* zombie_array); // Defined at the planting system
+		void updateBossPlantStruct(); // Defined at the boss system system
 
 	private:
 		void animationHandler() {
@@ -975,6 +978,48 @@ namespace Plants_Zombies
 		{
 			PlantsArray[i].updatePlantStruct(zombie_array);
 			PlantingPotArray[i].updatePlantStruct(zombie_array);
+		}
+	}
+
+	void UpdateBossPlants(Vector2f mousepos)
+	{
+		//deletes outdated projectiles
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		{
+			if (!PlantProjectilesARR.empty()
+				&& (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter || PlantProjectilesARR[i].type == PuffShroom)
+				&& PlantProjectilesARR[i].shape.getPosition().x > 1000) //enter despawn position
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+			else if (!PlantProjectilesARR.empty()
+				&& (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
+				&& (PlantProjectilesARR[i].projectileLifeSpan.asSeconds() <= PlantProjectilesARR[i].clockTime))
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+		}
+
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		{
+			PlantProjectilesARR[i].update();
+			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
+				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
+				&& Mouse::isButtonPressed(Mouse::Left))
+			{
+				PlaySoundEffect(SunCoinSoundBuffer, true);
+				score += PlantProjectilesARR[i].sunValue;
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+		}
+
+		for (int i = 0; i < 45; i++)
+		{
+			PlantsArray[i].updateBossPlantStruct();
+			PlantingPotArray[i].updateBossPlantStruct();
 		}
 	}
 

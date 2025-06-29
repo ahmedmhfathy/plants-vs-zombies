@@ -697,7 +697,7 @@ void UpdateLevel5(RenderWindow& window)
     boss::UpdateBossLogic();
     //level(3, 35, 10.0f, 3); // 3 , 35 , 7
 
-    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+    Plants_Zombies::UpdateBossPlants(MouseWorldPostion);
 }
 void DrawLevel5(RenderWindow& window)
 {
