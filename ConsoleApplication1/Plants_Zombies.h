@@ -1164,7 +1164,8 @@ namespace Plants_Zombies
 		bool SquishEffect = false;
 		bool wassoundplayed = false;
 		bool startJackClock = true;
-		bool isGargantousCrush = false;
+		bool isGargantousCrushPlant = false;
+		bool isGargantousCrushPot = false;
 		bool isGargantousDead = false;
 		bool jumpFromPlant = false;
 		#pragma endregion
@@ -1215,7 +1216,8 @@ namespace Plants_Zombies
 			PlantInfront = false;
 			jackBomb = false;
 			startJackClock = true;
-			isGargantousCrush = false;
+			isGargantousCrushPlant = false;
+			isGargantousCrushPot = false;
 			IsFrozen = false;
 			isGargantousDead = false;
 			jumpFromPlant = false;
@@ -1546,14 +1548,25 @@ namespace Plants_Zombies
 					//attack clock
 					if (EatTimer.asSeconds() <= EatClock)
 					{
-						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant)
+						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
+						{
+								PlantsArray[CurrentPlantIndex].takeDmg(damage);	
+						}
+						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
+						{
+							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);	
+						}
+						else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPlant)
 						{
 							PlantsArray[CurrentPlantIndex].takeDmg(damage);
+							isGargantousCrushPlant = false;
 						}
-						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant)
+						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPot)
 						{
 							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
+							isGargantousCrushPot = false;
 						}
+						
 						/*else if (type == gargantous && (PlantsArray[CurrentPlantIndex].type != EmptyPlant && PlantingPotArray[CurrentPlantIndex].type != EmptyPlant))
 						{
 							
@@ -2221,10 +2234,21 @@ namespace Plants_Zombies
 				}
 				else if (isAttacking)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 300) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 86, 0, 86, 92));
+					if (Zclock.getElapsedTime().asMilliseconds() > 300 && CollIndex != 5) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 115, 0, 115, 92));
 						zombieCont.setTexture(GiantEatText);
-						CollIndex = (CollIndex + 1) % 6;
+						//CollIndex = (CollIndex + 1) % 5;
+						CollIndex++;
+						if (CollIndex == 5 )
+						{
+							zombieCont.setTextureRect(IntRect(5 * 115, 0, 115, 92));
+							cout << "ana mesh mawgood\n";
+							isAttacking = false;
+							isMoving = true;
+							isGargantousCrushPlant = true;
+							isGargantousCrushPot = true;
+							cout << "edrab ya gargantooooooooo\n";
+						}
 						Zclock.restart();
 					}
 
