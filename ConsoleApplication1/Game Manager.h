@@ -21,6 +21,7 @@ bool ButtonTapSoundPauseBackToMainMenu = false;
 bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
+bool winSound = false;
 
 Time TickBoxDelay = seconds(.25);
 Clock DelayClock;
@@ -79,7 +80,6 @@ Sprite WinMenuBlank;
 Sprite NextlevelButton;
 
 SoundBuffer WinSoundBuffer;
-Sound WinSound;
 #pragma endregion
 
 #pragma region Pause Menu
@@ -300,6 +300,8 @@ void LoadLevelEndTextures() {
     RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
 
     //win case
+    WinSoundBuffer.loadFromFile("Audio/pvz jingle.wav");
+    
     WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
     NextlevelButtonTex.loadFromFile("Assets/Win Menu/next-level-button.png");
     NextlevelButtonHoverTex.loadFromFile("Assets/Win Menu/next-level-button-hover.png");
@@ -358,6 +360,12 @@ void LevelEndUpdate()
 
     if (boss::LevelIsOver)
     {
+
+        /*if (winSound)
+        {
+            PlaySoundEffect(WinSoundBuffer,false);
+
+        }*/
         if (boss::WinLevel)
         {
             if (CurrentState == Level5 && boss::LevelIsOver && boss::WinLevel)

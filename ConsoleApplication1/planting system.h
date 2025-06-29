@@ -76,6 +76,7 @@ Clock PlantSelectionAnimationClock;
 SoundBuffer PlantingSoundBuffer;
 SoundBuffer SelectingPlant;
 SoundBuffer ShovelSoundBuffer;
+SoundBuffer PotatoMineBoomBuffer;
 
 SoundBuffer HoverButtonBuffer;
 SoundBuffer ClickButtonBuffer;
@@ -379,6 +380,8 @@ void LoadSelectionTexture() {
 	PlantingSoundBuffer.loadFromFile("Audio/plant.ogg");
 	ShovelSoundBuffer.loadFromFile("Audio/shovel.ogg");
 	SelectingPlant.loadFromFile("Audio/seedlift.ogg");
+	//Potato mine
+	PotatoMineBoomBuffer.loadFromFile("Audio/Plants/potato_mine.ogg");
 
 	shoveltex.loadFromFile("Assets/Currency System and planting/shovel.png");
 	ShovelContainerAvailable.loadFromFile("Assets/Currency System and planting/container-with-shovel.png");
@@ -874,8 +877,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 			isHolding = false;
 		}
 
-		isHolding = true;
-		currentselection = Plants_Zombies::Jalapeno;
+		//isHolding = true;
+		//currentselection = Plants_Zombies::Jalapeno;
 
 		//selection hologram logic
 		if (isHolding)
@@ -1051,8 +1054,8 @@ void UpdatePlantingAndCurrencySystem(Vector2f mousepos, Vector2f offset)
 								PlaySoundEffect(PlantingSoundBuffer, true);
 								mygrid[i].isplanted = true;
 								Plants_Zombies::score -= selectedPlantsArr[currentSelectionIndex].price;
-								Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::IceShroom;
-								//Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
+								//Plants_Zombies::PlantsArray[i - 1].type = Plants_Zombies::IceShroom;
+								Plants_Zombies::PlantsArray[i - 1].type = selectedPlantsArr[currentSelectionIndex].type;
 								Plants_Zombies::PlantsArray[i - 1].start();
 								Plants_Zombies::PlantsArray[i - 1].shape.setPosition(mygrid[i].shape.getPosition() + Vector2f{ 0, -15 });
 								selectedPlantsArr[currentSelectionIndex].resetSeedPacket();
@@ -1246,6 +1249,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[])
 							zombieProximityAction = true;
 							animationCol = 0;
 							zombie_array[j].health -= damage;
+							PlaySoundEffect(PotatoMineBoomBuffer, false);
 						}
 					}
 				}
