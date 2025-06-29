@@ -1189,7 +1189,6 @@ namespace Plants_Zombies
 		zombieType type;
 
 		#pragma region booleans
-		bool hasJumped = false;
 		bool started = false;
 		bool isSlowed = false;
 		bool IsFrozen = false;
@@ -1215,7 +1214,8 @@ namespace Plants_Zombies
 		bool isGargantousCrushPlant = false;
 		bool isGargantousCrushPot = false;
 		bool isGargantousDead = false;
-		bool jumpFromPlant = false;
+		bool hasJumped = false;
+		bool isJumping = false;
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
@@ -1268,7 +1268,8 @@ namespace Plants_Zombies
 			isGargantousCrushPot = false;
 			IsFrozen = false;
 			isGargantousDead = false;
-			jumpFromPlant = false;
+			isJumping = false;
+			hasJumped = false;
 			#pragma endregion
 
 			switch (type)
@@ -1373,7 +1374,7 @@ namespace Plants_Zombies
 				damage = 20;
 				zombieCollider.setSize({ 50, 40 });
 				zombieCollider.setScale(1.4, 1);
-				zombieCont.setScale(0.5, 0.5);
+				zombieCont.setScale(2.8, 2.8);
 				break;
 			case imp:
 				zombieCont.setTexture(PVWalkText);
@@ -1576,8 +1577,20 @@ namespace Plants_Zombies
 							|| (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
 								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
 						{
-							CurrentPlantIndex = i;
-							PlantInfront = true;
+
+							if (type == poleVault && !hasJumped )
+							{
+								isJumping = true;
+								PlantsinFront = false;
+								cout << "ana mesh a7wal la ana a3ma\n";
+							}
+							else {
+								CurrentPlantIndex = i;
+								PlantInfront = true;
+								cout << "plants in front\n";
+
+							}
+
 							break;
 						}
 						else
@@ -2193,7 +2206,7 @@ namespace Plants_Zombies
 
 			// polevault
 			if (type == poleVault && !isSquished) {
-				if (isMoving)
+				if (isMoving && !isJumping)
 				{
 					if (!hasJumped)
 					{
@@ -2215,20 +2228,27 @@ namespace Plants_Zombies
 					}
 
 				}
-				else if (jumpFromPlant)
+				else if (isJumping)
 				{
-					zombieCont.setTexture(PVRunWithPoleText);
-					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7) {
+					zombieCont.setTexture(PVJumpText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 350 && CollIndex != 5) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 67, 0, 67, 71));
 						CollIndex++;
 						if (CollIndex == 4)
 						{
+							hasJumped == true;
 							zombieCont.move(-190, 0);
+							zombieCollider.move(-190, 0);
+							cout << "7arakt el collider wel sprite\n";
 
 						}
-						if (CollIndex == 6)
+						if (CollIndex == 5)
 						{
-							jumpFromPlant = false;
+							zombieCont.setTextureRect(IntRect(5 * 67, 0, 67, 71));
+							isJumping = false;
+							hasJumped = true;
+							isMoving = true;
+							cout << "not yasta\n";
 
 						}
 						Zclock.restart();
@@ -2395,21 +2415,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = poleVault;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = poleVault;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = poleVault;
 				zombie_array[i].start();
 			}
 		}
