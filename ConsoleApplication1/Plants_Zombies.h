@@ -1373,7 +1373,7 @@ namespace Plants_Zombies
 				speed = 15;
 				damage = 20;
 				zombieCollider.setSize({ 50, 40 });
-				zombieCollider.setScale(1.4, 1);
+				zombieCollider.setScale(1, 1);
 				zombieCont.setScale(2.8, 2.8);
 				break;
 			case imp:
@@ -1525,6 +1525,16 @@ namespace Plants_Zombies
 			else if (type == imp) {
 				zombieCollider.setPosition(zombieCont.getPosition().x + 25, zombieCont.getPosition().y + 55);
 			}
+			else if (type == poleVault )
+			{
+				
+				if (!hasJumped)
+					zombieCollider.setPosition(zombieCont.getPosition().x + 70, zombieCont.getPosition().y + 55);
+				else
+					zombieCollider.setPosition(zombieCont.getPosition().x + 20, zombieCont.getPosition().y + 55);
+				
+				
+			}
 			else {
 				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
 			}
@@ -1613,10 +1623,12 @@ namespace Plants_Zombies
 						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
 						{
 								PlantsArray[CurrentPlantIndex].takeDmg(damage);	
+								cout << "ana bakol\n";
 						}
 						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
 						{
-							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);	
+							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
+							cout << "ana bakol\n";
 						}
 						else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPlant)
 						{
@@ -2237,8 +2249,9 @@ namespace Plants_Zombies
 						if (CollIndex == 4)
 						{
 							hasJumped == true;
-							zombieCont.move(-190, 0);
-							zombieCollider.move(-190, 0);
+							zombieCont.move(-130, 0);
+							//zombieCollider.move(-170, 0);
+							zombieCollider.setScale(0, 0);
 							cout << "7arakt el collider wel sprite\n";
 
 						}
@@ -2249,6 +2262,8 @@ namespace Plants_Zombies
 							hasJumped = true;
 							isMoving = true;
 							cout << "not yasta\n";
+							zombieCollider.setScale(1, 1);
+							zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
 
 						}
 						Zclock.restart();
@@ -2415,21 +2430,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = poleVault;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = poleVault;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = poleVault;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
