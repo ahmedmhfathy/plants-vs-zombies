@@ -243,6 +243,7 @@ namespace boss
 					moveBossAnimClock.restart();
 
 					isAttacking = true;
+					attackOnce = false;
 				}
 
 				//move head to rand position
@@ -303,7 +304,11 @@ namespace boss
 			}
 			else if (currentState == PlacingZombies)
 			{
-				isAttacking = true;
+				if (!isAttacking)
+				{
+					isAttacking = true;
+					attackOnce = false;
+				}
 
 				Time animspeed = seconds(3);
 				Vector2f startFront = { 1100, -300 };
@@ -351,6 +356,7 @@ namespace boss
 					}
 					else
 					{
+						zombiePlaceCounter++;
 						animationCol2 = 2;
 						attackOnce = false;
 						isAttacking = false;
@@ -359,6 +365,7 @@ namespace boss
 					}
 				}
 
+				//animate leg too
 				if (animationClock >= seconds(0.45f).asSeconds())
 				{
 					//cout << "animate idle leg \n";
@@ -670,6 +677,7 @@ namespace boss
 
 				if (!resetBossState)
 				{
+					ballAttackCounter++;
 					BossOBJ.currentState = HeadIdle;
 					BossOBJ.animationCol = 0;
 					BossOBJ.isAttacking = false;
@@ -758,7 +766,18 @@ namespace boss
 				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::Dead);
 
 				zombieprefab.type = randomzombietype;
-				zombieprefab.zombieCont.setPosition(x_axisrandomplace, y_axisrandomplace);
+
+				//adjust position based on zombie type
+				if (randomzombietype == Plants_Zombies::gargantous)
+				{
+					zombieprefab.zombieCont.setPosition(x_axisrandomplace, y_axisrandomplace - 60);
+				}
+				else 
+				{
+					zombieprefab.zombieCont.setPosition(x_axisrandomplace, y_axisrandomplace);
+				}
+
+				//zombieprefab.zombieCont.setPosition(x_axisrandomplace, y_axisrandomplace);
 				zombieprefab.CurrentPlantIndex = 45;
 				zombieprefab.zombieCollider.setScale(0, 0);
 
@@ -850,7 +869,6 @@ void BossStateManager()
 			{
 				//cout << "zomb" << endl;
 				BossOBJ.placeZombie();
-				zombiePlaceCounter++;
 				BossOBJ.attackClock = 0;
 			}
 
@@ -878,7 +896,6 @@ void BossStateManager()
 			{
 				cout << "throw ball" << endl;
 				BossOBJ.ThrowElementalAttack(randomAttackType);
-				ballAttackCounter++;
 			}
 
 			cout << endl << endl << ballAttackCounter << endl << endl;
