@@ -6,6 +6,7 @@
 #include<string>
 #include<vector>
 #include "Game Settings And Audio.h"
+#include "Brightness Shader.h"
 using namespace std;
 using namespace sf;
 
@@ -22,7 +23,7 @@ namespace Plants_Zombies
 #pragma endregion
 
 #pragma region Plants and Zombies Types
-	enum PlantType { PeaShooter, SnowPeaShooter, SunFlower, WallNut, SunShroom, PuffShroom, ScaredyShroom, PlantingPot, PotatoMine, Jalapeno, IceShroom, EmptyPlant, SunCoin, Shovel };
+	enum PlantType { PeaShooter, SnowPeaShooter, PlantingPot, Jalapeno, IceShroom, SunFlower, WallNut, PotatoMine, SunShroom, ScaredyShroom, PuffShroom, EmptyPlant, SunCoin, Shovel };
 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, Dead, imp , poleVault};
 #pragma endregion
 
@@ -75,6 +76,14 @@ namespace Plants_Zombies
 	SoundBuffer BucketHatHitSoundBuffer[2];
 	SoundBuffer jackSong;
 	SoundBuffer jackBombSound;
+	SoundBuffer jackSurprise;
+	SoundBuffer GargantousDeathSound;
+	SoundBuffer GargantousCrushSound;
+	SoundBuffer ImpSpawnSound;
+	SoundBuffer poleJumpSound;
+	SoundBuffer JalapenoFireBuffer;
+	SoundBuffer IceShroomFreezeBuffer;
+	SoundBuffer PotatoMineBoomBuffer;
 #pragma endregion
 
 #pragma region Plants
@@ -82,6 +91,12 @@ namespace Plants_Zombies
 	void LoadPlantTexturesAndSounds() {
 		//Audio
 		SunCoinSoundBuffer.loadFromFile("Audio/points.ogg");
+		//Ice shroom
+		IceShroomFreezeBuffer.loadFromFile("Audio/Plants/frozen.ogg");
+		//Jalapeno
+		JalapenoFireBuffer.loadFromFile("Audio/Plants/jalapeno.ogg");
+		//Potato mine
+		PotatoMineBoomBuffer.loadFromFile("Audio/Plants/potato_mine.ogg");
 		//SunCoinSound.setBuffer(SunCoinSoundBuffer);
 		PeaShootSoundBuffer.loadFromFile("Audio/Plants/peaShoot1.ogg");
 		//ShootSound.setBuffer(PeaShootSoundBuffer);
@@ -100,7 +115,13 @@ namespace Plants_Zombies
 		// Jack in The box
 		jackBombSound.loadFromFile("Audio/Zombies/jackBomb.ogg");
 		jackSong.loadFromFile("Audio/Zombies/jackSong.ogg");
-
+		jackSurprise.loadFromFile("Audio/Zombies/jackSuprise.ogg");
+		// gargantous
+		GargantousDeathSound.loadFromFile("Audio/Zombies/gargantousdeathsound.ogg");
+		GargantousCrushSound.loadFromFile("Audio/Zombies/gargantouscrushsound.ogg");
+		ImpSpawnSound.loadFromFile("Audio/Zombies/impVoice.ogg");
+		// pole vault
+		poleJumpSound.loadFromFile("Audio/Zombies/polevaultjump.ogg");
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
 		PeaShooterShootTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-shooting-ST.png");
@@ -125,6 +146,7 @@ namespace Plants_Zombies
 		//Ice Shroom
 		IceShroomIdelTex.loadFromFile("Assets/Plants/Ice shroom/Ice shroom idel.png");
 		IceShroomIceTex.loadFromFile("Assets/Plants/Ice shroom/Ice boom2.png");
+		
 
 		//SunShroom
 		SunShroomIdleTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-idle-ST.png");
@@ -249,14 +271,15 @@ namespace Plants_Zombies
 		float health;
 		float damage;
 
+		bool ExplosionIce = false;
+		bool Explosion = false;
+
 	private:
 		bool zombieInFront = false;
 		bool zombieProximityAction = false;
 		bool isHiding = false;
 		bool GettingUp = false;
 		bool checkdeathpos = false;
-		bool Explosion = false;
-		bool ExplosionIce = false;
 
 		int animationCol = 0;
 		int animationRow = 0;
@@ -287,7 +310,9 @@ namespace Plants_Zombies
 				isDead = true;
 			}
 		}
+
 		void updatePlantStruct(Zombie* zombie_array); // Defined at the planting system
+		void updateBossPlantStruct(); // Defined at the boss system system
 
 	private:
 		void animationHandler() {
@@ -427,6 +452,7 @@ namespace Plants_Zombies
 							if (checkdeathpos == false) {
 								shape.setPosition(shape.getPosition().x - 90, shape.getPosition().y - 130);
 								checkdeathpos = true;
+								PlaySoundEffect(PotatoMineBoomBuffer, false);
 							}
 							shape.setTextureRect(IntRect(animationCol * 80, 0, 80, 70));
 							shape.setTexture(PotatoExplosionTex);
@@ -455,6 +481,7 @@ namespace Plants_Zombies
 
 							animationCol = 0;
 							Explosion = true;
+							PlaySoundEffect(JalapenoFireBuffer,false);
 						}
 					}
 					else if (Explosion)
@@ -519,6 +546,7 @@ namespace Plants_Zombies
 							plantCollider.setSize({0,0});
 
 							ExplosionIce = true;
+							PlaySoundEffect(IceShroomFreezeBuffer, false);
 						} 
 					}
 					else if (ExplosionIce)
@@ -978,6 +1006,48 @@ namespace Plants_Zombies
 		}
 	}
 
+	void UpdateBossPlants(Vector2f mousepos)
+	{
+		//deletes outdated projectiles
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		{
+			if (!PlantProjectilesARR.empty()
+				&& (PlantProjectilesARR[i].type == PeaShooter || PlantProjectilesARR[i].type == SnowPeaShooter || PlantProjectilesARR[i].type == PuffShroom)
+				&& PlantProjectilesARR[i].shape.getPosition().x > 1000) //enter despawn position
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+			else if (!PlantProjectilesARR.empty()
+				&& (PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
+				&& (PlantProjectilesARR[i].projectileLifeSpan.asSeconds() <= PlantProjectilesARR[i].clockTime))
+			{
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+		}
+
+		for (int i = 0; i < PlantProjectilesARR.size(); i++)
+		{
+			PlantProjectilesARR[i].update();
+			if ((PlantProjectilesARR[i].type == SunFlower || PlantProjectilesARR[i].type == SunCoin || PlantProjectilesARR[i].type == SunShroom)
+				&& PlantProjectilesARR[i].shape.getGlobalBounds().contains(mousepos)
+				&& Mouse::isButtonPressed(Mouse::Left))
+			{
+				PlaySoundEffect(SunCoinSoundBuffer, true);
+				score += PlantProjectilesARR[i].sunValue;
+				PlantProjectilesARR.erase(PlantProjectilesARR.begin() + i);
+				i--;
+			}
+		}
+
+		for (int i = 0; i < 45; i++)
+		{
+			PlantsArray[i].updateBossPlantStruct();
+			PlantingPotArray[i].updateBossPlantStruct();
+		}
+	}
+
 	void DrawPlantsAndProjectiles(RenderWindow& window) 
 	{
 		for (int i = 0; i < PlantProjectilesARR.size(); i++)
@@ -1049,6 +1119,7 @@ namespace Plants_Zombies
 	Texture JackEatText;
 	Texture JackDeathText;
 	Texture JackExplosionText;
+	Texture jackSurprisedText;
 	//screendoor
 	Texture ScreenDoorWalkText;
 	Texture ScreenDoorEatText;
@@ -1106,6 +1177,7 @@ namespace Plants_Zombies
 		JackWalkText.loadFromFile("Assets/Zombies/jackinthebox/jack-default-walk-ST.png");
 		JackEatText.loadFromFile("Assets/Zombies/jackinthebox/jack-default-eat-ST.png");
 		JackDeathText.loadFromFile("Assets/Zombies/jackinthebox/jack-default-death-ST.png");
+		jackSurprisedText.loadFromFile("Assets/Zombies/jackinthebox/jacksurprised.png");
 		//screendoor
 		ScreenDoorWalkText.loadFromFile("Assets/Zombies/screendoor/screendoor-walk-ST.png");
 		ScreenDoorEatText.loadFromFile("Assets/Zombies/screendoor/screendoor-eat-ST.png");
@@ -1127,7 +1199,7 @@ namespace Plants_Zombies
 		PVJumpText.loadFromFile("Assets/Zombies/pole vaulting/jumpPV.png");
 		PVWalkText.loadFromFile("Assets/Zombies/pole vaulting/walkPV.png");
 		PVEatText.loadFromFile("Assets/Zombies/pole vaulting/eatPV.png");
-		PvDeathText.loadFromFile("Assets/Zombies/pole vaulting/deathPV.png");
+		PvDeathText.loadFromFile("Assets/Zombies/pole vaulting/deathPV2.png");
 		//Imp (Little Ali Omar)
 		ImpWalkText.loadFromFile("Assets/Zombies/imp/walkimp.png");
 		ImpEatText.loadFromFile("Assets/Zombies/imp/eatimp.png");
@@ -1139,12 +1211,12 @@ namespace Plants_Zombies
 		RectangleShape zombieCollider;
 		RectangleShape jackCollider;
 
-		Vector2f GargantousPos;
+		Vector2f GargantousPos, JackPos;
 
 		zombieType type;
+		FlashState flashData;
 
 		#pragma region booleans
-		bool hasJumped = false;
 		bool started = false;
 		bool isSlowed = false;
 		bool IsFrozen = false;
@@ -1170,7 +1242,10 @@ namespace Plants_Zombies
 		bool isGargantousCrushPlant = false;
 		bool isGargantousCrushPot = false;
 		bool isGargantousDead = false;
-		bool jumpFromPlant = false;
+		bool hasJumped = false;
+		bool isJumping = false;
+		bool isJackSurprised = false;
+		bool StopJackMusic = false;
 		#pragma endregion
 
 		Clock Zclock, Deathclock;
@@ -1200,6 +1275,9 @@ namespace Plants_Zombies
 			gargantousCrushClock = 0;
 			FrozenClock = 0;
 
+			flashData.isFlashing = false;
+			flashData.currentBrightness = flashData.normalBrightness;
+
 			#pragma region Booleans
 			started = false;
 			isSlowed = false;
@@ -1223,7 +1301,10 @@ namespace Plants_Zombies
 			isGargantousCrushPot = false;
 			IsFrozen = false;
 			isGargantousDead = false;
-			jumpFromPlant = false;
+			isJumping = false;
+			hasJumped = false;
+			isJackSurprised = false;
+			StopJackMusic = false;
 			#pragma endregion
 
 			switch (type)
@@ -1314,7 +1395,7 @@ namespace Plants_Zombies
 				break;
 			case gargantous: // zombie zengy
 				zombieCont.setTexture(GiantWalkText);
-				health = 3000;
+				health = 100;
 				speed = 7.4;
 				damage = 20000;
 				zombieCollider.setSize({ 50, 40 });
@@ -1327,8 +1408,8 @@ namespace Plants_Zombies
 				speed = 15;
 				damage = 20;
 				zombieCollider.setSize({ 50, 40 });
-				zombieCollider.setScale(1.4, 1);
-				zombieCont.setScale(0.5, 0.5);
+				zombieCollider.setScale(1, 1);
+				zombieCont.setScale(2.8, 2.8);
 				break;
 			case imp:
 				zombieCont.setTexture(PVWalkText);
@@ -1374,8 +1455,18 @@ namespace Plants_Zombies
 						= true;
 				}
 
+				if (type == gargantous && isDead && !wassoundplayed)
+				{
+					PlaySoundEffect(GargantousDeathSound, false);
+					//cout << "play\n";
+					wassoundplayed = true;
+				}
+
 				zombieCollider.setScale(0, 0);
-				jackCollider.setScale(0, 0);
+				/*if (jackBomb && isJackSurprised)
+				{
+					jackCollider.setScale(0, 0);
+				}*/
 			}
 
 			//normal update
@@ -1385,6 +1476,7 @@ namespace Plants_Zombies
 				CollisionZombies(PlantProjectilesARR, PlantsArray);
 				Animation();
 
+				#pragma region damaged states
 				if (type == trafficCone && health < 320 && !isDamaged)
 					isDamaged = true;
 				else if (type == bucketHat && health < 650 && !isDamaged)
@@ -1416,15 +1508,19 @@ namespace Plants_Zombies
 					// imp spawn
 					type = imp;
 					start();
+					started = true;
+					PlaySoundEffect(ImpSpawnSound, false);
 					zombieCont.setPosition(GargantousPos.x, GargantousPos.y + 70);
 					isGargantousDead = false;
 					cout << "egry ya imp ya gaaaammemeddddd\n";
 				}
+				#pragma endregion
 
 				if (IsFrozen && !(isDead || health <= 0))
 				{
 					FrozenClock = 0;
 					Zclock.restart();
+					EatClock = 0;
 					zombieCont.setColor(Color(120, 120, 255, 255));
 					speed = 0;
 					IsFrozen = false;
@@ -1432,8 +1528,9 @@ namespace Plants_Zombies
 				else if (speed == 0 && !(isDead || health <= 0))
 				{
 					Zclock.restart();
+					EatClock = 0;
 					zombieCont.setColor(Color(120, 120, 255, 255));
-					cout << " blue NIgga";
+					//cout << " blue NIgga";
 
 					if (FrozenClock >= 5)
 					{
@@ -1456,21 +1553,45 @@ namespace Plants_Zombies
 					zombieCont.setColor(Color(255, 255, 255, 255));
 				}
 
+				if (flashData.isFlashing)
+				{
+					if (flashData.flashClock.getElapsedTime() <= flashData.flashDuration)
+					{
+						flashData.currentBrightness = flashData.flashBrightness;
+					}
+					else
+					{
+						flashData.currentBrightness = flashData.normalBrightness;
+						flashData.isFlashing = false;
+					}
+				}
+
 				if (type == gargantous)
 				{
 					GargantousPos = zombieCont.getPosition();
-					//cout << GargantousPos.x << " " << GargantousPos.y << endl;
+				}
+				else if (type == jackInTheBox)
+				{
+					JackPos = jackCollider.getPosition();
 				}
 			}
 
-			if (type == jackInTheBox && jackBomb && !isDead) {
+			/*if (type == jackInTheBox && jackBomb && isJackSurprised && !isDead) {
 				isDead = true;
 				isMoving = false;
 				isAttacking = false;
 				health = 0;
-			}
+			}*/
 
-			jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
+			if (type == jackInTheBox && !jackBomb && !isJackSurprised)
+			{
+				jackCollider.setPosition(zombieCont.getPosition().x -75, zombieCont.getPosition().y -100);
+			}
+			else if (type == jackInTheBox && jackBomb && isJackSurprised)
+			{
+				jackCollider.setPosition(JackPos.x, JackPos.y );
+				//cout << "ana sabet makanie\n";
+			}
 
 			if (type == gargantous)
 			{
@@ -1478,6 +1599,16 @@ namespace Plants_Zombies
 			}
 			else if (type == imp) {
 				zombieCollider.setPosition(zombieCont.getPosition().x + 25, zombieCont.getPosition().y + 55);
+			}
+			else if (type == poleVault )
+			{
+				
+				if (!hasJumped)
+					zombieCollider.setPosition(zombieCont.getPosition().x + 70, zombieCont.getPosition().y + 55);
+				else
+					zombieCollider.setPosition(zombieCont.getPosition().x + 20, zombieCont.getPosition().y + 55);
+				
+				
 			}
 			else {
 				zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
@@ -1511,6 +1642,9 @@ namespace Plants_Zombies
 
 						PlaySoundEffect(SplatSoundBuffer, true ,3, 25);
 
+						flashData.isFlashing = true;
+						flashData.flashClock.restart();
+
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 						j--;
 						break;
@@ -1531,8 +1665,20 @@ namespace Plants_Zombies
 							|| (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
 								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
 						{
-							CurrentPlantIndex = i;
-							PlantInfront = true;
+
+							if (type == poleVault && !hasJumped && !PlantsArray[i].Explosion)
+							{
+								isJumping = true;
+								PlantsinFront = false;
+								cout << "ana mesh a7wal la ana a3ma\n";
+							}
+							else {
+								CurrentPlantIndex = i;
+								PlantInfront = true;
+								cout << "plants in front\n";
+
+							}
+
 							break;
 						}
 						else
@@ -1550,48 +1696,46 @@ namespace Plants_Zombies
 					isAttacking = true;
 					isMoving = false;
 					//attack clock
-					if (EatTimer.asSeconds() <= EatClock)
+					if (EatTimer.asSeconds() <= EatClock && type != gargantous)
 					{
 						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
 						{
 								PlantsArray[CurrentPlantIndex].takeDmg(damage);	
+								cout << "ana bakol\n";
 						}
 						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
 						{
-							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);	
-						}
-						else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPlant)
-						{
-							PlantsArray[CurrentPlantIndex].takeDmg(damage);
-							isGargantousCrushPlant = false;
-						}
-						else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPot)
-						{
 							PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
-							isGargantousCrushPot = false;
+							cout << "ana bakol\n";
 						}
 						
-						/*else if (type == gargantous && (PlantsArray[CurrentPlantIndex].type != EmptyPlant && PlantingPotArray[CurrentPlantIndex].type != EmptyPlant))
-						{
-							
-							
-							PlantsArray[CurrentPlantIndex].shape.setScale(3.5, 0.7);
-							PlantingPotArray[CurrentPlantIndex].shape.setScale(3.5, 0.7);
-							isGargantousCrush = true;
-							
-							if (isGargantousCrush && gargantousCrushTimer.asSeconds() <= gargantousCrushClock)
-							{
-								PlantsArray[CurrentPlantIndex].takeDmg(damage);
-								PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
-								cout << "fa3as\n";
-								isGargantousCrush = false;
-								gargantousCrushClock = 0;
-							}
-
-						}*/
+						
+						
 						
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
 						EatClock = 0;
+					}
+					else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == jackInTheBox && jackBomb && isJackSurprised)
+					{
+						PlantsArray[CurrentPlantIndex].takeDmg(Extra_damage);
+
+					}
+					else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type == jackInTheBox && jackBomb && isJackSurprised)
+					{
+						PlantingPotArray[CurrentPlantIndex].takeDmg(Extra_damage);
+					}
+					else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPlant && CollIndex ==5 )
+					{
+						PlantsArray[CurrentPlantIndex].takeDmg(damage);
+						PlaySoundEffect(GargantousCrushSound, false);
+						isGargantousCrushPlant = false;
+					}
+					else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPot)
+					{
+						PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
+						PlaySoundEffect(GargantousCrushSound, false);
+						isGargantousCrushPot = false;
+
 					}
 				}
 				else
@@ -1643,31 +1787,44 @@ namespace Plants_Zombies
 			// Jack in the box
 			if (type == jackInTheBox && !isDead && health > 0)
 			{
-				if (started && !jackBomb && jackTimer.asSeconds() <= jackClock)
+				if (started && !isJackSurprised && !jackBomb && jackTimer.asSeconds() <= jackClock)
 				{
-					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
 					zombieCont.setColor(Color(255, 255, 255, 255));
-					jackBomb = true;
+					isJackSurprised = true;
+					isMoving = false;
+					//isDead = true;
 					jackClock = 0;
-					PlaySoundEffect(jackBombSound, true);
+					PlaySoundEffect(jackSurprise, true);
+					cout << "-----------------------ALLAHO AKBAAARRR-----------------------" << endl;
+					//PlaySoundEffect(jackBombSound, true);
 
 				}
-
 				//Jack in The Box
-				if (jackBomb)
+				if (jackBomb && isJackSurprised || isAttacking && isJackSurprised)
 				{
 					for (int i = 0; i < 45; i++)
 					{
-						if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0)
+						isMoving = false;
+						if ((PlantsArray[i].type != EmptyPlant || PlantsArray[i].health > 0)
 							&& jackCollider.getGlobalBounds().intersects(PlantsArray[i].plantCollider.getGlobalBounds()))
 						{
-							PlantsArray[i].takeDmg(Extra_damage);
+							/*cout << "looking for things to bomb\n";*/
+							if (jackBomb)
+							{
+								PlantsArray[i].takeDmg(Extra_damage);
+								cout << "bomb plant\n";
+
+							}
 						}
 
 						if (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0)
 							&& jackCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds()))
 						{
-							PlantingPotArray[i].takeDmg(Extra_damage);
+							if (jackBomb && CollIndex == 11)
+							{
+								PlantingPotArray[i].takeDmg(Extra_damage);
+
+							}
 						}
 					}
 				}
@@ -1920,7 +2077,7 @@ namespace Plants_Zombies
 			//jack in the box  
 			if (type == jackInTheBox)
 			{
-				if (isMoving && !isSquished)
+				if (isMoving && !isSquished && !isJackSurprised)
 				{
 					zombieCont.setTexture(JackWalkText);
 					zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 58));
@@ -1930,7 +2087,7 @@ namespace Plants_Zombies
 						Zclock.restart();
 					}
 				}
-				else if (isAttacking)
+				else if (isAttacking && !isJackSurprised)
 				{
 					zombieCont.setTextureRect(IntRect(CollIndex * 42, 0, 42, 58));
 					zombieCont.setTexture(JackEatText);
@@ -1940,66 +2097,80 @@ namespace Plants_Zombies
 						Zclock.restart();
 					}
 
+				} else if (isJackSurprised && !jackBomb)
+				{
+					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 9)
+					{
+						zombieCont.setTextureRect(IntRect(CollIndex * 45, 0, 45, 62));
+						zombieCont.setTexture(jackSurprisedText);
+
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 9)
+					{
+						//isJackSurprised = false;
+						jackBomb = true;
+						CollIndex = 0;
+					}
+				}else if (jackBomb && isJackSurprised)
+				{
+					//removes coloring
+					zombieCont.setColor(Color(255, 255, 255, 255));
+
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 11)
+					{
+						if (checkdeathpos == false) {
+							zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
+							checkdeathpos = true;
+							PlaySoundEffect(jackBombSound, true);
+						}
+
+						zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 66));
+						zombieCont.setTexture(JackExplosionText);
+
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 11)
+					{
+						zombieCont.setPosition(2000, 2000);
+						type = Dead;
+						jackCollider.setScale(0, 0);
+						cout << "type is dead\n";
+					}
 				}
 				else if (isDead)
 				{
-					if (jackBomb)
+					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7)
 					{
-						//removes coloring
-						zombieCont.setColor(Color(255, 255, 255, 255));
-
-						if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 11)
+						if (checkdeathpos == false)
 						{
-							if (checkdeathpos == false) {
-								zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
-								checkdeathpos = true;
-							}
-
-							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 66));
-							zombieCont.setTexture(JackExplosionText);
-
-							CollIndex++;
-							Zclock.restart();
+							zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
+							checkdeathpos = true;
 						}
-						if (CollIndex == 11)
+
+						zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
+						zombieCont.setTexture(JackDeathText);
+
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 7) {
+
+						zombieCont.setTextureRect(IntRect(6 * 95, 0, 95, 58));
+
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
+						}
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
 						{
+							zombieCont.setScale(0, 0);
 							zombieCont.setPosition(2000, 2000);
 							type = Dead;
 						}
 					}
-					else
-					{
-						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7)
-						{
-							if (checkdeathpos == false)
-							{
-								zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
-								checkdeathpos = true;
-							}
-
-							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
-							zombieCont.setTexture(JackDeathText);
-
-							CollIndex++;
-							Zclock.restart();
-						}
-						if (CollIndex == 7) {
-
-							zombieCont.setTextureRect(IntRect(6 * 95, 0, 95, 58));
-
-							if (deathstart == false) {
-								Deathclock.restart();
-								deathstart = true;
-							}
-							else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
-							{
-								zombieCont.setScale(0, 0);
-								zombieCont.setPosition(2000, 2000);
-								type = Dead;
-							}
-						}
-					}
-
 				}
 			}
 
@@ -2148,7 +2319,7 @@ namespace Plants_Zombies
 
 			// polevault
 			if (type == poleVault && !isSquished) {
-				if (isMoving)
+				if (isMoving && !isJumping)
 				{
 					if (!hasJumped)
 					{
@@ -2170,20 +2341,31 @@ namespace Plants_Zombies
 					}
 
 				}
-				else if (jumpFromPlant)
+				else if (isJumping)
 				{
-					zombieCont.setTexture(PVRunWithPoleText);
-					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7) {
+					zombieCont.setTexture(PVJumpText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 350 && CollIndex != 5) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 67, 0, 67, 71));
 						CollIndex++;
 						if (CollIndex == 4)
 						{
-							zombieCont.move(-190, 0);
+							hasJumped == true;
+							PlaySoundEffect(poleJumpSound, false);
+							zombieCont.move(-130, 0);
+							//zombieCollider.move(-170, 0);
+							zombieCollider.setScale(0, 0);
+							cout << "7arakt el collider wel sprite\n";
 
 						}
-						if (CollIndex == 6)
+						if (CollIndex == 5)
 						{
-							jumpFromPlant = false;
+							zombieCont.setTextureRect(IntRect(5 * 67, 0, 67, 71));
+							isJumping = false;
+							hasJumped = true;
+							isMoving = true;
+							cout << "not yasta\n";
+							zombieCollider.setScale(1, 1);
+							zombieCollider.setPosition(zombieCont.getPosition().x + 50, zombieCont.getPosition().y + 75);
 
 						}
 						Zclock.restart();
@@ -2201,15 +2383,15 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
-						zombieCont.setTexture(RegularDeathText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 10) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 58));
+						zombieCont.setTexture(PvDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 8) {
+					if (CollIndex == 10) {
 
-						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						zombieCont.setTextureRect(IntRect(10 * 50, 0, 50, 58));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
@@ -2227,7 +2409,7 @@ namespace Plants_Zombies
 
 			//Gargatnous
 			if (type == gargantous && !isSquished) {
-				if (isMoving)
+				if (isMoving && !isAttacking)
 				{
 					zombieCont.setTexture(GiantWalkText);
 					if (Zclock.getElapsedTime().asMilliseconds() > 300) {
@@ -2238,7 +2420,7 @@ namespace Plants_Zombies
 				}
 				else if (isAttacking)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 300 && CollIndex != 5) {
+					if (Zclock.getElapsedTime().asMilliseconds() > 300 && CollIndex) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 115, 0, 115, 92));
 						zombieCont.setTexture(GiantEatText);
 						//CollIndex = (CollIndex + 1) % 5;
@@ -2264,6 +2446,7 @@ namespace Plants_Zombies
 						zombieCont.setTexture(GiantDeathText);
 						CollIndex++;
 						Zclock.restart();
+						//cout << CollIndex << endl;
 					}
 					if (CollIndex == 6) {
 
@@ -2277,7 +2460,7 @@ namespace Plants_Zombies
 							zombieCont.setPosition(2000, 2000);
 							isGargantousDead = true;
 							//type = Dead;
-
+							wassoundplayed = false;
 						}
 					}
 				}
@@ -2350,21 +2533,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = regular;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}

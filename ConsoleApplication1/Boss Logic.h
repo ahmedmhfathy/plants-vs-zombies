@@ -8,6 +8,8 @@
 #include "Plants_Zombies.h"
 #include "StartAnimation.h"
 #include "Game Manager.h"
+#include "Plants_Zombies.h"
+#include "Brightness Shader.h"
 #include<deque>
 #include<vector>
 using namespace std;
@@ -56,9 +58,7 @@ namespace boss
 	BossState randomAttackType = static_cast<BossState>(rand() % ThrowVan);
 #pragma region boolean
 	bool startBossfight = false;
-
-	bool plantedIceAttack = false;
-	bool plantedFireAttack = false;
+	bool canBeDamaged = false;
 
 	bool LevelIsOver = false;
 	bool WinLevel = false;
@@ -155,8 +155,15 @@ namespace boss
 		Sprite Arm;
 		Sprite backlegforstartattackfirst;
 		Sprite backlegforstartattacksecond;
+
+		FlashState flashData;
+
+		RectangleShape collider;
+
 		BossState currentState, previousState;
-		int Health = 10000;
+
+		int Health = 30000;
+
 		bool isAttacking = false;
 		bool isSwitchingState = false;
 		bool attackOnce = false;
@@ -186,6 +193,10 @@ namespace boss
 		{
 			 currentState = EnteringLevel;
 			//currentState = PlacingZombies;
+
+			flashData.isFlashing = false;
+			flashData.currentBrightness = flashData.normalBrightness;
+
 			 previousState=HeadIdle;
 			isAttacking = false;
 			isSwitchingState = false;
@@ -200,6 +211,12 @@ namespace boss
 			Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 			Head.setScale(3.5, 3.5);
 			Head.setPosition({ 495, -165 });
+			Head.setColor(Color(255, 255, 255, 255));
+
+			collider.setSize({30, 145});
+			collider.setScale(3.5, 3.5);
+			collider.setFillColor(Color(255, 0, 0, 150));
+			collider.setPosition(Head.getPosition() + Vector2f{ 300, 120 });
 
 			LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
 			LegFront.setTexture(LegEnterTex);
@@ -292,13 +309,15 @@ namespace boss
 			}
 			else if (currentState == IceAttack || currentState == FireAttack)
 			{
-				cout << "entered elemental attack animation" << endl;
+				canBeDamaged = true;
+
+				//cout << "entered elemental attack animation" << endl;
 
 				Time animTime = seconds(3);
 
 				if (!isAttacking)
 				{
-					cout << " attack boolean = true in elemental" << endl;
+					//cout << " attack boolean = true in elemental" << endl;
 					StartPos = Head.getPosition();
 					EndPos = randElementalAttackPos.first;
 					moveBossAnimClock.restart();
@@ -392,6 +411,13 @@ namespace boss
 						isAttacking = true;
 						attackOnce = false;
 					}
+				canBeDamaged = false;
+
+				if (!isAttacking)
+				{
+					isAttacking = true;
+					attackOnce = false;
+				}
 
 					Time animspeed = seconds(3);
 					Vector2f startFront = { 1100, -300 };
@@ -467,6 +493,12 @@ namespace boss
 				}
 			else if (currentState == EnteringLevel)
 			{
+				canBeDamaged = false;
+
+				Time animspeed = seconds(2);
+				Vector2f startFront = { 1100, -300 }, endFront = { 750, -50 };
+				Vector2f startBack = { 1000, -400 }, endBack = { 675, -250 };
+
 				if (moveleft)
 				{
 					
@@ -543,6 +575,8 @@ namespace boss
 			}
 			else if (currentState == StandingIdle)
 			{
+				canBeDamaged = false;
+
 				cout << "wadddddddddddddddddddddddddddddddddddd\n";
 				if (animationClock >= seconds(0.45f).asSeconds())
 				{
@@ -626,6 +660,58 @@ namespace boss
 			//{
 			//	cout << "leg" << " - " << isAttacking << endl;
 			//}
+
+			collider.setPosition(Head.getPosition() + Vector2f{ 300, 120 });
+
+			Head.setColor(Color(255, 255, 255, 255));
+
+			if (flashData.isFlashing)
+			{
+				if (flashData.flashClock.getElapsedTime() <= flashData.flashDuration)
+				{
+					flashData.currentBrightness = flashData.flashBrightness;
+				}
+				else
+				{
+					flashData.currentBrightness = flashData.normalBrightness;
+					flashData.isFlashing = false;
+				}
+			}
+
+			if (canBeDamaged)
+			{
+				//damage boss with normal bullets
+				for (int i = 0; i < Plants_Zombies::PlantProjectilesARR.size(); i++)
+				{
+					if (Plants_Zombies::PlantProjectilesARR[i].shape.getGlobalBounds().intersects(
+						collider.getGlobalBounds()))
+					{
+						Health -= Plants_Zombies::PlantProjectilesARR[i].damage;
+						cout << Health << " - damaged boss" << endl;
+						PlaySoundEffect(Plants_Zombies::BucketHatHitSoundBuffer, true, 2);
+
+						flashData.isFlashing = true;
+
+						Plants_Zombies:: PlantProjectilesARR.erase(Plants_Zombies::PlantProjectilesARR.begin() + i);
+						i--;
+						break;
+					}
+				}
+
+				//damage boss with jalapeno if it hits
+				for (int i = 0; i < 45; i++)
+				{
+					if (Plants_Zombies::PlantsArray[i].type == Plants_Zombies::Jalapeno
+						&& Plants_Zombies::PlantsArray[i].plantCollider.getGlobalBounds().intersects(
+						collider.getGlobalBounds()) && Plants_Zombies::PlantsArray[i].Explosion == true)
+					{
+						flashData.isFlashing = true;
+
+						Health -= 20;
+						cout << Health << " - damaged boss" << endl;
+					}
+				}
+			}
 		}
 
 		void placeZombie() 
@@ -650,7 +736,7 @@ namespace boss
 				//cout << "Throw elemental attack func" << endl;
 
 				randElementalAttackPos = ElementalAttacksSpawnPoints[rand() % 4];
-				BossOBJ.currentState = attackType;
+				BossOBJ.currentState = static_cast<BossState>(IceAttack + rand() % FireAttack);;
 
 				isSwitchingState = true;
 			}
@@ -684,6 +770,9 @@ namespace boss
 					{
 						window.draw(Head);
 					}
+				}
+					window.draw(Head);
+					window.draw(collider);
 				}
 				else if (currentState == PlacingZombies)
 				{
@@ -772,7 +861,7 @@ namespace boss
 				}
 				else
 				{
-					cout << endl << "ready is true " << endl;
+					//cout << endl << "ready is true " << endl;
 					scale = finalScale;
 					ready = true;
 				}
@@ -804,7 +893,7 @@ namespace boss
 			spriteTop.setScale(scale);
 			spriteBottom.setScale(scale);
 
-			if (plantedIceAttack && type == FireAttack)
+			/*if (plantedIceAttack && type == FireAttack)
 			{
 				spriteTop.scale({ 0,0 });
 				spriteBottom.scale({ 0,0 });
@@ -819,7 +908,7 @@ namespace boss
 
 				explode = true;
 				active = false;
-			}
+			}*/
 
 			if (pos.x <= -200)
 			{
@@ -833,7 +922,8 @@ namespace boss
 			{
 				for (int i = 0; i < 45; i++)
 				{
-					if (collider.getGlobalBounds().intersects(Plants_Zombies::PlantsArray[i].plantCollider.getGlobalBounds()))
+					if (collider.getGlobalBounds().intersects(Plants_Zombies::PlantsArray[i].plantCollider.getGlobalBounds())
+						&& !(Plants_Zombies::PlantsArray[i].type == Plants_Zombies::Jalapeno && Plants_Zombies::PlantsArray[i].Explosion))
 					{
 						Plants_Zombies::PlantsArray[i].takeDmg(9999999);
 					}
@@ -853,10 +943,10 @@ namespace boss
 	{
 		if (!isSwitchingState && isAttacking)
 		{
-			cout << "Main attack func" << endl;
+			//cout << "Main attack func" << endl;
 			if ((currentState == FireAttack || currentState == IceAttack) && !attackOnce)
 			{
-				cout << "entered ball attack func" << endl;
+				//cout << "entered ball attack func" << endl;
 				ElementalAttack projectile;
 				projectile.start(currentState, randElementalAttackPos.second);
 
@@ -866,7 +956,7 @@ namespace boss
 			}
 			else if (currentState == PlacingZombies && !attackOnce)
 			{
-				cout << "entered zomb attack func" << endl;
+				//cout << "entered zomb attack func" << endl;
 				y_axisrandomplace = y_axisplacingzombie[rand() % 5];
 				x_axisrandomplace = x_axisplacingzombie[rand() % 3];
 
@@ -874,6 +964,7 @@ namespace boss
 				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::Dead);
 
 				zombieprefab.type = randomzombietype;
+				//zombieprefab.type = randomzombietype;
 
 				//adjust position based on zombie type
 				if (randomzombietype == Plants_Zombies::gargantous)
@@ -936,10 +1027,8 @@ void SetupBossData()
 	elementalAttackArr.clear();
 	bosszombies.clear();
 
-	plantedIceAttack = false;
-	plantedFireAttack = false;
-
 	startBossfight = false;
+	canBeDamaged = false;
 
 	zombieSpawnRate = 8;
 	zombiePlaceCounter = 0;
@@ -974,6 +1063,7 @@ void BossStateManager()
 			}*/
 			else
 			{
+				//cout << "reset attack wave " << endl;
 				cout << "twooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\n";
 				cout << "reset attack wave " << endl;
 
@@ -1021,24 +1111,23 @@ void BossStateManager()
 		{
 			if (ballAttackCounter == 3)
 			{
-				
-				 cout << " AAAAAAAAAAAAAAAAAAAAhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << endl;
-				 endAttackWave = true;
+				cout << " AAAAAAAAAAAAAAAAAAAALLLLLLLLLLLLLLLLLLOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOooo" << endl;
+				endAttackWave = true;
 				return;
 			}
 
 			if (BossOBJ.attackClock < 4)
 			{
-				cout << "Head idle" << endl;
+				//cout << "Head idle" << endl;
 				BossOBJ.currentState = HeadIdle;
 			}
 			else if (!BossOBJ.isAttacking)
 			{
-				cout << "throw ball" << endl;
+				//cout << "throw ball" << endl;
 				BossOBJ.ThrowElementalAttack(randomAttackType);
 			}
 
-			cout << endl << endl << ballAttackCounter << endl << endl;
+			//cout << endl << endl << ballAttackCounter << endl << endl;
 		}
 	}
 }
@@ -1047,24 +1136,49 @@ void UpdateBossLogic()
 {
 	BossStateManager();
 
-	//update elemental attacks
+#pragma region update elements
+	//update elemental attacks and deactivation logic
 	for (int i = 0; i < elementalAttackArr.size(); i++)
 	{
 		elementalAttackArr[i].update();
+
+		for (int j = 0; j < 45; j++)
+		{
+			//deactivate the ice attacks
+			if (Plants_Zombies::PlantsArray[j].type == Plants_Zombies::Jalapeno
+				&& (elementalAttackArr[i].type == IceAttack)
+				&& (Plants_Zombies::PlantsArray[j].plantCollider.getGlobalBounds().intersects(
+				   elementalAttackArr[i].collider.getGlobalBounds()))
+				&& elementalAttackArr[i].ready)
+			{
+				elementalAttackArr[i].active = false;
+				break;
+			}
+
+			//deactivate the fire attacks
+			if (Plants_Zombies::PlantsArray[j].type == Plants_Zombies::IceShroom
+				&& Plants_Zombies::PlantsArray[j].ExplosionIce
+				&& elementalAttackArr[i].type == FireAttack && elementalAttackArr[i].ready)
+			{
+				elementalAttackArr[i].active = false;
+				break;
+			}
+		}
 	}
 
 	//delete elemental attacks
-	if (!elementalAttackArr.empty() && !elementalAttackArr.front().active)
-	{
-		elementalAttackArr.pop_front();
-	}
+	elementalAttackArr.erase(remove_if(elementalAttackArr.begin(), elementalAttackArr.end(),
+		[](const ElementalAttack& A)
+		{
+			return A.active == false;
+		}), elementalAttackArr.end());
 
 	//intersection of zombies and cars
 	for (int i = 0; i < 5; i++)
 	{
 		FloatRect rect1 = car[i].lawnsprite.getGlobalBounds();
 
-		for (int j = 0;j < bosszombies.size(); j++)
+		for (int j = 0; j < bosszombies.size(); j++)
 		{
 			FloatRect rect2 = bosszombies[j].zombieCollider.getGlobalBounds();
 
@@ -1092,22 +1206,14 @@ void UpdateBossLogic()
 		}
 	}
 
-	//delete zombies
-	/*for (int i = 0; i < bosszombies.size(); i++) 
-	{
-		if (bosszombies[i].type == Plants_Zombies::Dead)
-		{
-			bosszombies.erase(bosszombies.begin(), bosszombies.begin() + i);
-		}
-	}*/
-
 	//arrange zombies to be removed at the left then iterate through the dead zombies and removes them
 	//leaving the alive zombies unaffected by vector shifting elements
 	bosszombies.erase(remove_if(bosszombies.begin(), bosszombies.end(),
-		[](const Plants_Zombies::Zombie& z) 
+		[](const Plants_Zombies::Zombie& z)
 		{
-				return z.type == Plants_Zombies::Dead;
-		}) ,bosszombies.end());
+			return z.type == Plants_Zombies::Dead;
+		}), bosszombies.end());
+#pragma endregion
 
 	BossOBJ.Update();
 }
@@ -1126,14 +1232,15 @@ void DrawBoss(RenderWindow& window)
 	{
 		if (bosszombies[i].started) 
 		{
-			window.draw(bosszombies[i].zombieCont);
+			myBrightnessShader.setUniform("brightness", bosszombies[i].flashData.currentBrightness);
+
+			window.draw(bosszombies[i].zombieCont, &myBrightnessShader);
 			window.draw(bosszombies[i].zombieCollider);
 		}
 	}
 
 	//draw boss
 	BossOBJ.drawBoss(window);
-
 }
 
 void endlevel() 
@@ -1167,5 +1274,178 @@ void endlevel()
 		}
 	}*/
 }
+}
 
+//the calling of this function is in the plants_Zombies header file
+//update the plants with the zombie vector
+void Plants_Zombies::Plants::updateBossPlantStruct()
+{
+	int lastZombieProximity = 0;
+	if (!isDead) // if not dead will animate and execute action  
+	{
+		actionTimeClock += deltaTime;
+		plantLifeTimeClock += deltaTime;
+
+		//zombie in front checker
+		for (int j = 0; j < boss::bosszombies.size(); j++)
+		{
+			if (!(boss::bosszombies[j].isDead || boss::bosszombies[j].type == Dead) && boss::bosszombies[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+			{
+				// checks if a zombie is in front of the plant  
+				if ((type == PeaShooter || type == SnowPeaShooter || type == ScaredyShroom)
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (boss::bosszombies[j].zombieCollider.getGlobalBounds().top + boss::bosszombies[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= boss::bosszombies[j].zombieCollider.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= boss::bosszombies[j].zombieCollider.getGlobalBounds().left))
+					&& (boss::bosszombies[j].zombieCollider.getPosition().x < 960))
+				{
+					zombieInFront = true;
+					break;
+				}
+				else if ((type == PuffShroom)
+					&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (boss::bosszombies[j].zombieCollider.getGlobalBounds().top + boss::bosszombies[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= boss::bosszombies[j].zombieCollider.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= boss::bosszombies[j].zombieCollider.getGlobalBounds().left))
+					&& (boss::bosszombies[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 4))
+					&& (boss::bosszombies[j].zombieCollider.getPosition().x < 960))
+				{
+					zombieInFront = true;
+					break;
+				}
+				else
+				{
+					zombieInFront = false;
+				}
+			}
+			else
+			{
+				zombieInFront = false;
+			}
+		}
+
+		//zombie proximity checker
+		if (type == ScaredyShroom)
+		{
+			for (int j = 0; j < boss::bosszombies.size(); j++)
+			{
+				if (!(boss::bosszombies[j].isDead || boss::bosszombies[j].type == Dead) && boss::bosszombies[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (boss::bosszombies[j].zombieCollider.getGlobalBounds().top + boss::bosszombies[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= boss::bosszombies[j].zombieCollider.getGlobalBounds().top))
+						&& (boss::bosszombies[j].zombieCollider.getPosition().x < shape.getPosition().x + (107 * 3.5)))
+					{
+						//cout << "true \n";
+						zombieProximityAction = true;
+						lastZombieProximity = j;
+						break;
+					}
+					else
+					{
+						zombieProximityAction = false;
+					}
+				}
+				else if (lastZombieProximity == j)
+				{
+					zombieProximityAction = false;
+				}
+			}
+		}
+		else if (type == PotatoMine && !zombieProximityAction && GettingUp)
+		{
+			for (int j = 0; j < boss::bosszombies.size(); j++)
+			{
+				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+				if (!(boss::bosszombies[j].isDead || boss::bosszombies[j].type == Dead) && boss::bosszombies[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					if (((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (boss::bosszombies[j].zombieCollider.getGlobalBounds().top + boss::bosszombies[j].zombieCollider.getGlobalBounds().height)
+						&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= boss::bosszombies[j].zombieCollider.getGlobalBounds().top)
+						&& (shape.getGlobalBounds().left <= boss::bosszombies[j].zombieCollider.getGlobalBounds().left))
+						&& (boss::bosszombies[j].zombieCollider.getPosition().x < shape.getPosition().x + (107))
+						&& (boss::bosszombies[j].zombieCollider.getPosition().x < 960))
+
+					{
+						zombieProximityAction = true;
+						animationCol = 0;
+						boss::bosszombies[j].health -= damage;
+					}
+				}
+			}
+		}
+		else if (type == Jalapeno && Explosion)
+		{
+			for (int j = 0; j < boss::bosszombies.size(); j++)
+			{
+				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+				if (!(boss::bosszombies[j].isDead || boss::bosszombies[j].type == Dead) && boss::bosszombies[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					if (plantCollider.getGlobalBounds().intersects(boss::bosszombies[j].zombieCollider.getGlobalBounds()))
+					{
+						boss::bosszombies[j].health -= damage;
+					}
+				}
+			}
+		}
+		else if (type == IceShroom && ExplosionIce)
+		{
+			for (int j = 0; j < boss::bosszombies.size(); j++)
+			{
+				//!(zombie_array[j].isDead || zombie_array[j].type == Dead || !zombie_array[j].started)
+				if (!(boss::bosszombies[j].isDead || boss::bosszombies[j].type == Dead) && boss::bosszombies[j].started) // checks if zombie is dead or not to avoid shooting dead zombies
+				{
+					boss::bosszombies[j].IsFrozen = true;
+				}
+			}
+		}
+
+		if (boss::canBeDamaged && boss::startBossfight)
+		{
+			if (plantCollider.getGlobalBounds().height/2 >= boss::BossOBJ.collider.getGlobalBounds().top 
+				&& plantCollider.getGlobalBounds().height/2 <= boss::BossOBJ.collider.getGlobalBounds().height)
+			{
+				zombieInFront = true;
+			}
+		}
+
+		animationHandler();
+		action();
+
+		/*shape.setColor(Color(255, 255, 255, 255));
+
+		if (flashData.isFlashing)
+		{
+			if (flashData.flashClock.getElapsedTime() <= flashData.flashDuration)
+			{
+				flashData.currentBrightness = flashData.flashBrightness;
+			}
+			else
+			{
+				flashData.currentBrightness = flashData.normalBrightness;
+				flashData.isFlashing = false;
+			}
+		}*/
+
+		if (!Explosion)
+		{
+			plantCollider.setPosition(shape.getPosition());
+		}
+	}
+	else if (!mygrid[gridIndex].gravePlanted && !deadPlantingPot)// else if there is not a grave planted there will turn the plant into an empty gameobject  
+	{
+		if (type == PlantingPot)
+		{
+			deadPlantingPot = true;
+		}
+
+		type = EmptyPlant;
+		mygrid[gridIndex].isplanted = false;
+		zombieProximityAction = false;
+		setupPrefab();
+	}
+
+	if (health <= 0 || type == EmptyPlant)
+	{
+		isDead = true;
+		idle = false;
+		doAction = false;
+		zombieProximityAction = false;
+	}
 }

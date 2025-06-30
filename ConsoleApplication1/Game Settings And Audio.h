@@ -57,7 +57,7 @@ void DeltaTimeManager()
 void SetupGameSettings() 
 {
 	IsFullScreen = false;
-	IsSoundEffects = false;
+	IsSoundEffects = true;
 	IsMusic = false;
 	changeFullScreenState = true;
 	jackMusicOn = false;

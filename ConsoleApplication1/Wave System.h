@@ -40,6 +40,7 @@ Sprite zombieinStreet;
 
 SoundBuffer RSPSoundBuffer;
 SoundBuffer ZombiesAreComingBuffer;
+SoundBuffer WinSoundBuffer;
 #pragma endregion
 
 #pragma region boolean
@@ -184,7 +185,14 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
 
         if (!onRoof)
         {
-            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
+            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::gargantous)
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]-60);
+            }
+            else
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
+            }
 
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
@@ -379,6 +387,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                         boss::LevelIsOver = true;
                         boss::WinLevel = true;
                         IsPaused = true;
+                        PlaySoundEffect(WinSoundBuffer, false);
                     }
                     else
                     {
@@ -453,6 +462,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                         boss::LevelIsOver = true;
                         boss::WinLevel = true;
                         IsPaused = true;
+                        PlaySoundEffect(WinSoundBuffer, false);
                     }
                     else
                     {
@@ -542,8 +552,10 @@ void DrawWavesAndZombies(RenderWindow& window)
                     {
                         window.draw(Plants_Zombies::zombie_array[i].jackCollider);
                     }*/
+                    myBrightnessShader.setUniform("brightness", Plants_Zombies::zombie_array[i].flashData.currentBrightness);
+
                     window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCont, &myBrightnessShader);
                 }
             }
         }
@@ -555,8 +567,10 @@ void DrawWavesAndZombies(RenderWindow& window)
                     {
                         window.draw(Plants_Zombies::zombie_array[i].jackCollider);
                     }*/
+                    myBrightnessShader.setUniform("brightness", Plants_Zombies::zombie_array[i].flashData.currentBrightness);
+                    
                     window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCont, &myBrightnessShader);
                 }
 
             }
@@ -569,8 +583,10 @@ void DrawWavesAndZombies(RenderWindow& window)
                     {
                         window.draw(Plants_Zombies::zombie_array[i].jackCollider);
                     }*/
+                    myBrightnessShader.setUniform("brightness", Plants_Zombies::zombie_array[i].flashData.currentBrightness);
+                    
                     window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCont);
+                    window.draw(Plants_Zombies::zombie_array[i].zombieCont, &myBrightnessShader);
                 }
             }
         }

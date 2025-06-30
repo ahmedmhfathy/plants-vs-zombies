@@ -21,6 +21,7 @@ bool ButtonTapSoundPauseBackToMainMenu = false;
 bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
+bool winSound = false;
 
 Time TickBoxDelay = seconds(.25);
 Clock DelayClock;
@@ -77,9 +78,6 @@ Sprite RetryButton;
 Sprite BackToMainMenuLevelEnd;
 Sprite WinMenuBlank;
 Sprite NextlevelButton;
-
-SoundBuffer WinSoundBuffer;
-Sound WinSound;
 #pragma endregion
 
 #pragma region Pause Menu
@@ -300,6 +298,8 @@ void LoadLevelEndTextures() {
     RetryButtonHoverTex.loadFromFile("Assets/Lost Menu/retry-button-hover.png");
 
     //win case
+    WinSoundBuffer.loadFromFile("Audio/pvz jingle.wav");
+    
     WinMenuBlankTex.loadFromFile("Assets/Win Menu/win-menu-blank.png");
     NextlevelButtonTex.loadFromFile("Assets/Win Menu/next-level-button.png");
     NextlevelButtonHoverTex.loadFromFile("Assets/Win Menu/next-level-button-hover.png");
@@ -358,9 +358,15 @@ void LevelEndUpdate()
 
     if (boss::LevelIsOver)
     {
+
+        /*if (winSound)
+        {
+            PlaySoundEffect(WinSoundBuffer,false);
+
+        }*/
         if (boss::WinLevel)
         {
-            if (CurrentState == Level3 && boss::LevelIsOver && boss::WinLevel)
+            if (CurrentState == Level5 && boss::LevelIsOver && boss::WinLevel)
             {
                 if (ThankYouForPlaying.getPosition().y > 310)
                 {
@@ -372,7 +378,7 @@ void LevelEndUpdate()
                     CurrentState = MainMenu;
                 }
 
-                MaxLevelWon = Level3;
+                MaxLevelWon = Level5;
             }
             else
             {
@@ -417,6 +423,14 @@ void LevelEndUpdate()
                         else if (CurrentState == Level2)
                         {
                             SwitchState(Level3);
+                        }
+                        else if (CurrentState == Level3)
+                        {
+                            SwitchState(Level4);
+                        }
+                        else if (CurrentState == Level4)
+                        {
+                            SwitchState(Level5);
                         }
                     }
                 }
@@ -521,7 +535,7 @@ void DrawLevelEnd(RenderWindow& window)
 {
     if (boss::WinLevel)
     {
-        if (CurrentState == Level3)
+        if (CurrentState == Level5)
         {
             window.draw(ThankYouForPlaying);
         }
@@ -689,7 +703,7 @@ void UpdateLevel5(RenderWindow& window)
     boss::UpdateBossLogic();
     //level(3, 35, 10.0f, 3); // 3 , 35 , 7
 
-    Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
+    Plants_Zombies::UpdateBossPlants(MouseWorldPostion);
 }
 void DrawLevel5(RenderWindow& window)
 {
