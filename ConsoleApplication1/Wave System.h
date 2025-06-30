@@ -184,7 +184,14 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
 
         if (!onRoof)
         {
-            Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
+            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::gargantous)
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]-60);
+            }
+            else
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
+            }
 
             if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan

@@ -76,6 +76,9 @@ namespace Plants_Zombies
 	SoundBuffer jackSong;
 	SoundBuffer jackBombSound;
 	SoundBuffer jackSurprise;
+	SoundBuffer GargantousDeathSound;
+	SoundBuffer GargantousCrushSound;
+	SoundBuffer ImpSpawnSound;
 	SoundBuffer JalapenoFireBuffer;
 	SoundBuffer IceShroomFreezeBuffer;
 	SoundBuffer PotatoMineBoomBuffer;
@@ -111,7 +114,10 @@ namespace Plants_Zombies
 		jackBombSound.loadFromFile("Audio/Zombies/jackBomb.ogg");
 		jackSong.loadFromFile("Audio/Zombies/jackSong.ogg");
 		jackSurprise.loadFromFile("Audio/Zombies/jackSuprise.ogg");
-
+		// gargantous
+		GargantousDeathSound.loadFromFile("Audio/Zombies/gargantousdeathsound.ogg");
+		GargantousCrushSound.loadFromFile("Audio/Zombies/gargantouscrushsound.ogg");
+		ImpSpawnSound.loadFromFile("Audio/Zombies/impVoice.ogg");
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
 		PeaShooterShootTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-shooting-ST.png");
@@ -1441,6 +1447,13 @@ namespace Plants_Zombies
 						= true;
 				}
 
+				if (type == gargantous && isDead && !wassoundplayed)
+				{
+					PlaySoundEffect(GargantousDeathSound, false);
+					//cout << "play\n";
+					wassoundplayed = true;
+				}
+
 				zombieCollider.setScale(0, 0);
 				/*if (jackBomb && isJackSurprised)
 				{
@@ -1486,6 +1499,7 @@ namespace Plants_Zombies
 					// imp spawn
 					type = imp;
 					start();
+					PlaySoundEffect(ImpSpawnSound, false);
 					zombieCont.setPosition(GargantousPos.x, GargantousPos.y + 70);
 					isGargantousDead = false;
 					cout << "egry ya imp ya gaaaammemeddddd\n";
@@ -1654,7 +1668,7 @@ namespace Plants_Zombies
 					isAttacking = true;
 					isMoving = false;
 					//attack clock
-					if (EatTimer.asSeconds() <= EatClock)
+					if (EatTimer.asSeconds() <= EatClock && type != gargantous)
 					{
 						if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type != gargantous)
 						{
@@ -1669,10 +1683,11 @@ namespace Plants_Zombies
 						
 						
 						
+						
 						PlaySoundEffect(ZombieEatSoundBuffer, false, 3, 25);
 						EatClock = 0;
 					}
-					if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == jackInTheBox && jackBomb && isJackSurprised)
+					else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == jackInTheBox && jackBomb && isJackSurprised)
 					{
 						PlantsArray[CurrentPlantIndex].takeDmg(Extra_damage);
 
@@ -1680,6 +1695,19 @@ namespace Plants_Zombies
 					else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type == jackInTheBox && jackBomb && isJackSurprised)
 					{
 						PlantingPotArray[CurrentPlantIndex].takeDmg(Extra_damage);
+					}
+					else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPlant && CollIndex ==5 )
+					{
+						PlantsArray[CurrentPlantIndex].takeDmg(damage);
+						PlaySoundEffect(GargantousCrushSound, false);
+						isGargantousCrushPlant = false;
+					}
+					else if (PlantingPotArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && isGargantousCrushPot)
+					{
+						PlantingPotArray[CurrentPlantIndex].takeDmg(damage);
+						PlaySoundEffect(GargantousCrushSound, false);
+						isGargantousCrushPot = false;
+
 					}
 				}
 				else
@@ -2357,7 +2385,7 @@ namespace Plants_Zombies
 
 			//Gargatnous
 			if (type == gargantous && !isSquished) {
-				if (isMoving)
+				if (isMoving && !isAttacking)
 				{
 					zombieCont.setTexture(GiantWalkText);
 					if (Zclock.getElapsedTime().asMilliseconds() > 300) {
@@ -2368,7 +2396,7 @@ namespace Plants_Zombies
 				}
 				else if (isAttacking)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 300 && CollIndex != 5) {
+					if (Zclock.getElapsedTime().asMilliseconds() > 300 && CollIndex) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 115, 0, 115, 92));
 						zombieCont.setTexture(GiantEatText);
 						//CollIndex = (CollIndex + 1) % 5;
@@ -2394,6 +2422,7 @@ namespace Plants_Zombies
 						zombieCont.setTexture(GiantDeathText);
 						CollIndex++;
 						Zclock.restart();
+						//cout << CollIndex << endl;
 					}
 					if (CollIndex == 6) {
 
@@ -2407,7 +2436,7 @@ namespace Plants_Zombies
 							zombieCont.setPosition(2000, 2000);
 							isGargantousDead = true;
 							//type = Dead;
-
+							wassoundplayed = false;
 						}
 					}
 				}
