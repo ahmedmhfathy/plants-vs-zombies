@@ -768,6 +768,7 @@ namespace boss
 				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::Dead);
 
 				zombieprefab.type = randomzombietype;
+				//zombieprefab.type = randomzombietype;
 
 				//adjust position based on zombie type
 				if (randomzombietype == Plants_Zombies::gargantous)

@@ -1387,7 +1387,7 @@ namespace Plants_Zombies
 				break;
 			case gargantous: // zombie zengy
 				zombieCont.setTexture(GiantWalkText);
-				health = 3000;
+				health = 100;
 				speed = 7.4;
 				damage = 20000;
 				zombieCollider.setSize({ 50, 40 });
@@ -1499,6 +1499,7 @@ namespace Plants_Zombies
 					// imp spawn
 					type = imp;
 					start();
+					started = true;
 					PlaySoundEffect(ImpSpawnSound, false);
 					zombieCont.setPosition(GargantousPos.x, GargantousPos.y + 70);
 					isGargantousDead = false;
@@ -2509,21 +2510,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = randomzombietype;
+				zombie_array[i].type = gargantous;
 				zombie_array[i].start();
 			}
 		}
