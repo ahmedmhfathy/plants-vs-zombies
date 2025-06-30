@@ -1239,7 +1239,7 @@ namespace Plants_Zombies
 
 		Clock Zclock, Deathclock;
 		float EatClock, CrushedZombieClock,  jackClock, gargantousCrushClock,FrozenClock;
-		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(12), gargantousCrushTimer = seconds(10);
+		Time EatTimer = seconds(1), CrushedTimer =seconds(1.5), jackTimer = seconds(22), gargantousCrushTimer = seconds(10);
 
 	private:
 		int CollIndex = 0;
@@ -2480,21 +2480,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = jackInTheBox;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = jackInTheBox;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = jackInTheBox;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
