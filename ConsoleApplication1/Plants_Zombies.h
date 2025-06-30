@@ -79,6 +79,7 @@ namespace Plants_Zombies
 	SoundBuffer GargantousDeathSound;
 	SoundBuffer GargantousCrushSound;
 	SoundBuffer ImpSpawnSound;
+	SoundBuffer poleJumpSound;
 	SoundBuffer JalapenoFireBuffer;
 	SoundBuffer IceShroomFreezeBuffer;
 	SoundBuffer PotatoMineBoomBuffer;
@@ -118,6 +119,8 @@ namespace Plants_Zombies
 		GargantousDeathSound.loadFromFile("Audio/Zombies/gargantousdeathsound.ogg");
 		GargantousCrushSound.loadFromFile("Audio/Zombies/gargantouscrushsound.ogg");
 		ImpSpawnSound.loadFromFile("Audio/Zombies/impVoice.ogg");
+		// pole vault
+		poleJumpSound.loadFromFile("Audio/Zombies/polevaultjump.ogg");
 		//PeaShooter
 		PeaShooterIdleTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-idle-ST.png");
 		PeaShooterShootTex.loadFromFile("Assets/Plants/PeaShooter/peashooter-shooting-ST.png");
@@ -1195,7 +1198,7 @@ namespace Plants_Zombies
 		PVJumpText.loadFromFile("Assets/Zombies/pole vaulting/jumpPV.png");
 		PVWalkText.loadFromFile("Assets/Zombies/pole vaulting/walkPV.png");
 		PVEatText.loadFromFile("Assets/Zombies/pole vaulting/eatPV.png");
-		PvDeathText.loadFromFile("Assets/Zombies/pole vaulting/deathPV.png");
+		PvDeathText.loadFromFile("Assets/Zombies/pole vaulting/deathPV2.png");
 		//Imp (Little Ali Omar)
 		ImpWalkText.loadFromFile("Assets/Zombies/imp/walkimp.png");
 		ImpEatText.loadFromFile("Assets/Zombies/imp/eatimp.png");
@@ -1640,7 +1643,7 @@ namespace Plants_Zombies
 								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
 						{
 
-							if (type == poleVault && !hasJumped )
+							if (type == poleVault && !hasJumped && !PlantsArray[i].Explosion)
 							{
 								isJumping = true;
 								PlantsinFront = false;
@@ -2329,6 +2332,7 @@ namespace Plants_Zombies
 						if (CollIndex == 4)
 						{
 							hasJumped == true;
+							PlaySoundEffect(poleJumpSound, false);
 							zombieCont.move(-130, 0);
 							//zombieCollider.move(-170, 0);
 							zombieCollider.setScale(0, 0);
@@ -2361,15 +2365,15 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 8) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 100, 0, 100, 58));
-						zombieCont.setTexture(RegularDeathText);
+					if (Zclock.getElapsedTime().asMilliseconds() > 200 && CollIndex != 10) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 50, 0, 50, 58));
+						zombieCont.setTexture(PvDeathText);
 						CollIndex++;
 						Zclock.restart();
 					}
-					if (CollIndex == 8) {
+					if (CollIndex == 10) {
 
-						zombieCont.setTextureRect(IntRect(8 * 100, 0, 100, 58));
+						zombieCont.setTextureRect(IntRect(10 * 50, 0, 50, 58));
 						if (deathstart == false) {
 							Deathclock.restart();
 							deathstart = true;
@@ -2511,21 +2515,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = regular;
+				zombie_array[i].type = poleVault;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = poleVault;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = poleVault;
 				zombie_array[i].start();
 			}
 		}
