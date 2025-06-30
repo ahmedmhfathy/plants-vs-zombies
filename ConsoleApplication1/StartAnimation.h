@@ -148,7 +148,7 @@ namespace  StartAnimationNS {
         animcameraClock.restart();
         clockRSP.restart();
 
-        //GardenCamera.zoom(1.5);
+       // GardenCamera.zoom(1.5);
 
         for (int i = 0; i < 5; i++)
         {
