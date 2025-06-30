@@ -1510,6 +1510,7 @@ namespace Plants_Zombies
 				{
 					FrozenClock = 0;
 					Zclock.restart();
+					EatClock = 0;
 					zombieCont.setColor(Color(120, 120, 255, 255));
 					speed = 0;
 					IsFrozen = false;
@@ -1517,6 +1518,7 @@ namespace Plants_Zombies
 				else if (speed == 0 && !(isDead || health <= 0))
 				{
 					Zclock.restart();
+					EatClock = 0;
 					zombieCont.setColor(Color(120, 120, 255, 255));
 					//cout << " blue NIgga";
 
@@ -2510,7 +2512,7 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = regular;
 				zombie_array[i].start();
 			}
 		}

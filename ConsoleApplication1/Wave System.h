@@ -40,6 +40,7 @@ Sprite zombieinStreet;
 
 SoundBuffer RSPSoundBuffer;
 SoundBuffer ZombiesAreComingBuffer;
+SoundBuffer WinSoundBuffer;
 #pragma endregion
 
 #pragma region boolean
@@ -386,6 +387,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                         boss::LevelIsOver = true;
                         boss::WinLevel = true;
                         IsPaused = true;
+                        PlaySoundEffect(WinSoundBuffer, false);
                     }
                     else
                     {
@@ -460,6 +462,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                         boss::LevelIsOver = true;
                         boss::WinLevel = true;
                         IsPaused = true;
+                        PlaySoundEffect(WinSoundBuffer, false);
                     }
                     else
                     {

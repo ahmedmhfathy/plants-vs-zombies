@@ -26,6 +26,8 @@ namespace  StartAnimationNS {
     View GardenCamera(FloatRect(0, 0, 1280, 720));
 
     void LoadStartAndWaveAnimationTextures() {
+        //win case
+        WinSoundBuffer.loadFromFile("Audio/pvz jingle.wav");
         gardenTextureDay.loadFromFile("Assets/Environment/Game-Environment.png");
         gardenTextureNight.loadFromFile("Assets/Environment/Game-Environment-Night.png");
         roofTextureDay.loadFromFile("Assets/Environment/Roof-Day.png");

@@ -78,8 +78,6 @@ Sprite RetryButton;
 Sprite BackToMainMenuLevelEnd;
 Sprite WinMenuBlank;
 Sprite NextlevelButton;
-
-SoundBuffer WinSoundBuffer;
 #pragma endregion
 
 #pragma region Pause Menu
