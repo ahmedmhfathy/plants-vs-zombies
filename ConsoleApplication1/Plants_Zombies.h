@@ -75,6 +75,9 @@ namespace Plants_Zombies
 	SoundBuffer BucketHatHitSoundBuffer[2];
 	SoundBuffer jackSong;
 	SoundBuffer jackBombSound;
+	SoundBuffer JalapenoFireBuffer;
+	SoundBuffer IceShroomFreezeBuffer;
+	SoundBuffer PotatoMineBoomBuffer;
 #pragma endregion
 
 #pragma region Plants
@@ -82,6 +85,12 @@ namespace Plants_Zombies
 	void LoadPlantTexturesAndSounds() {
 		//Audio
 		SunCoinSoundBuffer.loadFromFile("Audio/points.ogg");
+		//Ice shroom
+		IceShroomFreezeBuffer.loadFromFile("Audio/Plants/frozen.ogg");
+		//Jalapeno
+		JalapenoFireBuffer.loadFromFile("Audio/Plants/jalapeno.ogg");
+		//Potato mine
+		PotatoMineBoomBuffer.loadFromFile("Audio/Plants/potato_mine.ogg");
 		//SunCoinSound.setBuffer(SunCoinSoundBuffer);
 		PeaShootSoundBuffer.loadFromFile("Audio/Plants/peaShoot1.ogg");
 		//ShootSound.setBuffer(PeaShootSoundBuffer);
@@ -125,6 +134,7 @@ namespace Plants_Zombies
 		//Ice Shroom
 		IceShroomIdelTex.loadFromFile("Assets/Plants/Ice shroom/Ice shroom idel.png");
 		IceShroomIceTex.loadFromFile("Assets/Plants/Ice shroom/Ice boom2.png");
+		
 
 		//SunShroom
 		SunShroomIdleTex.loadFromFile("Assets/Plants/SunShroom/SunShroom-idle-ST.png");
@@ -430,6 +440,7 @@ namespace Plants_Zombies
 							if (checkdeathpos == false) {
 								shape.setPosition(shape.getPosition().x - 90, shape.getPosition().y - 130);
 								checkdeathpos = true;
+								PlaySoundEffect(PotatoMineBoomBuffer, false);
 							}
 							shape.setTextureRect(IntRect(animationCol * 80, 0, 80, 70));
 							shape.setTexture(PotatoExplosionTex);
@@ -458,6 +469,7 @@ namespace Plants_Zombies
 
 							animationCol = 0;
 							Explosion = true;
+							PlaySoundEffect(JalapenoFireBuffer,false);
 						}
 					}
 					else if (Explosion)
@@ -522,6 +534,7 @@ namespace Plants_Zombies
 							plantCollider.setSize({0,0});
 
 							ExplosionIce = true;
+							PlaySoundEffect(IceShroomFreezeBuffer, false);
 						} 
 					}
 					else if (ExplosionIce)
@@ -1479,7 +1492,7 @@ namespace Plants_Zombies
 				{
 					Zclock.restart();
 					zombieCont.setColor(Color(120, 120, 255, 255));
-					cout << " blue NIgga";
+					//cout << " blue NIgga";
 
 					if (FrozenClock >= 5)
 					{

@@ -76,6 +76,7 @@ Clock PlantSelectionAnimationClock;
 SoundBuffer PlantingSoundBuffer;
 SoundBuffer SelectingPlant;
 SoundBuffer ShovelSoundBuffer;
+SoundBuffer PotatoMineBoomBuffer;
 
 SoundBuffer HoverButtonBuffer;
 SoundBuffer ClickButtonBuffer;
@@ -427,6 +428,8 @@ void LoadSelectionTexture() {
 	PlantingSoundBuffer.loadFromFile("Audio/plant.ogg");
 	ShovelSoundBuffer.loadFromFile("Audio/shovel.ogg");
 	SelectingPlant.loadFromFile("Audio/seedlift.ogg");
+	//Potato mine
+	PotatoMineBoomBuffer.loadFromFile("Audio/Plants/potato_mine.ogg");
 
 	shoveltex.loadFromFile("Assets/Currency System and planting/shovel.png");
 	ShovelContainerAvailable.loadFromFile("Assets/Currency System and planting/container-with-shovel.png");
@@ -1371,6 +1374,7 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[])
 							zombieProximityAction = true;
 							animationCol = 0;
 							zombie_array[j].health -= damage;
+							PlaySoundEffect(PotatoMineBoomBuffer, false);
 						}
 					}
 				}
