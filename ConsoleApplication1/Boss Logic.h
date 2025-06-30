@@ -921,7 +921,8 @@ void UpdateBossLogic()
 			if (Plants_Zombies::PlantsArray[j].type == Plants_Zombies::Jalapeno
 				&& (elementalAttackArr[i].type == IceAttack)
 				&& (Plants_Zombies::PlantsArray[j].plantCollider.getGlobalBounds().intersects(
-					elementalAttackArr[i].collider.getGlobalBounds())))
+				   elementalAttackArr[i].collider.getGlobalBounds()))
+				&& elementalAttackArr[i].ready)
 			{
 				elementalAttackArr[i].active = false;
 				break;
@@ -930,7 +931,7 @@ void UpdateBossLogic()
 			//deactivate the fire attacks
 			if (Plants_Zombies::PlantsArray[j].type == Plants_Zombies::IceShroom
 				&& Plants_Zombies::PlantsArray[j].ExplosionIce
-				&& elementalAttackArr[i].type == FireAttack)
+				&& elementalAttackArr[i].type == FireAttack && elementalAttackArr[i].ready)
 			{
 				elementalAttackArr[i].active = false;
 				break;
