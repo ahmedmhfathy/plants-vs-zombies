@@ -10,6 +10,7 @@
 #include "Tools.h"
 #include "Game Settings And Audio.h"
 #include "Boss Logic.h"
+#include "Brightness Shader.h"
 using namespace std;
 using namespace sf;
 
@@ -41,6 +42,9 @@ int main()
 
 void Start()
 {
+    myBrightnessShader.loadFromFile("Brightness.frag", Shader::Fragment);
+    //myBrightnessShader.setUniform("brightness", normalBrightness);
+
     SetupGameSettings();
 
     Plants_Zombies::LoadPlantTexturesAndSounds(); //textures loaded here once

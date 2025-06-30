@@ -6,6 +6,7 @@
 #include<string>
 #include<vector>
 #include "Game Settings And Audio.h"
+#include "Brightness Shader.h"
 using namespace std;
 using namespace sf;
 
@@ -1210,6 +1211,7 @@ namespace Plants_Zombies
 		Vector2f GargantousPos, JackPos;
 
 		zombieType type;
+		FlashState flashData;
 
 		#pragma region booleans
 		bool started = false;
@@ -1269,6 +1271,9 @@ namespace Plants_Zombies
 			jackClock = 0;
 			gargantousCrushClock = 0;
 			FrozenClock = 0;
+
+			flashData.isFlashing = false;
+			flashData.currentBrightness = flashData.normalBrightness;
 
 			#pragma region Booleans
 			started = false;
@@ -1468,6 +1473,7 @@ namespace Plants_Zombies
 				CollisionZombies(PlantProjectilesARR, PlantsArray);
 				Animation();
 
+				#pragma region damaged states
 				if (type == trafficCone && health < 320 && !isDamaged)
 					isDamaged = true;
 				else if (type == bucketHat && health < 650 && !isDamaged)
@@ -1505,6 +1511,7 @@ namespace Plants_Zombies
 					isGargantousDead = false;
 					cout << "egry ya imp ya gaaaammemeddddd\n";
 				}
+				#pragma endregion
 
 				if (IsFrozen && !(isDead || health <= 0))
 				{
@@ -1541,6 +1548,19 @@ namespace Plants_Zombies
 				else if(speed != 0)
 				{
 					zombieCont.setColor(Color(255, 255, 255, 255));
+				}
+
+				if (flashData.isFlashing)
+				{
+					if (flashData.flashClock.getElapsedTime() <= flashData.flashDuration)
+					{
+						flashData.currentBrightness = flashData.flashBrightness;
+					}
+					else
+					{
+						flashData.currentBrightness = flashData.normalBrightness;
+						flashData.isFlashing = false;
+					}
 				}
 
 				if (type == gargantous)
@@ -1618,6 +1638,9 @@ namespace Plants_Zombies
 						}
 
 						PlaySoundEffect(SplatSoundBuffer, true ,3, 25);
+
+						flashData.isFlashing = true;
+						flashData.flashClock.restart();
 
 						PlantProjectilesARR.erase(PlantProjectilesARR.begin() + j);
 						j--;
@@ -2116,40 +2139,35 @@ namespace Plants_Zombies
 				}
 				else if (isDead)
 				{
-					
-					
-					
-						if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7)
+					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7)
+					{
+						if (checkdeathpos == false)
 						{
-							if (checkdeathpos == false)
-							{
-								zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
-								checkdeathpos = true;
-							}
-
-							zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
-							zombieCont.setTexture(JackDeathText);
-
-							CollIndex++;
-							Zclock.restart();
+							zombieCont.setPosition(zombieCont.getPosition().x - 75, zombieCont.getPosition().y - 10);
+							checkdeathpos = true;
 						}
-						if (CollIndex == 7) {
 
-							zombieCont.setTextureRect(IntRect(6 * 95, 0, 95, 58));
+						zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 58));
+						zombieCont.setTexture(JackDeathText);
 
-							if (deathstart == false) {
-								Deathclock.restart();
-								deathstart = true;
-							}
-							else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
-							{
-								zombieCont.setScale(0, 0);
-								zombieCont.setPosition(2000, 2000);
-								type = Dead;
-							}
+						CollIndex++;
+						Zclock.restart();
+					}
+					if (CollIndex == 7) {
+
+						zombieCont.setTextureRect(IntRect(6 * 95, 0, 95, 58));
+
+						if (deathstart == false) {
+							Deathclock.restart();
+							deathstart = true;
 						}
-					
-
+						else if (Deathclock.getElapsedTime().asSeconds() >= 1.5)
+						{
+							zombieCont.setScale(0, 0);
+							zombieCont.setPosition(2000, 2000);
+							type = Dead;
+						}
+					}
 				}
 			}
 
@@ -2511,21 +2529,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = regular;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}

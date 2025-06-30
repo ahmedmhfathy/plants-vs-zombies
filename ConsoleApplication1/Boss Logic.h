@@ -9,6 +9,7 @@
 #include "StartAnimation.h"
 #include "Game Manager.h"
 #include "Plants_Zombies.h"
+#include "Brightness Shader.h"
 #include<deque>
 #include<vector>
 using namespace std;
@@ -145,6 +146,8 @@ namespace boss
 		Sprite LegBack;
 		Sprite Arm;
 
+		FlashState flashData;
+
 		RectangleShape collider;
 
 		BossState currentState, previousState;
@@ -179,6 +182,9 @@ namespace boss
 			currentState = EnteringLevel;
 			//currentState = PlacingZombies;
 
+			flashData.isFlashing = false;
+			flashData.currentBrightness = flashData.normalBrightness;
+
 			isAttacking = false;
 			isSwitchingState = false;
 			attackOnce = false;
@@ -192,6 +198,7 @@ namespace boss
 			Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 			Head.setScale(3.5, 3.5);
 			Head.setPosition({ 495, -165 });
+			Head.setColor(Color(255, 255, 255, 255));
 
 			collider.setSize({30, 145});
 			collider.setScale(3.5, 3.5);
@@ -553,6 +560,21 @@ namespace boss
 
 			collider.setPosition(Head.getPosition() + Vector2f{ 300, 120 });
 
+			Head.setColor(Color(255, 255, 255, 255));
+
+			if (flashData.isFlashing)
+			{
+				if (flashData.flashClock.getElapsedTime() <= flashData.flashDuration)
+				{
+					flashData.currentBrightness = flashData.flashBrightness;
+				}
+				else
+				{
+					flashData.currentBrightness = flashData.normalBrightness;
+					flashData.isFlashing = false;
+				}
+			}
+
 			if (canBeDamaged)
 			{
 				//damage boss with normal bullets
@@ -564,6 +586,9 @@ namespace boss
 						Health -= Plants_Zombies::PlantProjectilesARR[i].damage;
 						cout << Health << " - damaged boss" << endl;
 						PlaySoundEffect(Plants_Zombies::BucketHatHitSoundBuffer, true, 2);
+
+						flashData.isFlashing = true;
+
 						Plants_Zombies:: PlantProjectilesARR.erase(Plants_Zombies::PlantProjectilesARR.begin() + i);
 						i--;
 						break;
@@ -577,6 +602,8 @@ namespace boss
 						&& Plants_Zombies::PlantsArray[i].plantCollider.getGlobalBounds().intersects(
 						collider.getGlobalBounds()) && Plants_Zombies::PlantsArray[i].Explosion == true)
 					{
+						flashData.isFlashing = true;
+
 						Health -= 20;
 						cout << Health << " - damaged boss" << endl;
 					}
@@ -1052,14 +1079,15 @@ void DrawBoss(RenderWindow& window)
 	{
 		if (bosszombies[i].started) 
 		{
-			window.draw(bosszombies[i].zombieCont);
+			myBrightnessShader.setUniform("brightness", bosszombies[i].flashData.currentBrightness);
+
+			window.draw(bosszombies[i].zombieCont, &myBrightnessShader);
 			window.draw(bosszombies[i].zombieCollider);
 		}
 	}
 
 	//draw boss
 	BossOBJ.drawBoss(window);
-
 }
 
 void endlevel() 
@@ -1226,6 +1254,21 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 
 		animationHandler();
 		action();
+
+		/*shape.setColor(Color(255, 255, 255, 255));
+
+		if (flashData.isFlashing)
+		{
+			if (flashData.flashClock.getElapsedTime() <= flashData.flashDuration)
+			{
+				flashData.currentBrightness = flashData.flashBrightness;
+			}
+			else
+			{
+				flashData.currentBrightness = flashData.normalBrightness;
+				flashData.isFlashing = false;
+			}
+		}*/
 
 		if (!Explosion)
 		{

@@ -138,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Boss Logic.h" />
+    <ClInclude Include="Brightness Shader.h" />
     <ClInclude Include="Game Manager.h" />
     <ClInclude Include="Game Settings And Audio.h" />
     <ClInclude Include="Main Menu.h" />
@@ -146,6 +147,9 @@
     <ClInclude Include="StartAnimation.h" />
     <ClInclude Include="Tools.h" />
     <ClInclude Include="Wave System.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Brightness.frag" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

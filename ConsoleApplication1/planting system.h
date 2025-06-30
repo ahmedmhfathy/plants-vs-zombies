@@ -1410,6 +1410,19 @@ void Plants_Zombies::Plants::updatePlantStruct(Zombie zombie_array[])
 			{
 				plantCollider.setPosition(shape.getPosition());
 			}
+
+			/*if (flashData.isFlashing)
+			{
+				if (flashData.flashClock.getElapsedTime() <= flashData.flashDuration)
+				{
+					flashData.currentBrightness = flashData.flashBrightness;
+				}
+				else
+				{
+					flashData.currentBrightness = flashData.normalBrightness;
+					flashData.isFlashing = false;
+				}
+			}*/
 		}
 		else if (!mygrid[gridIndex].gravePlanted && !deadPlantingPot)// else if there is not a grave planted there will turn the plant into an empty gameobject  
 		{
