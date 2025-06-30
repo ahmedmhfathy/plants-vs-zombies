@@ -1548,7 +1548,6 @@ namespace Plants_Zombies
 				else if (type == jackInTheBox)
 				{
 					JackPos = jackCollider.getPosition();
-
 				}
 			}
 

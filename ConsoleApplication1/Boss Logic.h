@@ -49,9 +49,7 @@ namespace boss
 
 #pragma region boolean
 	bool startBossfight = false;
-
-	bool plantedIceAttack = false;
-	bool plantedFireAttack = false;
+	bool canBeDamaged = false;
 
 	bool LevelIsOver = false;
 	bool WinLevel = false;
@@ -147,9 +145,11 @@ namespace boss
 		Sprite LegBack;
 		Sprite Arm;
 
+		RectangleShape collider;
+
 		BossState currentState, previousState;
 
-		int Health = 10000;
+		int Health = 30000;
 
 		bool isAttacking = false;
 		bool isSwitchingState = false;
@@ -193,6 +193,11 @@ namespace boss
 			Head.setScale(3.5, 3.5);
 			Head.setPosition({ 495, -165 });
 
+			collider.setSize({30, 145});
+			collider.setScale(3.5, 3.5);
+			collider.setFillColor(Color(255, 0, 0, 150));
+			collider.setPosition(Head.getPosition() + Vector2f{ 300, 120 });
+
 			LegFront.setTextureRect(IntRect(animationCol * 140, 0, 140, 183));
 			LegFront.setTexture(LegEnterTex);
 			LegFront.setScale(3, 3);
@@ -217,6 +222,8 @@ namespace boss
 
 			if (currentState == HeadIdle)
 			{
+				canBeDamaged = true;
+
 				if (animationClock >= AnimationTime.asSeconds()) {
 					Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 					Head.setTexture(HeadIdleTex);
@@ -232,6 +239,8 @@ namespace boss
 			}
 			else if (currentState == IceAttack || currentState == FireAttack)
 			{
+				canBeDamaged = true;
+
 				//cout << "entered elemental attack animation" << endl;
 
 				Time animTime = seconds(3);
@@ -305,6 +314,8 @@ namespace boss
 			}
 			else if (currentState == PlacingZombies)
 			{
+				canBeDamaged = false;
+
 				if (!isAttacking)
 				{
 					isAttacking = true;
@@ -384,6 +395,8 @@ namespace boss
 			}
 			else if (currentState == EnteringLevel)
 			{
+				canBeDamaged = false;
+
 				Time animspeed = seconds(2);
 				Vector2f startFront = { 1100, -300 }, endFront = { 750, -50 };
 				Vector2f startBack = { 1000, -400 }, endBack = { 675, -250 };
@@ -456,6 +469,8 @@ namespace boss
 			}
 			else if (currentState == StandingIdle)
 			{
+				canBeDamaged = false;
+
 				if (animationClock >= seconds(0.45f).asSeconds())
 				{
 					//cout << "animate idle leg \n";
@@ -535,6 +550,38 @@ namespace boss
 			//{
 			//	cout << "leg" << " - " << isAttacking << endl;
 			//}
+
+			collider.setPosition(Head.getPosition() + Vector2f{ 300, 120 });
+
+			if (canBeDamaged)
+			{
+				//damage boss with normal bullets
+				for (int i = 0; i < Plants_Zombies::PlantProjectilesARR.size(); i++)
+				{
+					if (Plants_Zombies::PlantProjectilesARR[i].shape.getGlobalBounds().intersects(
+						collider.getGlobalBounds()))
+					{
+						Health -= Plants_Zombies::PlantProjectilesARR[i].damage;
+						cout << Health << " - damaged boss" << endl;
+						PlaySoundEffect(Plants_Zombies::BucketHatHitSoundBuffer, true, 2);
+						Plants_Zombies:: PlantProjectilesARR.erase(Plants_Zombies::PlantProjectilesARR.begin() + i);
+						i--;
+						break;
+					}
+				}
+
+				//damage boss with jalapeno if it hits
+				for (int i = 0; i < 45; i++)
+				{
+					if (Plants_Zombies::PlantsArray[i].type == Plants_Zombies::Jalapeno
+						&& Plants_Zombies::PlantsArray[i].plantCollider.getGlobalBounds().intersects(
+						collider.getGlobalBounds()) && Plants_Zombies::PlantsArray[i].Explosion == true)
+					{
+						Health -= 20;
+						cout << Health << " - damaged boss" << endl;
+					}
+				}
+			}
 		}
 
 		void placeZombie() 
@@ -578,6 +625,7 @@ namespace boss
 				{
 					//cout << "HEAD" << endl;
 					window.draw(Head);
+					window.draw(collider);
 				}
 				else if (currentState == PlacingZombies)
 				{
@@ -697,7 +745,7 @@ namespace boss
 			spriteTop.setScale(scale);
 			spriteBottom.setScale(scale);
 
-			if (plantedIceAttack && type == FireAttack)
+			/*if (plantedIceAttack && type == FireAttack)
 			{
 				spriteTop.scale({ 0,0 });
 				spriteBottom.scale({ 0,0 });
@@ -712,7 +760,7 @@ namespace boss
 
 				explode = true;
 				active = false;
-			}
+			}*/
 
 			if (pos.x <= -200)
 			{
@@ -829,10 +877,8 @@ void SetupBossData()
 	elementalAttackArr.clear();
 	bosszombies.clear();
 
-	plantedIceAttack = false;
-	plantedFireAttack = false;
-
 	startBossfight = false;
+	canBeDamaged = false;
 
 	zombieSpawnRate = 8;
 	zombiePlaceCounter = 0;
@@ -1047,7 +1093,6 @@ void endlevel()
 		}
 	}
 }
-
 }
 
 //the calling of this function is in the plants_Zombies header file
@@ -1167,6 +1212,15 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 				{
 					boss::bosszombies[j].IsFrozen = true;
 				}
+			}
+		}
+
+		if (boss::canBeDamaged && boss::startBossfight)
+		{
+			if (plantCollider.getGlobalBounds().height/2 >= boss::BossOBJ.collider.getGlobalBounds().top 
+				&& plantCollider.getGlobalBounds().height/2 <= boss::BossOBJ.collider.getGlobalBounds().height)
+			{
+				zombieInFront = true;
 			}
 		}
 

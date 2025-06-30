@@ -710,8 +710,6 @@ Plants_Zombies::PlantType randPlantType = static_cast<Plants_Zombies::PlantType>
 
 void addRandomPlant() 
 {
-	cout << "Entered random plant" << endl;
-
 	Texture AvailableTexture, UnavailableTexture;
 	Vector2f SeedPacketOffset;
 
