@@ -1239,7 +1239,7 @@ void DrawBoss(RenderWindow& window)
 
 void endlevel() 
 {
-	/*for (int i = 0; i < bosszombies.size(); i++) 
+	for (int i = 0; i < bosszombies.size(); i++) 
 	{
 		if (bosszombies[i].zombieCollider.getPosition().x < -50 && bosszombies[i].started)
 		{
@@ -1266,7 +1266,7 @@ void endlevel()
 			}
 			window.draw(Textlosegamesprite);
 		}
-	}*/
+	}
 }
 }
 
