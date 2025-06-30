@@ -59,7 +59,8 @@ namespace boss
 #pragma region boolean
 	bool startBossfight = false;
 	bool canBeDamaged = false;
-
+	bool plantedIceAttack = false;
+	bool plantedFireAttack = false;
 	bool LevelIsOver = false;
 	bool WinLevel = false;
 	bool playLoseGameAnim = false;
@@ -255,7 +256,7 @@ namespace boss
 
 			if (currentState == HeadIdle)
 			{
-				
+				canBeDamaged = true;
 				second = true;
 				cout << "Check " << check;
 				//if (animationClock >= AnimationTime.asSeconds())
@@ -397,6 +398,7 @@ namespace boss
 			}
 			else if (currentState == PlacingZombies)
 			{
+				canBeDamaged = false;
 				first = true;
 				check = true;
 				// third = true;
@@ -495,10 +497,7 @@ namespace boss
 			{
 				canBeDamaged = false;
 
-				Time animspeed = seconds(2);
-				Vector2f startFront = { 1100, -300 }, endFront = { 750, -50 };
-				Vector2f startBack = { 1000, -400 }, endBack = { 675, -250 };
-
+		
 				if (moveleft)
 				{
 					
@@ -754,7 +753,7 @@ namespace boss
 				else if (currentState == StandingIdle)
 				{
 					window.draw(LegBack);
-				 window.draw(LegFront);
+					window.draw(LegFront);
 				}
 				else if (currentState == HeadIdle || currentState == FireAttack || currentState == IceAttack)
 				{
@@ -765,21 +764,21 @@ namespace boss
 						window.draw(backlegforstartattackfirst);
 
 					}
-					
-					 if (!check)
+
+					if (!check)
 					{
 						window.draw(Head);
+						window.draw(collider);
 					}
 				}
-					window.draw(Head);
-					window.draw(collider);
-				}
+
+
 				else if (currentState == PlacingZombies)
 				{
 					window.draw(LegBack);
 					window.draw(LegFront);
 					window.draw(Arm);
-					
+
 				}
 			}
 		}
@@ -893,7 +892,7 @@ namespace boss
 			spriteTop.setScale(scale);
 			spriteBottom.setScale(scale);
 
-			/*if (plantedIceAttack && type == FireAttack)
+			if (plantedIceAttack && type == FireAttack)
 			{
 				spriteTop.scale({ 0,0 });
 				spriteBottom.scale({ 0,0 });
@@ -908,7 +907,7 @@ namespace boss
 
 				explode = true;
 				active = false;
-			}*/
+			}
 
 			if (pos.x <= -200)
 			{
@@ -1187,11 +1186,6 @@ void UpdateBossLogic()
 				bosszombies[j].isSquished = true;
 			}
 		}
-	}
-
-	//update cars
-	for (int i = 0; i < 5; i++) {
-		car[i].update();
 	}
 
 	//update zombies
