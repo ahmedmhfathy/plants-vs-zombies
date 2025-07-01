@@ -164,7 +164,7 @@ void LoadMainMenuTex()
 void MainMenuStart(RenderWindow& window)
 {
     jackMusicOn = false;
-    //MaxLevelWon = Level4;
+    MaxLevelWon = Level4;
 
     ifstream SaveLevelProgressRead("lastlevelreached.txt");
     if (SaveLevelProgressRead.is_open())

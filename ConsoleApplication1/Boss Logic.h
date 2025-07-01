@@ -17,10 +17,10 @@ using namespace sf;
 namespace boss
 {
 	deque<Plants_Zombies::Zombie> bosszombies;
-	enum BossState { IceAttack, PlacingZombies, FireAttack, ThrowVan, HeadIdle, StandingIdle, EnteringLevel, None };
+	enum BossState {  PlacingZombies, IceAttack, FireAttack, ThrowVan, HeadIdle, StandingIdle, EnteringLevel, None };
 	Clock LoseGameClock;
 	BossState randomAttackType = static_cast<BossState>(rand() % ThrowVan);
-	
+
 #pragma region sprite
 
 	Sprite Textlosegamesprite;
@@ -162,6 +162,10 @@ namespace boss
 		Sprite backlegforstartattacksecond;
 		FlashState flashData;
 		RectangleShape collider;
+
+
+
+
 		BossState currentState, previousState;
 		int Health = 30000;
 		bool isAttacking = false;
@@ -174,16 +178,18 @@ namespace boss
 
 		float animationClock = 0;
 		float attackClock = 0;
+		Clock moveBossAnimClock;
+		Vector2f StartPos, EndPos;
 		bool resetClock = false;
 	private:
 		Time AnimationTime = seconds(0.2f);
-		Clock moveBossAnimClock;
+
 
 
 
 		float animationCol3 = 0;
 
-		Vector2f StartPos, EndPos;
+
 		Vector2f HeadOutOfScreenPos = { 800, -400 };
 		Vector2f LegFrontOutOfScreenPos = { 900, -50 };
 		Vector2f LegBackOutOfScreenPos = { 860, -250 };
@@ -209,7 +215,7 @@ namespace boss
 			Head.setTexture(HeadIdleTex);
 			Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 			Head.setScale(3.5, 3.5);
-			Head.setPosition({ 495, -165 });
+			Head.setPosition({ 1000, -165 });
 			Head.setColor(Color(255, 255, 255, 255));
 			// collider
 			collider.setSize({ 30, 145 });
@@ -296,21 +302,39 @@ namespace boss
 					if (animationClock >= AnimationTime.asSeconds()) {
 						Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
 						Head.setTexture(HeadIdleTex);
+						Time animspeed = seconds(8);
+						Vector2f startHead = { 1500, -200 }, endHead = { 495, -200 };
+						cout << endl << "ballAttackCounterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" << ballAttackCounter << endl;
+						if (third) {
+							if (Head.getPosition() != endHead)
+							{
+								//cout << "MOVING FRONT LEG " << endl;
+								Head.setPosition(easeInOut(ExpoEaseIn, startHead.x, endHead.x, moveBossAnimClock, animspeed),
+									easeInOut(ExpoEaseIn, startHead.y, endHead.y, moveBossAnimClock, animspeed));
+							}
+
+							else {
+								third = false;
+							}
+
+
+						}
+
 						animationCol = (animationCol + 1) % 5;
 						animationClock = 0;
-
 					}
 					isSwitchingState = false;
 					isAttacking = false;
 					attackOnce = false;
 				}
 
+
 			}
 			else if (currentState == IceAttack || currentState == FireAttack)
 			{
 				canBeDamaged = true;
 				cout << "entered elemental attack animation" << endl;
-
+				third = false;
 				Time animTime = seconds(3);
 
 				if (!isAttacking)
@@ -398,6 +422,7 @@ namespace boss
 				canBeDamaged = false;
 				first = true;
 				check = true;
+				third = true;
 				// third = true;
 				if (second) {
 					currentState = EnteringLevel;
@@ -721,8 +746,8 @@ namespace boss
 				//cout << "Throw elemental attack func" << endl;
 
 				randElementalAttackPos = ElementalAttacksSpawnPoints[rand() % 4];
-				BossOBJ.currentState = attackType;
-				// BossOBJ.currentState = static_cast<BossState>(IceAttack + rand() % FireAttack);
+				//BossOBJ.currentState = attackType;
+				 BossOBJ.currentState = static_cast<BossState>(IceAttack + rand() % FireAttack);
 				isSwitchingState = true;
 			}
 		}
@@ -1024,6 +1049,7 @@ namespace boss
 		check = true;
 		first = true;
 		second = true;
+		third = true;
 		BossOBJ.Start();
 	}
 
@@ -1037,7 +1063,7 @@ namespace boss
 
 				if (BossOBJ.currentState == HeadIdle)
 				{
-					
+
 					randomAttackType = PlacingZombies;
 
 				}
@@ -1095,8 +1121,20 @@ namespace boss
 				if (ballAttackCounter == 3)
 				{
 
-					//cout << " AAAAAAAAAAAAAAAAAAAAhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << endl;
-					endAttackWave = true;
+					cout << " AAAAAAAAAAAAAAAAAAAAhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << endl;
+
+					Time animspeedd = seconds(8);
+					Vector2f startHeadd = { 495,BossOBJ.EndPos.y }, endHeadd = { 1200,BossOBJ.EndPos.y };
+					if (BossOBJ.Head.getPosition() != endHeadd)
+					{
+						//cout << "MOVING FRONT LEG " << endl;
+						BossOBJ.Head.setPosition(easeInOut(ExpoEaseIn, startHeadd.x, endHeadd.x, BossOBJ.moveBossAnimClock, animspeedd),
+							easeInOut(ExpoEaseIn, startHeadd.y, endHeadd.y, BossOBJ.moveBossAnimClock, animspeedd));
+					}
+					else
+					{
+						endAttackWave = true;
+					}
 					return;
 				}
 
@@ -1134,11 +1172,11 @@ namespace boss
 						elementalAttackArr[i].collider.getGlobalBounds()))
 					&& elementalAttackArr[i].ready)
 				{
-				elementalAttackArr[i].active = false;
+					elementalAttackArr[i].active = false;
 					break;
 				}
 
-			//	//deactivate the fire attacks
+				//	//deactivate the fire attacks
 				if (Plants_Zombies::PlantsArray[j].type == Plants_Zombies::IceShroom
 					&& Plants_Zombies::PlantsArray[j].ExplosionIce
 					&& elementalAttackArr[i].type == FireAttack && elementalAttackArr[i].ready)
