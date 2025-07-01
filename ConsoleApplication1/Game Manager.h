@@ -669,7 +669,7 @@ void UpdateLevel4(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(3, 2, 10.0f, 3); // 3 , 35 , 7
+    level(3, 2, 10.0f, 4); // 3 , 35 , 7
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }
@@ -701,7 +701,7 @@ void UpdateLevel5(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
     boss::UpdateBossLogic();
-    //level(3, 35, 10.0f, 3); // 3 , 35 , 7
+    // level(3, 35, 10.0f, 3); // 3 , 35 , 7
 
     Plants_Zombies::UpdateBossPlants(MouseWorldPostion);
 }

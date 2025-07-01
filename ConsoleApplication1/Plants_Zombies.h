@@ -24,7 +24,7 @@ namespace Plants_Zombies
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, PlantingPot, Jalapeno, IceShroom, SunFlower, WallNut, PotatoMine, SunShroom, ScaredyShroom, PuffShroom, EmptyPlant, SunCoin, Shovel };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, Dead, imp , poleVault};
+	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous,  poleVault, Dead,imp,};
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -2526,6 +2526,7 @@ namespace Plants_Zombies
 
 	//gives zombies random types
 	// 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, Dead };
+	// 	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous, poleVault,dead, imp};
 	void StartZombies(int numerzombieinwave, int numberlevel, bool onRoof_) 
 	{
 		onRoof = onRoof_;
@@ -2533,25 +2534,33 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
-				zombie_array[i].type = regular;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
-				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombieType randomzombietype = static_cast<zombieType>(rand() % screenDoor);
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
-				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type = gargantous;
+				zombieType randomzombietype = static_cast<zombieType>(rand() % poleVault);
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
-
+		else if (numberlevel == 4) 
+		{
+			for (int i = 0; i < numerzombieinwave; i++) {
+				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
+				zombie_array[i].type = randomzombietype;
+				zombie_array[i].start();
+			}
+		}
+	
 	}
 #pragma endregion
 }

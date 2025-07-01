@@ -54,7 +54,7 @@ bool ZombiesAreComingSoundOn = true;
 Texture fogTex;
 Sprite fog;
 
-bool isFog = false;
+
 
 Clock clockRSP;
 #pragma endregion
@@ -76,7 +76,7 @@ SoundBuffer FinalWaveSoundBuffer;
 
 #pragma region booleans
 
-
+bool isFog = false;
 bool nowave = true;
 bool checkstart_wave2 = true;
 bool checkstart_wave3 = true;
@@ -595,6 +595,7 @@ void DrawWavesAndZombies(RenderWindow& window)
     if (isFog)
     {
         window.draw(fog);
+       
     }
 
     if (timertostartwave2 > seconds(2) && timertostartwave2 < seconds(6) && wave[0].checkexit_wave)

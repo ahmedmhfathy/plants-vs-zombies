@@ -217,7 +217,7 @@ namespace  StartAnimationNS {
             if (fog.getPosition().x > -300)
             {
                 float startValue = 1500, endValue = -300;
-                if (startAnimcamera == false)
+                if (startAnimcamera == false&& isFog)
                 {
                     animcameraClock.restart();
                     startAnimcamera = true;
