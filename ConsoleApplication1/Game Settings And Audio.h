@@ -173,7 +173,7 @@ void SoundsUpdate()
 			soundEffects.pop_front();
 		}
 
-		if (jackMusicOn)
+		if (jackMusicOn && !IsPaused)
 		{
 			if (jackMusic.getStatus() == Sound::Status::Paused || jackMusic.getStatus() == Sound::Status::Stopped)
 			{

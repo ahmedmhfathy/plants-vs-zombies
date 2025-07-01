@@ -114,10 +114,17 @@ C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Plants_Zo
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Plants_Zombies.h(1684,18): warning C4305: '*=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
+<<<<<<< HEAD
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1803,31): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(2381,18): warning C4553: '==': result of expression not used; did you intend '='?
+=======
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Plants_Zombies.h(1802,31): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Plants_Zombies.h(2380,18): warning C4553: '==': result of expression not used; did you intend '='?
+>>>>>>> a593fedcb14e366fe7bf7121a7972cf5f1a72cee
   (compiling source file 'Main.cpp')
   
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\planting system.h(618,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data

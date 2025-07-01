@@ -1192,7 +1192,7 @@ namespace Plants_Zombies
 		FBDeathText.loadFromFile("Assets/Zombies/FootBall/deathfb.png");
 		//Gargantuar AKA giant AKA Elkebeer awy gedan 5ales fash5 very much  
 		GiantWalkText.loadFromFile("Assets/Zombies/giant/giantwalk.png");
-		GiantEatText.loadFromFile("Assets/Zombies/giant/gianteat.png");
+		GiantEatText.loadFromFile("Assets/Zombies/giant/gianteat2.png");
 		GiantDeathText.loadFromFile("Assets/Zombies/giant/deathgiant.png");
 		//polevault
 		PVRunWithPoleText.loadFromFile("Assets/Zombies/pole vaulting/runwithpolePV.png");
@@ -1568,7 +1568,7 @@ namespace Plants_Zombies
 					}
 				}
 
-				if (type == gargantous)
+				if (type == gargantous && !PlantsinFront && !isAttacking) 
 				{
 					GargantousPos = zombieCont.getPosition();
 				}
@@ -1601,7 +1601,7 @@ namespace Plants_Zombies
 
 			if (type == gargantous)
 			{
-				zombieCollider.setPosition(zombieCont.getPosition().x + 60, zombieCont.getPosition().y + 135);
+				zombieCollider.setPosition(zombieCont.getPosition().x + 70, zombieCont.getPosition().y + 135);
 			}
 			else if (type == imp) {
 				zombieCollider.setPosition(zombieCont.getPosition().x + 25, zombieCont.getPosition().y + 55);
@@ -1672,7 +1672,7 @@ namespace Plants_Zombies
 								&& zombieCollider.getGlobalBounds().intersects(PlantingPotArray[i].plantCollider.getGlobalBounds())))
 						{
 
-							if (type == poleVault && !hasJumped && !PlantsArray[i].Explosion)
+							if (type == poleVault && !hasJumped && !PlantsArray[i].Explosion) 
 							{
 								isJumping = true;
 								PlantsinFront = false;
@@ -1685,17 +1685,18 @@ namespace Plants_Zombies
 							}
 							
 							else {
-								if (type == gargantous)
+								CurrentPlantIndex = i;
+								PlantInfront = true;
+								cout << "plants in front\n";
+								if (type == gargantous && !isDead && !PlantsArray[i].Explosion)
 								{
 									gargantousCrushClock = 0;
 									isGargantousCrushPlant = false;
 									isGargantousCrushPot = false;
-									zombieCont.setPosition(GargantousPos.x - 35, GargantousPos.y - 25);
+									//zombieCont.setPosition(GargantousPos.x - 35, GargantousPos.y - 25);
 									cout << "zew\n";
 								}
-								CurrentPlantIndex = i;
-								PlantInfront = true;
-								cout << "plants in front\n";
+								
 
 							}
 
@@ -1745,15 +1746,15 @@ namespace Plants_Zombies
 					{
 						PlantingPotArray[CurrentPlantIndex].takeDmg(Extra_damage);
 					}
-					else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && gargantousCrushClock >= 0.2 && isGargantousCrushPlant  )
+					else if (PlantsArray[CurrentPlantIndex].type != EmptyPlant && type == gargantous && gargantousCrushClock >= 0.2 && isGargantousCrushPlant && !isDead && CollIndex == 7 )
 					{
 						PlantsArray[CurrentPlantIndex].takeDmg(damage);
 						PlaySoundEffect(GargantousCrushSound, false);
-						//isGargantousCrushPlant = false;
+						isGargantousCrushPlant = false;
 						//zombieCont.setScale(2.8, 2.8);
 						gargantousCrushClock = 0;
-						zombieCont.setPosition(GargantousPos.x +35, GargantousPos.y + 25);
-						cout << "bat7arak men take dmg\n";
+						//zombieCont.setPosition(GargantousPos.x + 35, GargantousPos.y + 40);
+						//cout << "bat7arak men take dmg\n";
 
 
 					}
@@ -1763,7 +1764,7 @@ namespace Plants_Zombies
 						PlaySoundEffect(GargantousCrushSound, false);
 						isGargantousCrushPot = false;
 						gargantousCrushClock = 0;
-						zombieCont.setPosition(GargantousPos.x + 35, GargantousPos.y + 25);
+						//zombieCont.setPosition(GargantousPos.x + 35, GargantousPos.y + 25);
 					}
 				}
 				else
@@ -2439,7 +2440,7 @@ namespace Plants_Zombies
 
 			//Gargatnous
 			if (type == gargantous && !isSquished) {
-				if (isMoving && !isAttacking)
+				if (isMoving )
 				{
 					if (Zclock.getElapsedTime().asMilliseconds() > 300) {
 						zombieCont.setTextureRect(IntRect(CollIndex * 72, 0, 72, 79));
@@ -2450,16 +2451,16 @@ namespace Plants_Zombies
 				}
 				else if (isAttacking)
 				{
-					cout << gargantousCrushClock << CollIndex << endl;
-					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 6) {
-						zombieCont.setTextureRect(IntRect(CollIndex * 115, 0, 115, 92));
+					cout << GargantousPos.y << endl;
+					//cout << gargantousCrushClock << CollIndex << endl;
+					if (Zclock.getElapsedTime().asMilliseconds() > 150 && CollIndex != 7) {
+						zombieCont.setTextureRect(IntRect(CollIndex * 95, 0, 95, 95));
 						zombieCont.setTexture(GiantEatText);
-						//CollIndex = (CollIndex + 1) % 5;
 						CollIndex++;
-						if (CollIndex == 6)
+						if (CollIndex == 7)
 						{
-							zombieCont.setTextureRect(IntRect(5 * 115, 0, 115, 92));
-							cout << CollIndex << endl;
+							//zombieCont.setPosition(GargantousPos.x, GargantousPos.y - 40);
+							zombieCont.setTextureRect(IntRect(6 * 95, 0, 95, 95));
 							cout << "ana mesh mawgood\n";
 							isAttacking = false;
 							isMoving = true;
@@ -2467,7 +2468,7 @@ namespace Plants_Zombies
 							isGargantousCrushPot = true;
 							cout << "edrab ya gargantooooooooo\n";
 							gargantousCrushClock = 0;
-							
+							//zombieCont.setPosition(GargantousPos.x + 35, GargantousPos.y + 40);
 						}
 						Zclock.restart();
 					}
@@ -2495,6 +2496,7 @@ namespace Plants_Zombies
 							isGargantousDead = true;
 							//type = Dead;
 							wassoundplayed = false;
+							//zombieCont.setPosition(GargantousPos.x - 35, GargantousPos.y - 65);
 						}
 					}
 				}
@@ -2568,21 +2570,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % newsMan);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % gargantous);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % poleVault);
-				zombie_array[i].type = gargantous;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
@@ -2590,7 +2592,7 @@ namespace Plants_Zombies
 		{
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type =	gargantous;
+				zombie_array[i].type =	randomzombietype;
 				zombie_array[i].start();
 			}
 		}
