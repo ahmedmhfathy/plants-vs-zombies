@@ -36,3 +36,5 @@ Makefile
 *.sdf
 *.cache
 *.VC.db
+lastlevelreached.txt
+  
