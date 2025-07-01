@@ -1309,6 +1309,7 @@ namespace boss
 void Plants_Zombies::Plants::updateBossPlantStruct()
 {
 	int lastZombieProximity = 0;
+	bool shootingZombies = false;
 	if (!isDead) // if not dead will animate and execute action  
 	{
 		actionTimeClock += deltaTime;
@@ -1327,6 +1328,7 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 					&& (boss::bosszombies[j].zombieCollider.getPosition().x < 960))
 				{
 					zombieInFront = true;
+					shootingZombies = true;
 					break;
 				}
 				else if ((type == PuffShroom)
@@ -1337,16 +1339,19 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 					&& (boss::bosszombies[j].zombieCollider.getPosition().x < 960))
 				{
 					zombieInFront = true;
+					shootingZombies = true;
 					break;
 				}
 				else
 				{
 					zombieInFront = false;
+					shootingZombies = false;
 				}
 			}
 			else
 			{
 				zombieInFront = false;
+				shootingZombies = false;
 			}
 		}
 
@@ -1428,11 +1433,12 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 		{
 			if (plantCollider.getGlobalBounds().height / 2 >= boss::BossOBJ.collider.getGlobalBounds().top
 				&& plantCollider.getGlobalBounds().height / 2 <= boss::BossOBJ.collider.getGlobalBounds().height
-				&&boss::BossOBJ.collider.getPosition().x<=900)
+				&&boss::BossOBJ.collider.getPosition().x <= 900)
 			{
 				zombieInFront = true;
 			}
-			else {
+			else if(!shootingZombies) 
+			{
 				zombieInFront = false;
 			}
 		}
