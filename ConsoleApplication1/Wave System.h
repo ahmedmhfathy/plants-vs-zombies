@@ -563,7 +563,7 @@ void DrawWavesAndZombies(RenderWindow& window)
                     }*/
                     myBrightnessShader.setUniform("brightness", Plants_Zombies::zombie_array[i].flashData.currentBrightness);
 
-              /*      window.draw(Plants_Zombies::zombie_array[i].zombieCollider);*/
+                  //window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont, &myBrightnessShader);
                 }
             }
