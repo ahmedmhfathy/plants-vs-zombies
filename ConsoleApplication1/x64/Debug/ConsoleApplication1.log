@@ -78,14 +78,10 @@ C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1381,13): warning C4305: '=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-<<<<<<< HEAD
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1385,29): warning C4305: 'argument': truncation from 'double' to 'float'
-=======
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Plants_Zombies.h(1385,34): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1385,34): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Plants_Zombies.h(1385,29): warning C4305: 'argument': truncation from 'double' to 'float'
->>>>>>> ed017fd03b31c98ed8aa5661c2bdbd3600ecff90
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1385,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1391,13): warning C4305: '=': truncation from 'double' to 'float'
@@ -118,10 +114,10 @@ C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1684,18): warning C4305: '*=': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1801,31): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(1802,31): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(2379,18): warning C4553: '==': result of expression not used; did you intend '='?
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Plants_Zombies.h(2380,18): warning C4553: '==': result of expression not used; did you intend '='?
   (compiling source file 'Main.cpp')
   
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\planting system.h(618,51): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
@@ -161,183 +157,93 @@ C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\planting syste
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\planting system.h(1389,34): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-<<<<<<< HEAD
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(106,30): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(110,30): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(106,25): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(110,25): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(107,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(111,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(113,30): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(117,30): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(113,25): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(117,25): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(114,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(118,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(240,22): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(244,22): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(240,17): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(244,17): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(260,36): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(264,36): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(265,72): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(265,72): warning C4244:         with
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(265,72): warning C4244:         [
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(265,72): warning C4244:             T=int
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(265,72): warning C4244:         ]
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(269,72): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:         with
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:         [
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:             T=int
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(277,73): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(277,73): warning C4244:         with
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(277,73): warning C4244:         [
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(277,73): warning C4244:             T=int
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(277,73): warning C4244:         ]
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(281,73): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:         with
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:         [
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:             T=int
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(532,102): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(536,102): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(533,83): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(537,83): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(670,55): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(674,55): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(820,54): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(820,54): warning C4244:         with
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(820,54): warning C4244:         [
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(820,54): warning C4244:             T=int
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(820,54): warning C4244:         ]
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(824,54): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:         with
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:         [
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:             T=int
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(820,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(824,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(821,63): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(821,63): warning C4244:         with
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(821,63): warning C4244:         [
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(821,63): warning C4244:             T=int
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(821,63): warning C4244:         ]
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(825,63): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:         with
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:         [
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:             T=int
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(821,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(825,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(822,59): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(822,59): warning C4244:         with
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(822,59): warning C4244:         [
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(822,59): warning C4244:             T=int
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(822,59): warning C4244:         ]
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(826,59): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:         with
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:         [
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:             T=int
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:         ]
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(822,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(826,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(1004,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(1011,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(1352,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(1356,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(1366,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-=======
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(110,30): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(110,25): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(111,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(117,30): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(117,25): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(118,36): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(244,22): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(244,17): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(264,36): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(269,72): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:         with
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:         [
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:             T=int
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(269,72): warning C4244:         ]
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(281,73): warning C4244: 'argument': conversion from 'float' to 'T', possible loss of data
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:         with
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:         [
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:             T=int
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(281,73): warning C4244:         ]
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(536,102): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(537,83): warning C4305: 'argument': truncation from 'double' to 'float'
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(674,55): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(824,54): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:         with
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:         [
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:             T=int
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(824,54): warning C4244:         ]
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(824,40): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(825,63): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:         with
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:         [
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:             T=int
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(825,63): warning C4244:         ]
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(825,46): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(826,59): warning C4244: 'argument': conversion from 'T' to 'float', possible loss of data
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:         with
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:         [
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:             T=int
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(826,59): warning C4244:         ]
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(826,42): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1011,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1356,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
-  (compiling source file 'Main.cpp')
-  
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1370,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
->>>>>>> ed017fd03b31c98ed8aa5661c2bdbd3600ecff90
+C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Boss Logic.h(1370,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\Ahmed\Documents\PROJECT_UNI\SP_FINAL\ConsoleApplication1\Wave System.h(190,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
