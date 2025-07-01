@@ -243,28 +243,34 @@ C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logi
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(190,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(194,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(197,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(201,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(200,94): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(208,98): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(204,92): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(211,96): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(211,98): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(218,96): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(220,97): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(249,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(224,98): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(517,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(227,96): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(521,29): warning C4305: 'argument': truncation from 'double' to 'float'
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(258,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(526,29): warning C4305: 'argument': truncation from 'double' to 'float'
+  (compiling source file 'Main.cpp')
+  
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(530,29): warning C4305: 'argument': truncation from 'double' to 'float'
   (compiling source file 'Main.cpp')
   
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\StartAnimation.h(60,39): warning C4305: 'argument': truncation from 'double' to 'float'

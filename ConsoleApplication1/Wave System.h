@@ -189,14 +189,17 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
             {
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]-60);
             }
-            else
-            {
-                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
-            }
 
-            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
+            else if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+            {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]-25);
+            }
+            else if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::soccerGuy) {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5] - 15);
+            }
+            else
             {
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, row[rand() % 5]);
             }
@@ -207,14 +210,20 @@ void startZombiePositions(int numZombies, int numberwave, int numlevel)
             {
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5] - 60);
             }
-            else {
-                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]);
-            }
 
-            if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
+            else if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::trafficCone
                 || Plants_Zombies::zombie_array[i].type == Plants_Zombies::newsMan
-                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox)
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::jackInTheBox
+                || Plants_Zombies::zombie_array[i].type == Plants_Zombies::soccerGuy
+                )
             {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]-25);
+
+            }
+            else if (Plants_Zombies::zombie_array[i].type == Plants_Zombies::poleVault) {
+                Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5] - 20);
+            }
+            else {
                 Plants_Zombies::zombie_array[i].zombieCont.setPosition(1000, rowroof[rand() % 5]);
             }
         }
