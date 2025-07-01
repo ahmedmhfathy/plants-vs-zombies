@@ -18,17 +18,13 @@ namespace boss
 {
 	deque<Plants_Zombies::Zombie> bosszombies;
 	enum BossState { IceAttack, PlacingZombies, FireAttack, ThrowVan, HeadIdle, StandingIdle, EnteringLevel, None };
+	Clock LoseGameClock;
+	BossState randomAttackType = static_cast<BossState>(rand() % ThrowVan);
+	
+#pragma region sprite
 
 	Sprite Textlosegamesprite;
-	Clock LoseGameClock;
-	float zombieSpawnRate = 8;
-	int zombiePlaceCounter = 0;
-	int ballAttackCounter = 0;
-	bool endAttackWave = true;
-	bool check = true;
-	bool first = true;
-	bool second = true;
-	bool third = true;
+#pragma endregion
 
 
 #pragma region Textures
@@ -54,13 +50,17 @@ namespace boss
 
 #pragma endregion
 
-	BossState randomAttackType = static_cast<BossState>(rand() % ThrowVan);
+
 #pragma region boolean
 	bool startBossfight = false;
 	bool canBeDamaged = false;
 	bool plantedIceAttack = false;
 	bool plantedFireAttack = false;
-
+	bool endAttackWave = true;
+	bool check = true;
+	bool first = true;
+	bool second = true;
+	bool third = true;
 	bool LevelIsOver = false;
 	bool WinLevel = false;
 	bool playLoseGameAnim = false;
@@ -86,7 +86,11 @@ namespace boss
 	float x_axisrandomplace = x_axisplacingzombie[rand() % 3];
 
 	float minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
-	float scalefactortextlosegame = 4.2f;      // First scale For Lose Game
+	float scalefactortextlosegame = 4.2f;  // First scale For Lose Game
+	float zombieSpawnRate = 8;
+	int zombiePlaceCounter = 0;
+	int ballAttackCounter = 0;
+
 #pragma endregion
 
 #pragma region Structs
@@ -981,20 +985,23 @@ namespace boss
 
 	void LoadBossTexturesAndAudio()
 	{
+		//===================================HeadIdle============================================//
 		HeadIdleTex.loadFromFile("Assets/Boss Fight/boss-idle-1.png");
 		HeadIceAttackTex.loadFromFile("Assets/Boss Fight/boss-iceattack-1.png");
 		HeadFireAttackTex.loadFromFile("Assets/Boss Fight/boss-fireattack-1.png");
-
+		//==================================Legenter / legIdle=============================================//
 		LegEnterTex.loadFromFile("Assets/Boss Fight/leg-entering.png");
 		LegBentEnterTex.loadFromFile("Assets/Boss Fight/leg-bent-entering.png");
 		LegsIdleTex.loadFromFile("Assets/Boss Fight/leg-idle.png");
-
+		//==================================arm=============================================================//
 		armtext.loadFromFile("Assets/Boss Fight/final arms.png");
-
+		//===================================Iceattack===========================================//
 		IceBallTopTex.loadFromFile("Assets/Boss Fight/iceball-top.png");
 		IceBallBottomTex.loadFromFile("Assets/Boss Fight/iceball-bottom.png");
+		//==================================Fireattack============================================//
 		FireBallTopTex.loadFromFile("Assets/Boss Fight/fireball-top.png");
 		FireBallBottomTex.loadFromFile("Assets/Boss Fight/fireball-bottom.png");
+		//===================================backleg========================================//
 		backlegtexfirst.loadFromFile("Assets/Boss Fight/back.leg.png");
 		backlegtexsecond.loadFromFile("Assets/Boss Fight/back.leg.png");
 	}
@@ -1030,10 +1037,7 @@ namespace boss
 
 				if (BossOBJ.currentState == HeadIdle)
 				{
-					cout << "oneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\n";
-					/*BossOBJ.currentState = EnteringLevel;
-					third = false;
-					*/
+					
 					randomAttackType = PlacingZombies;
 
 				}
@@ -1043,8 +1047,8 @@ namespace boss
 					}*/
 				else
 				{
-					cout << "twooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\n";
-					cout << "reset attack wave " << endl;
+					/*cout << "twooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\n";
+					cout << "reset attack wave " << endl;*/
 
 					randomAttackType = static_cast<BossState>(rand() % ThrowVan);
 					BossOBJ.currentState = randomAttackType;
@@ -1091,19 +1095,19 @@ namespace boss
 				if (ballAttackCounter == 3)
 				{
 
-					cout << " AAAAAAAAAAAAAAAAAAAAhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << endl;
+					//cout << " AAAAAAAAAAAAAAAAAAAAhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << endl;
 					endAttackWave = true;
 					return;
 				}
 
 				if (BossOBJ.attackClock < 4)
 				{
-					cout << "Head idle" << endl;
+					//cout << "Head idle" << endl;
 					BossOBJ.currentState = HeadIdle;
 				}
 				else if (!BossOBJ.isAttacking)
 				{
-					cout << "throw ball" << endl;
+					//cout << "throw ball" << endl;
 					BossOBJ.ThrowElementalAttack(randomAttackType);
 				}
 
@@ -1231,7 +1235,7 @@ namespace boss
 
 	void endlevel()
 	{
-		/*for (int i = 0; i < bosszombies.size(); i++)
+		for (int i = 0; i < bosszombies.size(); i++)
 		{
 			if (bosszombies[i].zombieCollider.getPosition().x < -50 && bosszombies[i].started)
 			{
@@ -1258,7 +1262,7 @@ namespace boss
 				}
 				window.draw(Textlosegamesprite);
 			}
-		}*/
+		}
 	}
 
 }

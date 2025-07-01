@@ -1382,7 +1382,7 @@ namespace Plants_Zombies
 				damage = 20;
 
 				zombieCollider.setSize({ 50, 40 });
-				zombieCollider.setScale(1.4, 1);
+				zombieCollider.setScale(1.4, 1.3);
 				zombieCont.setScale(3, 3);
 				break;
 			case screenDoor:
