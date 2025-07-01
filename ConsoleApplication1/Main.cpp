@@ -3,6 +3,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <fstream>
 #include "Main Menu.h"
 #include "Game Manager.h"
 #include "StartAnimation.h"
@@ -59,6 +60,8 @@ void Start()
 
     SetupPauseMenu(); //textures loaded here once
     LevelEndSetup(); //textures loaded here once
+
+    
 }
 
 void Update()

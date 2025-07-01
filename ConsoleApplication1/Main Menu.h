@@ -166,6 +166,19 @@ void MainMenuStart(RenderWindow& window)
     jackMusicOn = false;
     MaxLevelWon = Level4;
 
+    ifstream SaveLevelProgressRead("lastlevelreached.txt");
+    if (SaveLevelProgressRead.is_open())
+    {
+        while (getline(SaveLevelProgressRead, LevelReadFromFile)) {
+            cout << LevelReadFromFile << endl;
+            LastLevelReached = stoi(LevelReadFromFile) - 1;
+        }
+        cout << "====================== " << LastLevelReached << " from start ======================" << endl;
+        MaxLevelWon = static_cast<State>(LastLevelReached);
+        cout << "hello from start\n";
+
+    }
+
     MainMenuCamera.setCenter(640, 360);
     window.setView(MainMenuCamera);
     LoadMainMenuTex();
@@ -372,6 +385,7 @@ void MainMenuUpdate(Vector2f mouse_pos, RenderWindow& window)
                 PlaySoundEffect(ClickBuffer, true);
                 //Click.setPitch(randPitch[rand() % 3]);
                 //Click.play();
+                //SaveLevelProgressWrite.close();
                 window.close();
             }
 

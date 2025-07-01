@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <cmath>
+#include <fstream>
 #include "Game Settings And Audio.h"
 #include "planting system.h"
 #include "StartAnimation.h"
@@ -22,6 +23,12 @@ bool ButtonTapSoundBackToTheGame = false;
 bool ButtonTapSoundRetry = false;
 bool ButtonTapSoundLoseBackToMainMenu = false;
 bool winSound = false;
+
+// file saving for levels
+int LastLevelReached;
+string LevelReadFromFile;
+//ofstream SaveLevelProgressWrite("lastlevelreached.txt");
+//ifstream SaveLevelProgressRead("lastlevelreached.txt");
 
 Time TickBoxDelay = seconds(.25);
 Clock DelayClock;
@@ -403,6 +410,8 @@ void LevelEndUpdate()
                     MaxLevelWon = Level5;
                 }
 
+                
+
                 //go to next level button logic
                 if (NextlevelButton.getGlobalBounds().contains(MouseWorldPostion))
                 {
@@ -432,6 +441,13 @@ void LevelEndUpdate()
                         {
                             SwitchState(Level5);
                         }
+                        // opens file and wrties level number
+                        ofstream SaveLevelProgressWrite("lastlevelreached.txt");
+                        LastLevelReached = MaxLevelWon;
+                        SaveLevelProgressWrite << (LastLevelReached - 1);
+                        SaveLevelProgressWrite.close();
+
+                        cout << "====================== " << (LastLevelReached - 1) << " ======================" << endl;
                     }
                 }
                 else
