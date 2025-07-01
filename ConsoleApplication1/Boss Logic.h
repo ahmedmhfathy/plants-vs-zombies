@@ -19,13 +19,13 @@ namespace boss
 {
 	deque<Plants_Zombies::Zombie> bosszombies;
 	enum BossState { IceAttack,PlacingZombies, FireAttack, ThrowVan, HeadIdle, StandingIdle, EnteringLevel, None };
-
+	BossState randomAttackType = static_cast<BossState>(rand() % ThrowVan);
 	Sprite Textlosegamesprite;
 	Clock LoseGameClock;
 	float zombieSpawnRate = 8;
 	int zombiePlaceCounter = 0;
 	int ballAttackCounter = 0;
-	bool endAttackWave = true;
+
 	bool check = true;
 	bool first = true;
 	bool second = true;
@@ -55,7 +55,7 @@ namespace boss
 
 #pragma endregion
 
-	BossState randomAttackType = static_cast<BossState>(rand() % ThrowVan);
+	
 #pragma region boolean
 	bool startBossfight = false;
 	bool canBeDamaged = false;
@@ -64,6 +64,7 @@ namespace boss
 	bool LevelIsOver = false;
 	bool WinLevel = false;
 	bool playLoseGameAnim = false;
+	bool endAttackWave = true;
 #pragma endregion
 
 #pragma region Sound
@@ -854,6 +855,7 @@ namespace boss
 		{
 			if (!ready)
 			{
+				cout << "Kalllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllid\n";
 				if (scale.x < finalScale.x)
 				{
 					scale += Vector2f(2, 2) * deltaTime;
@@ -870,9 +872,9 @@ namespace boss
 			else
 			{
 				pos += Vector2f(-50, 0) * deltaTime;
-
 				if (!resetBossState)
 				{
+					cout <<endl<< "ballAttackCounterrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr" << ballAttackCounter << endl;
 					ballAttackCounter++;
 					BossOBJ.currentState = HeadIdle;
 					BossOBJ.animationCol = 0;
@@ -1032,7 +1034,7 @@ void SetupBossData()
 	zombieSpawnRate = 8;
 	zombiePlaceCounter = 0;
 	ballAttackCounter = 0;
-	endAttackWave = true;
+	 endAttackWave = true;
 	 check = true;
 	 first = true;
 	 second = true;
@@ -1046,7 +1048,7 @@ void BossStateManager()
 	{
 		if (endAttackWave)
 		{
-	
+
 			if (BossOBJ.currentState == HeadIdle)
 			{
 				cout << "oneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\n";
@@ -1056,10 +1058,10 @@ void BossStateManager()
 				randomAttackType = PlacingZombies;
 
 			}
-		/*	if (BossOBJ.currentState ==StandingIdle ) {
-				BossOBJ.currentState = PlacingZombies;
-				
-			}*/
+			/*	if (BossOBJ.currentState ==StandingIdle ) {
+					BossOBJ.currentState = PlacingZombies;
+
+				}*/
 			else
 			{
 				//cout << "reset attack wave " << endl;
@@ -1081,30 +1083,31 @@ void BossStateManager()
 					BossOBJ.currentState = PlacingZombies;
 				}
 			}*/
-		
-				
-			
+
+
+
 			BossOBJ.attackClock = 0;
 			ballAttackCounter = 0;
 			zombiePlaceCounter = 0;
-			endAttackWave = false;
+			endAttackWave= false;
 		}
-	
+
+
 		if (randomAttackType == PlacingZombies)
 		{
-			
-				if (BossOBJ.attackClock >= zombieSpawnRate)
-				{
-					//cout << "zomb" << endl;
-					BossOBJ.placeZombie();
-					BossOBJ.attackClock = 0;
-				}
 
-				if (zombiePlaceCounter == 5)
-				{
-					BossOBJ.isSwitchingState = false;
-					endAttackWave = true;
-				}
+			if (BossOBJ.attackClock >= zombieSpawnRate)
+			{
+				//cout << "zomb" << endl;
+				BossOBJ.placeZombie();
+				BossOBJ.attackClock = 0;
+			}
+
+			if (zombiePlaceCounter == 5)
+			{
+				BossOBJ.isSwitchingState = false;
+				endAttackWave = true;
+			}
 		}
 		else if (randomAttackType == FireAttack || randomAttackType == IceAttack)
 		{
@@ -1117,24 +1120,23 @@ void BossStateManager()
 
 			if (BossOBJ.attackClock < 4)
 			{
-				//cout << "Head idle" << endl;
+				cout << "Head idle" << endl;
 				BossOBJ.currentState = HeadIdle;
 			}
 			else if (!BossOBJ.isAttacking)
 			{
-				//cout << "throw ball" << endl;
+				cout << "throw ball" << endl;
 				BossOBJ.ThrowElementalAttack(randomAttackType);
 			}
 
 			//cout << endl << endl << ballAttackCounter << endl << endl;
 		}
+
 	}
 }
-
 void UpdateBossLogic()
 {
-	BossStateManager();
-
+	
 #pragma region update elements
 	//update elemental attacks and deactivation logic
 	for (int i = 0; i < elementalAttackArr.size(); i++)
@@ -1208,6 +1210,7 @@ void UpdateBossLogic()
 			return z.type == Plants_Zombies::Dead;
 		}), bosszombies.end());
 #pragma endregion
+	BossStateManager();
 
 	BossOBJ.Update();
 }

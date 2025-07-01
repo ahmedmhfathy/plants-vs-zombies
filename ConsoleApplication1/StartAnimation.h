@@ -33,6 +33,7 @@ namespace  StartAnimationNS {
         roofTextureDay.loadFromFile("Assets/Environment/Roof-Day.png");
         roofTextureNight.loadFromFile("Assets/Environment/Roof-Night.png");
         fogTex.loadFromFile("Assets/Environment/fog.png");
+        soundfogbuffer.loadFromFile("Audio/thunder.ogg");
 
         zombieinStreettex.loadFromFile("Assets/Environment/zombie.png");
         Readytexttexture.loadFromFile("Assets/Environment/StartReady.png");
@@ -220,6 +221,7 @@ namespace  StartAnimationNS {
                 {
                     animcameraClock.restart();
                     startAnimcamera = true;
+                    PlaySoundEffect(soundfogbuffer, false);
                 }
                 fog.setPosition(easeInOut(ExpoEaseOut, startValue, endValue, animcameraClock, seconds(4)), -50);
             }

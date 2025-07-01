@@ -37,7 +37,7 @@ Texture Planttexttexture;
 Sprite Planttextsprite;
 Texture zombieinStreettex;
 Sprite zombieinStreet;
-
+SoundBuffer soundfogbuffer;
 SoundBuffer RSPSoundBuffer;
 SoundBuffer ZombiesAreComingBuffer;
 SoundBuffer WinSoundBuffer;
