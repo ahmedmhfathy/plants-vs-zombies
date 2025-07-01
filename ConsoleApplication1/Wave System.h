@@ -274,7 +274,7 @@ void allwave(int numberwave, int numberzombie)
         if (numberwave >= 1 && i >= 0 && i <= 8)
         {
             //cout << timeSinceStart << endl;
-            if (timeSinceStart >= (float)(i * 0.5))
+            if (timeSinceStart >= (float)(i * 1))
             {
                 if (Plants_Zombies::zombie_array[i].startJackClock)
                 {
@@ -384,7 +384,7 @@ void level(int numberwave, int num, float delaybetweenw1, int numlevel)
                 {
                     if (wave[1].check_startwave)
                     {
-                        startallwave(1, num += 10, delaybetweenw1 -= 5.0f, numlevel);
+                        startallwave(1, num += 8, delaybetweenw1 -= 5.0f, numlevel);
                         wave[1].check_startwave = false;
                         scaleFactor = 6.0f;
                     }
@@ -563,7 +563,7 @@ void DrawWavesAndZombies(RenderWindow& window)
                     }*/
                     myBrightnessShader.setUniform("brightness", Plants_Zombies::zombie_array[i].flashData.currentBrightness);
 
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+              /*      window.draw(Plants_Zombies::zombie_array[i].zombieCollider);*/
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont, &myBrightnessShader);
                 }
             }
@@ -578,7 +578,7 @@ void DrawWavesAndZombies(RenderWindow& window)
                     }*/
                     myBrightnessShader.setUniform("brightness", Plants_Zombies::zombie_array[i].flashData.currentBrightness);
                     
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    /*window.draw(Plants_Zombies::zombie_array[i].zombieCollider);*/
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont, &myBrightnessShader);
                 }
 
@@ -594,7 +594,7 @@ void DrawWavesAndZombies(RenderWindow& window)
                     }*/
                     myBrightnessShader.setUniform("brightness", Plants_Zombies::zombie_array[i].flashData.currentBrightness);
                     
-                    window.draw(Plants_Zombies::zombie_array[i].zombieCollider);
+                    /*window.draw(Plants_Zombies::zombie_array[i].zombieCollider);*/
                     window.draw(Plants_Zombies::zombie_array[i].zombieCont, &myBrightnessShader);
                 }
             }

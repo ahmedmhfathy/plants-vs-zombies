@@ -24,7 +24,7 @@ namespace Plants_Zombies
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, PlantingPot, Jalapeno, IceShroom, SunFlower, WallNut, PotatoMine, SunShroom, ScaredyShroom, PuffShroom, EmptyPlant, SunCoin, Shovel };
-	enum zombieType { regular, bucketHat, trafficCone, newsMan, jackInTheBox, soccerGuy, screenDoor, gargantous,  poleVault, Dead,imp,};
+	enum zombieType { regular, bucketHat, trafficCone, soccerGuy, newsMan, jackInTheBox, screenDoor, gargantous,  poleVault, Dead,imp,};
 #pragma endregion
 
 #pragma region Declaring Texures
@@ -2533,14 +2533,14 @@ namespace Plants_Zombies
 
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
-				zombieType randomzombietype = static_cast<zombieType>(rand() % jackInTheBox);
+				zombieType randomzombietype = static_cast<zombieType>(rand() % newsMan);
 				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
-				zombieType randomzombietype = static_cast<zombieType>(rand() % screenDoor);
+				zombieType randomzombietype = static_cast<zombieType>(rand() % gargantous);
 				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
