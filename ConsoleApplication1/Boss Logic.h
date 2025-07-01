@@ -1130,10 +1130,12 @@ namespace boss
 						//cout << "MOVING FRONT LEG " << endl;
 						BossOBJ.Head.setPosition(easeInOut(ExpoEaseIn, startHeadd.x, endHeadd.x, BossOBJ.moveBossAnimClock, animspeedd),
 							easeInOut(ExpoEaseIn, startHeadd.y, endHeadd.y, BossOBJ.moveBossAnimClock, animspeedd));
+						
 					}
 					else
 					{
 						endAttackWave = true;
+						
 					}
 					return;
 				}
@@ -1425,9 +1427,13 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 		if (boss::canBeDamaged && boss::startBossfight)
 		{
 			if (plantCollider.getGlobalBounds().height / 2 >= boss::BossOBJ.collider.getGlobalBounds().top
-				&& plantCollider.getGlobalBounds().height / 2 <= boss::BossOBJ.collider.getGlobalBounds().height)
+				&& plantCollider.getGlobalBounds().height / 2 <= boss::BossOBJ.collider.getGlobalBounds().height
+				&&boss::BossOBJ.collider.getPosition().x<=900)
 			{
 				zombieInFront = true;
+			}
+			else {
+				zombieInFront = false;
 			}
 		}
 

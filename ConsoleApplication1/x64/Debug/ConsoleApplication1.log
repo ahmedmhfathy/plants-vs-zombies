@@ -240,10 +240,10 @@ C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logi
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1036,13): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1394,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1396,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
-C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1408,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
+C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Boss Logic.h(1410,38): warning C4244: '-=': conversion from 'float' to 'int', possible loss of data
   (compiling source file 'Main.cpp')
   
 C:\Users\Omar Hazem\source\repos\plants-vs-zombies\ConsoleApplication1\Wave System.h(190,93): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
