@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
+#include<iostream>
 #include <iostream>
 #include <algorithm>
 #include "Tools.h"
@@ -1216,7 +1217,9 @@ namespace boss
 		{
 			if (bosszombies[i].started)
 			{
-				window.draw(bosszombies[i].zombieCont);
+				myBrightnessShader.setUniform("brightness", bosszombies[i].flashData.currentBrightness);
+
+				window.draw(bosszombies[i].zombieCont, &myBrightnessShader);
 				window.draw(bosszombies[i].zombieCollider);
 			}
 		}
