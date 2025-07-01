@@ -37,9 +37,10 @@ Texture Planttexttexture;
 Sprite Planttextsprite;
 Texture zombieinStreettex;
 Sprite zombieinStreet;
-Texture fogTex;
-Sprite fog;
-
+SoundBuffer soundfogbuffer;
+SoundBuffer RSPSoundBuffer;
+SoundBuffer ZombiesAreComingBuffer;
+SoundBuffer WinSoundBuffer;
 #pragma endregion
 
 #pragma region boolean
@@ -50,19 +51,12 @@ bool RSPSonudon = true;
 bool ZombiesAreComingSoundOn = true;
 #pragma endregion
 
-#pragma region sound
-SoundBuffer soundfogbuffer;
-SoundBuffer RSPSoundBuffer;
-SoundBuffer ZombiesAreComingBuffer;
-SoundBuffer WinSoundBuffer;
-#pragma endregion
+Texture fogTex;
+Sprite fog;
 
-#pragma region clock
+
+
 Clock clockRSP;
-#pragma endregion
-
-
-
 #pragma endregion
 
 #pragma region Textures and Sprites declaration
@@ -125,7 +119,7 @@ struct waves
 
 #pragma endregion
 
-
+int numofstartnormalzombie;
 //resets all data so you can retry the level
 void setupWaveData(bool isNight_) {
     isNightLevel = isNight_;
@@ -171,7 +165,12 @@ void setupWaveData(bool isNight_) {
 
 void startZombiePositions(int numZombies, int numberwave, int numlevel)
 {
-    
+    //if (isNight && !onRoof) {
+    //    numofstartnormalzombie = numGraves;
+    //}
+    //else {
+    //    numofstartnormalzombie = 0;
+    //}
 
     Plants_Zombies::StartZombies(numZombies, numlevel, onRoof);
 

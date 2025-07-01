@@ -164,14 +164,14 @@ void LoadMainMenuTex()
 void MainMenuStart(RenderWindow& window)
 {
     jackMusicOn = false;
-    MaxLevelWon = Level4;
+    //MaxLevelWon = Level4;
 
     ifstream SaveLevelProgressRead("lastlevelreached.txt");
     if (SaveLevelProgressRead.is_open())
     {
         while (getline(SaveLevelProgressRead, LevelReadFromFile)) {
             cout << LevelReadFromFile << endl;
-            LastLevelReached = stoi(LevelReadFromFile) - 1;
+            LastLevelReached = stoi(LevelReadFromFile) ;
         }
         cout << "====================== " << LastLevelReached << " from start ======================" << endl;
         MaxLevelWon = static_cast<State>(LastLevelReached);

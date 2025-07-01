@@ -254,6 +254,12 @@ namespace  StartAnimationNS {
     void Renderstartanimation(RenderWindow& window)
     {
         window.draw(gardensprite);
+
+        /*if (EntertostartdrawRSP)
+        {
+            RSP(window);
+        }*/
+
         for (int i = 0; i < 5; i++)
         {
             window.draw(boss::car[i].lawnsprite);

@@ -427,24 +427,27 @@ void LevelEndUpdate()
                         if (CurrentState == Level1)
                         {
                             SwitchState(Level2);
-                            MaxLevelWon = Level3;
+                            MaxLevelWon = Level2;
                         }
                         else if (CurrentState == Level2)
                         {
                             SwitchState(Level3);
+                            MaxLevelWon = Level3;
                         }
                         else if (CurrentState == Level3)
                         {
                             SwitchState(Level4);
+                            MaxLevelWon = Level4;
                         }
                         else if (CurrentState == Level4)
                         {
                             SwitchState(Level5);
+                            MaxLevelWon = Level5;
                         }
                         // opens file and wrties level number
                         ofstream SaveLevelProgressWrite("lastlevelreached.txt");
                         LastLevelReached = MaxLevelWon;
-                        SaveLevelProgressWrite << (LastLevelReached - 1);
+                        SaveLevelProgressWrite << LastLevelReached - 1;
                         SaveLevelProgressWrite.close();
 
                         cout << "====================== " << (LastLevelReached - 1) << " ======================" << endl;
