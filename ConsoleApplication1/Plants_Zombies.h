@@ -1192,14 +1192,14 @@ namespace Plants_Zombies
 		FBDeathText.loadFromFile("Assets/Zombies/FootBall/deathfb.png");
 		//Gargantuar AKA giant AKA Elkebeer awy gedan 5ales fash5 very much  
 		GiantWalkText.loadFromFile("Assets/Zombies/giant/giantwalk.png");
-		GiantEatText.loadFromFile("Assets/Zombies/giant/gianteat3.png");
+		GiantEatText.loadFromFile("Assets/Zombies/giant/gianteat.png");
 		GiantDeathText.loadFromFile("Assets/Zombies/giant/deathgiant.png");
 		//polevault
 		PVRunWithPoleText.loadFromFile("Assets/Zombies/pole vaulting/runwithpolePV.png");
 		PVJumpText.loadFromFile("Assets/Zombies/pole vaulting/jumpPV.png");
 		PVWalkText.loadFromFile("Assets/Zombies/pole vaulting/walkPV.png");
 		PVEatText.loadFromFile("Assets/Zombies/pole vaulting/eatPV.png");
-		PvDeathText.loadFromFile("Assets/Zombies/pole vaulting/deathPV2.png");
+		PvDeathText.loadFromFile("Assets/Zombies/pole vaulting/deathPV.png");
 		//Imp (Little Ali Omar)
 		ImpWalkText.loadFromFile("Assets/Zombies/imp/walkimp.png");
 		ImpEatText.loadFromFile("Assets/Zombies/imp/eatimp.png");
