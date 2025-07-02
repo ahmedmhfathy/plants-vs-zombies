@@ -47,6 +47,9 @@ namespace boss
 	Texture armtext;
 	//==================lawn=========================//
 	Texture lawntexture;
+	//==================Health Bar==================//
+	Texture HealthBarBGText;
+	Texture HealthBarFGText;
 	//================death==========================//
 	Texture death1tex;
 	Texture death2tex;
@@ -176,7 +179,10 @@ namespace boss
 
 
 		BossState currentState, previousState;
-		int Health = 5000;
+		int Health = 30000;
+		RectangleShape HealthBar;
+		Sprite HealthBarBG;
+		Sprite HealthBarFG;
 		bool isAttacking = false;
 		bool isSwitchingState = false;
 		bool attackOnce = false;
@@ -208,7 +214,6 @@ namespace boss
 		{
 			currentState = EnteringLevel;
 			//currentState = PlacingZombies;
-
 			flashData.isFlashing = false;
 			flashData.currentBrightness = flashData.normalBrightness;
 			previousState = HeadIdle;
@@ -262,6 +267,17 @@ namespace boss
 			Arm.setScale(2.6, 2.6);
 			Arm.setOrigin(40, 180);
 			Arm.setPosition(1400, -500);
+			//Health Bar
+			HealthBarBGText.loadFromFile("Assets/Boss Fight/Boss Health Bar(BG).png");
+			HealthBarFGText.loadFromFile("Assets/Boss Fight/Boss Health Bar(FG).png");
+			/*HealthBar.setSize(Vector2f(800, 10));
+			HealthBar.setPosition(20, 650);
+			HealthBar.setFillColor(Color::Green);*/
+			HealthBarBG.setTexture(HealthBarBGText);
+			HealthBarBG.setPosition(20000, 200000);
+			HealthBarFG.setTexture(HealthBarFGText);
+			HealthBarFG.setPosition(20000, 200000);
+			
 			
 			// death1==
 			death1.setTexture(death1tex);
@@ -792,6 +808,13 @@ namespace boss
 					}
 				}
 			}
+			if (startBossfight) {
+				HealthBarBG.setPosition(30, 590);
+				HealthBarBG.setScale(3.271, 2);
+				HealthBarFG.setPosition(54, 606);
+				HealthBarFG.setScale(BossOBJ.Health/25 , 2);
+
+			}
 			if (Health <= 0) {
 				startBossfight = false;
 				endAttackWave = false;
@@ -799,6 +822,8 @@ namespace boss
 
 				currentState = death;
 			}
+			
+
 		}
 
 		void placeZombie()
@@ -1369,6 +1394,10 @@ namespace boss
 
 		//draw boss
 		BossOBJ.drawBoss(window);
+		window.draw(BossOBJ.HealthBarBG);
+		window.draw(BossOBJ.HealthBarFG);
+		cout << "ok boss";
+		
 
 	}
 
