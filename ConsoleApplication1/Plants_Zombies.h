@@ -24,7 +24,7 @@ namespace Plants_Zombies
 
 #pragma region Plants and Zombies Types
 	enum PlantType { PeaShooter, SnowPeaShooter, PlantingPot, Jalapeno, IceShroom, SunFlower, WallNut, PotatoMine, SunShroom, ScaredyShroom, PuffShroom, EmptyPlant, SunCoin, Shovel };
-	enum zombieType { regular, bucketHat, trafficCone, soccerGuy, newsMan, jackInTheBox, screenDoor, gargantous,  poleVault, Dead,imp,};
+	enum zombieType { regular, bucketHat, trafficCone, soccerGuy, newsMan, jackInTheBox, screenDoor, gargantous, poleVault, Dead, imp };
 #pragma endregion
 
 #pragma region Declaring Texures

@@ -97,7 +97,7 @@ namespace boss
 
 	float minscaletextlosegame = 1.17f;         // Min Scale For Text Lose Game
 	float scalefactortextlosegame = 4.2f;  // First scale For Lose Game
-	float zombieSpawnRate = 8;
+	float zombieSpawnRate = 5;
 	int zombiePlaceCounter = 0;
 	int ballAttackCounter = 0;
 
@@ -179,7 +179,7 @@ namespace boss
 
 
 		BossState currentState, previousState;
-		int Health = 30000;
+		int Health = 5000;
 		RectangleShape HealthBar;
 		Sprite HealthBarBG;
 		Sprite HealthBarFG;
@@ -812,7 +812,7 @@ namespace boss
 				HealthBarBG.setPosition(30, 590);
 				HealthBarBG.setScale(3.271, 2);
 				HealthBarFG.setPosition(54, 606);
-				HealthBarFG.setScale(BossOBJ.Health/25 , 2);
+				HealthBarFG.setScale(BossOBJ.Health/12.5 , 2);
 
 			}
 			if (Health <= 0) {
@@ -1084,7 +1084,7 @@ namespace boss
 				x_axisrandomplace = x_axisplacingzombie[rand() % 3];
 
 				Plants_Zombies::Zombie zombieprefab;
-				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::Dead);
+				Plants_Zombies::zombieType randomzombietype = static_cast<Plants_Zombies::zombieType>(rand() % Plants_Zombies::poleVault);
 
 				zombieprefab.type = randomzombietype;
 
@@ -1231,7 +1231,7 @@ namespace boss
 						BossOBJ.attackClock = 0;
 					}
 
-					if (zombiePlaceCounter == 5)
+					if (zombiePlaceCounter ==10)
 					{
 						BossOBJ.isSwitchingState = false;
 						endAttackWave = true;
