@@ -1063,13 +1063,13 @@ namespace Plants_Zombies
 		{
 			if (!(PlantingPotArray[i].type == EmptyPlant || PlantingPotArray[i].health <= 0))
 			{
-				window.draw(PlantingPotArray[i].plantCollider);
+				//window.draw(PlantingPotArray[i].plantCollider);
 				window.draw(PlantingPotArray[i].shape);
 			}
 
 			if (!(PlantsArray[i].type == EmptyPlant || PlantsArray[i].health <= 0))
 			{
-				window.draw(PlantsArray[i].plantCollider);
+				//window.draw(PlantsArray[i].plantCollider);
 				window.draw(PlantsArray[i].shape);
 			}
 		}
@@ -2573,21 +2573,21 @@ namespace Plants_Zombies
 		if (numberlevel == 1) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % newsMan);
-				zombie_array[i].type = poleVault;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 2) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % gargantous);
-				zombie_array[i].type = poleVault;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
 		else if (numberlevel == 3) {
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % poleVault);
-				zombie_array[i].type = poleVault;
+				zombie_array[i].type = randomzombietype;
 				zombie_array[i].start();
 			}
 		}
@@ -2595,7 +2595,7 @@ namespace Plants_Zombies
 		{
 			for (int i = 0; i < numerzombieinwave; i++) {
 				zombieType randomzombietype = static_cast<zombieType>(rand() % Dead);
-				zombie_array[i].type =	poleVault;
+				zombie_array[i].type =	randomzombietype;
 				zombie_array[i].start();
 			}
 		}
