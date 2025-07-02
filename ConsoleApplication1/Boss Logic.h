@@ -17,7 +17,7 @@ using namespace sf;
 namespace boss
 {
 	deque<Plants_Zombies::Zombie> bosszombies;
-	enum BossState {  PlacingZombies, IceAttack, FireAttack, ThrowVan, HeadIdle, StandingIdle, EnteringLevel, None };
+	enum BossState { PlacingZombies, IceAttack, FireAttack, ThrowVan, HeadIdle, StandingIdle, EnteringLevel,death };
 	Clock LoseGameClock;
 	BossState randomAttackType = static_cast<BossState>(rand() % ThrowVan);
 
@@ -47,6 +47,9 @@ namespace boss
 	Texture armtext;
 	//==================lawn=========================//
 	Texture lawntexture;
+	//================death==========================//
+	Texture death1tex;
+	Texture death2tex;
 
 #pragma endregion
 
@@ -64,6 +67,10 @@ namespace boss
 	bool LevelIsOver = false;
 	bool WinLevel = false;
 	bool playLoseGameAnim = false;
+	bool endfinallevel = false;
+	bool fourth = true;
+	bool stoped = true;
+	bool forclock = true;
 #pragma endregion
 
 #pragma region Sound
@@ -162,12 +169,14 @@ namespace boss
 		Sprite backlegforstartattacksecond;
 		FlashState flashData;
 		RectangleShape collider;
+		Sprite death1;
+		Sprite death2;
 
 
 
 
 		BossState currentState, previousState;
-		int Health = 30000;
+		int Health = 5000;
 		bool isAttacking = false;
 		bool isSwitchingState = false;
 		bool attackOnce = false;
@@ -207,10 +216,13 @@ namespace boss
 			isSwitchingState = false;
 			attackOnce = false;
 			resetClock = false;
-
+			endfinallevel = false;
+			fourth = true;
+			stoped = true;
+			forclock = true;
 			attackClock = 0;
 			animationCol = 0;
-			Health = 10000;
+			Health = 5000;
 
 			Head.setTexture(HeadIdleTex);
 			Head.setTextureRect(IntRect(animationCol * 230, 0, 230, 200));
@@ -219,7 +231,7 @@ namespace boss
 			Head.setColor(Color(255, 255, 255, 255));
 			// collider
 			collider.setSize({ 30, 145 });
-			collider.setScale(3.5, 3.5);
+			collider.setScale(3.5, 3.8);
 			collider.setFillColor(Color(255, 0, 0, 150));
 			collider.setPosition(Head.getPosition() + Vector2f{ 300, 120 });
 			// leg front
@@ -250,10 +262,20 @@ namespace boss
 			Arm.setScale(2.6, 2.6);
 			Arm.setOrigin(40, 180);
 			Arm.setPosition(1400, -500);
-
+			
+			// death1==
+			death1.setTexture(death1tex);
+			death1.setTextureRect(IntRect(animationCol * 120, 0, 120, 150));
+			death1.setScale(3.5, 3.5);
+			death1.setPosition(3400, -500);
+			// death2==
+			death2.setTexture(death2tex);
+			death2.setTextureRect(IntRect(animationCol * 120, 0, 120, 150));
+			death2.setScale(3.5, 3.5);
+			death2.setPosition(1000, -900);
 
 		}
-
+		Vector2f startdeath1 = { 600, -50 }, enddeath1 = { 600,-50 };
 		void AnimationHandler()
 		{
 			animationClock += deltaTime;
@@ -613,7 +635,55 @@ namespace boss
 
 				isAttacking = false;
 			}
+			else if (currentState == death&&stoped) {
+				if (animationClock >= seconds(0.4).asSeconds()) {
 
+					Time animdeath1 = seconds(3);
+					if (forclock) {
+						animationClock = 0;
+						animationCol = 0;
+						forclock = false;
+
+					}
+
+					//cout << "omarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n";
+						//death1.setTextureRect(IntRect(animationCol * 120, 0, 120, 150));
+					death1.setTexture(death1tex);
+					if (fourth)
+					{
+						death1.setPosition(600, -50);
+						death1.setTextureRect(IntRect(animationCol * 120, 0, 120, 150));
+						death1.setTexture(death1tex);
+						if (animationCol == 6) {
+							fourth = false;
+							animationCol = 0;
+						}
+					}
+					else {
+						//fourth = false;
+					/*	if (forclock) {
+							animationClock = 0;
+							animationCol = 0;
+							forclock = false;
+						}*/
+						// cout << "Omarrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr\n";
+						death2.setPosition(600, -50);
+						death2.setTextureRect(IntRect(animationCol * 120, 0, 120, 150));
+						death2.setTexture(death2tex);
+						if (animationCol == 6) {
+							LevelIsOver = true;
+							WinLevel = true;
+							IsPaused = true;
+							stoped = false;
+							bosszombies.clear();
+						}
+					}
+
+
+					animationCol = (animationCol + 1) % 7;
+					animationClock = 0;
+				}
+			}
 		}
 
 		void SwitchStates() {
@@ -722,6 +792,13 @@ namespace boss
 					}
 				}
 			}
+			if (Health <= 0) {
+				startBossfight = false;
+				endAttackWave = false;
+				endfinallevel = true;
+
+				currentState = death;
+			}
 		}
 
 		void placeZombie()
@@ -747,7 +824,7 @@ namespace boss
 
 				randElementalAttackPos = ElementalAttacksSpawnPoints[rand() % 4];
 				//BossOBJ.currentState = attackType;
-				 BossOBJ.currentState = static_cast<BossState>(IceAttack + rand() % FireAttack);
+				BossOBJ.currentState = static_cast<BossState>(IceAttack + rand() % FireAttack);
 				isSwitchingState = true;
 			}
 		}
@@ -788,6 +865,19 @@ namespace boss
 					window.draw(LegFront);
 					window.draw(Arm);
 
+				}
+				if (currentState == death) {
+					
+					if (fourth)
+					{
+						window.draw(death1);
+					}
+					
+					if (!fourth)
+					{
+						
+						window.draw(death2);
+					}
 				}
 			}
 		}
@@ -1029,6 +1119,11 @@ namespace boss
 		//===================================backleg========================================//
 		backlegtexfirst.loadFromFile("Assets/Boss Fight/back.leg.png");
 		backlegtexsecond.loadFromFile("Assets/Boss Fight/back.leg.png");
+		//==================================death1===============================================//
+		death1tex.loadFromFile("Assets/Boss Fight/death.1.color.png");
+		//================================death2============================================//
+		death2tex.loadFromFile("Assets/Boss Fight/death-2.color.png");
+
 	}
 
 	void SetupBossData()
@@ -1053,107 +1148,111 @@ namespace boss
 		BossOBJ.Start();
 	}
 
-
 	void BossStateManager()
 	{
-		if (startBossfight)
+		if (!endfinallevel)
 		{
-			if (endAttackWave)
+			if (startBossfight)
 			{
-
-				if (BossOBJ.currentState == HeadIdle)
+				if (endAttackWave)
 				{
 
-					randomAttackType = PlacingZombies;
-
-				}
-				/*	if (BossOBJ.currentState ==StandingIdle ) {
-						BossOBJ.currentState = PlacingZombies;
-
-					}*/
-				else
-				{
-					/*cout << "twooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\n";
-					cout << "reset attack wave " << endl;*/
-
-					randomAttackType = static_cast<BossState>(rand() % ThrowVan);
-					BossOBJ.currentState = randomAttackType;
-
-				}
-				/*if (BossOBJ.currentState == IceAttack || BossOBJ.currentState == FireAttack)
-				{
-					cout << "mazzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzen\n";
-					if (second) {
-						BossOBJ.currentState = EnteringLevel;
-						second = false;
-					}
-					else {
-						BossOBJ.currentState = PlacingZombies;
-					}
-				}*/
-
-
-
-				BossOBJ.attackClock = 0;
-				ballAttackCounter = 0;
-				zombiePlaceCounter = 0;
-				endAttackWave = false;
-			}
-
-			if (randomAttackType == PlacingZombies)
-			{
-
-				if (BossOBJ.attackClock >= zombieSpawnRate)
-				{
-					//cout << "zomb" << endl;
-					BossOBJ.placeZombie();
-					BossOBJ.attackClock = 0;
-				}
-
-				if (zombiePlaceCounter == 5)
-				{
-					BossOBJ.isSwitchingState = false;
-					endAttackWave = true;
-				}
-			}
-			else if (randomAttackType == FireAttack || randomAttackType == IceAttack)
-			{
-				if (ballAttackCounter == 3)
-				{
-
-					cout << " AAAAAAAAAAAAAAAAAAAAhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << endl;
-
-					Time animspeedd = seconds(8);
-					Vector2f startHeadd = { 495,BossOBJ.EndPos.y }, endHeadd = { 1200,BossOBJ.EndPos.y };
-					if (BossOBJ.Head.getPosition() != endHeadd)
+					if (BossOBJ.currentState == HeadIdle)
 					{
-						//cout << "MOVING FRONT LEG " << endl;
-						BossOBJ.Head.setPosition(easeInOut(ExpoEaseIn, startHeadd.x, endHeadd.x, BossOBJ.moveBossAnimClock, animspeedd),
-							easeInOut(ExpoEaseIn, startHeadd.y, endHeadd.y, BossOBJ.moveBossAnimClock, animspeedd));
-						
+
+						randomAttackType = PlacingZombies;
+
 					}
+					/*	if (BossOBJ.currentState ==StandingIdle ) {
+							BossOBJ.currentState = PlacingZombies;
+
+						}*/
 					else
 					{
-						endAttackWave = true;
-						
+						/*cout << "twooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo\n";
+						cout << "reset attack wave " << endl;*/
+
+						randomAttackType = static_cast<BossState>(rand() % ThrowVan);
+						BossOBJ.currentState = randomAttackType;
+
 					}
-					return;
+					/*if (BossOBJ.currentState == IceAttack || BossOBJ.currentState == FireAttack)
+					{
+						cout << "mazzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzen\n";
+						if (second) {
+							BossOBJ.currentState = EnteringLevel;
+							second = false;
+						}
+						else {
+							BossOBJ.currentState = PlacingZombies;
+						}
+					}*/
+
+
+
+					BossOBJ.attackClock = 0;
+					ballAttackCounter = 0;
+					zombiePlaceCounter = 0;
+					endAttackWave = false;
 				}
 
-				if (BossOBJ.attackClock < 4)
+				if (randomAttackType == PlacingZombies)
 				{
-					//cout << "Head idle" << endl;
-					BossOBJ.currentState = HeadIdle;
-				}
-				else if (!BossOBJ.isAttacking)
-				{
-					//cout << "throw ball" << endl;
-					BossOBJ.ThrowElementalAttack(randomAttackType);
-				}
 
-				cout << endl << endl << ballAttackCounter << endl << endl;
+					if (BossOBJ.attackClock >= zombieSpawnRate)
+					{
+						//cout << "zomb" << endl;
+						BossOBJ.placeZombie();
+						BossOBJ.attackClock = 0;
+					}
+
+					if (zombiePlaceCounter == 5)
+					{
+						BossOBJ.isSwitchingState = false;
+						endAttackWave = true;
+					}
+				}
+				else if (randomAttackType == FireAttack || randomAttackType == IceAttack)
+				{
+					if (ballAttackCounter == 3)
+					{
+
+						cout << " AAAAAAAAAAAAAAAAAAAAhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh" << endl;
+
+						Time animspeedd = seconds(8);
+						Vector2f startHeadd = { 495,BossOBJ.EndPos.y }, endHeadd = { 1200,BossOBJ.EndPos.y };
+						if (BossOBJ.Head.getPosition() != endHeadd)
+						{
+							//cout << "MOVING FRONT LEG " << endl;
+							BossOBJ.Head.setPosition(easeInOut(ExpoEaseIn, startHeadd.x, endHeadd.x, BossOBJ.moveBossAnimClock, animspeedd),
+								easeInOut(ExpoEaseIn, startHeadd.y, endHeadd.y, BossOBJ.moveBossAnimClock, animspeedd));
+
+						}
+						else
+						{
+							endAttackWave = true;
+
+						}
+						return;
+					}
+
+					if (BossOBJ.attackClock < 4)
+					{
+						//cout << "Head idle" << endl;
+						BossOBJ.currentState = HeadIdle;
+					}
+					else if (!BossOBJ.isAttacking)
+					{
+						//cout << "throw ball" << endl;
+						BossOBJ.ThrowElementalAttack(randomAttackType);
+					}
+
+					cout << endl << endl << ballAttackCounter << endl << endl;
+				}
 			}
 		}
+		
+		
 	}
 
 	void UpdateBossLogic()
@@ -1431,14 +1530,15 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 
 		if (boss::canBeDamaged && boss::startBossfight)
 		{
-			if (plantCollider.getGlobalBounds().height / 2 >= boss::BossOBJ.collider.getGlobalBounds().top
-				&& plantCollider.getGlobalBounds().height / 2 <= boss::BossOBJ.collider.getGlobalBounds().height
-				&&boss::BossOBJ.collider.getPosition().x <= 900)
+			if ( ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) <= (boss::BossOBJ.collider.getGlobalBounds().top + boss::BossOBJ.collider.getGlobalBounds().height)
+				&& ((shape.getGlobalBounds().top + shape.getGlobalBounds().height / 2) >= boss::BossOBJ.collider.getGlobalBounds().top))
+				&& (boss::BossOBJ.collider.getPosition().x < 900))
 			{
 				zombieInFront = true;
 			}
-			else if(!shootingZombies) 
+			else if (!shootingZombies)
 			{
+				// cout << "wadiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii\n";
 				zombieInFront = false;
 			}
 		}
@@ -1486,4 +1586,5 @@ void Plants_Zombies::Plants::updateBossPlantStruct()
 		doAction = false;
 		zombieProximityAction = false;
 	}
+
 }
