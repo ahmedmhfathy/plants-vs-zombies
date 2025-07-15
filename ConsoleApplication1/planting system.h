@@ -565,7 +565,7 @@ void StartPlantingAndCurrencySystem(Vector2f offset, bool isNight_, bool onRoof_
 	onRoof = onRoof_;
 	isbossFight = isBossFight_;
 
-	Plants_Zombies::score = 50000;
+	Plants_Zombies::score = 250;
 
 	SetupSelectionUI(offset);
 	Plants_Zombies::PlantProjectilesARR.clear();

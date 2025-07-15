@@ -627,7 +627,7 @@ void UpdateLevel2(RenderWindow& window)
     UpdatePlantingAndCurrencySystem(MouseWorldPostion, offset);
     StartAnimationNS::updateAnimation(window);
 
-    level(2, 20, 7.0f, 2); // 2, 15 , 10
+    level(2, 50, 7.0f, 2); // 2, 15 , 10
 
     Plants_Zombies::UpdatePlants(Plants_Zombies::zombie_array, MouseWorldPostion);
 }

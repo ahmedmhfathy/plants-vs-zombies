@@ -881,7 +881,7 @@ namespace boss
 					if (!check)
 					{
 						window.draw(Head);
-						window.draw(collider);
+						//window.draw(collider);
 					}
 				}
 				else if (currentState == PlacingZombies)
@@ -1388,7 +1388,7 @@ namespace boss
 				myBrightnessShader.setUniform("brightness", bosszombies[i].flashData.currentBrightness);
 
 				window.draw(bosszombies[i].zombieCont, &myBrightnessShader);
-				window.draw(bosszombies[i].zombieCollider);
+				//window.draw(bosszombies[i].zombieCollider);
 			}
 		}
 
